@@ -32,7 +32,7 @@ end
 
 def fixup_spec!(spec_dir, spec)
   unless spec.key?(:tb_file)
-    spec[:tb_file] = "#{spec[:module]}_tb.v"
+    spec[:tb_file] = "#{spec[:module]}_tb.gen.v"
   end
 
   [:file, :vector, :tb_file].each do |rel_file|
@@ -107,11 +107,19 @@ def emit_tb(spec)
     VERILOG
 
     # actual comparisons.
+    checks = spec[:outputs].map do |output|
+      <<~VERILOG
+        if (exp_#{output.name} !== #{output.name}) begin
+          $display("ERROR: expected #{output.name} to be %h, was %h", exp_#{output.name}, #{output.name});
+          error_count = error_count + 1;
+        end
+      VERILOG
+    end.join("\n")
     tb_io.puts <<~VERILOG
       always @(negedge clk)
         begin
           if (~reset) begin
-            $display("nothing yet.");
+            #{checks}
             current_vec = current_vec + 1;
 
             if (test_vectors[current_vec] === #{test_vector_size}'bx) begin

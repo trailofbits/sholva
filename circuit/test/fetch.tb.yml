@@ -8,4 +8,3 @@ outputs:
   - "72 raw_hint1"
   - "72 raw_hint2"
 vector: fetch.tv
-# tb_file: fetch_tb.v

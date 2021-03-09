@@ -24,7 +24,7 @@ always
   end
 initial
   begin
-    $readmemh("../circuit/test/fetch.tv", test_vectors);
+    $readmemh("fetch.tv", test_vectors);
     current_vec = 0; error_count = 0;
     reset = 1; #10; reset = 0;
   end
@@ -35,7 +35,26 @@ always @(posedge clk)
 always @(negedge clk)
   begin
     if (~reset) begin
-      $display("nothing yet.");
+      if (exp_raw_instr !== raw_instr) begin
+  $display("ERROR: expected raw_instr to be %h, was %h", exp_raw_instr, raw_instr);
+  error_count = error_count + 1;
+end
+
+if (exp_raw_regs !== raw_regs) begin
+  $display("ERROR: expected raw_regs to be %h, was %h", exp_raw_regs, raw_regs);
+  error_count = error_count + 1;
+end
+
+if (exp_raw_hint1 !== raw_hint1) begin
+  $display("ERROR: expected raw_hint1 to be %h, was %h", exp_raw_hint1, raw_hint1);
+  error_count = error_count + 1;
+end
+
+if (exp_raw_hint2 !== raw_hint2) begin
+  $display("ERROR: expected raw_hint2 to be %h, was %h", exp_raw_hint2, raw_hint2);
+  error_count = error_count + 1;
+end
+
       current_vec = current_vec + 1;
 
       if (test_vectors[current_vec] === 1120'bx) begin
