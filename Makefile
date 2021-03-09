@@ -1,6 +1,8 @@
+VFLAGS := -gstrict-expr-width
+
 .PHONY: all
 all: codegen
-	iverilog -ycircuit \
+	iverilog $(VFLAGS) -ycircuit \
 		-Icircuit \
 		-Icircuit/include \
 		-t null tiny86.v
