@@ -8,5 +8,11 @@ outputs:
   - "1 prefix_address_32bit"
   - "2 prefix_rep"
   - "2 prefix_count"
-vector: decode_prefix.tv
 vector_fmt: binary
+vector_specs:
+  - raw_instr: 0x909090909090909090909090
+    unprefixed_instr: 0x90909090909090909090
+    prefix_operand_32bit: 0
+    prefix_address_32bit: 0
+    prefix_rep: 0
+    prefix_count: 0

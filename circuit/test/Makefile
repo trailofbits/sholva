@@ -1,5 +1,5 @@
-TBGEN := ../../tbgen/tbgen
-TVGEN := ../../tvgen/tvgen
+TBGEN := ./codegen/tbgen
+TVGEN := ./codegen/tvgen
 
 MODULES := fetch decode_prefix
 
