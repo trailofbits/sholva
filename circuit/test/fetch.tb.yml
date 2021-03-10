@@ -9,3 +9,14 @@ outputs:
   - "72 raw_hint2"
 vector: fetch.tv
 vector_fmt: hex
+vector_specs:
+  - step: 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    raw_instr: 0xffffffffffffffffffffffff
+    raw_regs: 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    raw_hint1: 0xffffffffffffffffff
+    raw_hint2: 0xffffffffffffffffff
+  - step: 0xbbbbbbbbbbbbbbbbbbaaaaaaaaaaaaaaaaaaffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffeeeeeeeeeeeeeeeeeeeeeeee
+    raw_instr: 0xeeeeeeeeeeeeeeeeeeeeeeee
+    raw_regs: 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    raw_hint1: 0xaaaaaaaaaaaaaaaaaa
+    raw_hint2: 0xbbbbbbbbbbbbbbbbbb
