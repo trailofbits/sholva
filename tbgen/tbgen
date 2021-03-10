@@ -32,7 +32,7 @@ end
 
 def fixup_spec!(spec_dir, spec)
   unless spec.key?(:tb_file)
-    spec[:tb_file] = "#{spec[:module]}_tb.gen.v"
+    spec[:tb_file] = "#{spec[:module]}.tb.gen.v"
   end
 
   [:file, :vector, :tb_file].each do |rel_file|
@@ -93,10 +93,11 @@ def emit_tb(spec)
     VERILOG
 
     # prime test vectors, housekeeping variables.
+    readmem = spec[:vector_fmt] == "binary" ? "$readmemb" : "$readmemh"
     tb_io.puts <<~VERILOG
       initial
         begin
-          $readmemh("#{spec[:vector]}", test_vectors);
+          #{readmem}("#{spec[:vector]}", test_vectors);
           current_vec = 0; error_count = 0;
           reset = 1; #10; reset = 0;
         end
@@ -115,8 +116,10 @@ def emit_tb(spec)
     checks = spec[:outputs].map do |output|
       <<~VERILOG
         if (exp_#{output.name} !== #{output.name}) begin
-          $display("ERROR: expected #{output.name} to be %h, was %h", exp_#{output.name}, #{output.name});
+          $display("FAIL(#{spec[:module]}:%0d): expected #{output.name} to be %h, was %h", current_vec, exp_#{output.name}, #{output.name});
           error_count = error_count + 1;
+        end else begin
+          $display("PASS(#{spec[:module]}:%0d): #{output.name}", current_vec);
         end
       VERILOG
     end.join("\n")
@@ -128,7 +131,7 @@ def emit_tb(spec)
             current_vec = current_vec + 1;
 
             if (test_vectors[current_vec] === #{test_vector_size}'bx) begin
-              $display("done.");
+              $display("DONE(#{spec[:module]}): errors=%0d", error_count);
               $finish;
             end
           end
