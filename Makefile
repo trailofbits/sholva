@@ -10,3 +10,7 @@ all: codegen
 .PHONY: codegen
 codegen:
 	$(MAKE) -C circuit/codegen
+
+.PHONY: test
+test:
+	$(MAKE) -C circuit/test check
