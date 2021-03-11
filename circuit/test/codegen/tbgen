@@ -73,10 +73,10 @@ def emit_tb(spec)
     checks = spec[:outputs].map do |output|
       <<~VERILOG
         if (exp_#{output.name} !== #{output.name}) begin
-          $display("FAIL(#{spec[:module]}:%0d): expected #{output.name} to be %h, was %h", current_vec, exp_#{output.name}, #{output.name});
+          $display("TBGEN-FAIL #{spec[:module]}:%0d expected #{output.name} to be %h, was %h", current_vec, exp_#{output.name}, #{output.name});
           error_count = error_count + 1;
         end else begin
-          $display("PASS(#{spec[:module]}:%0d): #{output.name}", current_vec);
+          $display("TBGEN-PASS #{spec[:module]}:%0d #{output.name}", current_vec);
         end
       VERILOG
     end.join("\n")
@@ -88,7 +88,7 @@ def emit_tb(spec)
             current_vec = current_vec + 1;
 
             if (test_vectors[current_vec] === #{test_vector_size}'bx) begin
-              $display("DONE(#{spec[:module]}): errors=%0d", error_count);
+              $display("TBGEN-DONE #{spec[:module]} %0d errors=%0d", current_vec, error_count);
               $finish;
             end
           end
