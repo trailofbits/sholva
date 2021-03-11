@@ -207,6 +207,39 @@ def _gen_opc_map_v(commands):
             file=io,
         )
 
+        _br(io, 2)
+
+        # Create lists of `rb` and `ib` opcode encoding forms, then use
+        # those lists to generate the `reg_1byte` and `imm_1byte` assignments.
+        rb_forms = []
+        ib_forms = []
+        for cmd in commands:
+            [rb_forms.append(enc) for enc in cmd["encs"] if enc["rb"]]
+            [ib_forms.append(enc) for enc in cmd["encs"] if enc["ib"]]
+
+        rb_form_exprs = []
+        for enc in rb_forms:
+            rb_form_expr = _opc_eq(enc["opc"])
+            if enc["esc"]:
+                rb_form_expr = _and("is_2byte", rb_form_expr)
+            if enc["ext"] is not None:
+                rb_form_expr = _and(rb_form_expr, _opc_ext_eq(enc["ext"]))
+            rb_form_exprs.append(rb_form_expr)
+        print(_assign("reg_1byte", functools.reduce(_or, rb_form_exprs)), file=io)
+
+        _br(io, 2)
+
+        ib_form_exprs = []
+        for enc in ib_forms:
+            ib_form_expr = _opc_eq(enc["opc"])
+            if enc["esc"]:
+                ib_form_expr = _and("is_2byte", ib_form_expr)
+            if enc["ext"] is not None:
+                ib_form_expr = _and(ib_form_expr, _opc_ext_eq(enc["ext"]))
+            ib_form_exprs.append(ib_form_expr)
+        print(_assign("imm_1byte", functools.reduce(_or, ib_form_exprs)), file=io)
+
+
 
 def main():
     assert _COMMANDS_JSON.exists(), f"codegen dep missing: {_COMMANDS_JSON}"
