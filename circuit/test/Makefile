@@ -11,9 +11,9 @@ TESTBENCH_EXES := $(addsuffix .tb.vvp,$(MODULES))
 .PHONY: all
 all: $(TESTBENCH_EXES)
 
-.PHONT: test
-test: $(TESTBENCH_EXES)
-	./run-tests
+.PHONT: check
+check: $(TESTBENCH_EXES)
+	@./run-tests
 
 $(TESTBENCH_EXES): $(TESTBENCHES) $(TESTVECTORS)
 	iverilog -o $@ -I.. -I../include -y.. $(basename $@).gen.v
