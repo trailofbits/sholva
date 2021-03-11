@@ -18,6 +18,37 @@ fetch fetch_x(
   .raw_hint2(raw_hint2)
 );
 
+
+// Decode hints.
+wire [1:0] hint1_mask;
+wire hint1_rw;
+wire [31:0] hint1_address;
+wire [31:0] hint1_data;
+
+decode_hint decode_hint1(
+  .raw_hint(raw_hint1),
+
+  .mask(hint1_mask),
+  .rw(hint1_rw),
+  .address(hint1_address),
+  .data(hint1_data)
+);
+
+wire [1:0] hint2_mask;
+wire hint2_rw;
+wire [31:0] hint2_address;
+wire [31:0] hint2_data;
+
+decode_hint decode_hint2(
+  .raw_hint(raw_hint2),
+
+  .mask(hint2_mask),
+  .rw(hint2_rw),
+  .address(hint2_address),
+  .data(hint2_data)
+);
+
+
 // Decode prefix: Extract prefix information from the raw instruction.
 
 wire [79:0] unprefixed_instr;
