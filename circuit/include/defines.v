@@ -38,5 +38,11 @@
 // Trinary, reg of Mod/RM for r(+w), r/m of ModR/M for read, immediate for read.
 `define OPND_ENC_MODREGRM_REG_RM_IMM 4'd10
 
+// Trinary, r/m of ModR/M for r(+w), reg of ModR/M for read, immediate for read.
+`define OPND_ENC_MODREGRM_RM_REG_IMM 4'd11
+
+// Trinary, r/m of ModR/M for r(+w), reg of ModR/M for read, implicit CL reg for read.
+`define OPND_ENC_MODREGRM_RM_REG_CL 4'd12
+
 // Unknown operand encoding, should never be hit.
 `define OPND_ENC_UNKNOWN 4'd15
