@@ -177,6 +177,8 @@ def _gen_opc_map_v(commands):
                 enc_expr = _opc_eq(enc["opc"])
                 if enc["esc"]:
                     enc_expr = _and("is_2byte", enc_expr)
+                else:
+                    enc_expr = _and(_not("is_2byte"), enc_expr)
                 if enc["ext"] is not None:
                     enc_expr = _and(enc_expr, _opc_ext_eq(enc["ext"]))
                 enc_exprs.append(enc_expr)
@@ -199,6 +201,8 @@ def _gen_opc_map_v(commands):
                 enc_expr = _opc_eq(op_enc["opc"])
                 if op_enc["esc"]:
                     enc_expr = _and("is_2byte", enc_expr)
+                else:
+                    enc_expr = _and(_not("is_2byte"), enc_expr)
                 if op_enc["ext"] is not None:
                     enc_expr = _and(enc_expr, _opc_ext_eq(op_enc["ext"]))
                 enc_exprs.append(enc_expr)
@@ -226,6 +230,8 @@ def _gen_opc_map_v(commands):
             rb_form_expr = _opc_eq(enc["opc"])
             if enc["esc"]:
                 rb_form_expr = _and("is_2byte", rb_form_expr)
+            else:
+                enc_expr = _and(_not("is_2byte"), enc_expr)
             if enc["ext"] is not None:
                 rb_form_expr = _and(rb_form_expr, _opc_ext_eq(enc["ext"]))
             rb_form_exprs.append(rb_form_expr)
@@ -238,6 +244,8 @@ def _gen_opc_map_v(commands):
             ib_form_expr = _opc_eq(enc["opc"])
             if enc["esc"]:
                 ib_form_expr = _and("is_2byte", ib_form_expr)
+            else:
+                enc_expr = _and(_not("is_2byte"), enc_expr)
             if enc["ext"] is not None:
                 ib_form_expr = _and(ib_form_expr, _opc_ext_eq(enc["ext"]))
             ib_form_exprs.append(ib_form_expr)
