@@ -7,7 +7,6 @@ outputs:
   - "320 raw_regs"
   - "72 raw_hint1"
   - "72 raw_hint2"
-vector: fetch.tv
 vector_fmt: hex
 vector_specs:
   - step: 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
