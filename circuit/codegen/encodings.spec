@@ -7,7 +7,7 @@
 # encoding specifications. Each specification takes the following form, with
 # `[]` indicating "optional" and `{X,Y}` indicating "choice":
 #
-#  [x]HH[/D][+r{b,w,d,*}][+i{b,w,d,*}][~{I,D,M,O,MI,MR,RM,OI,AI,RMI,ZO}]
+#  [x]HH[/D][+r{b,w,d,*}][+i{b,w,d,*}][~{I,D,M,O,MI,MR,RM,OI,AI,RMI,MRI,MRC,ZO}]
 #
 # Where:
 # * `x` indicates that that the `0Fh` opcode escape was used;
@@ -28,6 +28,8 @@
 #   - `~OI`: Binary, reg of lower opcode bits for r(+w) and immediate for read
 #   - `~AI`: Binary, implicit accumulator reg for r(+w) and immediate for read
 #   - `~RMI`: Trinary, reg of Mod/RM for r(+w), r/m of ModR/M for read, immediate for read
+#   - `~MRI`: Trinary, r/m of ModR/M for r(+w), reg of ModR/M for read, immediate for read
+#   - `~MRC`: Trinary, r/m of ModR/M for r(+w), reg of ModR/M for read, implicit CL reg for read
 #   - `~ZO`: No explicit operands whatsoever
 #
 # By way of example: here's the encoding form for `AND r/m32, imm8`:
@@ -109,9 +111,8 @@ CMD_SAHF:9E~ZO
 CMD_SBB:18~MR,19~MR,1A~RM,1B~RM,1C+ib~I,1D+i*~MI,80/3+ib~MI,81/3+i*~MI,83/3+ib~MI
 CMD_SCAS:AE~ZO,AF~ZO
 
-# TODO(ww): Figure out three-operand forms here (MRI, MRC)
-# CMD_SHLD:xA4,xA5
-# CMD_SHRD:xAC,xAD
+CMD_SHLD:xA4+ib~MRI,xA5~MRC
+CMD_SHRD:xAC+ib~MRI,xAD~MRC
 
 CMD_STC:F9~ZO
 CMD_STD:FD~ZO

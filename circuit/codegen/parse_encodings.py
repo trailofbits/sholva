@@ -12,7 +12,7 @@ _ENCODINGS_SPEC = _HERE / "encodings.spec"
 _COMMANDS_JSON = _HERE / "commands.json"
 
 
-_OPERAND_ENCODINGS = {"I", "D", "M", "O", "MI", "MR", "RM", "OI", "AI", "RMI", "ZO"}
+_OPERAND_ENCODINGS = {"I", "D", "M", "O", "MI", "MR", "RM", "OI", "AI", "RMI", "MRI", "MRC", "ZO"}
 _MODIFIERS = {"ib", "iw", "id", "i*", "rb", "rw", "rd", "r*"}
 
 
