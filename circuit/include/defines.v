@@ -32,5 +32,11 @@
 // Binary, reg of opcode bits for r(+w) and immediate for read.
 `define OPND_ENC_REG_IMM 4'd8
 
+// Binary, implicit accumulator reg for r(+w) and immediate for read.
+`define OPND_ENC_EAX_IMM 4'd9
+
+// Trinary, reg of Mod/RM for r(+w), r/m of ModR/M for read, immediate for read.
+`define OPND_ENC_MODREGRM_REG_RM_IMM 4'd10
+
 // Unknown operand encoding, should never be hit.
-`define OPND_ENC_UNKNOWN 4'd9
+`define OPND_ENC_UNKNOWN 4'd15
