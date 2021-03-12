@@ -1,7 +1,9 @@
 VFLAGS := -gstrict-expr-width
 
+ALL_V := $(shell find . -name "*.v")
+
 .PHONY: all
-all: codegen
+all: codegen $(ALL_V)
 	iverilog $(VFLAGS) -ycircuit \
 		-Icircuit \
 		-Icircuit/include \

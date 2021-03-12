@@ -26,6 +26,10 @@ _OPND_ENC_MAP = {
     "MR": "OPND_ENC_MODREGRM_RM_REG",
     "RM": "OPND_ENC_MODREGRM_REG_RM",
     "OI": "OPND_ENC_REG_IMM",
+    "AI": "OPND_ENC_EAX_IMM",
+    "RMI": "OPND_ENC_MODREGRM_REG_RM_IMM",
+    "MRI": "OPND_ENC_MODREGRM_RM_REG_IMM",
+    "MRC": "OPND_ENC_MODREGRM_REG_RM_CL",
     "ZO": "OPND_ENC_NONE",
 }
 
@@ -122,6 +126,16 @@ def _not(expr):
     return f"(~{_paren(expr)})"
 
 
+def _bool(p, expr):
+    """
+    Emit an expression if `p`, or NOT expression if not `p`.
+    """
+    if p:
+        return expr
+    else:
+        return _not(expr)
+
+
 def _ternary(cond, ifthen, elsethen):
     """
     Emit a ternary expression.
@@ -170,9 +184,7 @@ def _gen_opc_map_v(commands):
         for cmd in commands:
             enc_exprs = []
             for enc in cmd["encs"]:
-                enc_expr = _opc_eq(enc["opc"])
-                if enc["esc"]:
-                    enc_expr = _and("is_2byte", enc_expr)
+                enc_expr = _and(_bool(enc["esc"], "is_2byte"), _opc_eq(enc["opc"]))
                 if enc["ext"] is not None:
                     enc_expr = _and(enc_expr, _opc_ext_eq(enc["ext"]))
                 enc_exprs.append(enc_expr)
@@ -192,18 +204,16 @@ def _gen_opc_map_v(commands):
         for opnd_enc, op_encs in opnd_enc_map.items():
             enc_exprs = []
             for op_enc in op_encs:
-                enc_expr = _opc_eq(op_enc["opc"])
-                if op_enc["esc"]:
-                    enc_expr = _and("is_2byte", enc_expr)
+                enc_expr = _and(
+                    _bool(op_enc["esc"], "is_2byte"), _opc_eq(op_enc["opc"])
+                )
                 if op_enc["ext"] is not None:
                     enc_expr = _and(enc_expr, _opc_ext_eq(op_enc["ext"]))
                 enc_exprs.append(enc_expr)
             opnd_enc_expr = functools.reduce(_or, enc_exprs)
             opnd_enc_exprs.append((_OPND_ENC_MAP[opnd_enc], opnd_enc_expr))
         print(
-            _assign(
-                "opnd_form", _ternary_chain(opnd_enc_exprs, "OPND_ENC_UNKNOWN")
-            ),
+            _assign("opnd_form", _ternary_chain(opnd_enc_exprs, "OPND_ENC_UNKNOWN")),
             file=io,
         )
 
@@ -219,9 +229,7 @@ def _gen_opc_map_v(commands):
 
         rb_form_exprs = []
         for enc in rb_forms:
-            rb_form_expr = _opc_eq(enc["opc"])
-            if enc["esc"]:
-                rb_form_expr = _and("is_2byte", rb_form_expr)
+            rb_form_expr = _and(_bool(enc["esc"], "is_2byte"), _opc_eq(enc["opc"]))
             if enc["ext"] is not None:
                 rb_form_expr = _and(rb_form_expr, _opc_ext_eq(enc["ext"]))
             rb_form_exprs.append(rb_form_expr)
@@ -231,14 +239,11 @@ def _gen_opc_map_v(commands):
 
         ib_form_exprs = []
         for enc in ib_forms:
-            ib_form_expr = _opc_eq(enc["opc"])
-            if enc["esc"]:
-                ib_form_expr = _and("is_2byte", ib_form_expr)
+            ib_form_expr = _and(_bool(enc["esc"], "is_2byte"), _opc_eq(enc["opc"]))
             if enc["ext"] is not None:
                 ib_form_expr = _and(ib_form_expr, _opc_ext_eq(enc["ext"]))
             ib_form_exprs.append(ib_form_expr)
         print(_assign("imm_1byte", functools.reduce(_or, ib_form_exprs)), file=io)
-
 
 
 def main():

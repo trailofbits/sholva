@@ -7,7 +7,7 @@
 # encoding specifications. Each specification takes the following form, with
 # `[]` indicating "optional" and `{X,Y}` indicating "choice":
 #
-#  [x]HH[/D][+r{b,w,d,*}][+i{b,w,d,*}][~{I,D,M,O,MI,MR,RM,OI,ZO}]
+#  [x]HH[/D][+r{b,w,d,*}][+i{b,w,d,*}][~{I,D,M,O,MI,MR,RM,OI,AI,RMI,MRI,MRC,ZO}]
 #
 # Where:
 # * `x` indicates that that the `0Fh` opcode escape was used;
@@ -26,6 +26,10 @@
 #   - `~MR`: Binary, r/m of ModR/M for r(+w) and reg of ModR/M for read
 #   - `~RM`: Binary, reg of ModR/M for r(+w) and r/m of ModR/M for read
 #   - `~OI`: Binary, reg of lower opcode bits for r(+w) and immediate for read
+#   - `~AI`: Binary, implicit accumulator reg for r(+w) and immediate for read
+#   - `~RMI`: Trinary, reg of Mod/RM for r(+w), r/m of ModR/M for read, immediate for read
+#   - `~MRI`: Trinary, r/m of ModR/M for r(+w), reg of ModR/M for read, immediate for read
+#   - `~MRC`: Trinary, r/m of ModR/M for r(+w), reg of ModR/M for read, implicit CL reg for read
 #   - `~ZO`: No explicit operands whatsoever
 #
 # By way of example: here's the encoding form for `AND r/m32, imm8`:
@@ -38,11 +42,15 @@
 #
 # * These specs are definitely an overapproximation in some places.
 #   For example, there are some MOV forms below that we probably shouldn't allow.
+#
+# * These specs are not enough, on their own, to fully interpret the operand
+#   semantics of an instruction. See `operands.spec` for a complementary
+#   spec.
 
 
-CMD_ADD:00~MR,01~MR,02~RM,03~RM,04+ib~I,05+i*~I,80/0+ib~MI,81/0+i*~MI,83/0+ib~MI
-CMD_ADC:10~MR,11~MR,12~RM,13~RM,14+ib~I,15+i*~I,80/2+ib~MI,81/2+i*~MI,83/2+ib~MI
-CMD_AND:20~MR,21~MR,22~RM,23~RM,24+ib~I,25+i*~I,80/4+ib~MI,81/4+i*~MI,83/4+ib~MI
+CMD_ADD:00~MR,01~MR,02~RM,03~RM,04+ib~AI,05+i*~AI,80/0+ib~MI,81/0+i*~MI,83/0+ib~MI
+CMD_ADC:10~MR,11~MR,12~RM,13~RM,14+ib~AI,15+i*~AI,80/2+ib~MI,81/2+i*~MI,83/2+ib~MI
+CMD_AND:20~MR,21~MR,22~RM,23~RM,24+ib~AI,25+i*~AI,80/4+ib~MI,81/4+i*~MI,83/4+ib~MI
 CMD_BSF:xBC~RM
 CMD_BSR:xBD~RM
 CMD_BT:xA3~MR,xBA/4+ib~MI
@@ -65,8 +73,7 @@ CMD_DEC:48+r*~O,FE/1~M,FF/1~M
 CMD_DIV:F6/6~M,F7/6~M
 CMD_IDIV:F6/7~M,F7/7~M
 
-# TODO(ww): Figure out the three-operand form of IMUL (RMI)
-# CMD_IMUL:69,6B,F6/5,F7/5,xAF
+CMD_IMUL:69+i*~RMI,6B+ib~RMI,F6/5~M,F7/5~M,xAF~RM
 
 CMD_INC:40+r*~O,FE/0~M,FF/0~M
 CMD_Jcc:70~D,71~D,72~D,73~D,74~D,75~D,76~D,77~D,78~D,79~D,7A~D,7B~D,7C~D,7D~D,7E~D,7F~D,x80~D,x81~D,x82~D,x83~D,x84~D,x85~D,x86~D,x87~D,x88~D,x89~D,x8A~D,x8B~D,x8C~D,x8D~D,x8E~D,x8F~D
@@ -83,6 +90,8 @@ CMD_MOV:88~MR,89~MR,8A~RM,8B~RM,8C~MR,8E~RM,B0+rb+ib~OI,B8+r*+i*~OI,C6/0+ib~MI,C
 CMD_MOVS:A4~ZO,A5~ZO
 CMD_MOVSX:63~RM,xBE~RM,xBF~RM
 CMD_MOVZX:xB6~RM,xB7~RM
+
+# TODO(ww): MUL writes to EDX:EAX, figure that out.
 CMD_MUL:F6/4~M,F7/4~M
 CMD_NEG:F6/3~M,F7/3~M
 CMD_NOP:x1F/0~M
@@ -102,9 +111,8 @@ CMD_SAHF:9E~ZO
 CMD_SBB:18~MR,19~MR,1A~RM,1B~RM,1C+ib~I,1D+i*~MI,80/3+ib~MI,81/3+i*~MI,83/3+ib~MI
 CMD_SCAS:AE~ZO,AF~ZO
 
-# TODO(ww): Figure out three-operand forms here (MRI, MRC)
-# CMD_SHLD:xA4,xA5
-# CMD_SHRD:xAC,xAD
+CMD_SHLD:xA4+ib~MRI,xA5~MRC
+CMD_SHRD:xAC+ib~MRI,xAD~MRC
 
 CMD_STC:F9~ZO
 CMD_STD:FD~ZO
