@@ -117,4 +117,34 @@ decode_opc_phase2 decode_opc_phase2_x(
 // Decode operands (phase 1): take the operand form and some information about widths,
 // return concrete operand selectors.
 
+// TODO
+
+
+// Register writeback + updates.
+wire [31:0] o_eax, o_ebx, o_ecx, o_edx, o_esi, o_edi, o_esp, o_ebp, o_eip, o_eflags;
+
+regfile regfile_x(
+  .i_eax(eax),
+  .i_ebx(ebx),
+  .i_ecx(ecx),
+  .i_edx(edx),
+  .i_esi(esi),
+  .i_edi(edi),
+  .i_esp(esp),
+  .i_ebp(ebp),
+  .i_eip(eip),
+  .i_eflags(eflags),
+
+  .o_eax(o_eax),
+  .o_ebx(o_ebx),
+  .o_ecx(o_ecx),
+  .o_edx(o_edx),
+  .o_esi(o_esi),
+  .o_edi(o_edi),
+  .o_esp(o_esp),
+  .o_ebp(o_ebp),
+  .o_eip(o_eip),
+  .o_eflags(o_eflags)
+);
+
 endmodule
