@@ -99,7 +99,7 @@ decode_opc_phase1 decode_opc_phase1_x(
 
 // Decode opcode (phase 2): extract the rough form of the opcode
 
-wire [6:0] opc;
+wire [5:0] opc;
 wire [3:0] opnd_form;
 wire imm_1byte;
 wire reg_1byte;
