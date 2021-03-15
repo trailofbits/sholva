@@ -46,3 +46,11 @@
 
 // Unknown operand encoding, should never be hit.
 `define OPND_ENC_UNKNOWN 4'd15
+
+// EFLAGS bits we care about
+`define EFLAGS_CF 32'd0
+`define EFLAGS_PF 32'd4
+`define EFLAGS_ZF 32'd6
+`define EFLAGS_SF 32'd7
+`define EFLAGS_DF 32'd10
+`define EFLAGS_OF 32'd11

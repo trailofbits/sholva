@@ -128,7 +128,8 @@ decode_opc_phase2 decode_opc_phase2_x(
 wire [2:0] gpr_selector = 3'd0; // TODO
 wire [31:0] gpr_wr = 32'd0; // TODO
 wire [31:0] next_eip = 32'd0; // TODO
-wire [4:0] alu_flags = 5'd0; // TODO
+wire alu_wr = 0; // TODO
+wire [5:0] alu_flags = 6'd0; // TODO
 
 wire [31:0] o_eax, o_ebx, o_ecx, o_edx, o_esi, o_edi, o_esp, o_ebp, o_eip, o_eflags;
 
@@ -147,6 +148,7 @@ regfile regfile_x(
   .gpr_selector(gpr_selector),
   .gpr_wr(gpr_wr),
   .next_eip(next_eip),
+  .alu_wr(alu_wr),
   .alu_flags(alu_flags),
 
   .o_eax(o_eax),
