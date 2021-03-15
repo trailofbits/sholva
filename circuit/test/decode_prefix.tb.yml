@@ -10,9 +10,24 @@ outputs:
   - "2 prefix_count"
 vector_fmt: binary
 vector_specs:
-  - raw_instr: 0x909090909090909090909090
+  - _description: "no prefixes, only NOPs"
+    raw_instr: 0x909090909090909090909090
     unprefixed_instr: 0x90909090909090909090
     prefix_operand_32bit: 0
     prefix_address_32bit: 0
     prefix_rep: 0
     prefix_count: 0
+  - _description: "REP prefix"
+    raw_instr: 0x9090909090909090909090F3
+    unprefixed_instr: 0x90909090909090909090
+    prefix_operand_32bit: 0
+    prefix_address_32bit: 0
+    prefix_rep: 0b10
+    prefix_count: 0b01
+  - _description: "REPNE prefix"
+    raw_instr: 0x9090909090909090909090F2
+    unprefixed_instr: 0x90909090909090909090
+    prefix_operand_32bit: 0
+    prefix_address_32bit: 0
+    prefix_rep: 0b01
+    prefix_count: 0b01
