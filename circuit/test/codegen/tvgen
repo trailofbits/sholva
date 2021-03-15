@@ -27,8 +27,9 @@ def emit_tv(spec)
     spec[:vector_specs].each do |vec_spec|
       desc = vec_spec.delete :_description
       comment tv_io, desc unless desc.nil?
-      raw_wire = vec_spec.map do |wire_name, wire_value|
-        wire = all_wires.find { |w| w.name == wire_name.to_s }
+
+      raw_wire = all_wires.map do |wire|
+        wire_value = vec_spec.fetch(wire.name.to_sym, 0)
         if spec[:vector_fmt] == "hex"
           wire_value.to_s(16).rjust(wire.size / 8, "0")
         else
