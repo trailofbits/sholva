@@ -9,7 +9,6 @@ inputs:
   - "32 i_edi"
   - "32 i_esp"
   - "32 i_ebp"
-  - "32 i_eip"
   - "32 i_eflags"
   - "3 gpr_selector"
   - "32 gpr_wr"

@@ -142,7 +142,6 @@ regfile regfile_x(
   .i_edi(edi),
   .i_esp(esp),
   .i_ebp(ebp),
-  .i_eip(eip),
   .i_eflags(eflags),
 
   .gpr_selector(gpr_selector),

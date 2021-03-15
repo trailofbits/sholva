@@ -1,8 +1,9 @@
 `include "defines.v"
 
 module regfile(
-  // Initial GPR/EIP/flag states.
-  input [31:0] i_eax, i_ebx, i_ecx, i_edx, i_esi, i_edi, i_esp, i_ebp, i_eip, i_eflags,
+  // Initial GPR/flag states.
+  // We unconditionally modify the EIP, so no need for it as an input.
+  input [31:0] i_eax, i_ebx, i_ecx, i_edx, i_esi, i_edi, i_esp, i_ebp, i_eflags,
 
   // GPR selector for register to update.
   // TODO(ww): We're probably going to need multiple of these, for
