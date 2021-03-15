@@ -32,7 +32,7 @@ assign o_eip = next_eip;
 
 // Status flag updates
 assign o_eflags = alu_wr ?
-  { i_eflags[31:12], alu_flags[5], alu_flags[4], i_eflags[9:8], alu_flags[3], alu_flags[2], i_eflags[5], alu_flags[1], i_eflags[3:1], alu_flags[0] }
+  { i_eflags[31:12], alu_flags[5:4], i_eflags[9:8], alu_flags[3:2], i_eflags[5], alu_flags[1], i_eflags[3:1], alu_flags[0] }
   : i_eflags;
 
 endmodule
