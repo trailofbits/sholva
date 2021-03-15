@@ -16,7 +16,9 @@ jobs:
         python-version: "^3.7"
     - name: deps
       run: |
-        sudo apt install -y iverilog
+        sudo apt install -y iverilog verilator
+    - name: lint
+      run: make lint
     - name: build
       run: make
     - name: test
