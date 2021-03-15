@@ -4,13 +4,12 @@ module regfile(
   // Initial GPR/EIP/flag states.
   input [31:0] i_eax, i_ebx, i_ecx, i_edx, i_esi, i_edi, i_esp, i_ebp, i_eip, i_eflags,
 
-  // GPR selector and value to write.
+  // GPR selector for register to update.
   // TODO(ww): We're probably going to need multiple of these, for
   // explicit register write + implicit register modify (like decrementing ECX)
   // Or: maybe we just include a counter wire that we use with the direction
   // flag to determine whether to increment/decrement ECX/EDX?
   input [2:0] gpr_selector,
-  input [31:0] gpr_wr,
 
   // The next EIP value.
   input [31:0] next_eip,
@@ -21,6 +20,21 @@ module regfile(
 
   // Output GPR/EIP/flag states.
   output [31:0] o_eax, o_ebx, o_ecx, o_edx, o_esi, o_edi, o_esp, o_ebp, o_eip, o_eflags
+);
+
+wire [31:0] gpr_wr;
+mux8_32 mux8_32_x(
+  .sel(gpr_selector),
+  .in0(i_eax),
+  .in1(i_ebx),
+  .in2(i_ecx),
+  .in3(i_edx),
+  .in4(i_esi),
+  .in5(i_edi),
+  .in6(i_esp),
+  .in7(i_ebp),
+
+  .out(gpr_wr)
 );
 
 // NOTE(ww): There is absolutely a better way to do this.

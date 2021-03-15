@@ -12,7 +12,6 @@ inputs:
   - "32 i_eip"
   - "32 i_eflags"
   - "3 gpr_selector"
-  - "32 gpr_wr"
   - "32 next_eip"
   - "1 alu_wr"
   - "6 alu_flags"

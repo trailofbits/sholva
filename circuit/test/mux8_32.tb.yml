@@ -1,7 +1,7 @@
 module: mux8_32
 file: ../mux8_32.v
 inputs:
-  - "4 sel"
+  - "3 sel"
   - "32 in0"
   - "32 in1"
   - "32 in2"

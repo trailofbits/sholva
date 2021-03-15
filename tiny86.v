@@ -126,7 +126,6 @@ decode_opc_phase2 decode_opc_phase2_x(
 
 // Register writeback + updates.
 wire [2:0] gpr_selector = 3'd0; // TODO
-wire [31:0] gpr_wr = 32'd0; // TODO
 wire [31:0] next_eip = 32'd0; // TODO
 wire alu_wr = 0; // TODO
 wire [5:0] alu_flags = 6'd0; // TODO
@@ -146,7 +145,6 @@ regfile regfile_x(
   .i_eflags(eflags),
 
   .gpr_selector(gpr_selector),
-  .gpr_wr(gpr_wr),
   .next_eip(next_eip),
   .alu_wr(alu_wr),
   .alu_flags(alu_flags),
