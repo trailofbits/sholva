@@ -120,6 +120,10 @@ decode_opc_phase2 decode_opc_phase2_x(
 // TODO
 
 
+// Execute
+// TODO
+
+
 // Register writeback + updates.
 wire [31:0] o_eax, o_ebx, o_ecx, o_edx, o_esi, o_edi, o_esp, o_ebp, o_eip, o_eflags;
 
