@@ -12,6 +12,7 @@ inputs:
   - "32 i_eip"
   - "32 i_eflags"
   - "3 gpr_selector"
+  - "32 gpr_wr"
   - "32 next_eip"
   - "1 alu_wr"
   - "6 alu_flags"
@@ -43,3 +44,8 @@ vector_specs:
     alu_wr: 0b1
     alu_flags: 0b000000
     o_eflags: 0b11111111111111111111001100101110
+  - _description: "gpr_selector for EAX"
+    i_eax: 0x000000ff
+    gpr_selector: 0x0
+    gpr_wr: 0xffffff00
+    o_eax: 0xffffff00
