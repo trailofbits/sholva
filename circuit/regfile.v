@@ -27,16 +27,12 @@ assign o_esi = i_esi;
 assign o_edi = i_edi;
 assign o_esp = i_esp;
 assign o_ebp = i_ebp;
-assign o_eip = i_eip;
-assign o_eflags = i_eflags;
+
+assign o_eip = next_eip;
 
 // Status flag updates
-// TODO(ww): Refactor.
-assign o_eflags[`EFLAGS_CF] = alu_wr ? alu_flags[0] : i_eflags[`EFLAGS_CF];
-assign o_eflags[`EFLAGS_PF] = alu_wr ? alu_flags[1] : i_eflags[`EFLAGS_PF];
-assign o_eflags[`EFLAGS_ZF] = alu_wr ? alu_flags[2] : i_eflags[`EFLAGS_ZF];
-assign o_eflags[`EFLAGS_SF] = alu_wr ? alu_flags[3] : i_eflags[`EFLAGS_SF];
-assign o_eflags[`EFLAGS_DF] = alu_wr ? alu_flags[4] : i_eflags[`EFLAGS_DF];
-assign o_eflags[`EFLAGS_OF] = alu_wr ? alu_flags[5] : i_eflags[`EFLAGS_OF];
+assign o_eflags = alu_wr ?
+  { i_eflags[31:12], alu_flags[5], alu_flags[4], i_eflags[9:8], alu_flags[3], alu_flags[2], i_eflags[5], alu_flags[1], i_eflags[3:1], alu_flags[0] }
+  : i_eflags;
 
 endmodule
