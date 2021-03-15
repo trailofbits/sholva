@@ -54,3 +54,13 @@
 `define EFLAGS_SF 32'd7
 `define EFLAGS_DF 32'd10
 `define EFLAGS_OF 32'd11
+
+// GPR numbering for register selectors/identification
+`define REG_EAX 3'd0
+`define REG_EBX 3'd1
+`define REG_ECX 3'd2
+`define REG_EDX 3'd3
+`define REG_ESI 3'd4
+`define REG_EDI 3'd5
+`define REG_ESP 3'd6
+`define REG_EBP 3'd7

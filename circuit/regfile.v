@@ -5,6 +5,10 @@ module regfile(
   input [31:0] i_eax, i_ebx, i_ecx, i_edx, i_esi, i_edi, i_esp, i_ebp, i_eip, i_eflags,
 
   // GPR selector and value to write.
+  // TODO(ww): We're probably going to need multiple of these, for
+  // explicit register write + implicit register modify (like decrementing ECX)
+  // Or: maybe we just include a counter wire that we use with the direction
+  // flag to determine whether to increment/decrement ECX/EDX?
   input [2:0] gpr_selector,
   input [31:0] gpr_wr,
 
@@ -19,14 +23,15 @@ module regfile(
   output [31:0] o_eax, o_ebx, o_ecx, o_edx, o_esi, o_edi, o_esp, o_ebp, o_eip, o_eflags
 );
 
-assign o_eax = i_eax;
-assign o_ebx = i_ebx;
-assign o_ecx = i_ecx;
-assign o_edx = i_edx;
-assign o_esi = i_esi;
-assign o_edi = i_edi;
-assign o_esp = i_esp;
-assign o_ebp = i_ebp;
+// NOTE(ww): There is absolutely a better way to do this.
+assign o_eax = gpr_selector == `REG_EAX ? gpr_wr : i_eax;
+assign o_ebx = gpr_selector == `REG_EBX ? gpr_wr : i_ebx;
+assign o_ecx = gpr_selector == `REG_ECX ? gpr_wr : i_ecx;
+assign o_edx = gpr_selector == `REG_EDX ? gpr_wr : i_edx;
+assign o_esi = gpr_selector == `REG_ESI ? gpr_wr : i_esi;
+assign o_edi = gpr_selector == `REG_EDI ? gpr_wr : i_edi;
+assign o_esp = gpr_selector == `REG_ESP ? gpr_wr : i_esp;
+assign o_ebp = gpr_selector == `REG_EBP ? gpr_wr : i_ebp;
 
 assign o_eip = next_eip;
 
