@@ -21,9 +21,12 @@ def emit_tv(spec)
     all_wires = [*spec[:inputs], *spec[:outputs]]
 
     summary = all_wires.map { |x| "(#{x.name})" }.join("_")
-    comment(tv_io, summary)
+    comment tv_io, summary
+    tv_io.puts
 
     spec[:vector_specs].each do |vec_spec|
+      desc = vec_spec.delete :_description
+      comment tv_io, desc unless desc.nil?
       raw_wire = vec_spec.map do |wire_name, wire_value|
         wire = all_wires.find { |w| w.name == wire_name.to_s }
         if spec[:vector_fmt] == "hex"

@@ -1,0 +1,109 @@
+module: regfile
+file: ../regfile.v
+inputs:
+  - "32 i_eax"
+  - "32 i_ebx"
+  - "32 i_ecx"
+  - "32 i_edx"
+  - "32 i_esi"
+  - "32 i_edi"
+  - "32 i_esp"
+  - "32 i_ebp"
+  - "32 i_eip"
+  - "32 i_eflags"
+  - "3 gpr_selector"
+  - "32 gpr_wr"
+  - "32 next_eip"
+  - "1 alu_wr"
+  - "6 alu_flags"
+outputs:
+  - "32 o_eax"
+  - "32 o_ebx"
+  - "32 o_ecx"
+  - "32 o_edx"
+  - "32 o_esi"
+  - "32 o_edi"
+  - "32 o_esp"
+  - "32 o_ebp"
+  - "32 o_eip"
+  - "32 o_eflags"
+vector_fmt: binary
+vector_specs:
+  - _description: "no changes, EFLAGS is not updated unless alu_wr is high"
+    i_eax: 0x00
+    i_ebx: 0x00
+    i_ecx: 0x00
+    i_edx: 0x00
+    i_esi: 0x00
+    i_edi: 0x00
+    i_esp: 0x00
+    i_ebp: 0x00
+    i_eip: 0x00
+    i_eflags: 0x00
+    gpr_selector: 0x00
+    gpr_wr: 0x00
+    next_eip: 0x00
+    alu_wr: 0x00
+    alu_flags: 0b111111
+    o_eax: 0x00
+    o_ebx: 0x00
+    o_ecx: 0x00
+    o_edx: 0x00
+    o_esi: 0x00
+    o_edi: 0x00
+    o_esp: 0x00
+    o_ebp: 0x00
+    o_eip: 0x00
+    o_eflags: 0x00
+  - _description: "EFLAGS is updated based on the ALU flags + alu_wr (all high)"
+    i_eax: 0x00
+    i_ebx: 0x00
+    i_ecx: 0x00
+    i_edx: 0x00
+    i_esi: 0x00
+    i_edi: 0x00
+    i_esp: 0x00
+    i_ebp: 0x00
+    i_eip: 0x00
+    i_eflags: 0x00
+    gpr_selector: 0x00
+    gpr_wr: 0x00
+    next_eip: 0x00
+    alu_wr: 0b1
+    alu_flags: 0b111111
+    o_eax: 0x00
+    o_ebx: 0x00
+    o_ecx: 0x00
+    o_edx: 0x00
+    o_esi: 0x00
+    o_edi: 0x00
+    o_esp: 0x00
+    o_ebp: 0x00
+    o_eip: 0x00
+    o_eflags: 0b00000000000000000000110011010001
+  - _description: "EFLAGS is updated based on the ALU flags + alu_wr (all low)"
+    i_eax: 0x00
+    i_ebx: 0x00
+    i_ecx: 0x00
+    i_edx: 0x00
+    i_esi: 0x00
+    i_edi: 0x00
+    i_esp: 0x00
+    i_ebp: 0x00
+    i_eip: 0x00
+    i_eflags: 0b11111111111111111111111111111111
+    gpr_selector: 0x00
+    gpr_wr: 0x00
+    next_eip: 0x00
+    alu_wr: 0b1
+    alu_flags: 0b000000
+    o_eax: 0x00
+    o_ebx: 0x00
+    o_ecx: 0x00
+    o_edx: 0x00
+    o_esi: 0x00
+    o_edi: 0x00
+    o_esp: 0x00
+    o_ebp: 0x00
+    o_eip: 0x00
+    o_eflags: 0b11111111111111111111001100101110
