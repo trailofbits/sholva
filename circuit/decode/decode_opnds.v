@@ -65,13 +65,23 @@ wire has_sib = has_modrm
 // TODO(ww): Assign opndN_r_form as OPND_IMM, OPND_MEM, etc.
 
 // For operand#0, our register selector can come from three sources:
+// TODO(ww): That's wrong. We also need to handle implicit register selector operands here,
+// like OPND_ENC_EAX_IMM and some of the "zero-operand" encodings. Latter needs thought.
 // * The lower three bits of the opcode itself (OPND_ENC_REG, OPND_ENC_REG_IMM)
-// * The r/m selector of ModR/M (OPND_ENC_MODREGRM_RM_*) when in register mode (mod=0b11)
+// * The r/m selector of ModR/M (OPND_ENC_MODREGRM_RM_*) when in register direct mode (mod=0b11)
 // * The reg selector of ModR/M (OPND_ENC_MODREGRM_REG_*)
 wire [2:0] opnd0_r_regsel = (opnd_form == `OPND_ENC_REG || opnd_form == `OPND_ENC_REG_IMM) ?
                                 unprefixed_instr[2:0] :
                             (opnd0_modrm_rm && maybe_modrm[7:6] == 2'b11) ?
                                 maybe_modrm[2:0] :
-                            (opnd0_modrm_reg) ? maybe_modrm[5:3] : 3'b000;
+                            (opnd0_modrm_reg) ? maybe_modrm[5:3] : 3'bxxx;
+
+// For operand#1, our register selector can come from N sources:
+// * The r/m selector of ModR/M (OPND_ENC_MODREGRM_REG_RM*) when in register direct mode (mod=0b11)
+// * The reg selector of ModR/M (OPND_ENC_MODREGRM_RM_REG*)
+// * TODO(ww): Implicit opnd1 register sources? Presumably some of the string operations?
+wire [2:0] opnd1_r_regsel = (opnd1_modrm_rm && maybe_modrm[7:6] == 2'b11) ?
+                                maybe_modrm[2:0] :
+                            (opnd1_modrm_reg) ? maybe_modrm[5:3] : 3'bxxx;
 
 endmodule
