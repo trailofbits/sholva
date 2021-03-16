@@ -39,8 +39,10 @@ wire opnd0_modrm_rm = opnd_form == `OPND_ENC_MODREGRM_RM ||
 wire opnd0_modrm_reg = opnd_form == `OPND_ENC_MODREGRM_REG_RM ||
                        opnd_form == `OPND_ENC_MODREGRM_REG_RM_IMM;
 
+// ModR/M encodings where R/M is operand#1.
 wire opnd1_modrm_rm = opnd0_modrm_reg;
 
+// ModR/M encodings where REG is operand#1.
 wire opnd1_modrm_reg = opnd_form == `OPND_ENC_MODREGRM_RM_REG ||
                        opnd_form == `OPND_ENC_MODREGRM_RM_REG_IMM ||
                        opnd_form == `OPND_ENC_MODREGRM_RM_REG_CL;
