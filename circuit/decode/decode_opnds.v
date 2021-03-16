@@ -2,6 +2,7 @@
 
 module decode_opnds(
   input [71:0] unprefixed_instr,
+  input [31:0] eax, ebx, ecx, edx, esi, edi, esp, ebp,
   input [5:0] opc,
   input [3:0] opnd_form,
   input imm_1byte,
@@ -83,5 +84,43 @@ wire [2:0] opnd0_r_regsel = (opnd_form == `OPND_ENC_REG || opnd_form == `OPND_EN
 wire [2:0] opnd1_r_regsel = (opnd1_modrm_rm && maybe_modrm[7:6] == 2'b11) ?
                                 maybe_modrm[2:0] :
                             (opnd1_modrm_reg) ? maybe_modrm[5:3] : 3'bxxx;
+
+// TODO(ww): operand#2 regsel. This can only ever be CL.
+
+// Finally, actually grab some values using our operand selectors.
+wire [31:0] opnd0_r_regval;
+mux8_32 mux8_32_opnd0(
+  .sel(opnd0_r_regsel),
+  .in0(eax),
+  .in1(ecx),
+  .in2(edx),
+  .in3(ebx),
+  .in4(esp),
+  .in5(ebp),
+  .in6(esi),
+  .in7(edi),
+
+  .out(opnd0_r_regval)
+);
+
+wire [31:0] opnd1_r_regval;
+mux8_32 mux8_32_opnd1(
+  .sel(opnd1_r_regsel),
+  .in0(eax),
+  .in1(ecx),
+  .in2(edx),
+  .in3(ebx),
+  .in4(esp),
+  .in5(ebp),
+  .in6(esi),
+  .in7(edi),
+
+  .out(opnd1_r_regval)
+);
+
+// TODO(ww): This eventually needs to be a multiplexor against
+// opndN_r_regval, opndN_r_memval, opndN_r_immval, etc.
+assign opnd0_r = opnd0_r_regval;
+assign opnd1_r = opnd1_r_regval;
 
 endmodule
