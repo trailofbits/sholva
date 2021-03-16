@@ -76,17 +76,21 @@ wire [7:0] maybe_sib = unescaped_instr[23:16];
 // TODO(ww): Actually support more than just register-register.
 // TODO(ww): Assign opndN_r_form as OPND_IMM, OPND_MEM, etc.
 
-// For operand#0, our register selector can come from three sources:
+// For operand#0, our register selector can come from four sources:
 // TODO(ww): That's wrong. We also need to handle implicit register selector operands here,
-// like OPND_ENC_EAX_IMM and some of the "zero-operand" encodings. Latter needs thought.
+// like some of the "zero-operand" encodings. Needs thought.
 // * The lower three bits of the opcode itself (OPND_ENC_REG, OPND_ENC_REG_IMM)
 // * The r/m selector of ModR/M (OPND_ENC_MODREGRM_RM_*) when in register direct mode (mod=0b11)
 // * The reg selector of ModR/M (OPND_ENC_MODREGRM_REG_*)
+// * An implicit EAX register (OPND_ENC_EAX_IMM)
 wire [2:0] opnd0_r_regsel = (opnd_form == `OPND_ENC_REG || opnd_form == `OPND_ENC_REG_IMM) ?
                                 unescaped_instr[2:0] :
                             (opnd0_modrm_rm && maybe_modrm[7:6] == 2'b11) ?
                                 maybe_modrm[2:0] :
-                            (opnd0_modrm_reg) ? maybe_modrm[5:3] : 3'bxxx;
+                            (opnd0_modrm_reg) ?
+                                maybe_modrm[5:3] :
+                            (opnd_form == `OPND_ENC_EAX_IMM) ?
+                                `REG_EAX : 3'bxxx;
 
 // For operand#1, our register selector can come from N sources:
 // * The r/m selector of ModR/M (OPND_ENC_MODREGRM_REG_RM*) when in register direct mode (mod=0b11)
