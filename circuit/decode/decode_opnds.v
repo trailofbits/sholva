@@ -1,7 +1,7 @@
 `include "defines.v"
 
 module decode_opnds(
-  input [71:0] unprefixed_instr,
+  input [71:0] unescaped_instr,
   input [31:0] eax, ebx, ecx, edx, esi, edi, esp, ebp,
   input [5:0] opc,
   input [3:0] opnd_form,
@@ -39,11 +39,17 @@ wire opnd0_modrm_rm = opnd_form == `OPND_ENC_MODREGRM_RM ||
 wire opnd0_modrm_reg = opnd_form == `OPND_ENC_MODREGRM_REG_RM ||
                        opnd_form == `OPND_ENC_MODREGRM_REG_RM_IMM;
 
+wire opnd1_modrm_rm = opnd0_modrm_reg;
+
+wire opnd1_modrm_reg = opnd_form == `OPND_ENC_MODREGRM_RM_REG ||
+                       opnd_form == `OPND_ENC_MODREGRM_RM_REG_IMM ||
+                       opnd_form == `OPND_ENC_MODREGRM_RM_REG_CL;
+
 // Whether we have a ModR/M byte supplying one or more operands.
 wire has_modrm = opnd0_modrm_rm || opnd0_modrm_reg;
 
 // The actual ModR/M byte, if `has_modrm`.
-wire [7:0] maybe_modrm = unprefixed_instr[15:8];
+wire [7:0] maybe_modrm = unescaped_instr[15:8];
 
 // Intel SDM Vol. 2A Table 2-1/2-2/2-3: the SIB byte is only present when all
 // of the following conditions hold:
@@ -54,6 +60,9 @@ wire has_sib = has_modrm
                && ~prefix_address_16bit
                && maybe_modrm[7:6] != 2'b11
                && maybe_modrm[2:0] == 3'b100;
+
+// The actual SIB byte, if `has_sib`.
+wire [7:0] maybe_sib = unescaped_instr[23:16];
 
 // Implicit
 
@@ -72,7 +81,7 @@ wire has_sib = has_modrm
 // * The r/m selector of ModR/M (OPND_ENC_MODREGRM_RM_*) when in register direct mode (mod=0b11)
 // * The reg selector of ModR/M (OPND_ENC_MODREGRM_REG_*)
 wire [2:0] opnd0_r_regsel = (opnd_form == `OPND_ENC_REG || opnd_form == `OPND_ENC_REG_IMM) ?
-                                unprefixed_instr[2:0] :
+                                unescaped_instr[2:0] :
                             (opnd0_modrm_rm && maybe_modrm[7:6] == 2'b11) ?
                                 maybe_modrm[2:0] :
                             (opnd0_modrm_reg) ? maybe_modrm[5:3] : 3'bxxx;
