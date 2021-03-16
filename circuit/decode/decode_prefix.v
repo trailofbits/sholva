@@ -18,8 +18,8 @@ assign prefix_operand_32bit = (raw_instr[7:0] == 8'h66 || raw_instr[15:8] == 8'h
 
 assign prefix_address_32bit = (raw_instr[7:0] == 8'h67 || raw_instr[15:8] == 8'h66) ? 1'd1 : 1'd0;
 
-assign prefix_count = (prefix_rep && (prefix_operand_32bit || prefix_address_32bit)) ? 2'd2 :
-                      (prefix_rep || prefix_operand_32bit || prefix_address_32bit) ? 2'd1 : 2'd0;
+assign prefix_count = (prefix_rep != 2'd0 && (prefix_operand_32bit || prefix_address_32bit)) ? 2'd2 :
+                      (prefix_rep != 2'd0 || prefix_operand_32bit || prefix_address_32bit) ? 2'd1 : 2'd0;
 
 assign unprefixed_instr = (prefix_count == 2'd2) ? raw_instr[95:16] :
                           (prefix_count == 2'd1) ? raw_instr[87:8] : raw_instr[79:0];

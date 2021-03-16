@@ -18,6 +18,24 @@ fetch fetch_x(
   .raw_hint2(raw_hint2)
 );
 
+// Decode regfile.
+wire [31:0] eax, ebx, ecx, edx, esi, edi, esp, ebp, eip, eflags;
+
+decode_regfile decode_regfile_x(
+  .raw_regs(raw_regs),
+
+  .eax(eax),
+  .ebx(ebx),
+  .ecx(ecx),
+  .edx(edx),
+  .esi(esi),
+  .edi(edi),
+  .esp(esp),
+  .ebp(ebp),
+  .eip(eip),
+  .eflags(eflags)
+);
+
 
 // Decode hints.
 wire [1:0] hint1_mask;
@@ -81,7 +99,7 @@ decode_opc_phase1 decode_opc_phase1_x(
 
 // Decode opcode (phase 2): extract the rough form of the opcode
 
-wire [6:0] opc;
+wire [5:0] opc;
 wire [3:0] opnd_form;
 wire imm_1byte;
 wire reg_1byte;
@@ -98,5 +116,50 @@ decode_opc_phase2 decode_opc_phase2_x(
 
 // Decode operands (phase 1): take the operand form and some information about widths,
 // return concrete operand selectors.
+
+// TODO
+
+
+// Execute
+// TODO
+
+
+// Register writeback + updates.
+wire [2:0] gpr_selector = 3'd0; // TODO
+wire [31:0] gpr_wr = 32'd0; // TODO
+wire [31:0] next_eip = 32'd0; // TODO
+wire alu_wr = 0; // TODO
+wire [5:0] alu_flags = 6'd0; // TODO
+
+wire [31:0] o_eax, o_ebx, o_ecx, o_edx, o_esi, o_edi, o_esp, o_ebp, o_eip, o_eflags;
+
+regfile regfile_x(
+  .i_eax(eax),
+  .i_ebx(ebx),
+  .i_ecx(ecx),
+  .i_edx(edx),
+  .i_esi(esi),
+  .i_edi(edi),
+  .i_esp(esp),
+  .i_ebp(ebp),
+  .i_eflags(eflags),
+
+  .gpr_selector(gpr_selector),
+  .gpr_wr(gpr_wr),
+  .next_eip(next_eip),
+  .alu_wr(alu_wr),
+  .alu_flags(alu_flags),
+
+  .o_eax(o_eax),
+  .o_ebx(o_ebx),
+  .o_ecx(o_ecx),
+  .o_edx(o_edx),
+  .o_esi(o_esi),
+  .o_edi(o_edi),
+  .o_esp(o_esp),
+  .o_ebp(o_ebp),
+  .o_eip(o_eip),
+  .o_eflags(o_eflags)
+);
 
 endmodule

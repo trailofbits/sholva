@@ -1,7 +1,7 @@
 TBGEN := ./codegen/tbgen
 TVGEN := ./codegen/tvgen
 
-MODULES := fetch decode_prefix mux8_32
+MODULES := fetch decode_prefix mux8_32 regfile
 
 TB_SPECS := $(addsuffix .tb.yml,$(MODULES))
 TESTBENCHES := $(addsuffix .tb.gen.v,$(MODULES))
@@ -16,7 +16,7 @@ check: $(TESTBENCH_EXES)
 	@./run-tests
 
 $(TESTBENCH_EXES): $(TESTBENCHES) $(TESTVECTORS)
-	iverilog -o $@ -I.. -I../include -y.. $(basename $@).gen.v
+	iverilog -o $@ -I.. -I../include -y.. -y../decode $(basename $@).gen.v
 
 $(TESTBENCHES): $(TB_SPECS) $(TBGEN)
 	$(TBGEN) $(basename $(basename $@)).yml
