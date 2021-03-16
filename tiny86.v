@@ -70,8 +70,8 @@ decode_hint decode_hint2(
 // Decode prefix: Extract prefix information from the raw instruction.
 
 wire [79:0] unprefixed_instr;
-wire prefix_operand_32bit;
-wire prefix_address_32bit;
+wire prefix_operand_16bit;
+wire prefix_address_16bit;
 wire [1:0] prefix_rep;
 wire [1:0] prefix_count;
 
@@ -79,8 +79,8 @@ decode_prefix decode_prefix_x(
   .raw_instr(raw_instr),
 
   .unprefixed_instr(unprefixed_instr),
-  .prefix_operand_32bit(prefix_operand_32bit),
-  .prefix_address_32bit(prefix_address_32bit),
+  .prefix_operand_16bit(prefix_operand_16bit),
+  .prefix_address_16bit(prefix_address_16bit),
   .prefix_rep(prefix_rep),
   .prefix_count(prefix_count)
 );

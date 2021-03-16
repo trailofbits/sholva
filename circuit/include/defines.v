@@ -5,6 +5,11 @@
 `define OPND_MEM 2'd2
 `define OPND_REG 2'd3
 
+// Valid destination (i.e., write) operand locations.
+// Only registers and memory can be written to.
+`define OPND_DEST_REG 1'd0
+`define OPND_DEST_MEM 1'd1
+
 // No operands.
 `define OPND_ENC_NONE 4'd0
 
@@ -56,11 +61,12 @@
 `define EFLAGS_OF 32'd11
 
 // GPR numbering for register selectors/identification
+// NOTE(ww): Weird numbering here is the canonical x86 numbering.
 `define REG_EAX 3'd0
-`define REG_EBX 3'd1
-`define REG_ECX 3'd2
-`define REG_EDX 3'd3
-`define REG_ESI 3'd4
-`define REG_EDI 3'd5
-`define REG_ESP 3'd6
-`define REG_EBP 3'd7
+`define REG_EBX 3'd3
+`define REG_ECX 3'd1
+`define REG_EDX 3'd2
+`define REG_ESI 3'd6
+`define REG_EDI 3'd7
+`define REG_ESP 3'd4
+`define REG_EBP 3'd5

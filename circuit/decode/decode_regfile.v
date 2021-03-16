@@ -13,6 +13,8 @@ module decode_regfile(
   output [31:0] eflags
 );
 
+// NOTE(ww): Our register ordering in each trace is not the canonical
+// x86 ordering. See the numbering in `defines.v` for that.
 assign {eax, ebx, ecx, edx, esi, edi, esp, ebp, eip, eflags} = raw_regs;
 
 endmodule
