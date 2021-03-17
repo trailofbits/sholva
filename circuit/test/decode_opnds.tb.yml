@@ -24,7 +24,8 @@ outputs:
   - "32 opnd2_r"
 vector_fmt: binary
 vector_specs:
-  - _description: "xchg EAX, EBX"
+  # reg-reg encoding forms
+  - _description: "xchg EAX, EBX (~AO)"
     unescaped_instr: 0x93
     eax: 0xAAAAAAAA
     ebx: 0xBBBBBBBB
@@ -32,3 +33,26 @@ vector_specs:
     prefix_address_16bit: 0
     opnd0_r: 0xAAAAAAAA
     opnd1_r: 0xBBBBBBBB
+  - _description: "xchg EAX, EAX (~AO)"
+    unescaped_instr: 0x90
+    eax: 0xAAAAAAAA
+    opnd_form: 10 # OPND_ENC_EAX_REG
+    prefix_address_16bit: 0
+    opnd0_r: 0xAAAAAAAA
+    opnd1_r: 0xAAAAAAAA
+  - _description: "xchg ECX, EDX (~RM)"
+    unescaped_instr: 0xca87
+    ecx: 0xCCCCCCCC
+    edx: 0xDDDDDDDD
+    opnd_form: 7 # OPND_ENC_MODREGRM_REG_RM
+    prefix_address_16bit: 0
+    opnd0_r: 0xCCCCCCCC
+    opnd1_r: 0xDDDDDDDD
+  - _description: "xchg EDX, ECX (~RM)"
+    unescaped_instr: 0xd187
+    ecx: 0xCCCCCCCC
+    edx: 0xDDDDDDDD
+    opnd_form: 7 # OPND_ENC_MODREGRM_REG_RM
+    prefix_address_16bit: 0
+    opnd0_r: 0xDDDDDDDD
+    opnd1_r: 0xCCCCCCCC

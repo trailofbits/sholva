@@ -123,5 +123,9 @@ CMD_STOS:AA~ZO,AB~ZO
 
 CMD_SUB:28~MR,29~MR,2A~RM,2B~RM,2C+ib~I,2D+i*~I,80/5+ib~MI,81/5+i*~MI,83/5+ib~MI
 CMD_TEST:84~MR,85~MR,A8+ib~I,A9+i*~I,F6/0+ib~MI,F7/0+i*~MI
-CMD_XCHG:86~RM,86~MR,87~RM,87~MR,90+r*~AO
+
+# NOTE(ww): SDM lists XCHG 86 and 87 as both RM and MR, which doesn't make a lot of sense.
+# Only the RM is represented here, since only one form is needed to cover all
+# possible valid encodings.
+CMD_XCHG:86~RM,87~RM,90+r*~AO
 CMD_XOR:30~MR,31~MR,32~RM,33~RM,34+ib~I,35+i*~I,80/6+ib~MI,81/6+i*~MI,83/6+ib~MI
