@@ -146,5 +146,6 @@ assign opnd1_r = opnd1_r_regval;
 // TODO(ww): Temporary assignments, to make testing easier.
 assign disp_1byte = 1'd0;
 assign opnd2_r = 32'd0;
+assign opnd_count = 2'd0;
 
 endmodule
