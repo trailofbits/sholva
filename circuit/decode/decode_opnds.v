@@ -82,23 +82,27 @@ wire [7:0] maybe_sib = unescaped_instr[23:16];
 // * The lower three bits of the opcode itself (OPND_ENC_REG, OPND_ENC_REG_IMM)
 // * The r/m selector of ModR/M (OPND_ENC_MODREGRM_RM_*) when in register direct mode (mod=0b11)
 // * The reg selector of ModR/M (OPND_ENC_MODREGRM_REG_*)
-// * An implicit EAX register (OPND_ENC_EAX_IMM)
+// * An implicit EAX register (OPND_ENC_EAX_*)
 wire [2:0] opnd0_r_regsel = (opnd_form == `OPND_ENC_REG || opnd_form == `OPND_ENC_REG_IMM) ?
                                 unescaped_instr[2:0] :
                             (opnd0_modrm_rm && maybe_modrm[7:6] == 2'b11) ?
                                 maybe_modrm[2:0] :
                             (opnd0_modrm_reg) ?
                                 maybe_modrm[5:3] :
-                            (opnd_form == `OPND_ENC_EAX_IMM) ?
+                            (opnd_form == `OPND_ENC_EAX_IMM || opnd_form == `OPND_ENC_EAX_REG) ?
                                 `REG_EAX : 3'bxxx;
 
 // For operand#1, our register selector can come from N sources:
 // * The r/m selector of ModR/M (OPND_ENC_MODREGRM_REG_RM*) when in register direct mode (mod=0b11)
 // * The reg selector of ModR/M (OPND_ENC_MODREGRM_RM_REG*)
+// * The lower three bits of the opcode itself (OPND_ENC_*_REG)
 // * TODO(ww): Implicit opnd1 register sources? Presumably some of the string operations?
 wire [2:0] opnd1_r_regsel = (opnd1_modrm_rm && maybe_modrm[7:6] == 2'b11) ?
                                 maybe_modrm[2:0] :
-                            (opnd1_modrm_reg) ? maybe_modrm[5:3] : 3'bxxx;
+                            (opnd1_modrm_reg) ?
+                                maybe_modrm[5:3] :
+                            (opnd_form == `OPND_ENC_EAX_REG) ?
+                                unescaped_instr[2:0] : 3'bxxx;
 
 // TODO(ww): operand#2 regsel. This can only ever be CL.
 
@@ -137,5 +141,10 @@ mux8_32 mux8_32_opnd1(
 // opndN_r_regval, opndN_r_memval, opndN_r_immval, etc.
 assign opnd0_r = opnd0_r_regval;
 assign opnd1_r = opnd1_r_regval;
+
+
+// TODO(ww): Temporary assignments, to make testing easier.
+assign disp_1byte = 1'd0;
+assign opnd2_r = 32'd0;
 
 endmodule

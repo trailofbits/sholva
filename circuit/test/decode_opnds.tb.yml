@@ -1,0 +1,34 @@
+module: decode_opnds
+file: ../decode/decode_opnds.v
+inputs:
+  - "72 unescaped_instr"
+  - "32 eax"
+  - "32 ebx"
+  - "32 ecx"
+  - "32 edx"
+  - "32 esi"
+  - "32 edi"
+  - "32 esp"
+  - "32 ebp"
+  - "6 opc"
+  - "4 opnd_form"
+  - "1 imm_1byte"
+  - "1 reg_1byte"
+  - "1 prefix_operand_16bit"
+  - "1 prefix_address_16bit"
+outputs:
+  - "1 disp_1byte"
+  - "2 opnd_count"
+  - "32 opnd0_r"
+  - "32 opnd1_r"
+  - "32 opnd2_r"
+vector_fmt: binary
+vector_specs:
+  - _description: "xchg EAX, EBX"
+    unescaped_instr: 0x93
+    eax: 0xAAAAAAAA
+    ebx: 0xBBBBBBBB
+    opnd_form: 10 # OPND_ENC_EAX_REG
+    prefix_address_16bit: 0
+    opnd0_r: 0xAAAAAAAA
+    opnd1_r: 0xBBBBBBBB
