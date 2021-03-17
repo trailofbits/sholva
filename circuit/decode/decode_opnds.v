@@ -58,10 +58,10 @@ wire modrm_rm_is_regsel = maybe_modrm[7:6] == 2'b11;
 // of the following conditions hold:
 //  * The ModR/M byte is present;
 //  * We are not performing a 16-bit addressing operation;
-//  * ModR/M.mod != 0b11 and ModR/M.rm == 0b100
+//  * We are not in register direct mode and ModR/M.rm == 0b100
 wire has_sib = has_modrm
                && ~prefix_address_16bit
-               && maybe_modrm[7:6] != 2'b11
+               && ~modrm_rm_is_regsel
                && maybe_modrm[2:0] == 3'b100;
 
 // The actual SIB byte, if `has_sib`.
