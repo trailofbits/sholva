@@ -72,3 +72,10 @@ vector_specs:
     prefix_address_16bit: 0
     opnd0_r: 0xAAAAAAAA
     opnd1_r: 0xBBBBBBBB
+  - _description: "inc EAX"
+    unescaped_instr: 0x40
+    eax: 0xAAAAAAAA
+    opnd_form: 4 # OPND_ENC_REG
+    prefix_address_16bit: 0
+    opnd0_r: 0xAAAAAAAA
+    opnd1_r: x
