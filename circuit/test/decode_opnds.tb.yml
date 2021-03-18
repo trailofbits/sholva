@@ -56,3 +56,19 @@ vector_specs:
     prefix_address_16bit: 0
     opnd0_r: 0xDDDDDDDD
     opnd1_r: 0xCCCCCCCC
+  - _description: "mov EAX, EBX (~MR)"
+    unescaped_instr: 0xd889
+    eax: 0xAAAAAAAA
+    ebx: 0xBBBBBBBB
+    opnd_form: 6 # OPND_ENC_MODREGRM_RM_REG
+    prefix_address_16bit: 0
+    opnd0_r: 0xAAAAAAAA
+    opnd1_r: 0xBBBBBBBB
+  - _description: "mov EAX, EBX (~RM)"
+    unescaped_instr: 0xc38b
+    eax: 0xAAAAAAAA
+    ebx: 0xBBBBBBBB
+    opnd_form: 7 # OPND_ENC_MODREGRM_REG_RM
+    prefix_address_16bit: 0
+    opnd0_r: 0xAAAAAAAA
+    opnd1_r: 0xBBBBBBBB
