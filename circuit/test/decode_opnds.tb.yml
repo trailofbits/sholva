@@ -71,46 +71,66 @@ vector_specs:
     prefix_address_16bit: 0
     opnd0_r: 0xAAAAAAAA
     opnd1_r: 0xBBBBBBBB
-  - _description: "inc EAX"
+  - _description: "inc EAX (~O)"
     unescaped_instr: 0x40
     eax: 0xAAAAAAAA
     opnd_form: 4 # OPND_ENC_REG
     prefix_address_16bit: 0
     opnd0_r: 0xAAAAAAAA
     opnd1_r: x
-  - _description: "inc EBX"
+  - _description: "inc EBX (~O)"
     unescaped_instr: 0x43
     ebx: 0xBBBBBBBB
     opnd_form: 4 # OPND_ENC_REG
     prefix_address_16bit: 0
     opnd0_r: 0xBBBBBBBB
     opnd1_r: x
-  - _description: "inc ECX"
+  - _description: "inc ECX (~O)"
     unescaped_instr: 0x41
     ecx: 0xCCCCCCCC
     opnd_form: 4 # OPND_ENC_REG
     prefix_address_16bit: 0
     opnd0_r: 0xCCCCCCCC
     opnd1_r: x
-  - _description: "inc EDX"
+  - _description: "inc EDX (~O)"
     unescaped_instr: 0x42
     edx: 0xDDDDDDDD
     opnd_form: 4 # OPND_ENC_REG
     prefix_address_16bit: 0
     opnd0_r: 0xDDDDDDDD
     opnd1_r: x
-  - _description: "inc ESI"
+  - _description: "inc ESI (~O)"
     unescaped_instr: 0x46
     esi: 0x12121212
     opnd_form: 4 # OPND_ENC_REG
     prefix_address_16bit: 0
     opnd0_r: 0x12121212
     opnd1_r: x
-  - _description: "inc EDI"
+  - _description: "inc EDI (~O)"
     unescaped_instr: 0x47
     edi: 0x13131313
     opnd_form: 4 # OPND_ENC_REG
     prefix_address_16bit: 0
     opnd0_r: 0x13131313
     opnd1_r: x
-
+  - _description: "inc ESP (~O)"
+    unescaped_instr: 0x44
+    esp: 0x14141414
+    opnd_form: 4 # OPND_ENC_REG
+    prefix_address_16bit: 0
+    opnd0_r: 0x14141414
+    opnd1_r: x
+  - _description: "inc EBP (~O)"
+    unescaped_instr: 0x45
+    ebp: 0x15151515
+    opnd_form: 4 # OPND_ENC_REG
+    prefix_address_16bit: 0
+    opnd0_r: 0x15151515
+    opnd1_r: x
+  - _description: "add EAX, 0xffffffff (~AI)"
+    unescaped_instr: 0xffffffff05
+    eax: 0x99999999
+    opnd_form: 9 # OPND_ENC_EAX_IMM
+    prefix_address_16bit: 0
+    opnd0_r: 0x99999999
+    opnd1_r: x
