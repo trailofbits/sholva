@@ -12,8 +12,6 @@ module decode_opc_phase2(
   output reg_1byte
 
   // TODO: outputs:
-  // operand 1 selector (imm, reg, mem)
-  // operand 2 selector (imm, reg, mem)
   // some wires for operand sizes (8/16/32)
   // some wires for whether operands are sign/zero extended
 );

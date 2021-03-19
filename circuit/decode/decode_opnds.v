@@ -50,8 +50,20 @@ wire opnd1_modrm_reg = opnd_form == `OPND_ENC_MODREGRM_RM_REG ||
 wire has_modrm = opnd0_modrm_rm || opnd0_modrm_reg;
 
 // The actual ModR/M byte, if `has_modrm`.
-wire [7:0] maybe_modrm = unescaped_instr[15:8];
-wire modrm_rm_is_regsel = maybe_modrm[7:6] == 2'b11;
+wire [7:0] modrm = unescaped_instr[15:8];
+wire modrm_rm_is_regsel = modrm[7:6] == 2'b11;
+
+// Whether we have displacement byte(s).
+// Displacement byte(s) are present when all of the following conditions hold:
+// * The ModR/M byte is present;
+// * We are not in register direct mode;
+// * One of:
+//   * We are in a displacement-only mode (ModR/M.rm == 0b101 and ModR/M.mod == 0b00)
+//   * We are in a SIB + displacement addressing mode (ModR/M.mod == 0b01 or 0b10)
+wire has_disp = has_modrm
+                && ~modrm_rm_is_regsel
+                && ((modrm[2:0] == 3'b101 && modrm[7:6] == 2'b00)
+                    || (modrm[7:6] == 2'b01 || modrm[7:6] == 2'b10));
 
 // Intel SDM Vol. 2A Table 2-1/2-2/2-3: the SIB byte is only present when all
 // of the following conditions hold:
@@ -61,7 +73,7 @@ wire modrm_rm_is_regsel = maybe_modrm[7:6] == 2'b11;
 wire has_sib = has_modrm
                && ~prefix_address_16bit
                && ~modrm_rm_is_regsel
-               && maybe_modrm[2:0] == 3'b100;
+               && modrm[2:0] == 3'b100;
 
 // The actual SIB byte, if `has_sib`.
 wire [7:0] maybe_sib = unescaped_instr[23:16];
@@ -86,9 +98,9 @@ wire [7:0] maybe_sib = unescaped_instr[23:16];
 wire [2:0] opnd0_r_regsel = (opnd_form == `OPND_ENC_REG || opnd_form == `OPND_ENC_REG_IMM) ?
                                 unescaped_instr[2:0] :
                             (opnd0_modrm_rm && modrm_rm_is_regsel) ?
-                                maybe_modrm[2:0] :
+                                modrm[2:0] :
                             (opnd0_modrm_reg) ?
-                                maybe_modrm[5:3] :
+                                modrm[5:3] :
                             (opnd_form == `OPND_ENC_EAX_IMM || opnd_form == `OPND_ENC_EAX_REG) ?
                                 `REG_EAX : 3'bxxx;
 
@@ -98,9 +110,9 @@ wire [2:0] opnd0_r_regsel = (opnd_form == `OPND_ENC_REG || opnd_form == `OPND_EN
 // * The lower three bits of the opcode itself (OPND_ENC_*_REG)
 // * TODO(ww): Implicit opnd1 register sources? Presumably some of the string operations?
 wire [2:0] opnd1_r_regsel = (opnd1_modrm_rm && modrm_rm_is_regsel) ?
-                                maybe_modrm[2:0] :
+                                modrm[2:0] :
                             (opnd1_modrm_reg) ?
-                                maybe_modrm[5:3] :
+                                modrm[5:3] :
                             (opnd_form == `OPND_ENC_EAX_REG) ?
                                 unescaped_instr[2:0] : 3'bxxx;
 

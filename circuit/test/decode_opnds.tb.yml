@@ -134,3 +134,4 @@ vector_specs:
     prefix_address_16bit: 0
     opnd0_r: 0x99999999
     opnd1_r: x
+  # - _description: "add EAX, 0xffffffff (s-ext, ~MI)"
