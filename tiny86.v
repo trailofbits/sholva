@@ -101,6 +101,7 @@ decode_opc_phase1 decode_opc_phase1_x(
 
 wire [5:0] opc;
 wire [3:0] opnd_form;
+wire [1:0] opnd_count;
 wire imm_1byte;
 wire reg_1byte;
 
@@ -110,6 +111,7 @@ decode_opc_phase2 decode_opc_phase2_x(
 
   .opc(opc),
   .opnd_form(opnd_form),
+  .opnd_count(opnd_count),
   .imm_1byte(imm_1byte),
   .reg_1byte(reg_1byte)
 );
@@ -118,7 +120,6 @@ decode_opc_phase2 decode_opc_phase2_x(
 // return concrete operand (read) values and a write selector.
 
 wire disp_1byte;
-wire [1:0] opnd_count;
 wire [31:0] opnd0_r, opnd1_r, opnd2_r;
 
 decode_opnds decode_opnds_x(
@@ -142,7 +143,6 @@ decode_opnds decode_opnds_x(
 
   // Outputs
   .disp_1byte(disp_1byte),
-  .opnd_count(opnd_count),
   .opnd0_r(opnd0_r),
   .opnd1_r(opnd1_r),
   .opnd2_r(opnd2_r)

@@ -18,20 +18,20 @@ _COMMANDS_GEN_V = _HERE / "commands.gen.v"
 _OPC_MAP_GEN_V = _HERE / "opc_map.gen.v"
 
 _OPND_ENC_MAP = {
-    "I": "OPND_ENC_IMM",
-    "D": "OPND_ENC_DISP",
-    "M": "OPND_ENC_MODREGRM_RM",
-    "O": "OPND_ENC_REG",
-    "MI": "OPND_ENC_MODREGRM_RM_IMM",
-    "MR": "OPND_ENC_MODREGRM_RM_REG",
-    "RM": "OPND_ENC_MODREGRM_REG_RM",
-    "OI": "OPND_ENC_REG_IMM",
-    "AI": "OPND_ENC_EAX_IMM",
-    "AO": "OPND_ENC_EAX_REG",
-    "RMI": "OPND_ENC_MODREGRM_REG_RM_IMM",
-    "MRI": "OPND_ENC_MODREGRM_RM_REG_IMM",
-    "MRC": "OPND_ENC_MODREGRM_RM_REG_CL",
-    "ZO": "OPND_ENC_NONE",
+    "I": ("OPND_ENC_IMM", 1),
+    "D": ("OPND_ENC_DISP", 1),
+    "M": ("OPND_ENC_MODREGRM_RM", 1),
+    "O": ("OPND_ENC_REG", 1),
+    "MI": ("OPND_ENC_MODREGRM_RM_IMM", 2),
+    "MR": ("OPND_ENC_MODREGRM_RM_REG", 2),
+    "RM": ("OPND_ENC_MODREGRM_REG_RM", 2),
+    "OI": ("OPND_ENC_REG_IMM", 2),
+    "AI": ("OPND_ENC_EAX_IMM", 2),
+    "AO": ("OPND_ENC_EAX_REG", 2),
+    "RMI": ("OPND_ENC_MODREGRM_REG_RM_IMM", 3),
+    "MRI": ("OPND_ENC_MODREGRM_RM_REG_IMM", 3),
+    "MRC": ("OPND_ENC_MODREGRM_RM_REG_CL", 3),
+    "ZO": ("OPND_ENC_NONE", 0),
 }
 
 
@@ -144,20 +144,24 @@ def _ternary(cond, ifthen, elsethen):
     return f"{_paren(cond)} ?\n    {_paren(ifthen)} :\n    {_paren(elsethen)}"
 
 
-def _ternary_chain(exprs, lastelsethen):
+def _ternary_chain(exprs, lastelsethen=None):
     """
     Emit a ternary chain, with each leaf evaluating to an opcode command.
     """
 
     def _ternary_chain_(exprs, lastelsethen):
         if exprs == []:
-            return _asdef(lastelsethen)
+            return lastelsethen
         else:
             return _ternary(
                 exprs[0][1],
-                _asdef(exprs[0][0]),
+                exprs[0][0],
                 _ternary_chain_(exprs[1:], lastelsethen),
             )
+
+    if lastelsethen is None:
+        lastelsethen = exprs[-1][0]
+        exprs = exprs[0:-1]
 
     return _ternary_chain_(exprs, lastelsethen)
 
@@ -190,8 +194,8 @@ def _gen_opc_map_v(commands):
                     enc_expr = _and(enc_expr, _opc_ext_eq(enc["ext"]))
                 enc_exprs.append(enc_expr)
             cmd_expr = functools.reduce(_or, enc_exprs)
-            cmd_exprs.append((cmd["cmd"], cmd_expr))
-        print(_assign("opc", _ternary_chain(cmd_exprs, "CMD_UNKNOWN")), file=io)
+            cmd_exprs.append((_asdef(cmd["cmd"]), cmd_expr))
+        print(_assign("opc", _ternary_chain(cmd_exprs, _asdef("CMD_UNKNOWN"))), file=io)
 
         _br(io, 2)
 
@@ -212,9 +216,9 @@ def _gen_opc_map_v(commands):
                     enc_expr = _and(enc_expr, _opc_ext_eq(op_enc["ext"]))
                 enc_exprs.append(enc_expr)
             opnd_enc_expr = functools.reduce(_or, enc_exprs)
-            opnd_enc_exprs.append((_OPND_ENC_MAP[opnd_enc], opnd_enc_expr))
+            opnd_enc_exprs.append((_asdef(_OPND_ENC_MAP[opnd_enc][0]), opnd_enc_expr))
         print(
-            _assign("opnd_form", _ternary_chain(opnd_enc_exprs, "OPND_ENC_UNKNOWN")),
+            _assign("opnd_form", _ternary_chain(opnd_enc_exprs, _asdef("OPND_ENC_UNKNOWN"))),
             file=io,
         )
 
@@ -245,6 +249,20 @@ def _gen_opc_map_v(commands):
                 ib_form_expr = _and(ib_form_expr, _opc_ext_eq(enc["ext"]))
             ib_form_exprs.append(ib_form_expr)
         print(_assign("imm_1byte", functools.reduce(_or, ib_form_exprs)), file=io)
+
+        _br(io, 2)
+
+        # Generate the opnd_count assignment.
+        arity_map = defaultdict(list)
+        for form, arity in _OPND_ENC_MAP.values():
+            arity_map[arity].append(form)
+        arity_exprs = []
+        for arity, forms in arity_map.items():
+            arity_expr = functools.reduce(
+                _or, [_eq("opnd_form", _asdef(form)) for form in forms]
+            )
+            arity_exprs.append((f"2'd{arity}", arity_expr))
+        print(_assign("opnd_count", _ternary_chain(arity_exprs)), file=io)
 
 
 def main():

@@ -11,7 +11,6 @@ module decode_opnds(
   input prefix_address_16bit,
 
   output disp_1byte,
-  output [1:0] opnd_count,
   // TODO(ww): Output wires for opnd0's write destination
   // (whether a memory address or a register selector)
   output [31:0] opnd0_r,
@@ -147,6 +146,5 @@ assign opnd1_r = opnd1_r_regval;
 // TODO(ww): Temporary assignments, to make testing easier.
 assign disp_1byte = 1'd0;
 assign opnd2_r = 32'd0;
-assign opnd_count = 2'd0;
 
 endmodule

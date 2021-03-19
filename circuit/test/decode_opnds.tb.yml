@@ -79,3 +79,39 @@ vector_specs:
     prefix_address_16bit: 0
     opnd0_r: 0xAAAAAAAA
     opnd1_r: x
+  - _description: "inc EBX"
+    unescaped_instr: 0x43
+    ebx: 0xBBBBBBBB
+    opnd_form: 4 # OPND_ENC_REG
+    prefix_address_16bit: 0
+    opnd0_r: 0xBBBBBBBB
+    opnd1_r: x
+  - _description: "inc ECX"
+    unescaped_instr: 0x41
+    ecx: 0xCCCCCCCC
+    opnd_form: 4 # OPND_ENC_REG
+    prefix_address_16bit: 0
+    opnd0_r: 0xCCCCCCCC
+    opnd1_r: x
+  - _description: "inc EDX"
+    unescaped_instr: 0x42
+    edx: 0xDDDDDDDD
+    opnd_form: 4 # OPND_ENC_REG
+    prefix_address_16bit: 0
+    opnd0_r: 0xDDDDDDDD
+    opnd1_r: x
+  - _description: "inc ESI"
+    unescaped_instr: 0x46
+    esi: 0x12121212
+    opnd_form: 4 # OPND_ENC_REG
+    prefix_address_16bit: 0
+    opnd0_r: 0x12121212
+    opnd1_r: x
+  - _description: "inc EDI"
+    unescaped_instr: 0x47
+    edi: 0x13131313
+    opnd_form: 4 # OPND_ENC_REG
+    prefix_address_16bit: 0
+    opnd0_r: 0x13131313
+    opnd1_r: x
+
