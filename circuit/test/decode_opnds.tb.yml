@@ -18,7 +18,6 @@ inputs:
   - "1 prefix_address_16bit"
 outputs:
   - "1 disp_1byte"
-  - "2 opnd_count"
   - "32 opnd0_r"
   - "32 opnd1_r"
   - "32 opnd2_r"
