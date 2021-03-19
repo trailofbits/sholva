@@ -148,8 +148,6 @@ decode_opnds decode_opnds_x(
   .opnd2_r(opnd2_r)
 );
 
-// TODO
-
 
 // Execute
 // TODO
