@@ -30,10 +30,12 @@ def emit_tv(spec)
 
       raw_wire = all_wires.map do |wire|
         wire_value = vec_spec.fetch(wire.name.to_sym, 0)
-        if spec[:vector_fmt] == "hex"
-          wire_value.to_s(16).rjust(wire.size / 8, "0")
+        scale = spec[:vector_fmt] == "hex" ? wire.size / 8 : wire.size
+        fmt = spec[:vector_fmt] == "hex" ? 16 : 2
+        if wire_value == "x"
+          wire_value * scale
         else
-          wire_value.to_s(2).rjust(wire.size, "0")
+          wire_value.to_s(fmt).rjust(scale, "0")
         end
       end.join("_")
       tv_io.puts(raw_wire)

@@ -1,0 +1,139 @@
+module: decode_opnds
+file: ../decode/decode_opnds.v
+inputs:
+  - "72 unescaped_instr"
+  - "32 eax"
+  - "32 ebx"
+  - "32 ecx"
+  - "32 edx"
+  - "32 esi"
+  - "32 edi"
+  - "32 esp"
+  - "32 ebp"
+  - "6 opc"
+  - "4 opnd_form"
+  - "1 imm_1byte"
+  - "1 reg_1byte"
+  - "1 prefix_operand_16bit"
+  - "1 prefix_address_16bit"
+outputs:
+  - "1 disp_1byte"
+  - "32 opnd0_r"
+  - "32 opnd1_r"
+  - "32 opnd2_r"
+  - "2 dest0_sel"
+  - "2 dest1_sel"
+vector_fmt: binary
+vector_specs:
+  # reg-reg encoding forms
+  - _description: "xchg EAX, EBX (~AO)"
+    unescaped_instr: 0x93
+    eax: 0xAAAAAAAA
+    ebx: 0xBBBBBBBB
+    opnd_form: 10 # OPND_ENC_EAX_REG
+    prefix_address_16bit: 0
+    opnd0_r: 0xAAAAAAAA
+    opnd1_r: 0xBBBBBBBB
+  - _description: "xchg EAX, EAX (~AO)"
+    unescaped_instr: 0x90
+    eax: 0xAAAAAAAA
+    opnd_form: 10 # OPND_ENC_EAX_REG
+    prefix_address_16bit: 0
+    opnd0_r: 0xAAAAAAAA
+    opnd1_r: 0xAAAAAAAA
+  - _description: "xchg ECX, EDX (~RM)"
+    unescaped_instr: 0xca87
+    ecx: 0xCCCCCCCC
+    edx: 0xDDDDDDDD
+    opnd_form: 7 # OPND_ENC_MODREGRM_REG_RM
+    prefix_address_16bit: 0
+    opnd0_r: 0xCCCCCCCC
+    opnd1_r: 0xDDDDDDDD
+  - _description: "xchg EDX, ECX (~RM)"
+    unescaped_instr: 0xd187
+    ecx: 0xCCCCCCCC
+    edx: 0xDDDDDDDD
+    opnd_form: 7 # OPND_ENC_MODREGRM_REG_RM
+    prefix_address_16bit: 0
+    opnd0_r: 0xDDDDDDDD
+    opnd1_r: 0xCCCCCCCC
+  - _description: "mov EAX, EBX (~MR)"
+    unescaped_instr: 0xd889
+    eax: 0xAAAAAAAA
+    ebx: 0xBBBBBBBB
+    opnd_form: 6 # OPND_ENC_MODREGRM_RM_REG
+    prefix_address_16bit: 0
+    opnd0_r: 0xAAAAAAAA
+    opnd1_r: 0xBBBBBBBB
+  - _description: "mov EAX, EBX (~RM)"
+    unescaped_instr: 0xc38b
+    eax: 0xAAAAAAAA
+    ebx: 0xBBBBBBBB
+    opnd_form: 7 # OPND_ENC_MODREGRM_REG_RM
+    prefix_address_16bit: 0
+    opnd0_r: 0xAAAAAAAA
+    opnd1_r: 0xBBBBBBBB
+  - _description: "inc EAX (~O)"
+    unescaped_instr: 0x40
+    eax: 0xAAAAAAAA
+    opnd_form: 4 # OPND_ENC_REG
+    prefix_address_16bit: 0
+    opnd0_r: 0xAAAAAAAA
+    opnd1_r: x
+  - _description: "inc EBX (~O)"
+    unescaped_instr: 0x43
+    ebx: 0xBBBBBBBB
+    opnd_form: 4 # OPND_ENC_REG
+    prefix_address_16bit: 0
+    opnd0_r: 0xBBBBBBBB
+    opnd1_r: x
+  - _description: "inc ECX (~O)"
+    unescaped_instr: 0x41
+    ecx: 0xCCCCCCCC
+    opnd_form: 4 # OPND_ENC_REG
+    prefix_address_16bit: 0
+    opnd0_r: 0xCCCCCCCC
+    opnd1_r: x
+  - _description: "inc EDX (~O)"
+    unescaped_instr: 0x42
+    edx: 0xDDDDDDDD
+    opnd_form: 4 # OPND_ENC_REG
+    prefix_address_16bit: 0
+    opnd0_r: 0xDDDDDDDD
+    opnd1_r: x
+  - _description: "inc ESI (~O)"
+    unescaped_instr: 0x46
+    esi: 0x12121212
+    opnd_form: 4 # OPND_ENC_REG
+    prefix_address_16bit: 0
+    opnd0_r: 0x12121212
+    opnd1_r: x
+  - _description: "inc EDI (~O)"
+    unescaped_instr: 0x47
+    edi: 0x13131313
+    opnd_form: 4 # OPND_ENC_REG
+    prefix_address_16bit: 0
+    opnd0_r: 0x13131313
+    opnd1_r: x
+  - _description: "inc ESP (~O)"
+    unescaped_instr: 0x44
+    esp: 0x14141414
+    opnd_form: 4 # OPND_ENC_REG
+    prefix_address_16bit: 0
+    opnd0_r: 0x14141414
+    opnd1_r: x
+  - _description: "inc EBP (~O)"
+    unescaped_instr: 0x45
+    ebp: 0x15151515
+    opnd_form: 4 # OPND_ENC_REG
+    prefix_address_16bit: 0
+    opnd0_r: 0x15151515
+    opnd1_r: x
+  - _description: "add EAX, 0xffffffff (~AI)"
+    unescaped_instr: 0xffffffff05
+    eax: 0x99999999
+    opnd_form: 9 # OPND_ENC_EAX_IMM
+    prefix_address_16bit: 0
+    opnd0_r: 0x99999999
+    opnd1_r: x
+  # - _description: "add EAX, 0xffffffff (s-ext, ~MI)"

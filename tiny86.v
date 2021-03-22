@@ -70,8 +70,8 @@ decode_hint decode_hint2(
 // Decode prefix: Extract prefix information from the raw instruction.
 
 wire [79:0] unprefixed_instr;
-wire prefix_operand_32bit;
-wire prefix_address_32bit;
+wire prefix_operand_16bit;
+wire prefix_address_16bit;
 wire [1:0] prefix_rep;
 wire [1:0] prefix_count;
 
@@ -79,8 +79,8 @@ decode_prefix decode_prefix_x(
   .raw_instr(raw_instr),
 
   .unprefixed_instr(unprefixed_instr),
-  .prefix_operand_32bit(prefix_operand_32bit),
-  .prefix_address_32bit(prefix_address_32bit),
+  .prefix_operand_16bit(prefix_operand_16bit),
+  .prefix_address_16bit(prefix_address_16bit),
   .prefix_rep(prefix_rep),
   .prefix_count(prefix_count)
 );
@@ -101,6 +101,7 @@ decode_opc_phase1 decode_opc_phase1_x(
 
 wire [5:0] opc;
 wire [3:0] opnd_form;
+wire [1:0] opnd_count;
 wire imm_1byte;
 wire reg_1byte;
 
@@ -110,14 +111,45 @@ decode_opc_phase2 decode_opc_phase2_x(
 
   .opc(opc),
   .opnd_form(opnd_form),
+  .opnd_count(opnd_count),
   .imm_1byte(imm_1byte),
   .reg_1byte(reg_1byte)
 );
 
 // Decode operands (phase 1): take the operand form and some information about widths,
-// return concrete operand selectors.
+// return concrete operand (read) values and a write selector.
 
-// TODO
+wire disp_1byte;
+wire [31:0] opnd0_r, opnd1_r, opnd2_r;
+wire [1:0] dest0_sel, dest1_sel;
+
+decode_opnds decode_opnds_x(
+  // Inputs
+  .unescaped_instr(unescaped_instr),
+  .eax(eax),
+  .ebx(ebx),
+  .ecx(ecx),
+  .edx(edx),
+  .esi(esi),
+  .edi(edi),
+  .esp(esp),
+  .ebp(ebp),
+
+  .opc(opc),
+  .opnd_form(opnd_form),
+  .imm_1byte(imm_1byte),
+  .reg_1byte(reg_1byte),
+  .prefix_operand_16bit(prefix_operand_16bit),
+  .prefix_address_16bit(prefix_address_16bit),
+
+  // Outputs
+  .disp_1byte(disp_1byte),
+  .opnd0_r(opnd0_r),
+  .opnd1_r(opnd1_r),
+  .opnd2_r(opnd2_r),
+  .dest0_sel(dest0_sel),
+  .dest1_sel(dest1_sel)
+);
 
 
 // Execute

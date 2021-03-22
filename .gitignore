@@ -1,2 +1,5 @@
 # iverilog default output
 a.out
+
+# BLIF outputs
+*.blif

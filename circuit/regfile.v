@@ -10,6 +10,8 @@ module regfile(
   // explicit register write + implicit register modify (like decrementing ECX)
   // Or: maybe we just include a counter wire that we use with the direction
   // flag to determine whether to increment/decrement ECX/EDX?
+  // TODO(ww): We are definitely going to need multiple, for instructions that
+  // modify 64-bit pairs like ECX:EDX.
   input [2:0] gpr_selector,
   input [31:0] gpr_wr,
 

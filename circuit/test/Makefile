@@ -1,7 +1,7 @@
 TBGEN := ./codegen/tbgen
 TVGEN := ./codegen/tvgen
 
-MODULES := fetch decode_prefix mux8_32 regfile
+MODULES := fetch decode_prefix mux8_32 regfile decode_opnds
 
 TB_SPECS := $(addsuffix .tb.yml,$(MODULES))
 TESTBENCHES := $(addsuffix .tb.gen.v,$(MODULES))

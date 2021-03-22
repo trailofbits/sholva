@@ -4,8 +4,8 @@ inputs:
   - "96 raw_instr"
 outputs:
   - "80 unprefixed_instr"
-  - "1 prefix_operand_32bit"
-  - "1 prefix_address_32bit"
+  - "1 prefix_operand_16bit"
+  - "1 prefix_address_16bit"
   - "2 prefix_rep"
   - "2 prefix_count"
 vector_fmt: binary
