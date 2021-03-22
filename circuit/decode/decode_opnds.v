@@ -53,18 +53,6 @@ wire has_modrm = opnd0_modrm_rm || opnd0_modrm_reg;
 wire [7:0] modrm = unescaped_instr[15:8];
 wire modrm_rm_is_regsel = modrm[7:6] == 2'b11;
 
-// Whether we have displacement byte(s).
-// Displacement byte(s) are present when all of the following conditions hold:
-// * The ModR/M byte is present;
-// * We are not in register direct mode;
-// * One of:
-//   * We are in a displacement-only mode (ModR/M.rm == 0b101 and ModR/M.mod == 0b00)
-//   * We are in a SIB + displacement addressing mode (ModR/M.mod == 0b01 or 0b10)
-wire has_disp = has_modrm
-                && ~modrm_rm_is_regsel
-                && ((modrm[2:0] == 3'b101 && modrm[7:6] == 2'b00)
-                    || (modrm[7:6] == 2'b01 || modrm[7:6] == 2'b10));
-
 // Intel SDM Vol. 2A Table 2-1/2-2/2-3: the SIB byte is only present when all
 // of the following conditions hold:
 //  * The ModR/M byte is present;
@@ -77,6 +65,28 @@ wire has_sib = has_modrm
 
 // The actual SIB byte, if `has_sib`.
 wire [7:0] maybe_sib = unescaped_instr[23:16];
+
+// Whether we have displacement byte(s).
+// Displacement byte(s) are present in two cases:
+// First, when all of the following conditions hold:
+// * The ModR/M byte is present;
+// * We are not in register direct mode;
+// * One of:
+//   * We are in a displacement-only mode (ModR/M.rm == 0b101 and ModR/M.mod == 0b00)
+//   * We are in a SIB + displacement addressing mode (ModR/M.mod == 0b01 or 0b10)
+// Second, when we are in a displacement-only encoding (i.e., no ModR/M whatsoever).
+// TODO(ww): Handle that second case.
+wire has_disp = (has_modrm
+                   && ~modrm_rm_is_regsel
+                   && ((modrm[2:0] == 3'b101 && modrm[7:6] == 2'b00)
+                       || (modrm[7:6] == 2'b01 || modrm[7:6] == 2'b10)))
+                || opnd_form == `OPND_ENC_DISP;
+
+wire disp8 = has_disp && modrm[7:6] == 2'b01;
+// wire disp16 =
+wire disp32 = has_disp && modrm[7:6] == 2'b01;
+
+// TODO(ww): Actually extract the disp byte(s) here, maybe with a separate module.
 
 // Implicit
 
