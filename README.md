@@ -11,8 +11,8 @@ shol'va
 
 ### Dependencies
 
-*shol'va* currently depends on iVerilog and Python 3 (for code generation).
-These must be available as `iverilog` and `python3`, respectively.
+*shol'va* currently depends on iVerilog, Verilator, and Python 3, and Ruby (for code generation).
+These must be available as `iverilog`, `verilator`, `python3`, and `ruby` respectively.
 
 ### Building
 
@@ -27,4 +27,10 @@ Independently, you can run *shol'va*'s self tests:
 
 ```bash
 $ make check
+```
+
+You can also run *shol'va*'s modules through Verilator's linter.
+
+```bash
+$ make lint
 ```
