@@ -148,7 +148,7 @@ decode_opnds decode_opnds_x(
   .opnd1_r(opnd1_r),
   .opnd2_r(opnd2_r),
   .dest0_sel(dest0_sel),
-  .dest0_sel(dest1_sel)
+  .dest1_sel(dest1_sel)
 );
 
 
