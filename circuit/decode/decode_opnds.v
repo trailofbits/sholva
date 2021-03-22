@@ -11,11 +11,11 @@ module decode_opnds(
   input prefix_address_16bit,
 
   output disp_1byte,
-  // TODO(ww): Output wires for opnd0's write destination
-  // (whether a memory address or a register selector)
   output [31:0] opnd0_r,
   output [31:0] opnd1_r,
-  output [31:0] opnd2_r
+  output [31:0] opnd2_r,
+  output [1:0] dest0_sel,
+  output [1:0] dest1_sel
 );
 
 // Whether we have any immediate byte(s).
@@ -168,5 +168,12 @@ assign opnd1_r = opnd1_r_regval;
 // TODO(ww): Temporary assignments, to make testing easier.
 assign disp_1byte = 1'd0;
 assign opnd2_r = 32'd0;
+
+// TODO(ww): Temporary. These will eventually need to be selected based
+// on the types of opndN and whether they're being written to.
+// TODO(ww): Is this the right place for this? Maybe we should do it
+// further on in instruction decoding, when looking at `opc` more closely.
+assign dest0_sel = `OPND_DEST_REG;
+assign dest1_sel = `OPND_DEST_REG;
 
 endmodule

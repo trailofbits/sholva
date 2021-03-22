@@ -121,6 +121,7 @@ decode_opc_phase2 decode_opc_phase2_x(
 
 wire disp_1byte;
 wire [31:0] opnd0_r, opnd1_r, opnd2_r;
+wire [1:0] dest0_sel, dest1_sel;
 
 decode_opnds decode_opnds_x(
   // Inputs
@@ -145,7 +146,9 @@ decode_opnds decode_opnds_x(
   .disp_1byte(disp_1byte),
   .opnd0_r(opnd0_r),
   .opnd1_r(opnd1_r),
-  .opnd2_r(opnd2_r)
+  .opnd2_r(opnd2_r),
+  .dest0_sel(dest0_sel),
+  .dest0_sel(dest1_sel)
 );
 
 

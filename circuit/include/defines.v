@@ -7,8 +7,9 @@
 
 // Valid destination (i.e., write) operand locations.
 // Only registers and memory can be written to.
-`define OPND_DEST_REG 1'd0
-`define OPND_DEST_MEM 1'd1
+`define OPND_DEST_REG 2'd0
+`define OPND_DEST_MEM 2'd1
+`define OPND_DEST_NONE 2'd2
 
 // No operands.
 `define OPND_ENC_NONE 4'd0
