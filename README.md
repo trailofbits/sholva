@@ -26,5 +26,5 @@ $ make
 Independently, you can run *shol'va*'s self tests:
 
 ```bash
-$ make test
+$ make check
 ```
