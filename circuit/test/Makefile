@@ -16,7 +16,12 @@ check: $(TESTBENCH_EXES)
 	@./run-tests
 
 $(TESTBENCH_EXES): $(TESTBENCHES) $(TESTVECTORS)
-	iverilog -o $@ -I.. -I../include -y.. -y../decode $(basename $@).gen.v
+	iverilog -o $@ \
+		-I.. -I../include \
+		-y.. \
+		-y../decode \
+		-y../execute \
+		$(basename $@).gen.v
 
 $(TESTBENCHES): $(TB_SPECS) $(TBGEN)
 	$(TBGEN) $(basename $(basename $@)).yml

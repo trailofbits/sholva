@@ -97,8 +97,7 @@ decode decode_instr(
 
 
 // Execute
-// TODO
-
+execute execute_x();
 
 // Register writeback + updates.
 wire [2:0] gpr_selector = 3'd0; // TODO
