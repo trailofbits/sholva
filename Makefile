@@ -14,6 +14,7 @@ all: codegen $(ALL_V)
 	iverilog $(IVERILOG_FLAGS) $(IFLAGS) \
 		-ycircuit \
 		-ycircuit/decode \
+		-ycircuit/execute \
 		-t null tiny86.v
 
 .PHONY: netlistify
