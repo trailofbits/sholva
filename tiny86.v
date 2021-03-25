@@ -18,25 +18,6 @@ fetch fetch_x(
   .raw_hint2(raw_hint2)
 );
 
-// Decode regfile.
-wire [31:0] eax, ebx, ecx, edx, esi, edi, esp, ebp, eip, eflags;
-
-decode_regfile decode_regfile_x(
-  .raw_regs(raw_regs),
-
-  .eax(eax),
-  .ebx(ebx),
-  .ecx(ecx),
-  .edx(edx),
-  .esi(esi),
-  .edi(edi),
-  .esp(esp),
-  .ebp(ebp),
-  .eip(eip),
-  .eflags(eflags)
-);
-
-
 // Decode hints.
 wire [1:0] hint1_mask;
 wire hint1_rw;
@@ -66,66 +47,37 @@ decode_hint decode_hint2(
   .data(hint2_data)
 );
 
+// Decode regfile.
+wire [31:0] eax, ebx, ecx, edx, esi, edi, esp, ebp, eip, eflags;
 
-// Decode prefix: Extract prefix information from the raw instruction.
+decode_regfile decode_regfile_x(
+  .raw_regs(raw_regs),
 
-wire [79:0] unprefixed_instr;
-wire prefix_operand_16bit;
-wire prefix_address_16bit;
-wire [1:0] prefix_rep;
-wire [1:0] prefix_count;
-
-decode_prefix decode_prefix_x(
-  .raw_instr(raw_instr),
-
-  .unprefixed_instr(unprefixed_instr),
-  .prefix_operand_16bit(prefix_operand_16bit),
-  .prefix_address_16bit(prefix_address_16bit),
-  .prefix_rep(prefix_rep),
-  .prefix_count(prefix_count)
+  .eax(eax),
+  .ebx(ebx),
+  .ecx(ecx),
+  .edx(edx),
+  .esi(esi),
+  .edi(edi),
+  .esp(esp),
+  .ebp(ebp),
+  .eip(eip),
+  .eflags(eflags)
 );
 
-// Decode opcode (phase 1): detect an opcode escape and truncate as appropriate.
 
-wire is_2byte;
-wire [71:0] unescaped_instr;
-
-decode_opc_phase1 decode_opc_phase1_x(
-  .unprefixed_instr(unprefixed_instr),
-
-  .is_2byte(is_2byte),
-  .unescaped_instr(unescaped_instr)
-);
-
-// Decode opcode (phase 2): extract the rough form of the opcode
-
+// Core instruction decoding: extract the core instruction semantics, decompose
+// operands into their concrete 32-bit values, extract reg/mem selectors for
+// writeback.
 wire [5:0] opc;
-wire [3:0] opnd_form;
-wire [1:0] opnd_count;
-wire imm_1byte;
-wire reg_1byte;
+wire [31:0] opnd0_r;
+wire [31:0] opnd1_r;
+wire [31:0] opnd2_r;
+wire [1:0] dest0_sel;
+wire [1:0] dest1_sel;
 
-decode_opc_phase2 decode_opc_phase2_x(
-  .unescaped_instr(unescaped_instr),
-  .is_2byte(is_2byte),
-
-  .opc(opc),
-  .opnd_form(opnd_form),
-  .opnd_count(opnd_count),
-  .imm_1byte(imm_1byte),
-  .reg_1byte(reg_1byte)
-);
-
-// Decode operands (phase 1): take the operand form and some information about widths,
-// return concrete operand (read) values and a write selector.
-
-wire disp_1byte;
-wire [31:0] opnd0_r, opnd1_r, opnd2_r;
-wire [1:0] dest0_sel, dest1_sel;
-
-decode_opnds decode_opnds_x(
-  // Inputs
-  .unescaped_instr(unescaped_instr),
+decode decode_instr(
+  .raw_instr(raw_instr),
   .eax(eax),
   .ebx(ebx),
   .ecx(ecx),
@@ -136,14 +88,6 @@ decode_opnds decode_opnds_x(
   .ebp(ebp),
 
   .opc(opc),
-  .opnd_form(opnd_form),
-  .imm_1byte(imm_1byte),
-  .reg_1byte(reg_1byte),
-  .prefix_operand_16bit(prefix_operand_16bit),
-  .prefix_address_16bit(prefix_address_16bit),
-
-  // Outputs
-  .disp_1byte(disp_1byte),
   .opnd0_r(opnd0_r),
   .opnd1_r(opnd1_r),
   .opnd2_r(opnd2_r),
