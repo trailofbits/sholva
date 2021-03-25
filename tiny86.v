@@ -18,25 +18,6 @@ fetch fetch_x(
   .raw_hint2(raw_hint2)
 );
 
-// // Decode regfile.
-// wire [31:0] eax, ebx, ecx, edx, esi, edi, esp, ebp, eip, eflags;
-
-// decode_regfile decode_regfile_x(
-//   .raw_regs(raw_regs),
-
-//   .eax(eax),
-//   .ebx(ebx),
-//   .ecx(ecx),
-//   .edx(edx),
-//   .esi(esi),
-//   .edi(edi),
-//   .esp(esp),
-//   .ebp(ebp),
-//   .eip(eip),
-//   .eflags(eflags)
-// );
-
-
 // Decode hints.
 wire [1:0] hint1_mask;
 wire hint1_rw;
