@@ -166,15 +166,34 @@ def _ternary_chain(exprs, lastelsethen=None):
     return _ternary_chain_(exprs, lastelsethen)
 
 
+def _1hot(width, n):
+    """
+    Emit a one-hot `width` bitstring of value `n`, with `n=0` being hot index 0.
+    """
+    return (((width - 1) - n) * "0") + "1" + ((width - (((width - 1) - n) + 1)) * "0")
+
+
 def _gen_commands_v(commands):
     """
     Generate `commands.gen.v`.
     """
     with _COMMANDS_GEN_V.open(mode="w+") as io:
         print(_header(), file=io)
+
+        # Numeric forms.
         for idx, cmd in enumerate(commands):
             print(_define(cmd["cmd"], f"6'd{idx}"), file=io)
         print(_define("CMD_UNKNOWN", f"6'd{idx + 1}"), file=io)
+
+        _br(io, 2)
+
+        # One-hot forms.
+        hotlen = 2 ** 6
+        for idx, cmd in enumerate(commands):
+            bitstring = _1hot(hotlen, idx)
+            print(_define(f"{cmd['cmd']}_1HOT", f"{hotlen}'b{bitstring}"), file=io)
+        bitstring = _1hot(hotlen, idx + 1)
+        print(_define("CMD_UNKNOWN_1HOT", f"{hotlen}'b{bitstring}"), file=io)
 
 
 def _gen_opc_map_v(commands):
@@ -218,7 +237,9 @@ def _gen_opc_map_v(commands):
             opnd_enc_expr = functools.reduce(_or, enc_exprs)
             opnd_enc_exprs.append((_asdef(_OPND_ENC_MAP[opnd_enc][0]), opnd_enc_expr))
         print(
-            _assign("opnd_form", _ternary_chain(opnd_enc_exprs, _asdef("OPND_ENC_UNKNOWN"))),
+            _assign(
+                "opnd_form", _ternary_chain(opnd_enc_exprs, _asdef("OPND_ENC_UNKNOWN"))
+            ),
             file=io,
         )
 
