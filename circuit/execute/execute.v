@@ -29,8 +29,10 @@ wire alu_op_div = opc_1hot[`CMD_DIV] | opc_1hot[`CMD_IDIV];
 // Auxiliary signals.
 wire alu_src_inv = opc_1hot[`CMD_SUB] | opc_1hot[`CMD_SBB] | opc_1hot[`CMD_DEC];
 wire alu_use_carry = opc_1hot[`CMD_ADC] | opc_1hot[`CMD_SBB];
+wire alu_src_inc = opc_1hot[`CMD_SUB] | opc_1hot[`CMD_SBB];
 
-wire [7:0] alu_cntl = {
+wire [8:0] alu_cntl = {
+                        alu_src_inc,   // 9
                         alu_use_carry, // 8
                         alu_op_add,    // 7
                         alu_op_and,    // 6
