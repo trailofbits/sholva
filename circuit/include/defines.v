@@ -74,3 +74,13 @@
 `define REG_EDI 3'd7
 `define REG_ESP 3'd4
 `define REG_EBP 3'd5
+
+// ALU control signal numbering.
+`define ALU_SRC_INV   8'b00000001
+`define ALU_OP_ADD    8'b00000010
+`define ALU_OP_AND    8'b00000100
+`define ALU_OP_OR     8'b00001000
+`define ALU_OP_XOR    8'b00010000
+`define ALU_OP_MUL    8'b00100000
+`define ALU_OP_DIV    8'b01000000
+`define ALU_USE_CARRY 8'b10000000

@@ -98,7 +98,10 @@ decode decode_instr(
 
 // Execute
 execute execute_x(
-  .opc(opc)
+  .opc(opc),
+  .eflags(eflags),
+  .opnd0_r(opnd0_r),
+  .opnd1_r(opnd1_r)
 );
 
 // Register writeback + updates.
