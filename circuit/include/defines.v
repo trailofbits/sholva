@@ -86,3 +86,4 @@
 `define ALU_USE_CARRY 4'd7
 `define ALU_SRC_INC   4'd8
 `define ALU_NO_WR     4'd9
+`define ALU_OP_SUB    4'd10
