@@ -60,4 +60,7 @@ assign status_out[`STAT_OF] = of_no_wr     ? status_in[`STAT_OF] :
                               alu_clear_of ? 1'b0 :
                               1'b0; // TODO(ww): Overflow flag.
 
+// TODO(ww): Maybe get rid of alu_no_wr entirely and check it only in execute.v.
+assign result = alu_no_wr ? 32'b0 : stat_result[31:0];
+
 endmodule

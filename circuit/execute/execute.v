@@ -42,11 +42,22 @@ wire alu_op_div = opc_1hot[`CMD_DIV] |
                   opc_1hot[`CMD_IDIV];
 
 // Auxiliary signals.
-wire alu_src_inv = opc_1hot[`CMD_SUB] | opc_1hot[`CMD_SBB] | opc_1hot[`CMD_DEC];
-wire alu_use_carry = opc_1hot[`CMD_ADC] | opc_1hot[`CMD_SBB];
-wire alu_src_inc = opc_1hot[`CMD_SUB] | opc_1hot[`CMD_SBB];
-wire alu_no_wr = opc_1hot[`CMD_CMP] | opc_1hot[`CMD_CMPS] | opc_1hot[`CMD_TEST];
+wire alu_src_inv = opc_1hot[`CMD_SUB] |
+                   opc_1hot[`CMD_SBB] |
+                   opc_1hot[`CMD_DEC];
+
+wire alu_use_carry = opc_1hot[`CMD_ADC] |
+                     opc_1hot[`CMD_SBB];
+
+wire alu_src_inc = opc_1hot[`CMD_SUB] |
+                   opc_1hot[`CMD_SBB];
+
+wire alu_no_wr = opc_1hot[`CMD_CMP] |
+                 opc_1hot[`CMD_CMPS] |
+                 opc_1hot[`CMD_TEST];
+
 wire alu_no_flags = opc_1hot[`CMD_NOT];
+
 // TODO(ww): Flesh these out more:
 // https://sandpile.org/x86/flags.htm
 wire alu_clear_cf = opc_1hot[`CMD_AND] |
@@ -85,8 +96,8 @@ wire [4:0] status_in = {
                           eflags[`EFLAGS_OF]
                        };
 
-wire [4:0] status_out;
-wire [31:0] result;
+wire [4:0] alu_status_out;
+wire [31:0] alu_result;
 
 alu alu_x(
   .cntl(alu_cntl),
@@ -94,8 +105,8 @@ alu alu_x(
   .opnd0_r(opnd0_r),
   .opnd1_r(opnd1_r),
 
-  .status_out(status_out),
-  .result(result)
+  .status_out(alu_status_out),
+  .result(alu_result)
 );
 
 endmodule
