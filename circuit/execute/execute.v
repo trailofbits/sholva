@@ -15,6 +15,24 @@ module execute(
 
 wire [63:0] opc_1hot = one_hot64(opc);
 
+///
+/// BEGIN ALU
+///
+
+// The ALU is responsible for the following instructions:
+//
+// ADD, ADC, INC -> ALU_OP_ADD
+// SUB, SBB, DEC -> ALU_OP_SUB
+// AND, TEST     -> ALU_OP_AND
+// OR            -> ALU_OP_OR
+// XOR, NOT      -> ALU_OP_XOR
+// MUL, IMUL     -> ALU_OP_MUL
+// DIV, IDIV     -> ALU_OP_DIV
+
+// TODO(ww): The ALU needs to support each of the following:
+// BSF, BSR, BT, BTC, BTR, BTS
+// Jcc, JCXZ, SETcc (?), LOOPcc, PUSH(A), POP(A)
+
 // ALU control signals.
 
 // Core operation signals.
@@ -119,6 +137,19 @@ alu alu_x(
   .result(alu_result)
 );
 
+///
+/// END ALU
+///
+
+///
+/// BEGIN MOVE UNIT
+///
+
+// The move unit is responsible for the following instructions:
+//
+// MOV, MOVSZ, MOVZX, LEA, MOVS, XCHG -> MU_OP_MOV
+
+
 // Move unit control signals.
 
 wire mu_sext = opc_1hot[`CMD_MOVSX];
@@ -131,6 +162,11 @@ wire exe_is_mu = opc_1hot[`CMD_MOV]   |
                  opc_1hot[`CMD_LEA]   |
                  opc_1hot[`CMD_MOVS]  |
                  opc_1hot[`CMD_MOVSX] |
-                 opc_1hot[`CMD_MOVZX];
+                 opc_1hot[`CMD_MOVZX] |
+                 opc_1hot[`CMD_XCHG];
+
+///
+/// END MOVE UNIT
+///
 
 endmodule
