@@ -2,11 +2,11 @@
 
 module alu(
   input [13:0] cntl,
-  input [4:0] status_in, // 4:CF, 3:PF, 2:ZF, 1:SF, 0:OF
+  input [4:0] status_in,
   input [31:0] opnd0_r,
   input [31:0] opnd1_r,
 
-  output [4:0] status_out, // 4:CF, 3:PF, 2:ZF, 1:SF, 0:OF
+  output [4:0] status_out,
   output [31:0] result
 );
 
