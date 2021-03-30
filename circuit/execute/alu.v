@@ -1,7 +1,7 @@
 `include "defines.v"
 
 module alu(
-  input [11:0] cntl,
+  input [13:0] cntl,
   input [4:0] status_in, // 4:CF, 3:PF, 2:ZF, 1:SF, 0:OF
   input [31:0] opnd0_r,
   input [31:0] opnd1_r,
@@ -14,6 +14,8 @@ wire alu_src_inv = cntl[`ALU_SRC_INV];
 wire alu_src_inc = cntl[`ALU_SRC_INC];
 wire alu_use_carry = cntl[`ALU_USE_CARRY];
 wire alu_no_wr = cntl[`ALU_NO_WR];
+wire alu_clear_cf = cntl[`ALU_CLEAR_CF];
+wire alu_clear_of = cntl[`ALU_CLEAR_OF];
 
 // Apply our carry bit if CF is high *and* the ALU is specifically asked to use it.
 wire carry = alu_use_carry & status_in[`STAT_CF];
@@ -37,10 +39,23 @@ wire [32:0] stat_result = cntl[`ALU_OP_ADD] ? result_add :
                           cntl[`ALU_OP_MUL] ? result_sub :
                                               result_div;
 
-assign status_out[`STAT_CF] = stat_result[32];
-assign status_out[`STAT_PF] = 1'b0; // TODO
-assign status_out[`STAT_ZF] = stat_result[31:0] == 32'b0;
-assign status_out[`STAT_SF] = stat_result[31];
-assign status_out[`STAT_OF] = 1'b0; // TODO
+// TODO(ww): Fill these in.
+wire cf_no_wr = alu_no_wr;
+wire pf_no_wr = alu_no_wr;
+wire zf_no_wr = alu_no_wr;
+wire sf_no_wr = alu_no_wr;
+wire of_no_wr = alu_no_wr;
+
+assign status_out[`STAT_CF] = cf_no_wr     ? status_in[`STAT_CF] :
+                              alu_clear_cf ? 1'b0 :
+                              stat_result[32];
+
+assign status_out[`STAT_PF] = pf_no_wr ? status_in[`STAT_PF] : ~^stat_result[31:0];
+
+assign status_out[`STAT_ZF] = zf_no_wr ? status_in[`STAT_ZF] : stat_result[31:0] == 32'b0;
+
+assign status_out[`STAT_SF] = sf_no_wr ? status_in[`STAT_SF] : stat_result[31];
+
+assign status_out[`STAT_OF] = of_no_wr ? status_in[`STAT_OF] : 1'b0; // TODO
 
 endmodule

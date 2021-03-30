@@ -33,10 +33,19 @@ wire alu_no_wr = opc_1hot[`CMD_CMP] | opc_1hot[`CMD_CMPS];
 wire alu_no_flags = opc_1hot[`CMD_NOT];
 // TODO(ww): Flesh these out more:
 // https://sandpile.org/x86/flags.htm
-wire alu_clear_cf = opc_1hot[`CMD_AND] | opc_1hot[`CMD_OR] | opc_1hot[`CMD_XOR];
-wire alu_clear_of = opc_1hot[`CMD_AND] | opc_1hot[`CMD_OR] | opc_1hot[`CMD_XOR];
+wire alu_clear_cf = opc_1hot[`CMD_AND] |
+                    opc_1hot[`CMD_OR] |
+                    opc_1hot[`CMD_XOR] |
+                    opc_1hot[`CMD_TEST];
 
-wire [11:0] alu_cntl = {
+wire alu_clear_of = opc_1hot[`CMD_AND] |
+                    opc_1hot[`CMD_OR] |
+                    opc_1hot[`CMD_XOR] |
+                    opc_1hot[`CMD_TEST];
+
+wire [13:0] alu_cntl = {
+                        alu_clear_of,  // 13
+                        alu_clear_cf,  // 12
                         alu_no_flags,  // 11
                         alu_op_sub,    // 10
                         alu_no_wr,     // 9

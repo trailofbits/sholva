@@ -95,3 +95,5 @@
 `define ALU_NO_WR     4'd9
 `define ALU_OP_SUB    4'd10
 `define ALU_NO_FLAGS  4'd11
+`define ALU_CLEAR_CF  4'd12
+`define ALU_CLEAR_OF  4'd13
