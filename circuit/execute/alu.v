@@ -18,13 +18,13 @@ wire alu_clear_cf = cntl[`ALU_CLEAR_CF];
 wire alu_clear_of = cntl[`ALU_CLEAR_OF];
 
 // Apply our carry bit if CF is high *and* the ALU is specifically asked to use it.
-wire carry = alu_use_carry & status_in[`STAT_CF];
+wire carry_in = alu_use_carry & status_in[`STAT_CF];
 
 wire [32:0] opnd0_r_tmp = { 1'b0, opnd0_r };
 wire [32:0] opnd1_r_tmp = { 1'b0, opnd1_r };
 
-wire [32:0] result_add = opnd0_r_tmp + opnd1_r_tmp + { 32'b0, carry };
-wire [32:0] result_sub = opnd0_r_tmp - opnd1_r_tmp + { 32'b0, carry };
+wire [32:0] result_add = opnd0_r_tmp + opnd1_r_tmp + { 32'b0, carry_in };
+wire [32:0] result_sub = opnd0_r_tmp - opnd1_r_tmp + { 32'b0, carry_in };
 wire [32:0] result_and = opnd0_r_tmp & opnd1_r_tmp;
 wire [32:0] result_or = opnd0_r_tmp | opnd1_r_tmp;
 wire [32:0] result_xor = opnd0_r_tmp ^ opnd1_r_tmp;
@@ -58,7 +58,7 @@ assign status_out[`STAT_SF] = sf_no_wr ? status_in[`STAT_SF] : stat_result[31];
 
 assign status_out[`STAT_OF] = of_no_wr     ? status_in[`STAT_OF] :
                               alu_clear_of ? 1'b0 :
-                              1'b0; // TODO(ww): Overflow flag.
+                              carry_in ^ stat_result[32];
 
 // TODO(ww): Maybe get rid of alu_no_wr entirely and check it only in execute.v.
 assign result = alu_no_wr ? 32'b0 : stat_result[31:0];
