@@ -16,7 +16,7 @@ wire alu_use_carry = cntl[`ALU_USE_CARRY];
 wire alu_no_wr = cntl[`ALU_NO_WR];
 
 // Apply our carry bit if CF is high *and* the ALU is specifically asked to use it.
-wire carry = alu_use_carry & status_in[4];
+wire carry = alu_use_carry & status_in[`STAT_CF];
 
 wire [32:0] opnd0_r_tmp = { 1'b0, opnd0_r };
 wire [32:0] opnd1_r_tmp = { 1'b0, opnd1_r };
@@ -36,5 +36,11 @@ wire [32:0] stat_result = cntl[`ALU_OP_ADD] ? result_add :
                           cntl[`ALU_OP_XOR] ? result_sub :
                           cntl[`ALU_OP_MUL] ? result_sub :
                                               result_div;
+
+assign status_out[`STAT_CF] = stat_result[32];
+assign status_out[`STAT_PF] = 1'b0; // TODO
+assign status_out[`STAT_ZF] = stat_result[31:0] == 32'b0;
+assign status_out[`STAT_SF] = stat_result[31];
+assign status_out[`STAT_OF] = 1'b0; // TODO
 
 endmodule

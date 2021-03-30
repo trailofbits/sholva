@@ -64,6 +64,13 @@
 `define EFLAGS_DF 32'd10
 `define EFLAGS_OF 32'd11
 
+// Like EFLAGS, but for the compressed status signal.
+`define STAT_OF 3'd0
+`define STAT_SF 3'd1
+`define STAT_ZF 3'd2
+`define STAT_PF 3'd3
+`define STAT_CF 3'd4
+
 // GPR numbering for register selectors/identification
 // NOTE(ww): Weird numbering here is the canonical x86 numbering.
 `define REG_EAX 3'd0

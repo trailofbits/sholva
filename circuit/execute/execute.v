@@ -5,6 +5,7 @@ module execute(
   input [31:0] eflags,
   input [31:0] opnd0_r,
   input [31:0] opnd1_r
+  // TODO(ww): Input signal for 8/16/32 bit opnds
 
   // TODO: opndN_w for outputs
 );
@@ -61,6 +62,7 @@ wire [4:0] status_in = {
 
 wire [4:0] status_out;
 wire [31:0] result;
+
 alu alu_x(
   .cntl(alu_cntl),
   .status_in(status_in),
