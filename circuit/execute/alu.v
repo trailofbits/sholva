@@ -56,6 +56,8 @@ assign status_out[`STAT_ZF] = zf_no_wr ? status_in[`STAT_ZF] : stat_result[31:0]
 
 assign status_out[`STAT_SF] = sf_no_wr ? status_in[`STAT_SF] : stat_result[31];
 
-assign status_out[`STAT_OF] = of_no_wr ? status_in[`STAT_OF] : 1'b0; // TODO
+assign status_out[`STAT_OF] = of_no_wr     ? status_in[`STAT_OF] :
+                              alu_clear_of ? 1'b0 :
+                              1'b0; // TODO(ww): Overflow flag.
 
 endmodule
