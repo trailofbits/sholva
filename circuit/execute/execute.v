@@ -1,3 +1,4 @@
+`include "defines.v"
 `include "codegen/commands.gen.v"
 
 module execute(
