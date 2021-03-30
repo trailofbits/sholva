@@ -42,6 +42,15 @@ wire alu_op_mul = opc_1hot[`CMD_MUL] |
 wire alu_op_div = opc_1hot[`CMD_DIV] |
                   opc_1hot[`CMD_IDIV];
 
+// Are we performing an ALU operation?
+wire exe_is_alu = alu_op_add |
+                  alu_op_sub |
+                  alu_op_and |
+                  alu_op_or  |
+                  alu_op_xor |
+                  alu_op_mul |
+                  alu_op_div;
+
 // Auxiliary signals.
 wire alu_src_inv = opc_1hot[`CMD_SUB] |
                    opc_1hot[`CMD_SBB] |
@@ -109,5 +118,19 @@ alu alu_x(
   .status_out(alu_status_out),
   .result(alu_result)
 );
+
+// Move unit control signals.
+
+wire mu_sext = opc_1hot[`CMD_MOVSX];
+wire mu_zext = opc_1hot[`CMD_MOVZX];
+
+// Are we performing a move operation?
+// We treat LEAs as moves: every LEA is essentially an address calculation,
+// moved into a register.
+wire exe_is_mu = opc_1hot[`CMD_MOV]   |
+                 opc_1hot[`CMD_LEA]   |
+                 opc_1hot[`CMD_MOVS]  |
+                 opc_1hot[`CMD_MOVSX] |
+                 opc_1hot[`CMD_MOVZX];
 
 endmodule
