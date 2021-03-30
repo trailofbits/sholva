@@ -161,6 +161,8 @@ mux8_32 mux8_32_opnd1(
 
 // TODO(ww): This eventually needs to be a multiplexor against
 // opndN_r_regval, opndN_r_memval, opndN_r_immval, etc.
+// TODO(ww): Also handle special operand fixups here. For example, opnd1_r
+// will be 32'b1 for CMD_NOT.
 assign opnd0_r = opnd0_r_regval;
 assign opnd1_r = opnd1_r_regval;
 
@@ -175,5 +177,6 @@ assign opnd2_r = 32'd0;
 // further on in instruction decoding, when looking at `opc` more closely.
 assign dest0_sel = `OPND_DEST_REG;
 assign dest1_sel = `OPND_DEST_REG;
+
 
 endmodule

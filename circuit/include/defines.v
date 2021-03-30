@@ -87,3 +87,4 @@
 `define ALU_SRC_INC   4'd8
 `define ALU_NO_WR     4'd9
 `define ALU_OP_SUB    4'd10
+`define ALU_NO_FLAGS  4'd11
