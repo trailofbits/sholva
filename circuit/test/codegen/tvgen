@@ -35,6 +35,7 @@ def emit_tv(spec)
         if wire_value == "x"
           wire_value * scale
         else
+          wire_value = [wire_value.to_i].pack("L").unpack1("L") if wire_value.to_i.negative?
           wire_value.to_s(fmt).rjust(scale, "0")
         end
       end.join("_")
