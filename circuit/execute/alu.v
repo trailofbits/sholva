@@ -33,10 +33,10 @@ wire [32:0] result_div = opnd0_r_tmp / opnd1_r_tmp;
 
 wire [32:0] stat_result = cntl[`ALU_OP_ADD] ? result_add :
                           cntl[`ALU_OP_SUB] ? result_sub :
-                          cntl[`ALU_OP_AND] ? result_sub :
-                          cntl[`ALU_OP_OR]  ? result_sub :
-                          cntl[`ALU_OP_XOR] ? result_sub :
-                          cntl[`ALU_OP_MUL] ? result_sub :
+                          cntl[`ALU_OP_AND] ? result_and :
+                          cntl[`ALU_OP_OR]  ? result_or  :
+                          cntl[`ALU_OP_XOR] ? result_xor :
+                          cntl[`ALU_OP_MUL] ? result_mul :
                                               result_div;
 
 // TODO(ww): Fill these in.

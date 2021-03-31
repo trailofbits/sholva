@@ -1,0 +1,19 @@
+module: alu
+file: ../execute/alu.v
+inputs:
+  - "14 cntl"
+  - "5 status_in"
+  - "32 opnd0_r"
+  - "32 opnd1_r"
+outputs:
+  - "5 status_out"
+  - "32 result"
+vector_fmt: binary
+vector_specs:
+    - _description: "ALU_OP_ADD, no carry in/out, parity even"
+      cntl: 0b00000000000010
+      status_in: 0b00000
+      opnd0_r: 0xaaaa
+      opnd1_r: 0xbbbb
+      status_out: 0b00000
+      result: 0x16665

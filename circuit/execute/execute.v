@@ -106,12 +106,12 @@ wire [13:0] alu_cntl = {
                         alu_no_wr,     // 9
                         alu_src_inc,   // 8
                         alu_use_carry, // 7
-                        alu_op_add,    // 6
-                        alu_op_and,    // 5
-                        alu_op_or,     // 4
-                        alu_op_xor,    // 3
-                        alu_op_mul,    // 2
-                        alu_op_div,    // 1
+                        alu_op_div,    // 6
+                        alu_op_mul,    // 5
+                        alu_op_xor,    // 4
+                        alu_op_or,     // 3
+                        alu_op_and,    // 2
+                        alu_op_add,    // 1
                         alu_src_inv    // 0
                       };
 
