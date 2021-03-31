@@ -56,9 +56,10 @@ assign status_out[`STAT_ZF] = zf_no_wr ? status_in[`STAT_ZF] : stat_result[31:0]
 
 assign status_out[`STAT_SF] = sf_no_wr ? status_in[`STAT_SF] : stat_result[31];
 
+// NOTE(ww): OF is calculated as (SGN(op0) & SGN(op1) ^ SGN(result))
 assign status_out[`STAT_OF] = of_no_wr     ? status_in[`STAT_OF] :
                               alu_clear_of ? 1'b0 :
-                              carry_in ^ stat_result[32];
+                              (opnd0_r_tmp[31] & opnd1_r_tmp[31]) ^ stat_result[31];
 
 // TODO(ww): Maybe get rid of alu_no_wr entirely and check it only in execute.v.
 assign result = alu_no_wr ? 32'b0 : stat_result[31:0];

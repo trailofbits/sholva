@@ -22,3 +22,10 @@ vector_specs:
       opnd1_r: 8
       status_out: 0b01000
       result: 15
+    - _description: "ALU_OP_ADD, carry in (no carry out, no overflow)"
+      cntl: 0b00000010000010
+      status_in: 0b10000
+      opnd0_r: 3
+      opnd1_r: 4
+      status_out: 0b00000
+      result: 8
