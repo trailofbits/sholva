@@ -10,10 +10,15 @@ outputs:
   - "32 result"
 vector_fmt: binary
 vector_specs:
-    - _description: "ALU_OP_ADD, no carry in/out, parity even"
+    - _description: "ALU_OP_ADD, no carry in/out, parity odd (PF=0)"
       cntl: 0b00000000000010
-      status_in: 0b00000
       opnd0_r: 0xaaaa
       opnd1_r: 0xbbbb
       status_out: 0b00000
       result: 0x16665
+    - _description: "ALU_OP_ADD, no carry in/out, parity even (PF=1)"
+      cntl: 0b00000000000010
+      opnd0_r: 7
+      opnd1_r: 8
+      status_out: 0b01000
+      result: 15
