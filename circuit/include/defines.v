@@ -64,6 +64,13 @@
 `define EFLAGS_DF 32'd10
 `define EFLAGS_OF 32'd11
 
+// Like EFLAGS, but for the compressed status signal.
+`define STAT_OF 3'd0
+`define STAT_SF 3'd1
+`define STAT_ZF 3'd2
+`define STAT_PF 3'd3
+`define STAT_CF 3'd4
+
 // GPR numbering for register selectors/identification
 // NOTE(ww): Weird numbering here is the canonical x86 numbering.
 `define REG_EAX 3'd0
@@ -74,3 +81,19 @@
 `define REG_EDI 3'd7
 `define REG_ESP 3'd4
 `define REG_EBP 3'd5
+
+// ALU control signal numbering.
+`define ALU_SRC_INV   4'd0
+`define ALU_OP_ADD    4'd1
+`define ALU_OP_AND    4'd2
+`define ALU_OP_OR     4'd3
+`define ALU_OP_XOR    4'd4
+`define ALU_OP_MUL    4'd5
+`define ALU_OP_DIV    4'd6
+`define ALU_USE_CARRY 4'd7
+`define ALU_SRC_INC   4'd8
+`define ALU_NO_WR     4'd9
+`define ALU_OP_SUB    4'd10
+`define ALU_NO_FLAGS  4'd11
+`define ALU_CLEAR_CF  4'd12
+`define ALU_CLEAR_OF  4'd13

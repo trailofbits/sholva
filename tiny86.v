@@ -97,7 +97,12 @@ decode decode_instr(
 
 
 // Execute
-execute execute_x();
+execute execute_x(
+  .opc(opc),
+  .eflags(eflags),
+  .opnd0_r(opnd0_r),
+  .opnd1_r(opnd1_r)
+);
 
 // Register writeback + updates.
 wire [2:0] gpr_selector = 3'd0; // TODO
