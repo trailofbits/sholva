@@ -18,13 +18,13 @@ wire alu_clear_cf = cntl[`ALU_CLEAR_CF];
 wire alu_clear_of = cntl[`ALU_CLEAR_OF];
 
 // Apply our carry bit if CF is high *and* the ALU is specifically asked to use it.
-wire carry_in = alu_use_carry & status_in[`STAT_CF];
+wire [32:0] carry_in = { 32'b0, alu_use_carry & status_in[`STAT_CF] };
 
 wire [32:0] opnd0_r_tmp = { 1'b0, opnd0_r };
 wire [32:0] opnd1_r_tmp = { 1'b0, opnd1_r };
 
-wire [32:0] result_add = opnd0_r_tmp + opnd1_r_tmp + { 32'b0, carry_in };
-wire [32:0] result_sub = opnd0_r_tmp - opnd1_r_tmp + { 32'b0, carry_in };
+wire [32:0] result_add = opnd0_r_tmp + opnd1_r_tmp + carry_in;
+wire [32:0] result_sub = opnd0_r_tmp - opnd1_r_tmp + carry_in;
 wire [32:0] result_and = opnd0_r_tmp & opnd1_r_tmp;
 wire [32:0] result_or = opnd0_r_tmp | opnd1_r_tmp;
 wire [32:0] result_xor = opnd0_r_tmp ^ opnd1_r_tmp;

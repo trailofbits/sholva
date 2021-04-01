@@ -169,4 +169,15 @@ wire exe_is_mu = opc_1hot[`CMD_MOV]   |
 /// END MOVE UNIT
 ///
 
+///
+/// BEGIN META UNIT
+///
+
+// The "meta" unit is responsible for various instructions that manipulate
+// EFLAGS or other non-GPR/memory architectural state directly.
+
+///
+/// END META UNIT
+///
+
 endmodule
