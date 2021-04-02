@@ -9,12 +9,17 @@ inputs:
   - "32 i_edi"
   - "32 i_esp"
   - "32 i_ebp"
-  - "32 i_eflags"
-  - "3 gpr_selector"
-  - "32 gpr_wr"
+  - "32 w_eax"
+  - "32 w_ebx"
+  - "32 w_ecx"
+  - "32 w_edx"
+  - "32 w_esi"
+  - "32 w_edi"
+  - "32 w_esp"
+  - "32 w_ebp"
+  - "8 gpr_wrmask"
   - "32 next_eip"
-  - "1 alu_wr"
-  - "6 alu_flags"
+  - "32 next_eflags"
 outputs:
   - "32 o_eax"
   - "32 o_ebx"
@@ -28,23 +33,27 @@ outputs:
   - "32 o_eflags"
 vector_fmt: binary
 vector_specs:
-  - _description: "no changes, EFLAGS is not updated unless alu_wr is high"
-    i_eflags: 0x00
-    alu_wr: 0x00
-    alu_flags: 0b111111
-    o_eflags: 0x00
-  - _description: "EFLAGS is updated based on the ALU flags + alu_wr (all high)"
-    i_eflags: 0x00
-    alu_wr: 0b1
-    alu_flags: 0b111111
-    o_eflags: 0b00000000000000000000110011010001
-  - _description: "EFLAGS is updated based on the ALU flags + alu_wr (all low)"
-    i_eflags: 0b11111111111111111111111111111111
-    alu_wr: 0b1
-    alu_flags: 0b000000
-    o_eflags: 0b11111111111111111111001100101110
-  - _description: "gpr_selector for EAX"
-    i_eax: 0x000000ff
-    gpr_selector: 0x0
-    gpr_wr: 0xffffff00
-    o_eax: 0xffffff00
+  - _description: "update one GPR (EBX)"
+    i_ebx: 0xAAAAAAAA
+    w_ebx: 0xBBBBBBBB
+    gpr_wrmask: 0b00001000
+    o_ebx: 0xBBBBBBBB
+  - _description: "update two GPRs (ECX:EDX)"
+    i_ecx: 0x11111111
+    i_edx: 0x22222222
+    w_ecx: 0x33333333
+    w_edx: 0x44444444
+    gpr_wrmask: 0b00000110
+    o_ecx: 0x33333333
+    o_edx: 0x44444444
+  - _description: "update no GPRs (w_REG values with no mask do nothing)"
+    i_eax: 0xAAAAAAAA
+    w_eax: 0xBBBBBBBB
+    gpr_wrmask: 0b00000000
+    o_eax: 0xAAAAAAAA
+  - _description: "update EIP"
+    next_eip: 0x41414141
+    o_eip: 0x41414141
+  - _description: "update EFLAGS"
+    next_eflags: 0x12121212
+    o_eflags: 0x12121212
