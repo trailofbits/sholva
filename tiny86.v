@@ -105,11 +105,10 @@ execute execute_x(
 );
 
 // Register writeback + updates.
-wire [2:0] gpr_selector = 3'd0; // TODO
-wire [31:0] gpr_wr = 32'd0; // TODO
+wire [31:0] w_eax, w_ebx, w_ecx, w_edx, w_esi, w_edi, w_esp, w_ebp, w_eip, w_eflags;  // TODO
+wire [7:0] gpr_wrmask; // TODO
 wire [31:0] next_eip = 32'd0; // TODO
-wire alu_wr = 0; // TODO
-wire [5:0] alu_flags = 6'd0; // TODO
+wire [31:0] next_eflags = 32'd0; // TODO
 
 wire [31:0] o_eax, o_ebx, o_ecx, o_edx, o_esi, o_edi, o_esp, o_ebp, o_eip, o_eflags;
 
@@ -122,13 +121,20 @@ regfile regfile_x(
   .i_edi(edi),
   .i_esp(esp),
   .i_ebp(ebp),
-  .i_eflags(eflags),
 
-  .gpr_selector(gpr_selector),
-  .gpr_wr(gpr_wr),
+  .w_eax(w_eax),
+  .w_ebx(w_ebx),
+  .w_ecx(w_ecx),
+  .w_edx(w_edx),
+  .w_esi(w_esi),
+  .w_edi(w_edi),
+  .w_esp(w_esp),
+  .w_ebp(w_ebp),
+
+  .gpr_wrmask(gpr_wrmask),
+
+  .next_eflags(next_eflags),
   .next_eip(next_eip),
-  .alu_wr(alu_wr),
-  .alu_flags(alu_flags),
 
   .o_eax(o_eax),
   .o_ebx(o_ebx),
