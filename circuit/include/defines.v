@@ -83,15 +83,6 @@
 `define REG_ESP 3'd4
 `define REG_EBP 3'd5
 
-`define REG_EAX_LONG 32'd0
-`define REG_EBX_LONG 32'd3
-`define REG_ECX_LONG 32'd1
-`define REG_EDX_LONG 32'd2
-`define REG_ESI_LONG 32'd6
-`define REG_EDI_LONG 32'd7
-`define REG_ESP_LONG 32'd4
-`define REG_EBP_LONG 32'd5
-
 // ALU control signal numbering.
 `define ALU_SRC_INV   4'd0
 `define ALU_OP_ADD    4'd1
