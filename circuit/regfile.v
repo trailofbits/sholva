@@ -5,6 +5,9 @@ module regfile(
   // We unconditionally modify the EIP and EFLAGS, so no need for them as inputs.
   input [31:0] i_eax, i_ebx, i_ecx, i_edx, i_esi, i_edi, i_esp, i_ebp,
 
+  // TODO(ww): Maybe special wires to signal stack inc/dec,
+  // ECX/EDX and ESI:EDI inc/dec? Worth it?
+
   input [1:0] dest0_kind, dest1_kind,
   input [2:0] dest0_sel, dest1_sel,
   input [31:0] opnd0_w, opnd1_w,

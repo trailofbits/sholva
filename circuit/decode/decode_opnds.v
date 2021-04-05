@@ -91,15 +91,19 @@ wire has_disp = (has_modrm
 
 // TODO(ww): Actually extract the disp byte(s) here, maybe with a separate module.
 
-// Implicit
+///
+/// OPERAND EXTRACTION
+///
 
 // The annoying and hard to visualize bit: we don't have any real control flow,
 // so we have to compute each operand's prospective value as if it was an
 // immediate, displacement, register, and memory operand. Then, we get to
 // select from those unconditional computations based on which one it actually
 // is.
-// TODO(ww): Actually support more than just register-register.
-// TODO(ww): Assign opndN_r_form as OPND_IMM, OPND_MEM, etc.
+
+///
+/// REGISTER OPERANDS
+///
 
 // For operand#0, our register selector can come from four sources:
 // TODO(ww): That's wrong. We also need to handle implicit register selector operands here,
@@ -161,6 +165,17 @@ mux8_32 mux8_32_opnd1(
 
   .out(opnd1_r_regval)
 );
+
+///
+/// END REGISTER OPERANDS
+///
+
+// TODO(ww): Immediate and memory operands.
+// TODO(ww): "Implicit" immediates, like `INC reg` -> `ADD reg, 1`
+
+///
+/// END OPERAND EXTRACTION
+///
 
 // TODO(ww): This eventually needs to be a multiplexor against
 // opndN_r_regval, opndN_r_memval, opndN_r_immval, etc.
