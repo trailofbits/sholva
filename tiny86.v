@@ -79,6 +79,8 @@ wire [31:0] opnd1_r;
 wire [31:0] opnd2_r;
 wire [1:0] dest0_kind;
 wire [1:0] dest1_kind;
+wire [31:0] dest0_sel;
+wire [31:0] dest1_sel;
 
 decode decode_instr(
   .raw_instr(raw_instr),
@@ -96,7 +98,9 @@ decode decode_instr(
   .opnd1_r(opnd1_r),
   .opnd2_r(opnd2_r),
   .dest0_kind(dest0_kind),
-  .dest1_kind(dest1_kind)
+  .dest1_kind(dest1_kind),
+  .dest0_sel(dest0_sel),
+  .dest1_sel(dest1_sel)
 );
 
 
