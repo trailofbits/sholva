@@ -21,8 +21,8 @@ outputs:
   - "32 opnd0_r"
   - "32 opnd1_r"
   - "32 opnd2_r"
-  - "2 dest0_sel"
-  - "2 dest1_sel"
+  - "2 dest0_kind"
+  - "2 dest1_kind"
 vector_fmt: binary
 vector_specs:
   # reg-reg encoding forms

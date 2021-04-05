@@ -1,6 +1,3 @@
-`define SIZ_BIT 1'd0
-`define DIR_BIT 1'd1
-
 `define OPND_IMM 2'd1
 `define OPND_MEM 2'd2
 `define OPND_REG 2'd3

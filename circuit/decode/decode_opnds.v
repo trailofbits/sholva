@@ -14,8 +14,8 @@ module decode_opnds(
   output [31:0] opnd0_r,
   output [31:0] opnd1_r,
   output [31:0] opnd2_r,
-  output [1:0] dest0_sel,
-  output [1:0] dest1_sel
+  output [1:0] dest0_kind,
+  output [1:0] dest1_kind
 );
 
 // Whether we have any immediate byte(s).
@@ -175,8 +175,8 @@ assign opnd2_r = 32'd0;
 // on the types of opndN and whether they're being written to.
 // TODO(ww): Is this the right place for this? Maybe we should do it
 // further on in instruction decoding, when looking at `opc` more closely.
-assign dest0_sel = `OPND_DEST_REG;
-assign dest1_sel = `OPND_DEST_REG;
+assign dest0_kind = `OPND_DEST_REG;
+assign dest1_kind = `OPND_DEST_REG;
 
 
 endmodule

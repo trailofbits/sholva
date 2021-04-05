@@ -19,6 +19,7 @@ fetch fetch_x(
 );
 
 // Decode hints.
+wire hint1_valid;
 wire [1:0] hint1_mask;
 wire hint1_rw;
 wire [31:0] hint1_address;
@@ -27,12 +28,14 @@ wire [31:0] hint1_data;
 decode_hint decode_hint1(
   .raw_hint(raw_hint1),
 
+  .valid_hint(hint1_valid),
   .mask(hint1_mask),
   .rw(hint1_rw),
   .address(hint1_address),
   .data(hint1_data)
 );
 
+wire hint2_valid;
 wire [1:0] hint2_mask;
 wire hint2_rw;
 wire [31:0] hint2_address;
@@ -41,6 +44,7 @@ wire [31:0] hint2_data;
 decode_hint decode_hint2(
   .raw_hint(raw_hint2),
 
+  .valid_hint(hint2_valid),
   .mask(hint2_mask),
   .rw(hint2_rw),
   .address(hint2_address),
@@ -73,8 +77,8 @@ wire [5:0] opc;
 wire [31:0] opnd0_r;
 wire [31:0] opnd1_r;
 wire [31:0] opnd2_r;
-wire [1:0] dest0_sel;
-wire [1:0] dest1_sel;
+wire [1:0] dest0_kind;
+wire [1:0] dest1_kind;
 
 decode decode_instr(
   .raw_instr(raw_instr),
@@ -91,17 +95,22 @@ decode decode_instr(
   .opnd0_r(opnd0_r),
   .opnd1_r(opnd1_r),
   .opnd2_r(opnd2_r),
-  .dest0_sel(dest0_sel),
-  .dest1_sel(dest1_sel)
+  .dest0_kind(dest0_kind),
+  .dest1_kind(dest1_kind)
 );
 
 
 // Execute
+wire [31:0] opnd0_w;
+
 execute execute_x(
   .opc(opc),
   .eflags(eflags),
   .opnd0_r(opnd0_r),
-  .opnd1_r(opnd1_r)
+  .opnd1_r(opnd1_r),
+
+  .opnd0_w(opnd0_w)
+  // .opnd0_sel(opnd0_sel),
 );
 
 // Register writeback + updates.

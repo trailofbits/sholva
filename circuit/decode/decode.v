@@ -13,8 +13,8 @@ module decode(
   output [31:0] opnd0_r,
   output [31:0] opnd1_r,
   output [31:0] opnd2_r,
-  output [1:0] dest0_sel,
-  output [1:0] dest1_sel
+  output [1:0] dest0_kind,
+  output [1:0] dest1_kind
   // output [3:0] opnd_form,
   // output [31:0] eax, ebx, ecx, edx, esi, edi, esp, ebp, eip, eflags
 );
@@ -96,8 +96,8 @@ decode_opnds decode_opnds_x(
   .opnd0_r(opnd0_r),
   .opnd1_r(opnd1_r),
   .opnd2_r(opnd2_r),
-  .dest0_sel(dest0_sel),
-  .dest1_sel(dest1_sel)
+  .dest0_kind(dest0_kind),
+  .dest1_kind(dest1_kind)
 );
 
 

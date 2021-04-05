@@ -5,10 +5,12 @@ module execute(
   input [5:0] opc,
   input [31:0] eflags,
   input [31:0] opnd0_r,
-  input [31:0] opnd1_r
+  input [31:0] opnd1_r,
   // TODO(ww): Input signal for 8/16/32 bit opnds
 
   // TODO: opndN_w for outputs
+  output [31:0] opnd0_w
+  // output [31:0] opnd1_w,
 );
 
 `include "funcs.v"
@@ -165,6 +167,8 @@ wire exe_is_mu = opc_1hot[`CMD_MOV]   |
                  opc_1hot[`CMD_MOVZX] |
                  opc_1hot[`CMD_XCHG];
 
+wire [31:0] mu_result = 32'b0; // TODO
+
 ///
 /// END MOVE UNIT
 ///
@@ -180,13 +184,8 @@ wire exe_is_mu = opc_1hot[`CMD_MOV]   |
 /// END META UNIT
 ///
 
-///
-/// BEGIN WRITEBACK
-///
-
-
-///
-/// END WRITEBACK
-///
+assign opnd0_w = exe_is_alu ? alu_result :
+                 exe_is_mu  ? mu_result  :
+                              32'b0;
 
 endmodule
