@@ -1,3 +1,5 @@
+`include "defines.v"
+
 module tiny86(
   input [559:0] step
 );
@@ -106,6 +108,7 @@ decode decode_instr(
 
 // Execute
 wire [31:0] opnd0_w;
+wire [31:0] opnd1_w; // TODO
 
 execute execute_x(
   .opc(opc),
@@ -114,12 +117,9 @@ execute execute_x(
   .opnd1_r(opnd1_r),
 
   .opnd0_w(opnd0_w)
-  // .opnd0_sel(opnd0_sel),
 );
 
 // Register writeback + updates.
-wire [31:0] w_eax, w_ebx, w_ecx, w_edx, w_esi, w_edi, w_esp, w_ebp, w_eip, w_eflags;  // TODO
-wire [7:0] gpr_wrmask; // TODO
 wire [31:0] next_eip = 32'd0; // TODO
 wire [31:0] next_eflags = 32'd0; // TODO
 
@@ -135,16 +135,14 @@ regfile regfile_x(
   .i_esp(esp),
   .i_ebp(ebp),
 
-  .w_eax(w_eax),
-  .w_ebx(w_ebx),
-  .w_ecx(w_ecx),
-  .w_edx(w_edx),
-  .w_esi(w_esi),
-  .w_edi(w_edi),
-  .w_esp(w_esp),
-  .w_ebp(w_ebp),
+  .dest0_kind(dest0_kind),
+  .dest1_kind(dest1_kind),
 
-  .gpr_wrmask(gpr_wrmask),
+  .dest0_sel(dest0_sel[2:0]),
+  .dest1_sel(dest1_sel[2:0]),
+
+  .opnd0_w(opnd0_w),
+  .opnd1_w(opnd1_w),
 
   .next_eflags(next_eflags),
   .next_eip(next_eip),

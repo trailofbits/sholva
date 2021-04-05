@@ -178,12 +178,12 @@ assign opnd2_r = 32'd0;
 // on the types of opndN and whether they're being written to.
 // TODO(ww): Is this the right place for this? Maybe we should do it
 // further on in instruction decoding, when looking at `opc` more closely.
-assign dest0_kind = `OPND_DEST_REG;
+assign dest0_kind = `OPND_DEST_REG_1HOT;
 assign dest1_kind = `OPND_DEST_NONE;
 
-assign dest0_sel = dest0_kind == `OPND_DEST_REG ?
+assign dest0_sel = dest0_kind[`OPND_DEST_REG] ?
                                  { 29'b0, opnd0_r_regsel } : 32'b0;
-assign dest1_sel = dest1_kind == `OPND_DEST_REG ?
+assign dest1_sel = dest1_kind[`OPND_DEST_REG] ?
                                  { 29'b0, opnd1_r_regsel } : 32'b0;
 
 endmodule

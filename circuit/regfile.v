@@ -5,11 +5,9 @@ module regfile(
   // We unconditionally modify the EIP and EFLAGS, so no need for them as inputs.
   input [31:0] i_eax, i_ebx, i_ecx, i_edx, i_esi, i_edi, i_esp, i_ebp,
 
-  // Potential modified GPR values.
-  input [31:0] w_eax, w_ebx, w_ecx, w_edx, w_esi, w_edi, w_esp, w_ebp,
-
-  // A write mask for selecting GPRs to update.
-  input [7:0] gpr_wrmask,
+  input [1:0] dest0_kind, dest1_kind,
+  input [2:0] dest0_sel, dest1_sel,
+  input [31:0] opnd0_w, opnd1_w,
 
   // The next EIP value.
   input [31:0] next_eip,
@@ -21,14 +19,31 @@ module regfile(
   output [31:0] o_eax, o_ebx, o_ecx, o_edx, o_esi, o_edi, o_esp, o_ebp, o_eip, o_eflags
 );
 
-assign o_eax = gpr_wrmask[`REG_EAX] ? w_eax : i_eax;
-assign o_ebx = gpr_wrmask[`REG_EBX] ? w_ebx : i_ebx;
-assign o_ecx = gpr_wrmask[`REG_ECX] ? w_ecx : i_ecx;
-assign o_edx = gpr_wrmask[`REG_EDX] ? w_edx : i_edx;
-assign o_esi = gpr_wrmask[`REG_ESI] ? w_esi : i_esi;
-assign o_edi = gpr_wrmask[`REG_EDI] ? w_edi : i_edi;
-assign o_esp = gpr_wrmask[`REG_ESP] ? w_esp : i_esp;
-assign o_ebp = gpr_wrmask[`REG_EBP] ? w_ebp : i_ebp;
+// Ugly.
+// TODO(ww): Maybe use a 1hot form for the selectors here, to avoid lots of 3-bit compares.
+assign o_eax = (dest0_kind[`OPND_DEST_REG] && dest0_sel == `REG_EAX) ? opnd0_w :
+               (dest1_kind[`OPND_DEST_REG] && dest1_sel == `REG_EAX) ? opnd1_w : i_eax;
+
+assign o_ebx = (dest0_kind[`OPND_DEST_REG] && dest0_sel == `REG_EBX) ? opnd0_w :
+               (dest1_kind[`OPND_DEST_REG] && dest1_sel == `REG_EBX) ? opnd1_w : i_ebx;
+
+assign o_ecx = (dest0_kind[`OPND_DEST_REG] && dest0_sel == `REG_ECX) ? opnd0_w :
+               (dest1_kind[`OPND_DEST_REG] && dest1_sel == `REG_ECX) ? opnd1_w : i_ecx;
+
+assign o_edx = (dest0_kind[`OPND_DEST_REG] && dest0_sel == `REG_EDX) ? opnd0_w :
+               (dest1_kind[`OPND_DEST_REG] && dest1_sel == `REG_EDX) ? opnd1_w : i_edx;
+
+assign o_esi = (dest0_kind[`OPND_DEST_REG] && dest0_sel == `REG_ESI) ? opnd0_w :
+               (dest1_kind[`OPND_DEST_REG] && dest1_sel == `REG_ESI) ? opnd1_w : i_esi;
+
+assign o_edi = (dest0_kind[`OPND_DEST_REG] && dest0_sel == `REG_EDI) ? opnd0_w :
+               (dest1_kind[`OPND_DEST_REG] && dest1_sel == `REG_EDI) ? opnd1_w : i_edi;
+
+assign o_esp = (dest0_kind[`OPND_DEST_REG] && dest0_sel == `REG_ESP) ? opnd0_w :
+               (dest1_kind[`OPND_DEST_REG] && dest1_sel == `REG_ESP) ? opnd1_w : i_esp;
+
+assign o_ebp = (dest0_kind[`OPND_DEST_REG] && dest0_sel == `REG_EBP) ? opnd0_w :
+               (dest1_kind[`OPND_DEST_REG] && dest1_sel == `REG_EBP) ? opnd1_w : i_ebp;
 
 assign o_eip = next_eip;
 assign o_eflags = next_eflags;

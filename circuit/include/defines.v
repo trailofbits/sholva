@@ -4,9 +4,13 @@
 
 // Valid destination (i.e., write) operand locations.
 // Only registers and memory can be written to.
-`define OPND_DEST_REG 2'd0
-`define OPND_DEST_MEM 2'd1
-`define OPND_DEST_NONE 2'd2
+// Managed as a one-hot, for quick compares.
+`define OPND_DEST_REG  1'd0
+`define OPND_DEST_MEM  1'd1
+
+`define OPND_DEST_REG_1HOT  2'b01
+`define OPND_DEST_MEM_1HOT  2'b10
+`define OPND_DEST_NONE      2'b00
 
 // No operands.
 `define OPND_ENC_NONE 4'd0
@@ -78,6 +82,15 @@
 `define REG_EDI 3'd7
 `define REG_ESP 3'd4
 `define REG_EBP 3'd5
+
+`define REG_EAX_LONG 32'd0
+`define REG_EBX_LONG 32'd3
+`define REG_ECX_LONG 32'd1
+`define REG_EDX_LONG 32'd2
+`define REG_ESI_LONG 32'd6
+`define REG_EDI_LONG 32'd7
+`define REG_ESP_LONG 32'd4
+`define REG_EBP_LONG 32'd5
 
 // ALU control signal numbering.
 `define ALU_SRC_INV   4'd0

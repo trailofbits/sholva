@@ -9,15 +9,12 @@ inputs:
   - "32 i_edi"
   - "32 i_esp"
   - "32 i_ebp"
-  - "32 w_eax"
-  - "32 w_ebx"
-  - "32 w_ecx"
-  - "32 w_edx"
-  - "32 w_esi"
-  - "32 w_edi"
-  - "32 w_esp"
-  - "32 w_ebp"
-  - "8 gpr_wrmask"
+  - "2 dest0_kind"
+  - "2 dest1_kind"
+  - "3 dest0_sel"
+  - "3 dest1_sel"
+  - "32 opnd0_w"
+  - "32 opnd1_w"
   - "32 next_eip"
   - "32 next_eflags"
 outputs:
@@ -35,21 +32,26 @@ vector_fmt: binary
 vector_specs:
   - _description: "update one GPR (EBX)"
     i_ebx: 0xAAAAAAAA
-    w_ebx: 0xBBBBBBBB
-    gpr_wrmask: 0b00001000
+    dest0_kind: 0b01 # OPND_DEST_REG
+    dest0_sel: 3 # EBX
+    opnd0_w: 0xBBBBBBBB
     o_ebx: 0xBBBBBBBB
   - _description: "update two GPRs (ECX:EDX)"
     i_ecx: 0x11111111
     i_edx: 0x22222222
-    w_ecx: 0x33333333
-    w_edx: 0x44444444
-    gpr_wrmask: 0b00000110
+    dest0_kind: 0b01
+    dest1_kind: 0b01
+    dest0_sel: 1 # ECX
+    dest1_sel: 2 # EDX
+    opnd0_w: 0x33333333
+    opnd1_w: 0x44444444
     o_ecx: 0x33333333
     o_edx: 0x44444444
-  - _description: "update no GPRs (w_REG values with no mask do nothing)"
+  - _description: "update no GPRs (kind is not reg)"
     i_eax: 0xAAAAAAAA
-    w_eax: 0xBBBBBBBB
-    gpr_wrmask: 0b00000000
+    dest0_kind: 0b10 # OPND_DEST_MEM
+    dest0_sel: 0 # EAX
+    opnd0_w: 0xBBBBBBBB
     o_eax: 0xAAAAAAAA
   - _description: "update EIP"
     next_eip: 0x41414141
