@@ -71,6 +71,7 @@ decode_opc_phase2 decode_opc_phase2_x(
 // return concrete operand (read) values and a write selector.
 
 wire disp_1byte;
+wire [31:0] dest0_sel, dest1_sel;
 
 decode_opnds decode_opnds_x(
   // Inputs
@@ -97,7 +98,9 @@ decode_opnds decode_opnds_x(
   .opnd1_r(opnd1_r),
   .opnd2_r(opnd2_r),
   .dest0_kind(dest0_kind),
-  .dest1_kind(dest1_kind)
+  .dest1_kind(dest1_kind),
+  .dest0_sel(dest0_sel),
+  .dest1_sel(dest1_sel)
 );
 
 
