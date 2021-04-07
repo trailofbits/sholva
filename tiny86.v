@@ -7,7 +7,7 @@ module tiny86(
 // Fetch: Extract the individual components from a trace step.
 
 wire [95:0] raw_instr;
-wire [319:0] raw_regs;
+wire [31:0] eax, ebx, ecx, edx, esi, edi, esp, ebp, eip, eflags;
 wire [71:0] raw_hint1;
 wire [71:0] raw_hint2;
 
@@ -15,7 +15,16 @@ fetch fetch_x(
   .step(step),
 
   .raw_instr(raw_instr),
-  .raw_regs(raw_regs),
+  .eax(eax),
+  .ebx(ebx),
+  .ecx(ecx),
+  .edx(edx),
+  .esi(esi),
+  .edi(edi),
+  .esp(esp),
+  .ebp(ebp),
+  .eip(eip),
+  .eflags(eflags),
   .raw_hint1(raw_hint1),
   .raw_hint2(raw_hint2)
 );
@@ -51,24 +60,6 @@ decode_hint decode_hint2(
   .rw(hint2_rw),
   .address(hint2_address),
   .data(hint2_data)
-);
-
-// Decode regfile.
-wire [31:0] eax, ebx, ecx, edx, esi, edi, esp, ebp, eip, eflags;
-
-decode_regfile decode_regfile_x(
-  .raw_regs(raw_regs),
-
-  .eax(eax),
-  .ebx(ebx),
-  .ecx(ecx),
-  .edx(edx),
-  .esi(esi),
-  .edi(edi),
-  .esp(esp),
-  .ebp(ebp),
-  .eip(eip),
-  .eflags(eflags)
 );
 
 

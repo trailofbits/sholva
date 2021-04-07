@@ -4,19 +4,54 @@ inputs:
   - "560 step"
 outputs:
   - "96 raw_instr"
-  - "320 raw_regs"
+  - "32 eax"
+  - "32 ebx"
+  - "32 ecx"
+  - "32 edx"
+  - "32 esi"
+  - "32 edi"
+  - "32 esp"
+  - "32 ebp"
+  - "32 eip"
+  - "32 eflags"
   - "72 raw_hint1"
   - "72 raw_hint2"
 vector_specs:
   - _description: "basic step splitting"
     step: 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
     raw_instr: 0xffffffffffffffffffffffff
-    raw_regs: 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    eax: 0xffffffff
+    ebx: 0xffffffff
+    ecx: 0xffffffff
+    edx: 0xffffffff
+    esi: 0xffffffff
+    edi: 0xffffffff
+    esp: 0xffffffff
+    ebp: 0xffffffff
+    eip: 0xffffffff
+    eflags: 0xffffffff
     raw_hint1: 0xffffffffffffffffff
     raw_hint2: 0xffffffffffffffffff
   - _description: "basic step splitting, with different values for clarity"
     step: 0xbbbbbbbbbbbbbbbbbbaaaaaaaaaaaaaaaaaaffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffeeeeeeeeeeeeeeeeeeeeeeee
+    eax: 0xffffffff
+    ebx: 0xffffffff
+    ecx: 0xffffffff
+    edx: 0xffffffff
+    esi: 0xffffffff
+    edi: 0xffffffff
+    esp: 0xffffffff
+    ebp: 0xffffffff
+    eip: 0xffffffff
+    eflags: 0xffffffff
     raw_instr: 0xeeeeeeeeeeeeeeeeeeeeeeee
-    raw_regs: 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
     raw_hint1: 0xaaaaaaaaaaaaaaaaaa
     raw_hint2: 0xbbbbbbbbbbbbbbbbbb
+  - _description: "ADD eax, ebx (eax=0x12345678, ebx=0x90abcdef)"
+    step: 0b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010010001101000101011001111000100100001010101111001101111011110000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011111111111111111101110110110000000000000000000000000000000000000000100000000100100100000000101000000000000000000000001000000010100100001001000010010000100100001001000010010000100100001001000010010000100100001101100000000001
+    raw_instr: 0x90909090909090909090d801
+    eax: 0x12345678
+    ebx: 0x90abcdef
+    esp: 0xffffddb0
+    eip: 0x0804900a
+    eflags: 0x00000202
