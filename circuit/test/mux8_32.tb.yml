@@ -12,7 +12,6 @@ inputs:
   - "32 in7"
 outputs:
   - "32 out"
-vector_fmt: binary
 vector_specs:
   - _description: "select in0"
     sel: 0

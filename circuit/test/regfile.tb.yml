@@ -28,7 +28,6 @@ outputs:
   - "32 o_ebp"
   - "32 o_eip"
   - "32 o_eflags"
-vector_fmt: binary
 vector_specs:
   - _description: "update one GPR (EBX)"
     i_ebx: 0xAAAAAAAA

@@ -7,7 +7,6 @@ outputs:
   - "320 raw_regs"
   - "72 raw_hint1"
   - "72 raw_hint2"
-vector_fmt: hex
 vector_specs:
   - _description: "basic step splitting"
     step: 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff

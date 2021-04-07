@@ -25,7 +25,6 @@ outputs:
   - "2 dest1_kind"
   - "32 dest0_sel"
   - "32 dest1_sel"
-vector_fmt: binary
 vector_specs:
   # reg-reg encoding forms
   - _description: "xchg EAX, EBX (~AO)"

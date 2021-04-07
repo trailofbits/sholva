@@ -30,8 +30,8 @@ def emit_tv(spec)
 
       raw_wire = all_wires.map do |wire|
         wire_value = vec_spec.fetch(wire.name.to_sym, 0)
-        scale = spec[:vector_fmt] == "hex" ? wire.size / 8 : wire.size
-        fmt = spec[:vector_fmt] == "hex" ? 16 : 2
+        scale = wire.size
+        fmt = 2
         if wire_value == "x"
           wire_value * scale
         else
@@ -40,6 +40,13 @@ def emit_tv(spec)
         end
       end.join("_")
       tv_io.puts(raw_wire)
+    end
+
+    unless spec[:extra_vectors].nil?
+      comment tv_io, "extra vectors included from #{spec[:extra_vectors]}"
+
+      vecs = File.read spec[:extra_vectors]
+      tv_io.puts vecs
     end
   end
 end

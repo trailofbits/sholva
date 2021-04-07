@@ -8,7 +8,6 @@ outputs:
   - "1 prefix_address_16bit"
   - "2 prefix_rep"
   - "2 prefix_count"
-vector_fmt: binary
 vector_specs:
   - _description: "no prefixes, only NOPs"
     raw_instr: 0x909090909090909090909090
