@@ -141,13 +141,22 @@ alu alu_x(
   .result(alu_result)
 );
 
-wire [31:0] alu_eflags = eflags;
-assign alu_eflags[`EFLAGS_AF] = alu_status_out[`STAT_AF];
-assign alu_eflags[`EFLAGS_CF] = alu_status_out[`STAT_CF];
-assign alu_eflags[`EFLAGS_PF] = alu_status_out[`STAT_PF];
-assign alu_eflags[`EFLAGS_ZF] = alu_status_out[`STAT_ZF];
-assign alu_eflags[`EFLAGS_SF] = alu_status_out[`STAT_SF];
-assign alu_eflags[`EFLAGS_OF] = alu_status_out[`STAT_OF];
+// Mash the ALU states back into our prospective EFLAGS.
+wire [31:0] alu_eflags = {
+                            eflags[31:12],
+                            alu_status_out[`STAT_OF],
+                            eflags[`EFLAGS_DF],
+                            eflags[`EFLAGS_IF],
+                            eflags[`EFLAGS_TF],
+                            alu_status_out[`STAT_SF],
+                            alu_status_out[`STAT_ZF],
+                            eflags[5], // reserved
+                            alu_status_out[`STAT_AF],
+                            eflags[3], // reserved
+                            alu_status_out[`STAT_PF],
+                            eflags[1], // reserved
+                            alu_status_out[`STAT_CF]
+                         };
 
 ///
 /// END ALU

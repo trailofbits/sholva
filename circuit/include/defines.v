@@ -63,6 +63,8 @@
 `define EFLAGS_AF 32'd4
 `define EFLAGS_ZF 32'd6
 `define EFLAGS_SF 32'd7
+`define EFLAGS_TF 32'd8
+`define EFLAGS_IF 32'd9
 `define EFLAGS_DF 32'd10
 `define EFLAGS_OF 32'd11
 

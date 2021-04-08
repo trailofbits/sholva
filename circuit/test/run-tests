@@ -16,7 +16,7 @@ verbose "discovered #{vvps.size} tests: #{vvps}"
 puts "1..#{vvps.size}"
 
 vvps.each_with_index do |vvp, i|
-  lines = `vvp #{vvp}`.split "\n"
+  lines = `vvp #{vvp} -lxt2`.split "\n"
   done = lines.find { |l| l.start_with? "TBGEN-DONE" }.split
   testcase = done[1]
   ntests = done[2].to_i
