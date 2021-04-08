@@ -45,7 +45,7 @@ def emit_tb(spec)
     tb_io.puts <<~VERILOG
       always
         begin
-          clk = 1; #5; clk = 0; #5;
+          clk = 1; #10; clk = 0; #10;
         end
     VERILOG
 
