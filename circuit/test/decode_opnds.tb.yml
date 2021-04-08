@@ -182,4 +182,15 @@ vector_specs:
     dest0_kind: 0b01
     dest1_kind: 0b00
     dest0_sel: 0 # EAX
+  - _description: "add EAX, EBX (~MR)"
+    unescaped_instr: 0xd801
+    eax: 0xabababab
+    ebx: 0xcdcdcdcd
+    opnd_form: 6 # OPND_ENC_MODREGRM_RM_REG
+    prefix_address_16bit: 0
+    opnd0_r: 0xabababab
+    opnd1_r: 0xcdcdcdcd
+    dest0_kind: 0b01
+    dest1_kind: 0b00
+    dest0_sel: 0 # EAX
   # - _description: "add EAX, 0xffffffff (s-ext, ~MI)"

@@ -34,3 +34,9 @@ vector_specs:
       opnd1_r: 4
       status_out: 0b00000
       result: 8
+    - _description: "ALU_OP_ADD, no carry in, OF=1, SF=1"
+      cntl: 0b00000000000010
+      opnd0_r: 0x12345678
+      opnd1_r: 0x90abcdef
+      status_out: 0b00011
+      result: 0xa2e02467

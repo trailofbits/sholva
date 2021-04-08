@@ -5,6 +5,8 @@ MODULES := fetch \
 	decode_prefix \
 	decode_opc_phase1 \
 	decode_opc_phase2 \
+	decode \
+	execute \
 	mux8_32 \
 	regfile \
 	decode_opnds \

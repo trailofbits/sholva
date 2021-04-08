@@ -98,6 +98,7 @@ decode decode_instr(
 
 
 // Execute
+wire [31:0] next_eflags;
 wire [31:0] opnd0_w;
 wire [31:0] opnd1_w; // TODO
 
@@ -107,12 +108,12 @@ execute execute_x(
   .opnd0_r(opnd0_r),
   .opnd1_r(opnd1_r),
 
+  .o_eflags(next_eflags),
   .opnd0_w(opnd0_w)
 );
 
 // Register writeback + updates.
 wire [31:0] next_eip = 32'd0; // TODO
-wire [31:0] next_eflags = 32'd0; // TODO
 
 wire [31:0] o_eax, o_ebx, o_ecx, o_edx, o_esi, o_edi, o_esp, o_ebp, o_eip, o_eflags;
 

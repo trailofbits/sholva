@@ -8,8 +8,9 @@ module execute(
   input [31:0] opnd1_r,
   // TODO(ww): Input signal for 8/16/32 bit opnds
 
-  // TODO: opndN_w for outputs
+  output [31:0] o_eflags,
   output [31:0] opnd0_w
+  // TODO: opndN_w for outputs
   // output [31:0] opnd1_w,
 );
 
@@ -139,6 +140,13 @@ alu alu_x(
   .result(alu_result)
 );
 
+wire [31:0] alu_eflags = eflags;
+assign alu_eflags[`EFLAGS_CF] = alu_status_out[`STAT_CF];
+assign alu_eflags[`EFLAGS_PF] = alu_status_out[`STAT_PF];
+assign alu_eflags[`EFLAGS_ZF] = alu_status_out[`STAT_ZF];
+assign alu_eflags[`EFLAGS_SF] = alu_status_out[`STAT_SF];
+assign alu_eflags[`EFLAGS_OF] = alu_status_out[`STAT_OF];
+
 ///
 /// END ALU
 ///
@@ -187,5 +195,10 @@ wire [31:0] mu_result = 32'b0; // TODO
 assign opnd0_w = exe_is_alu ? alu_result :
                  exe_is_mu  ? mu_result  :
                               32'b0;
+
+// Only ALU operations modify the eflags.
+// TODO(ww): That's wrong: some of our dedicated meta instructions will also
+// directly modify eflags.
+assign o_eflags = exe_is_alu ? alu_eflags : eflags;
 
 endmodule

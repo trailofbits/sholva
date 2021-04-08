@@ -1,0 +1,35 @@
+module: decode
+file: ../decode/decode.v
+inputs:
+  - "96 raw_instr"
+  - "32 eax"
+  - "32 ebx"
+  - "32 ecx"
+  - "32 edx"
+  - "32 esi"
+  - "32 edi"
+  - "32 esp"
+  - "32 ebp"
+outputs:
+  - "6 opc"
+  - "32 opnd0_r"
+  - "32 opnd1_r"
+  - "32 opnd2_r"
+  - "2 dest0_kind"
+  - "2 dest1_kind"
+  - "32 dest0_sel"
+  - "32 dest1_sel"
+vector_specs:
+  - _description: "ADD eax, ebx (eax=0x12345678, ebx=0x90abcdef)"
+    raw_instr: 0x90909090909090909090d801
+    eax: 0x12345678
+    ebx: 0x90abcdef
+    esp: 0xffffddb0
+    eip: 0x0804900a
+    eflags: 0x00000202
+    opc: 0 # CMD_ADD
+    opnd0_r: 0x12345678
+    opnd1_r: 0x90abcdef
+    dest0_kind: 1 # OPND_DEST_REG_1HOT
+    dest1_kind: 0 # OPND_DEST_NONE
+    dest0_sel: 0 # EAX
