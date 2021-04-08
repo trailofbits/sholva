@@ -10,7 +10,8 @@ MODULES := fetch \
 	mux8_32 \
 	regfile \
 	decode_opnds \
-	alu
+	alu \
+	tiny86
 
 TB_SPECS := $(addsuffix .tb.yml,$(MODULES))
 TESTBENCHES := $(addsuffix .tb.gen.v,$(MODULES))
@@ -28,6 +29,7 @@ $(TESTBENCH_EXES): $(TESTBENCHES) $(TESTVECTORS)
 	iverilog -o $@ \
 		-I.. -I../include \
 		-y.. \
+		-y../.. \
 		-y../decode \
 		-y../execute \
 		$(basename $@).gen.v

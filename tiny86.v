@@ -1,7 +1,18 @@
 `include "defines.v"
 
 module tiny86(
-  input [559:0] step
+  input [559:0] step,
+
+  output [31:0] o_eax,
+  output [31:0] o_ebx,
+  output [31:0] o_ecx,
+  output [31:0] o_edx,
+  output [31:0] o_esi,
+  output [31:0] o_edi,
+  output [31:0] o_esp,
+  output [31:0] o_ebp,
+  output [31:0] o_eip,
+  output [31:0] o_eflags
 );
 
 // Fetch: Extract the individual components from a trace step.
@@ -114,8 +125,6 @@ execute execute_x(
 
 // Register writeback + updates.
 wire [31:0] next_eip = 32'd0; // TODO
-
-wire [31:0] o_eax, o_ebx, o_ecx, o_edx, o_esi, o_edi, o_esp, o_ebp, o_eip, o_eflags;
 
 regfile regfile_x(
   .i_eax(eax),
