@@ -1,0 +1,20 @@
+module: decode_opc_phase2
+file: ../decode/decode_opc_phase2.v
+inputs:
+  - "72 unescaped_instr"
+  - "1 is_2byte"
+outputs:
+  - "6 opc"
+  - "4 opnd_form"
+  - "2 opnd_count"
+  - "1 imm_1byte"
+  - "1 reg_1byte"
+vector_specs:
+  - _description: "ADD eax, ebx"
+    unescaped_instr: 0x90909090909090d801
+    is_2byte: 0
+    opc: 0 # CMD_ADD
+    opnd_form: 6 # OPND_ENC_MODREGRM_RM_REG
+    opnd_count: 2
+    imm_1byte: 0
+    reg_1byte: 0
