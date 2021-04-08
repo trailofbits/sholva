@@ -2,11 +2,11 @@
 
 module alu(
   input [13:0] cntl,
-  input [4:0] status_in,
+  input [5:0] status_in,
   input [31:0] opnd0_r,
   input [31:0] opnd1_r,
 
-  output [4:0] status_out,
+  output [5:0] status_out,
   output [31:0] result
 );
 
@@ -45,6 +45,7 @@ wire pf_no_wr = alu_no_wr;
 wire zf_no_wr = alu_no_wr;
 wire sf_no_wr = alu_no_wr;
 wire of_no_wr = alu_no_wr;
+wire af_no_wr = alu_no_wr;
 
 assign status_out[`STAT_CF] = cf_no_wr     ? status_in[`STAT_CF] :
                               alu_clear_cf ? 1'b0 :
@@ -60,6 +61,8 @@ assign status_out[`STAT_SF] = sf_no_wr ? status_in[`STAT_SF] : stat_result[31];
 assign status_out[`STAT_OF] = of_no_wr     ? status_in[`STAT_OF] :
                               alu_clear_of ? 1'b0 :
                               (opnd0_r_tmp[31] & opnd1_r_tmp[31]) ^ stat_result[31];
+
+assign status_out[`STAT_AF] = 1'b0;
 
 // TODO(ww): Maybe get rid of alu_no_wr entirely and check it only in execute.v.
 assign result = alu_no_wr ? 32'b0 : stat_result[31:0];

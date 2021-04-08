@@ -119,7 +119,8 @@ wire [13:0] alu_cntl = {
                       };
 
 // Input arithmetic flag states.
-wire [4:0] status_in = {
+wire [5:0] status_in = {
+                          eflags[`EFLAGS_AF],
                           eflags[`EFLAGS_CF],
                           eflags[`EFLAGS_PF],
                           eflags[`EFLAGS_ZF],
@@ -127,7 +128,7 @@ wire [4:0] status_in = {
                           eflags[`EFLAGS_OF]
                        };
 
-wire [4:0] alu_status_out;
+wire [5:0] alu_status_out;
 wire [31:0] alu_result;
 
 alu alu_x(
@@ -141,6 +142,7 @@ alu alu_x(
 );
 
 wire [31:0] alu_eflags = eflags;
+assign alu_eflags[`EFLAGS_AF] = alu_status_out[`STAT_AF];
 assign alu_eflags[`EFLAGS_CF] = alu_status_out[`STAT_CF];
 assign alu_eflags[`EFLAGS_PF] = alu_status_out[`STAT_PF];
 assign alu_eflags[`EFLAGS_ZF] = alu_status_out[`STAT_ZF];

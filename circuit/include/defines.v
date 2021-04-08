@@ -59,7 +59,8 @@
 
 // EFLAGS bits we care about
 `define EFLAGS_CF 32'd0
-`define EFLAGS_PF 32'd4
+`define EFLAGS_PF 32'd2
+`define EFLAGS_AF 32'd4
 `define EFLAGS_ZF 32'd6
 `define EFLAGS_SF 32'd7
 `define EFLAGS_DF 32'd10
@@ -71,6 +72,7 @@
 `define STAT_ZF 3'd2
 `define STAT_PF 3'd3
 `define STAT_CF 3'd4
+`define STAT_AF 3'd5
 
 // GPR numbering for register selectors/identification
 // NOTE(ww): Weird numbering here is the canonical x86 numbering.
