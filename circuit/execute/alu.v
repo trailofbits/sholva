@@ -51,7 +51,7 @@ assign status_out[`STAT_CF] = cf_no_wr     ? status_in[`STAT_CF] :
                               alu_clear_cf ? 1'b0 :
                               stat_result[32];
 
-assign status_out[`STAT_PF] = pf_no_wr ? status_in[`STAT_PF] : ~^stat_result[31:0];
+assign status_out[`STAT_PF] = pf_no_wr ? status_in[`STAT_PF] : ~^stat_result[7:0];
 
 assign status_out[`STAT_ZF] = zf_no_wr ? status_in[`STAT_ZF] : stat_result[31:0] == 32'b0;
 
