@@ -1,3 +1,4 @@
+`include "codegen/commands.gen.v"
 `include "defines.v"
 
 module decode_opnds(
@@ -24,6 +25,7 @@ module decode_opnds(
 `include "funcs.v"
 
 wire [15:0] opnd_form_1hot = one_hot16(opnd_form);
+wire [63:0] opc_1hot = one_hot64(opc);
 
 // Whether we have any immediate byte(s).
 wire has_imm = opnd_form_1hot[`OPND_ENC_IMM] ||
@@ -190,6 +192,28 @@ mux8_32 mux8_32_opnd1(
 
 ///
 /// END REGISTER OPERANDS
+///
+
+///
+/// MEMORY OPERANDS
+///
+
+// Is operand#0 a memory address?
+// TODO(ww): Missing anything?
+wire opnd0_is_mem = (opnd1_modrm_rm && ~modrm_rm_is_regsel) ||
+                    opc_1hot[`CMD_MOVS] ||
+                    opc_1hot[`CMD_CMPS] ||
+                    opc_1hot[`CMD_SCAS] ||
+                    opc_1hot[`CMD_LODS];
+
+// Is operand#1 a memory address?
+// TODO(ww): Missing anything?
+wire opnd1_is_mem = opc_1hot[`CMD_MOVS] ||
+                    opc_1hot[`CMD_CMPS] ||
+                    opc_1hot[`CMD_STOS];
+
+///
+/// END MEMORY OPERANDS
 ///
 
 // TODO(ww): Immediate and memory operands.
