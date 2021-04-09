@@ -1,0 +1,16 @@
+module: agu
+file: ../execute/agu.v
+inputs:
+  - "2 scale"
+  - "32 index"
+  - "32 base"
+  - "32 disp"
+outputs:
+  - "32 address"
+vector_specs:
+  - _description: "displacement only"
+    scale: 0b00
+    index: 0
+    base: 0
+    disp: 0xaaaaaaaa
+    address: 0xaaaaaaaa

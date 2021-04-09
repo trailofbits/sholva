@@ -11,6 +11,7 @@ MODULES := fetch \
 	regfile \
 	decode_opnds \
 	alu \
+	agu \
 	tiny86
 
 TB_SPECS := $(addsuffix .tb.yml,$(MODULES))
