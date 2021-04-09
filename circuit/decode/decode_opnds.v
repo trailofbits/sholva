@@ -212,6 +212,24 @@ wire opnd1_is_mem = opc_1hot[`CMD_MOVS] ||
                     opc_1hot[`CMD_CMPS] ||
                     opc_1hot[`CMD_STOS];
 
+// To actually calculate our effective addresses for operand#0 and operand#1,
+// we need to get the (scale, index, base, displacement) for each, or
+// appropriate dummy values.
+// Selecting the base register selector goes as follows:
+// * If we have a SIB byte, it's the SIB base selector.
+// * If we have a bare ModR/M byte with ModR/M.mod != 0b11, it's the ModR/M.rm
+//   selector.
+// * Otherwise, it's an implicit selector for one of the string/data
+//   instructions.
+
+wire opnd0_r_mem_scale = has_sib ? sib_scale : 2'b00;
+wire opnd0_r_mem_index = has_sib ? sib_index_regsel : 3'b000;
+// wire opnd0_r_mem_base_regsel = has_sib ? sib_base_regsel :
+
+// TODO
+wire [31:0] opnd0_r_memval = 32'b0;
+wire [31:0] opnd1_r_memval = 32'b0;
+
 ///
 /// END MEMORY OPERANDS
 ///
