@@ -14,3 +14,11 @@ function [7:0] one_hot8;
     one_hot8[binary] = 1'b1;
   end
 endfunction
+
+function [15:0] one_hot16;
+  input [3:0] binary;
+  begin
+    one_hot16 = 16'h0000;
+    one_hot16[binary] = 1'b1;
+  end
+endfunction

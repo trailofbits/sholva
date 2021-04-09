@@ -21,33 +21,37 @@ module decode_opnds(
   output [31:0] dest1_sel
 );
 
+`include "funcs.v"
+
+wire [15:0] opnd_form_1hot = one_hot16(opnd_form);
+
 // Whether we have any immediate byte(s).
-wire has_imm = opnd_form == `OPND_ENC_IMM ||
-               opnd_form == `OPND_ENC_MODREGRM_RM_IMM ||
-               opnd_form == `OPND_ENC_REG_IMM ||
-               opnd_form == `OPND_ENC_EAX_IMM ||
-               opnd_form == `OPND_ENC_MODREGRM_REG_RM_IMM ||
-               opnd_form == `OPND_ENC_MODREGRM_RM_REG_IMM;
+wire has_imm = opnd_form_1hot[`OPND_ENC_IMM] ||
+               opnd_form_1hot[`OPND_ENC_MODREGRM_RM_IMM] ||
+               opnd_form_1hot[`OPND_ENC_REG_IMM] ||
+               opnd_form_1hot[`OPND_ENC_EAX_IMM] ||
+               opnd_form_1hot[`OPND_ENC_MODREGRM_REG_RM_IMM] ||
+               opnd_form_1hot[`OPND_ENC_MODREGRM_RM_REG_IMM];
 
 
 // ModR/M encodings where R/M is operand#0 (i.e. op.d=0)
-wire opnd0_modrm_rm = opnd_form == `OPND_ENC_MODREGRM_RM ||
-                      opnd_form == `OPND_ENC_MODREGRM_RM_IMM ||
-                      opnd_form == `OPND_ENC_MODREGRM_RM_REG ||
-                      opnd_form == `OPND_ENC_MODREGRM_RM_REG_IMM ||
-                      opnd_form == `OPND_ENC_MODREGRM_RM_REG_CL;
+wire opnd0_modrm_rm = opnd_form_1hot[`OPND_ENC_MODREGRM_RM] ||
+                      opnd_form_1hot[`OPND_ENC_MODREGRM_RM_IMM] ||
+                      opnd_form_1hot[`OPND_ENC_MODREGRM_RM_REG] ||
+                      opnd_form_1hot[`OPND_ENC_MODREGRM_RM_REG_IMM] ||
+                      opnd_form_1hot[`OPND_ENC_MODREGRM_RM_REG_CL];
 
 // ModR/M encodings where REG is operand#0 (i.e. op.d=1)
-wire opnd0_modrm_reg = opnd_form == `OPND_ENC_MODREGRM_REG_RM ||
-                       opnd_form == `OPND_ENC_MODREGRM_REG_RM_IMM;
+wire opnd0_modrm_reg = opnd_form_1hot[`OPND_ENC_MODREGRM_REG_RM] ||
+                       opnd_form_1hot[`OPND_ENC_MODREGRM_REG_RM_IMM];
 
 // ModR/M encodings where R/M is operand#1.
 wire opnd1_modrm_rm = opnd0_modrm_reg;
 
 // ModR/M encodings where REG is operand#1.
-wire opnd1_modrm_reg = opnd_form == `OPND_ENC_MODREGRM_RM_REG ||
-                       opnd_form == `OPND_ENC_MODREGRM_RM_REG_IMM ||
-                       opnd_form == `OPND_ENC_MODREGRM_RM_REG_CL;
+wire opnd1_modrm_reg = opnd_form_1hot[`OPND_ENC_MODREGRM_RM_REG] ||
+                       opnd_form_1hot[`OPND_ENC_MODREGRM_RM_REG_IMM] ||
+                       opnd_form_1hot[`OPND_ENC_MODREGRM_RM_REG_CL];
 
 // Whether we have a ModR/M byte supplying one or more operands.
 wire has_modrm = opnd0_modrm_rm || opnd0_modrm_reg;
@@ -68,6 +72,10 @@ wire has_sib = has_modrm
 
 // The actual SIB byte, if `has_sib`.
 wire [7:0] maybe_sib = unescaped_instr[23:16];
+
+wire [2:0] sib_base_regsel = maybe_sib[2:0];
+wire [2:0] sib_index_regsel = maybe_sib[5:3];
+wire [1:0] sib_scale = maybe_sib[7:6];
 
 // Whether we have displacement byte(s).
 // Displacement byte(s) are present in two cases:
