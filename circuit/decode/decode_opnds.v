@@ -79,6 +79,9 @@ wire [2:0] sib_base_regsel = maybe_sib[2:0];
 wire [2:0] sib_index_regsel = maybe_sib[5:3];
 wire [1:0] sib_scale = maybe_sib[7:6];
 
+// SIB.base == 0b101 indicates scaled-index mode with no base register.
+wire sib_no_base = sib_base_regsel == 3'b101 && modrm[7:6] == 2'b00;
+
 // Whether we have displacement byte(s).
 // Displacement byte(s) are present in two cases:
 // First, when all of the following conditions hold:
@@ -86,7 +89,7 @@ wire [1:0] sib_scale = maybe_sib[7:6];
 // * We are not in register direct mode;
 // * One of:
 //   * We are in a displacement-only mode (ModR/M.rm == 0b101 and ModR/M.mod == 0b00)
-//   * We are in a SIB + displacement addressing mode (ModR/M.mod == 0b01 or 0b10)
+//   * We are in an indirect + displacement addressing mode (ModR/M.mod == 0b01 or 0b10)
 // Second, when we are in a displacement-only encoding (i.e., no ModR/M whatsoever).
 // TODO(ww): Handle that second case.
 wire has_disp = (has_modrm
@@ -100,6 +103,7 @@ wire has_disp = (has_modrm
 // wire disp32 = has_disp && modrm[7:6] == 2'b01;
 
 // TODO(ww): Actually extract the disp byte(s) here, maybe with a separate module.
+// NOTE(ww): disp8 needs to be sign extended.
 
 ///
 /// OPERAND EXTRACTION
@@ -200,17 +204,17 @@ mux8_32 mux8_32_opnd1(
 
 // Is operand#0 a memory address?
 // TODO(ww): Missing anything?
-wire opnd0_is_mem = (opnd1_modrm_rm && ~modrm_rm_is_regsel) ||
+wire opnd0_is_mem = (opnd0_modrm_rm && ~modrm_rm_is_regsel) ||
                     opc_1hot[`CMD_MOVS] ||
                     opc_1hot[`CMD_CMPS] ||
-                    opc_1hot[`CMD_SCAS] ||
-                    opc_1hot[`CMD_LODS];
+                    opc_1hot[`CMD_SCAS];
 
 // Is operand#1 a memory address?
 // TODO(ww): Missing anything?
 wire opnd1_is_mem = opc_1hot[`CMD_MOVS] ||
                     opc_1hot[`CMD_CMPS] ||
-                    opc_1hot[`CMD_STOS];
+                    opc_1hot[`CMD_STOS] ||
+                    opc_1hot[`CMD_LODS];
 
 // To actually calculate our effective addresses for operand#0 and operand#1,
 // we need to get the (scale, index, base, displacement) for each, or
@@ -220,11 +224,16 @@ wire opnd1_is_mem = opc_1hot[`CMD_MOVS] ||
 // * If we have a bare ModR/M byte with ModR/M.mod != 0b11, it's the ModR/M.rm
 //   selector.
 // * Otherwise, it's an implicit selector for one of the string/data
-//   instructions.
+//   instructions, which means that it's [EDI].
 
-wire opnd0_r_mem_scale = has_sib ? sib_scale : 2'b00;
-wire opnd0_r_mem_index = has_sib ? sib_index_regsel : 3'b000;
-// wire opnd0_r_mem_base_regsel = has_sib ? sib_base_regsel :
+wire [1:0] opnd0_r_mem_scale = has_sib ? sib_scale : 2'b00;
+wire [2:0] opnd0_r_mem_index = has_sib ? sib_index_regsel : 3'b000;
+wire [2:0] opnd0_r_mem_base_regsel = has_sib ? sib_base_regsel :
+                               (opnd0_modrm_rm && ~modrm_rm_is_regsel) ? modrm[2:0] :
+                               3'b000; // TODO: implicit base selectors.
+// wire opnd0_r_mem_disp
+
+// TODO(ww): Select between opnd0_r_mem_base_regsel and 32'b0 via sib_no_base.
 
 // TODO
 wire [31:0] opnd0_r_memval = 32'b0;
