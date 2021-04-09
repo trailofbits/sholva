@@ -1,7 +1,17 @@
 TBGEN := ./codegen/tbgen
 TVGEN := ./codegen/tvgen
 
-MODULES := fetch decode_prefix mux8_32 regfile decode_opnds alu
+MODULES := fetch \
+	decode_prefix \
+	decode_opc_phase1 \
+	decode_opc_phase2 \
+	decode \
+	execute \
+	mux8_32 \
+	regfile \
+	decode_opnds \
+	alu \
+	tiny86
 
 TB_SPECS := $(addsuffix .tb.yml,$(MODULES))
 TESTBENCHES := $(addsuffix .tb.gen.v,$(MODULES))
@@ -19,6 +29,7 @@ $(TESTBENCH_EXES): $(TESTBENCHES) $(TESTVECTORS)
 	iverilog -o $@ \
 		-I.. -I../include \
 		-y.. \
+		-y../.. \
 		-y../decode \
 		-y../execute \
 		$(basename $@).gen.v
@@ -31,4 +42,4 @@ $(TESTVECTORS): $(TB_SPECS) $(TVGEN)
 
 .PHONY: clean
 clean:
-	rm -rf $(TESTBENCHES) $(TESTVECTORS) $(TESTBENCH_EXES)
+	rm -rf $(TESTBENCHES) $(TESTVECTORS) $(TESTBENCH_EXES) *.vcd

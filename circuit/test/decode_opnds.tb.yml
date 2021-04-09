@@ -21,9 +21,10 @@ outputs:
   - "32 opnd0_r"
   - "32 opnd1_r"
   - "32 opnd2_r"
-  - "2 dest0_sel"
-  - "2 dest1_sel"
-vector_fmt: binary
+  - "2 dest0_kind"
+  - "2 dest1_kind"
+  - "32 dest0_sel"
+  - "32 dest1_sel"
 vector_specs:
   # reg-reg encoding forms
   - _description: "xchg EAX, EBX (~AO)"
@@ -34,6 +35,9 @@ vector_specs:
     prefix_address_16bit: 0
     opnd0_r: 0xAAAAAAAA
     opnd1_r: 0xBBBBBBBB
+    dest0_kind: 0b01
+    dest1_kind: 0b00
+    dest0_sel: 0 # EAX
   - _description: "xchg EAX, EAX (~AO)"
     unescaped_instr: 0x90
     eax: 0xAAAAAAAA
@@ -41,6 +45,9 @@ vector_specs:
     prefix_address_16bit: 0
     opnd0_r: 0xAAAAAAAA
     opnd1_r: 0xAAAAAAAA
+    dest0_kind: 0b01
+    dest1_kind: 0b00
+    dest0_sel: 0 # EAX
   - _description: "xchg ECX, EDX (~RM)"
     unescaped_instr: 0xca87
     ecx: 0xCCCCCCCC
@@ -49,6 +56,9 @@ vector_specs:
     prefix_address_16bit: 0
     opnd0_r: 0xCCCCCCCC
     opnd1_r: 0xDDDDDDDD
+    dest0_kind: 0b01
+    dest1_kind: 0b00
+    dest0_sel: 1 # ECX
   - _description: "xchg EDX, ECX (~RM)"
     unescaped_instr: 0xd187
     ecx: 0xCCCCCCCC
@@ -57,6 +67,9 @@ vector_specs:
     prefix_address_16bit: 0
     opnd0_r: 0xDDDDDDDD
     opnd1_r: 0xCCCCCCCC
+    dest0_kind: 0b01
+    dest1_kind: 0b00
+    dest0_sel: 2 # EDX
   - _description: "mov EAX, EBX (~MR)"
     unescaped_instr: 0xd889
     eax: 0xAAAAAAAA
@@ -65,6 +78,9 @@ vector_specs:
     prefix_address_16bit: 0
     opnd0_r: 0xAAAAAAAA
     opnd1_r: 0xBBBBBBBB
+    dest0_kind: 0b01
+    dest1_kind: 0b00
+    dest0_sel: 0 # EAX
   - _description: "mov EAX, EBX (~RM)"
     unescaped_instr: 0xc38b
     eax: 0xAAAAAAAA
@@ -73,6 +89,9 @@ vector_specs:
     prefix_address_16bit: 0
     opnd0_r: 0xAAAAAAAA
     opnd1_r: 0xBBBBBBBB
+    dest0_kind: 0b01
+    dest1_kind: 0b00
+    dest0_sel: 0 # EAX
   - _description: "inc EAX (~O)"
     unescaped_instr: 0x40
     eax: 0xAAAAAAAA
@@ -80,6 +99,9 @@ vector_specs:
     prefix_address_16bit: 0
     opnd0_r: 0xAAAAAAAA
     opnd1_r: x
+    dest0_kind: 0b01
+    dest1_kind: 0b00
+    dest0_sel: 0 # EAX
   - _description: "inc EBX (~O)"
     unescaped_instr: 0x43
     ebx: 0xBBBBBBBB
@@ -87,6 +109,9 @@ vector_specs:
     prefix_address_16bit: 0
     opnd0_r: 0xBBBBBBBB
     opnd1_r: x
+    dest0_kind: 0b01
+    dest1_kind: 0b00
+    dest0_sel: 3 # EBX
   - _description: "inc ECX (~O)"
     unescaped_instr: 0x41
     ecx: 0xCCCCCCCC
@@ -94,6 +119,9 @@ vector_specs:
     prefix_address_16bit: 0
     opnd0_r: 0xCCCCCCCC
     opnd1_r: x
+    dest0_kind: 0b01
+    dest1_kind: 0b00
+    dest0_sel: 1 # ECX
   - _description: "inc EDX (~O)"
     unescaped_instr: 0x42
     edx: 0xDDDDDDDD
@@ -101,6 +129,9 @@ vector_specs:
     prefix_address_16bit: 0
     opnd0_r: 0xDDDDDDDD
     opnd1_r: x
+    dest0_kind: 0b01
+    dest1_kind: 0b00
+    dest0_sel: 2 # EDX
   - _description: "inc ESI (~O)"
     unescaped_instr: 0x46
     esi: 0x12121212
@@ -108,6 +139,9 @@ vector_specs:
     prefix_address_16bit: 0
     opnd0_r: 0x12121212
     opnd1_r: x
+    dest0_kind: 0b01
+    dest1_kind: 0b00
+    dest0_sel: 6 # ESI
   - _description: "inc EDI (~O)"
     unescaped_instr: 0x47
     edi: 0x13131313
@@ -115,6 +149,9 @@ vector_specs:
     prefix_address_16bit: 0
     opnd0_r: 0x13131313
     opnd1_r: x
+    dest0_kind: 0b01
+    dest1_kind: 0b00
+    dest0_sel: 7 # EDI
   - _description: "inc ESP (~O)"
     unescaped_instr: 0x44
     esp: 0x14141414
@@ -122,6 +159,9 @@ vector_specs:
     prefix_address_16bit: 0
     opnd0_r: 0x14141414
     opnd1_r: x
+    dest0_kind: 0b01
+    dest1_kind: 0b00
+    dest0_sel: 4 # ESP
   - _description: "inc EBP (~O)"
     unescaped_instr: 0x45
     ebp: 0x15151515
@@ -129,6 +169,9 @@ vector_specs:
     prefix_address_16bit: 0
     opnd0_r: 0x15151515
     opnd1_r: x
+    dest0_kind: 0b01
+    dest1_kind: 0b00
+    dest0_sel: 5 # EBP
   - _description: "add EAX, 0xffffffff (~AI)"
     unescaped_instr: 0xffffffff05
     eax: 0x99999999
@@ -136,4 +179,18 @@ vector_specs:
     prefix_address_16bit: 0
     opnd0_r: 0x99999999
     opnd1_r: x
+    dest0_kind: 0b01
+    dest1_kind: 0b00
+    dest0_sel: 0 # EAX
+  - _description: "add EAX, EBX (~MR)"
+    unescaped_instr: 0xd801
+    eax: 0xabababab
+    ebx: 0xcdcdcdcd
+    opnd_form: 6 # OPND_ENC_MODREGRM_RM_REG
+    prefix_address_16bit: 0
+    opnd0_r: 0xabababab
+    opnd1_r: 0xcdcdcdcd
+    dest0_kind: 0b01
+    dest1_kind: 0b00
+    dest0_sel: 0 # EAX
   # - _description: "add EAX, 0xffffffff (s-ext, ~MI)"

@@ -14,8 +14,11 @@ module decode_opnds(
   output [31:0] opnd0_r,
   output [31:0] opnd1_r,
   output [31:0] opnd2_r,
-  output [1:0] dest0_sel,
-  output [1:0] dest1_sel
+
+  output [1:0] dest0_kind,
+  output [1:0] dest1_kind,
+  output [31:0] dest0_sel,
+  output [31:0] dest1_sel
 );
 
 // Whether we have any immediate byte(s).
@@ -88,15 +91,19 @@ wire has_disp = (has_modrm
 
 // TODO(ww): Actually extract the disp byte(s) here, maybe with a separate module.
 
-// Implicit
+///
+/// OPERAND EXTRACTION
+///
 
 // The annoying and hard to visualize bit: we don't have any real control flow,
 // so we have to compute each operand's prospective value as if it was an
 // immediate, displacement, register, and memory operand. Then, we get to
 // select from those unconditional computations based on which one it actually
 // is.
-// TODO(ww): Actually support more than just register-register.
-// TODO(ww): Assign opndN_r_form as OPND_IMM, OPND_MEM, etc.
+
+///
+/// REGISTER OPERANDS
+///
 
 // For operand#0, our register selector can come from four sources:
 // TODO(ww): That's wrong. We also need to handle implicit register selector operands here,
@@ -159,6 +166,17 @@ mux8_32 mux8_32_opnd1(
   .out(opnd1_r_regval)
 );
 
+///
+/// END REGISTER OPERANDS
+///
+
+// TODO(ww): Immediate and memory operands.
+// TODO(ww): "Implicit" immediates, like `INC reg` -> `ADD reg, 1`
+
+///
+/// END OPERAND EXTRACTION
+///
+
 // TODO(ww): This eventually needs to be a multiplexor against
 // opndN_r_regval, opndN_r_memval, opndN_r_immval, etc.
 // TODO(ww): Also handle special operand fixups here. For example, opnd1_r
@@ -175,8 +193,12 @@ assign opnd2_r = 32'd0;
 // on the types of opndN and whether they're being written to.
 // TODO(ww): Is this the right place for this? Maybe we should do it
 // further on in instruction decoding, when looking at `opc` more closely.
-assign dest0_sel = `OPND_DEST_REG;
-assign dest1_sel = `OPND_DEST_REG;
+assign dest0_kind = `OPND_DEST_REG_1HOT;
+assign dest1_kind = `OPND_DEST_NONE;
 
+assign dest0_sel = dest0_kind[`OPND_DEST_REG] ?
+                                 { 29'b0, opnd0_r_regsel } : 32'b0;
+assign dest1_sel = dest1_kind[`OPND_DEST_REG] ?
+                                 { 29'b0, opnd1_r_regsel } : 32'b0;
 
 endmodule

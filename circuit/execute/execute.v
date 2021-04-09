@@ -5,10 +5,13 @@ module execute(
   input [5:0] opc,
   input [31:0] eflags,
   input [31:0] opnd0_r,
-  input [31:0] opnd1_r
+  input [31:0] opnd1_r,
   // TODO(ww): Input signal for 8/16/32 bit opnds
 
+  output [31:0] o_eflags,
+  output [31:0] opnd0_w
   // TODO: opndN_w for outputs
+  // output [31:0] opnd1_w,
 );
 
 `include "funcs.v"
@@ -116,7 +119,8 @@ wire [13:0] alu_cntl = {
                       };
 
 // Input arithmetic flag states.
-wire [4:0] status_in = {
+wire [5:0] status_in = {
+                          eflags[`EFLAGS_AF],
                           eflags[`EFLAGS_CF],
                           eflags[`EFLAGS_PF],
                           eflags[`EFLAGS_ZF],
@@ -124,7 +128,7 @@ wire [4:0] status_in = {
                           eflags[`EFLAGS_OF]
                        };
 
-wire [4:0] alu_status_out;
+wire [5:0] alu_status_out;
 wire [31:0] alu_result;
 
 alu alu_x(
@@ -136,6 +140,23 @@ alu alu_x(
   .status_out(alu_status_out),
   .result(alu_result)
 );
+
+// Mash the ALU states back into our prospective EFLAGS.
+wire [31:0] alu_eflags = {
+                            eflags[31:12],
+                            alu_status_out[`STAT_OF],
+                            eflags[`EFLAGS_DF],
+                            eflags[`EFLAGS_IF],
+                            eflags[`EFLAGS_TF],
+                            alu_status_out[`STAT_SF],
+                            alu_status_out[`STAT_ZF],
+                            eflags[5], // reserved
+                            alu_status_out[`STAT_AF],
+                            eflags[3], // reserved
+                            alu_status_out[`STAT_PF],
+                            eflags[1], // reserved
+                            alu_status_out[`STAT_CF]
+                         };
 
 ///
 /// END ALU
@@ -165,6 +186,8 @@ wire exe_is_mu = opc_1hot[`CMD_MOV]   |
                  opc_1hot[`CMD_MOVZX] |
                  opc_1hot[`CMD_XCHG];
 
+wire [31:0] mu_result = 32'b0; // TODO
+
 ///
 /// END MOVE UNIT
 ///
@@ -179,5 +202,14 @@ wire exe_is_mu = opc_1hot[`CMD_MOV]   |
 ///
 /// END META UNIT
 ///
+
+assign opnd0_w = exe_is_alu ? alu_result :
+                 exe_is_mu  ? mu_result  :
+                              32'b0;
+
+// Only ALU operations modify the eflags.
+// TODO(ww): That's wrong: some of our dedicated meta instructions will also
+// directly modify eflags.
+assign o_eflags = exe_is_alu ? alu_eflags : eflags;
 
 endmodule

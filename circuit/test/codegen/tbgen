@@ -50,10 +50,12 @@ def emit_tb(spec)
     VERILOG
 
     # prime test vectors, housekeeping variables.
-    readmem = spec[:vector_fmt] == "binary" ? "$readmemb" : "$readmemh"
+    readmem = "$readmemb"
     tb_io.puts <<~VERILOG
       initial
         begin
+          $dumpfile("#{spec[:module]}.tb.vcd");
+          $dumpvars(0, #{spec[:module]}_tb);
           #{readmem}("#{spec[:tv_file]}", test_vectors);
           current_vec = 0; error_count = 0;
           reset = 1; #10; reset = 0;

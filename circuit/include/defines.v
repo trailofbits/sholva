@@ -1,15 +1,16 @@
-`define SIZ_BIT 1'd0
-`define DIR_BIT 1'd1
-
 `define OPND_IMM 2'd1
 `define OPND_MEM 2'd2
 `define OPND_REG 2'd3
 
 // Valid destination (i.e., write) operand locations.
 // Only registers and memory can be written to.
-`define OPND_DEST_REG 2'd0
-`define OPND_DEST_MEM 2'd1
-`define OPND_DEST_NONE 2'd2
+// Managed as a one-hot, for quick compares.
+`define OPND_DEST_REG  1'd0
+`define OPND_DEST_MEM  1'd1
+
+`define OPND_DEST_REG_1HOT  2'b01
+`define OPND_DEST_MEM_1HOT  2'b10
+`define OPND_DEST_NONE      2'b00
 
 // No operands.
 `define OPND_ENC_NONE 4'd0
@@ -58,9 +59,12 @@
 
 // EFLAGS bits we care about
 `define EFLAGS_CF 32'd0
-`define EFLAGS_PF 32'd4
+`define EFLAGS_PF 32'd2
+`define EFLAGS_AF 32'd4
 `define EFLAGS_ZF 32'd6
 `define EFLAGS_SF 32'd7
+`define EFLAGS_TF 32'd8
+`define EFLAGS_IF 32'd9
 `define EFLAGS_DF 32'd10
 `define EFLAGS_OF 32'd11
 
@@ -70,6 +74,7 @@
 `define STAT_ZF 3'd2
 `define STAT_PF 3'd3
 `define STAT_CF 3'd4
+`define STAT_AF 3'd5
 
 // GPR numbering for register selectors/identification
 // NOTE(ww): Weird numbering here is the canonical x86 numbering.

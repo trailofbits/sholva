@@ -1,0 +1,18 @@
+module: execute
+file: ../execute/execute.v
+inputs:
+  - "6 opc"
+  - "32 eflags"
+  - "32 opnd0_r"
+  - "32 opnd1_r"
+outputs:
+  - "32 o_eflags"
+  - "32 opnd0_w"
+vector_specs:
+  - _description: "execute CMD_ADD (ALU_OP_ADD)"
+    opc: 0 # CMD_ADD
+    eflags: 514
+    opnd0_r: 0x12345678
+    opnd1_r: 0x90abcdef
+    o_eflags: 658
+    opnd0_w: 0xa2e02467
