@@ -91,7 +91,7 @@ wire has_disp = (has_modrm
                    && ~modrm_rm_is_regsel
                    && ((modrm[2:0] == 3'b101 && modrm[7:6] == 2'b00)
                        || (modrm[7:6] == 2'b01 || modrm[7:6] == 2'b10)))
-                || opnd_form == `OPND_ENC_DISP;
+                || opnd_form_1hot[`OPND_ENC_DISP];
 
 // wire disp8 = has_disp && modrm[7:6] == 2'b01;
 // wire disp16 =
@@ -120,13 +120,13 @@ wire has_disp = (has_modrm
 // * The r/m selector of ModR/M (OPND_ENC_MODREGRM_RM_*) when in register direct mode (mod=0b11)
 // * The reg selector of ModR/M (OPND_ENC_MODREGRM_REG_*)
 // * An implicit EAX register (OPND_ENC_EAX_*)
-wire [2:0] opnd0_r_regsel = (opnd_form == `OPND_ENC_REG || opnd_form == `OPND_ENC_REG_IMM) ?
+wire [2:0] opnd0_r_regsel = (opnd_form_1hot[`OPND_ENC_REG] || opnd_form_1hot[`OPND_ENC_REG_IMM]) ?
                                 unescaped_instr[2:0] :
                             (opnd0_modrm_rm && modrm_rm_is_regsel) ?
                                 modrm[2:0] :
                             (opnd0_modrm_reg) ?
                                 modrm[5:3] :
-                            (opnd_form == `OPND_ENC_EAX_IMM || opnd_form == `OPND_ENC_EAX_REG) ?
+                            (opnd_form_1hot[`OPND_ENC_EAX_IMM] || opnd_form_1hot[`OPND_ENC_EAX_REG]) ?
                                 `REG_EAX : 3'bxxx;
 
 // For operand#1, our register selector can come from N sources:
@@ -138,7 +138,7 @@ wire [2:0] opnd1_r_regsel = (opnd1_modrm_rm && modrm_rm_is_regsel) ?
                                 modrm[2:0] :
                             (opnd1_modrm_reg) ?
                                 modrm[5:3] :
-                            (opnd_form == `OPND_ENC_EAX_REG) ?
+                            (opnd_form_1hot[`OPND_ENC_EAX_REG]) ?
                                 unescaped_instr[2:0] : 3'bxxx;
 
 // TODO(ww): operand#2 regsel. This can only ever be CL.
