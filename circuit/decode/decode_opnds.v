@@ -113,6 +113,15 @@ wire has_disp = (has_modrm
 /// REGISTER OPERANDS
 ///
 
+
+// Is operand#0 a register?
+wire opnd0_is_reg = opnd_form_1hot[`OPND_ENC_REG] ||
+                    opnd_form_1hot[`OPND_ENC_MODREGRM_RM] ||
+                    opnd_form_1hot[`OPND_ENC_EAX_IMM] ||
+                    opnd_form_1hot[`OPND_ENC_EAX_REG] ||
+                    (opnd0_modrm_rm && modrm_rm_is_regsel) ||
+                    opnd0_modrm_reg;
+
 // For operand#0, our register selector can come from four sources:
 // TODO(ww): That's wrong. We also need to handle implicit register selector operands here,
 // like some of the "zero-operand" encodings. Needs thought.
@@ -127,7 +136,12 @@ wire [2:0] opnd0_r_regsel = (opnd_form_1hot[`OPND_ENC_REG] || opnd_form_1hot[`OP
                             (opnd0_modrm_reg) ?
                                 modrm[5:3] :
                             (opnd_form_1hot[`OPND_ENC_EAX_IMM] || opnd_form_1hot[`OPND_ENC_EAX_REG]) ?
-                                `REG_EAX : 3'bxxx;
+                                `REG_EAX : 3'b0;
+
+// Is operand#1 a register?
+wire opnd1_is_reg = opnd_form_1hot[`OPND_ENC_EAX_REG] ||
+                    (opnd1_modrm_rm && modrm_rm_is_regsel) ||
+                    opnd1_modrm_reg;
 
 // For operand#1, our register selector can come from N sources:
 // * The r/m selector of ModR/M (OPND_ENC_MODREGRM_REG_RM*) when in register direct mode (mod=0b11)
@@ -139,7 +153,7 @@ wire [2:0] opnd1_r_regsel = (opnd1_modrm_rm && modrm_rm_is_regsel) ?
                             (opnd1_modrm_reg) ?
                                 modrm[5:3] :
                             (opnd_form_1hot[`OPND_ENC_EAX_REG]) ?
-                                unescaped_instr[2:0] : 3'bxxx;
+                                unescaped_instr[2:0] : 3'b0;
 
 // TODO(ww): operand#2 regsel. This can only ever be CL.
 
@@ -189,8 +203,8 @@ mux8_32 mux8_32_opnd1(
 // opndN_r_regval, opndN_r_memval, opndN_r_immval, etc.
 // TODO(ww): Also handle special operand fixups here. For example, opnd1_r
 // will be 32'b1 for CMD_NOT.
-assign opnd0_r = opnd0_r_regval;
-assign opnd1_r = opnd1_r_regval;
+assign opnd0_r = opnd0_is_reg ? opnd0_r_regval : 32'b0;
+assign opnd1_r = opnd1_is_reg ? opnd1_r_regval : 32'b0;
 
 
 // TODO(ww): Temporary assignments, to make testing easier.
