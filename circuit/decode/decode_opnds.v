@@ -99,7 +99,6 @@ wire has_disp = (has_modrm
                 || opnd_form_1hot[`OPND_ENC_DISP];
 
 // wire disp8 = has_disp && modrm[7:6] == 2'b01;
-// wire disp16 =
 // wire disp32 = has_disp && modrm[7:6] == 2'b01;
 
 // TODO(ww): Actually extract the disp byte(s) here, maybe with a separate module.
