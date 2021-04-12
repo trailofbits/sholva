@@ -82,6 +82,9 @@ wire [1:0] sib_scale = maybe_sib[7:6];
 // SIB.base == 0b101 indicates scaled-index mode with no base register.
 wire sib_no_base = sib_base_regsel == 3'b101 && modrm[7:6] == 2'b00;
 
+// SIB.index == 0b100 indicates no index while in SIB addressing mode.
+wire sib_no_index = sib_index_regsel == 3'b100;
+
 // Whether we have displacement byte(s).
 // Displacement byte(s) are present in two cases:
 // First, when all of the following conditions hold:
@@ -164,7 +167,7 @@ wire [2:0] opnd1_r_regsel = (opnd1_modrm_rm && modrm_rm_is_regsel) ?
 
 // Finally, actually grab some values using our operand selectors.
 wire [31:0] opnd0_r_regval;
-mux8_32 mux8_32_opnd0(
+mux8_32 mux8_32_opnd0_reg(
   .sel(opnd0_r_regsel),
   .in0(eax),
   .in1(ecx),
@@ -179,7 +182,7 @@ mux8_32 mux8_32_opnd0(
 );
 
 wire [31:0] opnd1_r_regval;
-mux8_32 mux8_32_opnd1(
+mux8_32 mux8_32_opnd1_reg(
   .sel(opnd1_r_regsel),
   .in0(eax),
   .in1(ecx),
@@ -226,16 +229,58 @@ wire opnd1_is_mem = opc_1hot[`CMD_MOVS] ||
 //   instructions, which means that it's [EDI].
 
 wire [1:0] opnd0_r_mem_scale = has_sib ? sib_scale : 2'b00;
-wire [2:0] opnd0_r_mem_index = has_sib ? sib_index_regsel : 3'b000;
+wire [2:0] opnd0_r_mem_index_regsel = has_sib ? sib_index_regsel : 3'b000;
 wire [2:0] opnd0_r_mem_base_regsel = has_sib ? sib_base_regsel :
                                (opnd0_modrm_rm && ~modrm_rm_is_regsel) ? modrm[2:0] :
                                3'b000; // TODO: implicit base selectors.
-// wire opnd0_r_mem_disp
+wire [31:0] opnd0_r_mem_disp = 32'b0; // TODO
 
-// TODO(ww): Select between opnd0_r_mem_base_regsel and 32'b0 via sib_no_base.
+wire [31:0] opnd0_r_mem_selected_index;
+mux8_32 mux8_32_opnd0_mem_index(
+  .sel(opnd0_r_mem_index_regsel),
+  .in0(eax),
+  .in1(ecx),
+  .in2(edx),
+  .in3(ebx),
+  .in4(esp),
+  .in5(ebp),
+  .in6(esi),
+  .in7(edi),
+
+  .out(opnd0_r_mem_selected_index)
+);
+
+wire [31:0] opnd0_r_mem_effective_index = sib_no_index ? 32'b0 : opnd0_r_mem_selected_index;
+
+wire [31:0] opnd0_r_mem_selected_base;
+mux8_32 mux8_32_opnd0_mem_base(
+  .sel(opnd0_r_mem_base_regsel),
+  .in0(eax),
+  .in1(ecx),
+  .in2(edx),
+  .in3(ebx),
+  .in4(esp),
+  .in5(ebp),
+  .in6(esi),
+  .in7(edi),
+
+  .out(opnd0_r_mem_selected_base)
+);
+
+wire [31:0] opnd0_r_mem_effective_base = sib_no_base ? 32'b0 : opnd0_r_mem_selected_base;
+
+// Finally, actually calculate our effective memory address for operand#0.
+wire [31:0] opnd0_r_memval = 32'b0;
+agu opnd0_r_mem_agu(
+  .scale(opnd0_r_mem_scale),
+  .index(opnd0_r_mem_effective_index),
+  .base(opnd0_r_mem_effective_base),
+  .disp(opnd0_r_mem_disp),
+
+  .address(opnd0_r_memval)
+);
 
 // TODO
-wire [31:0] opnd0_r_memval = 32'b0;
 wire [31:0] opnd1_r_memval = 32'b0;
 
 ///
