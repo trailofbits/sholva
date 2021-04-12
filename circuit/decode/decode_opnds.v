@@ -270,15 +270,17 @@ mux8_32 mux8_32_opnd0_mem_base(
 wire [31:0] opnd0_r_mem_effective_base = sib_no_base ? 32'b0 : opnd0_r_mem_selected_base;
 
 // Finally, actually calculate our effective memory address for operand#0.
-wire [31:0] opnd0_r_memval = 32'b0;
+wire [31:0] opnd0_r_mem_addr = 32'b0;
 agu opnd0_r_mem_agu(
   .scale(opnd0_r_mem_scale),
   .index(opnd0_r_mem_effective_index),
   .base(opnd0_r_mem_effective_base),
   .disp(opnd0_r_mem_disp),
 
-  .address(opnd0_r_memval)
+  .address(opnd0_r_mem_addr)
 );
+
+// TODO: Fetch the actual value for the effective addr from the memory hints.
 
 // TODO
 wire [31:0] opnd1_r_memval = 32'b0;
