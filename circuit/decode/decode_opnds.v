@@ -4,6 +4,14 @@
 module decode_opnds(
   input [71:0] unescaped_instr,
   input [31:0] eax, ebx, ecx, edx, esi, edi, esp, ebp,
+
+  input hint1_rw,
+  input [31:0] hint1_address,
+  input [31:0] hint1_data,
+  input hint2_rw,
+  input [31:0] hint2_address,
+  input [31:0] hint2_data,
+
   input [5:0] opc,
   input [3:0] opnd_form,
   input imm_1byte,

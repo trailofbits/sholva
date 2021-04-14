@@ -9,6 +9,13 @@ module decode(
   input [31:0] esp,
   input [31:0] ebp,
 
+  input hint1_rw,
+  input [31:0] hint1_address,
+  input [31:0] hint1_data,
+  input hint2_rw,
+  input [31:0] hint2_address,
+  input [31:0] hint2_data,
+
   output [5:0] opc,
   output [31:0] opnd0_r,
   output [31:0] opnd1_r,
@@ -83,6 +90,13 @@ decode_opnds decode_opnds_x(
   .edi(edi),
   .esp(esp),
   .ebp(ebp),
+
+  .hint1_rw(hint1_rw),
+  .hint1_address(hint1_address),
+  .hint1_data(hint1_data),
+  .hint2_rw(hint2_rw),
+  .hint2_address(hint2_address),
+  .hint2_data(hint2_data),
 
   .opc(opc),
   .opnd_form(opnd_form),

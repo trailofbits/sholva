@@ -97,6 +97,13 @@ decode decode_instr(
   .esp(esp),
   .ebp(ebp),
 
+  .hint1_rw(hint1_rw),
+  .hint1_address(hint1_address),
+  .hint1_data(hint1_data),
+  .hint2_rw(hint2_rw),
+  .hint2_address(hint2_address),
+  .hint2_data(hint2_data),
+
   .opc(opc),
   .opnd0_r(opnd0_r),
   .opnd1_r(opnd1_r),
