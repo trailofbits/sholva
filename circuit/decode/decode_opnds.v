@@ -68,7 +68,9 @@ wire has_modrm = opnd0_modrm_rm || opnd0_modrm_reg;
 
 // The actual ModR/M byte, if `has_modrm`.
 wire [7:0] modrm = unescaped_instr[15:8];
-wire modrm_rm_is_regsel = modrm[7:6] == 2'b11;
+
+// Whether ModR/M.rm indicates a register, i.e. "register direct".
+wire modrm_rm_is_reg_direct = modrm[7:6] == 2'b11;
 
 // Intel SDM Vol. 2A Table 2-1/2-2/2-3: the SIB byte is only present when all
 // of the following conditions hold:
@@ -77,8 +79,15 @@ wire modrm_rm_is_regsel = modrm[7:6] == 2'b11;
 //  * We are not in register direct mode and ModR/M.rm == 0b100
 wire has_sib = has_modrm
                && ~prefix_address_16bit
-               && ~modrm_rm_is_regsel
+               && ~modrm_rm_is_reg_direct
                && modrm[2:0] == 3'b100;
+
+// Whether ModR/M.rm indicates a register indirect selector,
+// i.e. a base address (and maybe a displacement).
+wire modrm_rm_is_reg_indirect = ~has_sib
+                             && ~modrm_rm_is_reg_direct
+                             && modrm[7:6] != 2'b00
+                             && modrm[2:0] != 3'b101;
 
 // The actual SIB byte, if `has_sib`.
 wire [7:0] maybe_sib = unescaped_instr[23:16];
@@ -104,7 +113,7 @@ wire sib_no_index = sib_index_regsel == 3'b100;
 // Second, when we are in a displacement-only encoding (i.e., no ModR/M whatsoever).
 // TODO(ww): Handle that second case.
 wire has_disp = (has_modrm
-                   && ~modrm_rm_is_regsel
+                   && ~modrm_rm_is_reg_direct
                    && ((modrm[2:0] == 3'b101 && modrm[7:6] == 2'b00)
                        || (modrm[7:6] == 2'b01 || modrm[7:6] == 2'b10)))
                 || opnd_form_1hot[`OPND_ENC_DISP];
@@ -135,7 +144,7 @@ wire opnd0_is_reg = opnd_form_1hot[`OPND_ENC_REG] ||
                     opnd_form_1hot[`OPND_ENC_MODREGRM_RM] ||
                     opnd_form_1hot[`OPND_ENC_EAX_IMM] ||
                     opnd_form_1hot[`OPND_ENC_EAX_REG] ||
-                    (opnd0_modrm_rm && modrm_rm_is_regsel) ||
+                    (opnd0_modrm_rm && modrm_rm_is_reg_direct) ||
                     opnd0_modrm_reg;
 
 // For operand#0, our register selector can come from four sources:
@@ -147,7 +156,7 @@ wire opnd0_is_reg = opnd_form_1hot[`OPND_ENC_REG] ||
 // * An implicit EAX register (OPND_ENC_EAX_*)
 wire [2:0] opnd0_r_regsel = (opnd_form_1hot[`OPND_ENC_REG] || opnd_form_1hot[`OPND_ENC_REG_IMM]) ?
                                 unescaped_instr[2:0] :
-                            (opnd0_modrm_rm && modrm_rm_is_regsel) ?
+                            (opnd0_modrm_rm && modrm_rm_is_reg_direct) ?
                                 modrm[2:0] :
                             (opnd0_modrm_reg) ?
                                 modrm[5:3] :
@@ -156,7 +165,7 @@ wire [2:0] opnd0_r_regsel = (opnd_form_1hot[`OPND_ENC_REG] || opnd_form_1hot[`OP
 
 // Is operand#1 a register?
 wire opnd1_is_reg = opnd_form_1hot[`OPND_ENC_EAX_REG] ||
-                    (opnd1_modrm_rm && modrm_rm_is_regsel) ||
+                    (opnd1_modrm_rm && modrm_rm_is_reg_direct) ||
                     opnd1_modrm_reg;
 
 // For operand#1, our register selector can come from N sources:
@@ -164,7 +173,7 @@ wire opnd1_is_reg = opnd_form_1hot[`OPND_ENC_EAX_REG] ||
 // * The reg selector of ModR/M (OPND_ENC_MODREGRM_RM_REG*)
 // * The lower three bits of the opcode itself (OPND_ENC_*_REG)
 // * TODO(ww): Implicit opnd1 register sources? Presumably some of the string operations?
-wire [2:0] opnd1_r_regsel = (opnd1_modrm_rm && modrm_rm_is_regsel) ?
+wire [2:0] opnd1_r_regsel = (opnd1_modrm_rm && modrm_rm_is_reg_direct) ?
                                 modrm[2:0] :
                             (opnd1_modrm_reg) ?
                                 modrm[5:3] :
@@ -214,14 +223,14 @@ mux8_32 mux8_32_opnd1_reg(
 
 // Is operand#0 a memory address?
 // TODO(ww): Missing anything?
-wire opnd0_is_mem = (opnd0_modrm_rm && ~modrm_rm_is_regsel) ||
+wire opnd0_is_mem = (opnd0_modrm_rm && ~modrm_rm_is_reg_direct) ||
                     opc_1hot[`CMD_MOVS] ||
                     opc_1hot[`CMD_CMPS] ||
                     opc_1hot[`CMD_SCAS];
 
 // Is operand#1 a memory address?
 // TODO(ww): Missing anything?
-wire opnd1_is_mem = (opnd1_modrm_rm && ~modrm_rm_is_regsel) ||
+wire opnd1_is_mem = (opnd1_modrm_rm && ~modrm_rm_is_reg_direct) ||
                     opc_1hot[`CMD_MOVS] ||
                     opc_1hot[`CMD_CMPS] ||
                     opc_1hot[`CMD_STOS] ||
@@ -246,7 +255,7 @@ wire [2:0] opndX_r_mem_index_regsel = has_sib ? sib_index_regsel : 3'b000;
 wire [2:0] opndX_r_mem_base_regsel =
   has_sib ?
     sib_base_regsel :
-  ((opnd0_modrm_rm || opnd1_modrm_rm) && ~modrm_rm_is_regsel) ?
+  ((opnd0_modrm_rm || opnd1_modrm_rm) && ~modrm_rm_is_reg_direct) ?
     modrm[2:0] : 3'b000;
 
 // Our base register selector(s) can come from ModR/M, SIB, or be an implicit
@@ -265,6 +274,7 @@ wire [2:0] opnd1_r_mem_base_regsel =
 
 
 wire [31:0] opnd0_r_mem_disp = 32'b0; // TODO
+wire [31:0] opnd1_r_mem_disp = 32'b0; // TODO
 
 wire [31:0] opnd0_r_mem_selected_index;
 mux8_32 mux8_32_opnd0_mem_index(
