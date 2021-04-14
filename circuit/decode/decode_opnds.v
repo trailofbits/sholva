@@ -5,10 +5,10 @@ module decode_opnds(
   input [71:0] unescaped_instr,
   input [31:0] eax, ebx, ecx, edx, esi, edi, esp, ebp,
 
-  input hint1_rw,
+  input hint1_is_write,
   input [31:0] hint1_address,
   input [31:0] hint1_data,
-  input hint2_rw,
+  input hint2_is_write,
   input [31:0] hint2_address,
   input [31:0] hint2_data,
 
@@ -221,7 +221,8 @@ wire opnd0_is_mem = (opnd0_modrm_rm && ~modrm_rm_is_regsel) ||
 
 // Is operand#1 a memory address?
 // TODO(ww): Missing anything?
-wire opnd1_is_mem = opc_1hot[`CMD_MOVS] ||
+wire opnd1_is_mem = (opnd1_modrm_rm && ~modrm_rm_is_regsel) ||
+                    opc_1hot[`CMD_MOVS] ||
                     opc_1hot[`CMD_CMPS] ||
                     opc_1hot[`CMD_STOS] ||
                     opc_1hot[`CMD_LODS];
@@ -236,16 +237,38 @@ wire opnd1_is_mem = opc_1hot[`CMD_MOVS] ||
 // * Otherwise, it's an implicit selector for one of the string/data
 //   instructions, which means that it's [EDI].
 
-wire [1:0] opnd0_r_mem_scale = has_sib ? sib_scale : 2'b00;
-wire [2:0] opnd0_r_mem_index_regsel = has_sib ? sib_index_regsel : 3'b000;
-wire [2:0] opnd0_r_mem_base_regsel = has_sib ? sib_base_regsel :
-                               (opnd0_modrm_rm && ~modrm_rm_is_regsel) ? modrm[2:0] :
-                               3'b000; // TODO: implicit base selectors.
+// There's only ever one ModR/M byte and SIB byte, so we don't need to
+// recalculate these separately for operand#0 and operand#0. Hence "X".
+// The base regsel here is incomplete; see the refinements for each operand
+// immediately below it.
+wire [1:0] opndX_r_mem_scale = has_sib ? sib_scale : 2'b00;
+wire [2:0] opndX_r_mem_index_regsel = has_sib ? sib_index_regsel : 3'b000;
+wire [2:0] opndX_r_mem_base_regsel =
+  has_sib ?
+    sib_base_regsel :
+  ((opnd0_modrm_rm || opnd1_modrm_rm) && ~modrm_rm_is_regsel) ?
+    modrm[2:0] : 3'b000;
+
+// Our base register selector(s) can come from ModR/M, SIB, or be an implicit
+// selector from an instruction like MOVS.
+wire [2:0] opnd0_r_mem_base_regsel =
+  (opc_1hot[`CMD_MOVS] || opc_1hot[`CMD_STOS] || opc_1hot[`CMD_SCAS]) ?
+    `REG_EDI :
+  (opc_1hot[`CMD_CMPS]) ?
+    `REG_ESI : opndX_r_mem_base_regsel;
+
+wire [2:0] opnd1_r_mem_base_regsel =
+  (opc_1hot[`CMD_MOVS] || opc_1hot[`CMD_LODS]) ?
+    `REG_ESI :
+  (opc_1hot[`CMD_CMPS]) ?
+    `REG_EDI : opndX_r_mem_base_regsel;
+
+
 wire [31:0] opnd0_r_mem_disp = 32'b0; // TODO
 
 wire [31:0] opnd0_r_mem_selected_index;
 mux8_32 mux8_32_opnd0_mem_index(
-  .sel(opnd0_r_mem_index_regsel),
+  .sel(opndX_r_mem_index_regsel),
   .in0(eax),
   .in1(ecx),
   .in2(edx),
@@ -280,13 +303,19 @@ wire [31:0] opnd0_r_mem_effective_base = sib_no_base ? 32'b0 : opnd0_r_mem_selec
 // Finally, actually calculate our effective memory address for operand#0.
 wire [31:0] opnd0_r_mem_addr = 32'b0;
 agu opnd0_r_mem_agu(
-  .scale(opnd0_r_mem_scale),
+  .scale(opndX_r_mem_scale),
   .index(opnd0_r_mem_effective_index),
   .base(opnd0_r_mem_effective_base),
   .disp(opnd0_r_mem_disp),
 
   .address(opnd0_r_mem_addr)
 );
+
+// TODO(ww): Use hint1_valid/hint2_valid? Necessary?
+wire [31:0] opnd0_r_mem_value = (~hint1_is_write && hint1_address == opnd0_r_mem_addr)
+                                ? hint1_data :
+                                (~hint2_is_write && hint2_address == opnd0_r_mem_addr)
+                                ? hint2_data : 32'b0;
 
 // TODO: Fetch the actual value for the effective addr from the memory hints.
 

@@ -13,10 +13,10 @@ reg [31:0] esi;
 reg [31:0] edi;
 reg [31:0] esp;
 reg [31:0] ebp;
-reg [0:0] hint1_rw;
+reg [0:0] hint1_is_write;
 reg [31:0] hint1_address;
 reg [31:0] hint1_data;
-reg [0:0] hint2_rw;
+reg [0:0] hint2_is_write;
 reg [31:0] hint2_address;
 reg [31:0] hint2_data;
 reg [5:0] opc;
@@ -51,10 +51,10 @@ decode_opnds dut(
 .edi(edi),
 .esp(esp),
 .ebp(ebp),
-.hint1_rw(hint1_rw),
+.hint1_is_write(hint1_is_write),
 .hint1_address(hint1_address),
 .hint1_data(hint1_data),
-.hint2_rw(hint2_rw),
+.hint2_is_write(hint2_is_write),
 .hint2_address(hint2_address),
 .hint2_data(hint2_data),
 .opc(opc),
@@ -86,7 +86,7 @@ initial
   end
 always @(posedge clk)
   begin
-    #1; { unescaped_instr, eax, ebx, ecx, edx, esi, edi, esp, ebp, hint1_rw, hint1_address, hint1_data, hint2_rw, hint2_address, hint2_data, opc, opnd_form, imm_1byte, reg_1byte, prefix_operand_16bit, prefix_address_16bit, exp_disp_1byte, exp_opnd0_r, exp_opnd1_r, exp_opnd2_r, exp_dest0_kind, exp_dest1_kind, exp_dest0_sel, exp_dest1_sel } = test_vectors[current_vec];
+    #1; { unescaped_instr, eax, ebx, ecx, edx, esi, edi, esp, ebp, hint1_is_write, hint1_address, hint1_data, hint2_is_write, hint2_address, hint2_data, opc, opnd_form, imm_1byte, reg_1byte, prefix_operand_16bit, prefix_address_16bit, exp_disp_1byte, exp_opnd0_r, exp_opnd1_r, exp_opnd2_r, exp_dest0_kind, exp_dest1_kind, exp_dest0_sel, exp_dest1_sel } = test_vectors[current_vec];
   end
 always @(negedge clk)
   begin

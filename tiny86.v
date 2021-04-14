@@ -43,7 +43,7 @@ fetch fetch_x(
 // Decode hints.
 wire hint1_valid;
 wire [1:0] hint1_mask;
-wire hint1_rw;
+wire hint1_is_write;
 wire [31:0] hint1_address;
 wire [31:0] hint1_data;
 
@@ -52,14 +52,14 @@ decode_hint decode_hint1(
 
   .valid_hint(hint1_valid),
   .mask(hint1_mask),
-  .rw(hint1_rw),
+  .is_write(hint1_is_write),
   .address(hint1_address),
   .data(hint1_data)
 );
 
 wire hint2_valid;
 wire [1:0] hint2_mask;
-wire hint2_rw;
+wire hint2_is_write;
 wire [31:0] hint2_address;
 wire [31:0] hint2_data;
 
@@ -68,7 +68,7 @@ decode_hint decode_hint2(
 
   .valid_hint(hint2_valid),
   .mask(hint2_mask),
-  .rw(hint2_rw),
+  .is_write(hint2_is_write),
   .address(hint2_address),
   .data(hint2_data)
 );
@@ -97,10 +97,10 @@ decode decode_instr(
   .esp(esp),
   .ebp(ebp),
 
-  .hint1_rw(hint1_rw),
+  .hint1_is_write(hint1_is_write),
   .hint1_address(hint1_address),
   .hint1_data(hint1_data),
-  .hint2_rw(hint2_rw),
+  .hint2_is_write(hint2_is_write),
   .hint2_address(hint2_address),
   .hint2_data(hint2_data),
 
