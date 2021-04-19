@@ -8,11 +8,13 @@ module decode_hint(
   output [31:0] data
 );
 
-assign mask = raw_hint[1:0];
-assign is_write = raw_hint[2];
-assign valid_hint = raw_hint[7];
+wire [7:0] meta = raw_hint[71:64];
 
-assign address = raw_hint[39:8];
-assign data = raw_hint[71:40];
+assign mask = meta[1:0];
+assign is_write = meta[2];
+assign valid_hint = meta[7];
+
+assign address = raw_hint[63:32];
+assign data = raw_hint[31:0];
 
 endmodule

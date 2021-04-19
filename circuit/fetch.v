@@ -8,8 +8,8 @@ module fetch(
 );
 
 assign raw_instr = step[95:0];
-assign raw_hint1 = step[487:416];
-assign raw_hint2 = step[559:488];
+assign raw_hint1 = step[559:488];
+assign raw_hint2 = step[487:416];
 
 decode_regfile decode_regfile_x(
   .raw_regs(step[415:96]),

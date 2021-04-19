@@ -2,6 +2,7 @@ TBGEN := ./codegen/tbgen
 TVGEN := ./codegen/tvgen
 
 MODULES := fetch \
+	decode_hint \
 	decode_prefix \
 	decode_opc_phase1 \
 	decode_opc_phase2 \
