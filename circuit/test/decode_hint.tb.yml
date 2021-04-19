@@ -16,3 +16,10 @@ vector_specs:
     is_write: 0b0 # read
     address: 0xffffddac
     data: 0xaaaaaaaa
+  - _description: "0x65666666 @ 0xffffddac (write, dword)"
+    raw_hint: 0x86ffffddac65666666
+    valid_hint: 0b1
+    mask: 0b10 # dword
+    is_write: 0b1 # write
+    address: 0xffffddac
+    data: 0x65666666
