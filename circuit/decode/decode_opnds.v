@@ -298,7 +298,23 @@ mux8_32 mux8_32_opnd0_mem_index(
   .out(opnd0_r_mem_selected_index)
 );
 
+wire [31:0] opnd1_r_mem_selected_index;
+mux8_32 mux8_32_opnd1_mem_index(
+  .sel(opnd1_r_mem_index_regsel),
+  .in0(eax),
+  .in1(ecx),
+  .in2(edx),
+  .in3(ebx),
+  .in4(esp),
+  .in5(ebp),
+  .in6(esi),
+  .in7(edi),
+
+  .out(opnd1_r_mem_selected_index)
+);
+
 wire [31:0] opnd0_r_mem_effective_index = sib_no_index ? 32'b0 : opnd0_r_mem_selected_index;
+wire [31:0] opnd1_r_mem_effective_index = sib_no_index ? 32'b0 : opnd1_r_mem_selected_index;
 
 wire [31:0] opnd0_r_mem_selected_base;
 mux8_32 mux8_32_opnd0_mem_base(
@@ -315,10 +331,29 @@ mux8_32 mux8_32_opnd0_mem_base(
   .out(opnd0_r_mem_selected_base)
 );
 
+wire [31:0] opnd1_r_mem_selected_base;
+mux8_32 mux8_32_opnd1_mem_base(
+  .sel(opnd1_r_mem_base_regsel),
+  .in0(eax),
+  .in1(ecx),
+  .in2(edx),
+  .in3(ebx),
+  .in4(esp),
+  .in5(ebp),
+  .in6(esi),
+  .in7(edi),
+
+  .out(opnd1_r_mem_selected_base)
+);
+
+// TODO(ww): Need to handle implicit bases here.
 wire [31:0] opnd0_r_mem_effective_base = (modrm_rm_is_reg_indirect || ~sib_no_base)
                                          ? opnd0_r_mem_selected_base : 32'b0;
 
-// Finally, actually calculate our effective memory address for operand#0.
+wire [31:0] opnd1_r_mem_effective_base = (modrm_rm_is_reg_indirect || ~sib_no_base)
+                                         ? opnd1_r_mem_selected_base : 32'b0;
+
+// Finally, actually calculate our effective memory address for operand#0 and operand#1.
 wire [31:0] opnd0_r_mem_addr = 32'b0;
 agu opnd0_r_mem_agu(
   .scale(opnd0_r_mem_scale),
@@ -329,15 +364,29 @@ agu opnd0_r_mem_agu(
   .address(opnd0_r_mem_addr)
 );
 
+wire [31:0] opnd1_r_mem_addr = 32'b0;
+agu opnd1_r_mem_agu(
+  .scale(opnd1_r_mem_scale),
+  .index(opnd1_r_mem_effective_index),
+  .base(opnd1_r_mem_effective_base),
+  .disp(opnd1_r_mem_disp),
+
+  .address(opnd1_r_mem_addr)
+);
+
 // TODO(ww): Use hint1_valid/hint2_valid? Necessary?
-wire [31:0] opnd0_r_mem_value = (~hint1_is_write && hint1_address == opnd0_r_mem_addr)
+wire [31:0] opnd0_r_memval = (~hint1_is_write && hint1_address == opnd0_r_mem_addr)
                                 ? hint1_data :
                                 (~hint2_is_write && hint2_address == opnd0_r_mem_addr)
                                 ? hint2_data : 32'b0;
 
 
-// TODO
-wire [31:0] opnd1_r_mem_value = 32'b0;
+// TODO(ww): Use hint1_valid/hint2_valid? Necessary?
+wire [31:0] opnd1_r_memval = (~hint1_is_write && hint1_address == opnd1_r_mem_addr)
+                                ? hint1_data :
+                                (~hint2_is_write && hint2_address == opnd1_r_mem_addr)
+                                ? hint2_data : 32'b0;
+
 
 ///
 /// END MEMORY OPERANDS
@@ -354,8 +403,10 @@ wire [31:0] opnd1_r_mem_value = 32'b0;
 // opndN_r_regval, opndN_r_memval, opndN_r_immval, etc.
 // TODO(ww): Also handle special operand fixups here. For example, opnd1_r
 // will be 32'b1 for CMD_NOT.
-assign opnd0_r = opnd0_is_reg ? opnd0_r_regval : 32'b0;
-assign opnd1_r = opnd1_is_reg ? opnd1_r_regval : 32'b0;
+assign opnd0_r = opnd0_is_reg ? opnd0_r_regval :
+                 opnd0_is_mem ? opnd0_r_memval : 32'b0;
+assign opnd1_r = opnd1_is_reg ? opnd1_r_regval :
+                 opnd1_is_mem ? opnd1_r_memval : 32'b0;
 
 
 // TODO(ww): Temporary assignments, to make testing easier.
