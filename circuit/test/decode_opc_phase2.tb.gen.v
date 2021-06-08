@@ -3,7 +3,7 @@
 module decode_opc_phase2_tb();
 reg clk, reset;
 reg [31:0] current_vec, error_count;
-reg [86:0] test_vectors [127:0];
+reg [92:0] test_vectors [127:0];
 reg [71:0] unescaped_instr;
 reg [0:0] is_2byte;
 reg [5:0] exp_opc;
@@ -16,6 +16,18 @@ reg [0:0] exp_imm_1byte;
 wire [0:0] imm_1byte;
 reg [0:0] exp_reg_1byte;
 wire [0:0] reg_1byte;
+reg [0:0] exp_opnd0_is_read;
+wire [0:0] opnd0_is_read;
+reg [0:0] exp_opnd0_is_write;
+wire [0:0] opnd0_is_write;
+reg [0:0] exp_opnd1_is_read;
+wire [0:0] opnd1_is_read;
+reg [0:0] exp_opnd1_is_write;
+wire [0:0] opnd1_is_write;
+reg [0:0] exp_opnd2_is_read;
+wire [0:0] opnd2_is_read;
+reg [0:0] exp_opnd2_is_write;
+wire [0:0] opnd2_is_write;
 decode_opc_phase2 dut(
 .unescaped_instr(unescaped_instr),
 .is_2byte(is_2byte),
@@ -23,7 +35,13 @@ decode_opc_phase2 dut(
 .opnd_form(opnd_form),
 .opnd_count(opnd_count),
 .imm_1byte(imm_1byte),
-.reg_1byte(reg_1byte)
+.reg_1byte(reg_1byte),
+.opnd0_is_read(opnd0_is_read),
+.opnd0_is_write(opnd0_is_write),
+.opnd1_is_read(opnd1_is_read),
+.opnd1_is_write(opnd1_is_write),
+.opnd2_is_read(opnd2_is_read),
+.opnd2_is_write(opnd2_is_write)
 );
 always
   begin
@@ -39,7 +57,7 @@ initial
   end
 always @(posedge clk)
   begin
-    #1; { unescaped_instr, is_2byte, exp_opc, exp_opnd_form, exp_opnd_count, exp_imm_1byte, exp_reg_1byte } = test_vectors[current_vec];
+    #1; { unescaped_instr, is_2byte, exp_opc, exp_opnd_form, exp_opnd_count, exp_imm_1byte, exp_reg_1byte, exp_opnd0_is_read, exp_opnd0_is_write, exp_opnd1_is_read, exp_opnd1_is_write, exp_opnd2_is_read, exp_opnd2_is_write } = test_vectors[current_vec];
   end
 always @(negedge clk)
   begin
@@ -79,9 +97,51 @@ end else begin
   error_count = error_count + 1;
 end
 
+if (exp_opnd0_is_read === opnd0_is_read || exp_opnd0_is_read === 1'bx) begin
+  $display("TBGEN-PASS decode_opc_phase2:%0d opnd0_is_read", current_vec);
+end else begin
+  $display("TBGEN-FAIL decode_opc_phase2:%0d expected opnd0_is_read to be 0x%h, was 0x%h", current_vec, exp_opnd0_is_read, opnd0_is_read);
+  error_count = error_count + 1;
+end
+
+if (exp_opnd0_is_write === opnd0_is_write || exp_opnd0_is_write === 1'bx) begin
+  $display("TBGEN-PASS decode_opc_phase2:%0d opnd0_is_write", current_vec);
+end else begin
+  $display("TBGEN-FAIL decode_opc_phase2:%0d expected opnd0_is_write to be 0x%h, was 0x%h", current_vec, exp_opnd0_is_write, opnd0_is_write);
+  error_count = error_count + 1;
+end
+
+if (exp_opnd1_is_read === opnd1_is_read || exp_opnd1_is_read === 1'bx) begin
+  $display("TBGEN-PASS decode_opc_phase2:%0d opnd1_is_read", current_vec);
+end else begin
+  $display("TBGEN-FAIL decode_opc_phase2:%0d expected opnd1_is_read to be 0x%h, was 0x%h", current_vec, exp_opnd1_is_read, opnd1_is_read);
+  error_count = error_count + 1;
+end
+
+if (exp_opnd1_is_write === opnd1_is_write || exp_opnd1_is_write === 1'bx) begin
+  $display("TBGEN-PASS decode_opc_phase2:%0d opnd1_is_write", current_vec);
+end else begin
+  $display("TBGEN-FAIL decode_opc_phase2:%0d expected opnd1_is_write to be 0x%h, was 0x%h", current_vec, exp_opnd1_is_write, opnd1_is_write);
+  error_count = error_count + 1;
+end
+
+if (exp_opnd2_is_read === opnd2_is_read || exp_opnd2_is_read === 1'bx) begin
+  $display("TBGEN-PASS decode_opc_phase2:%0d opnd2_is_read", current_vec);
+end else begin
+  $display("TBGEN-FAIL decode_opc_phase2:%0d expected opnd2_is_read to be 0x%h, was 0x%h", current_vec, exp_opnd2_is_read, opnd2_is_read);
+  error_count = error_count + 1;
+end
+
+if (exp_opnd2_is_write === opnd2_is_write || exp_opnd2_is_write === 1'bx) begin
+  $display("TBGEN-PASS decode_opc_phase2:%0d opnd2_is_write", current_vec);
+end else begin
+  $display("TBGEN-FAIL decode_opc_phase2:%0d expected opnd2_is_write to be 0x%h, was 0x%h", current_vec, exp_opnd2_is_write, opnd2_is_write);
+  error_count = error_count + 1;
+end
+
       current_vec = current_vec + 1;
 
-      if (test_vectors[current_vec] === 87'bx) begin
+      if (test_vectors[current_vec] === 93'bx) begin
         $display("TBGEN-DONE decode_opc_phase2 %0d errors=%0d", current_vec, error_count);
         $finish;
       end

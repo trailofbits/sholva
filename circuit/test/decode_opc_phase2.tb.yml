@@ -9,6 +9,12 @@ outputs:
   - "2 opnd_count"
   - "1 imm_1byte"
   - "1 reg_1byte"
+  - "1 opnd0_is_read"
+  - "1 opnd0_is_write"
+  - "1 opnd1_is_read"
+  - "1 opnd1_is_write"
+  - "1 opnd2_is_read"
+  - "1 opnd2_is_write"
 vector_specs:
   - _description: "ADD eax, ebx"
     unescaped_instr: 0x90909090909090d801
@@ -18,3 +24,6 @@ vector_specs:
     opnd_count: 2
     imm_1byte: 0
     reg_1byte: 0
+    opnd0_is_read: 1
+    opnd0_is_write: 1
+    opnd1_is_read: 1
