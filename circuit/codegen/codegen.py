@@ -296,9 +296,7 @@ def _gen_opc_map_v(commands):
                 for enc in cmd["encs"]:
                     opndN_mode = enc[f"opnd{n}_mode"]
 
-                    enc_expr = _and(
-                        _bool(enc["esc"], "is_2byte"), _opc_eq(enc["opc"])
-                    )
+                    enc_expr = _and(_bool(enc["esc"], "is_2byte"), _opc_eq(enc["opc"]))
                     if enc["ext"] is not None:
                         enc_expr = _and(enc_expr, _opc_ext_eq(enc["ext"]))
 
@@ -328,9 +326,7 @@ def _gen_opc_map_v(commands):
                 opndN_is_write_expr = "1'b0"
 
             print(
-                _assign(
-                    f"opnd{n}_is_write", opndN_is_write_expr
-                ),
+                _assign(f"opnd{n}_is_write", opndN_is_write_expr),
                 file=io,
             )
 
