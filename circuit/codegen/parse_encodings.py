@@ -18,6 +18,7 @@ _OPERAND_ENCODINGS = {
     "D": 1,
     "M": 1,
     "O": 1,
+    "A": 1,
     "MI": 2,
     "MR": 2,
     "RM": 2,

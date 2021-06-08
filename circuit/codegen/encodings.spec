@@ -23,6 +23,7 @@
 #   - `~D`: Unary, displacement only
 #   - `~M`: Unary, r/m of ModR/M only
 #   - `~O`: Unary, reg of lower opcode bits only
+#   - `~A`: Unary, implicit accumulator reg for r(+w)
 #   - `~MI`: Binary, r/m of ModR/M for r(+w) and immediate for read
 #   - `~MR`: Binary, r/m of ModR/M for r(+w) and reg of ModR/M for read
 #   - `~RM`: Binary, reg of ModR/M for r(+w) and r/m of ModR/M for read
@@ -68,7 +69,7 @@ CMD_BTS:xAB~MR,xBA/5+ib~MI~Wr
 # TODO(ww): Figure out rel16/32 notation.
 # CMD_CALL:E8,9A,FF/2,FF/3
 
-CMD_CBW:98~ZO~W
+CMD_CBW:98~A~W
 CMD_CLC:F8~ZO
 CMD_CLD:FC~ZO
 CMD_CMC:F5~ZO

@@ -27,6 +27,9 @@
 // Unary, reg of opcode bits operand.
 `define OPND_ENC_REG 4'd4
 
+// Unary, implicit accumulator reg for r(+w).
+`define OPND_ENC_EAX 4'd14
+
 // Binary, r/m of ModR/M for r(+w) and immediate for read.
 `define OPND_ENC_MODREGRM_RM_IMM 4'd5
 

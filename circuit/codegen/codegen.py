@@ -22,6 +22,7 @@ _OPND_ENC_MAP = {
     "D": ("OPND_ENC_DISP", 1),
     "M": ("OPND_ENC_MODREGRM_RM", 1),
     "O": ("OPND_ENC_REG", 1),
+    "A": ("OPND_ENC_EAX", 1),
     "MI": ("OPND_ENC_MODREGRM_RM_IMM", 2),
     "MR": ("OPND_ENC_MODREGRM_RM_REG", 2),
     "RM": ("OPND_ENC_MODREGRM_REG_RM", 2),
