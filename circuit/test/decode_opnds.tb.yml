@@ -89,7 +89,7 @@ vector_specs:
     opnd0_r: 0xAAAAAAAA
     opnd1_r: 0xBBBBBBBB
     dest0_kind: 0b01
-    dest1_kind: 0b00
+    dest1_kind: 0b00 # OPND_DEST_NONE
     dest0_sel: 0 # EAX
   - _description: "mov EAX, EBX (~RM)"
     unescaped_instr: 0xc38b
@@ -100,7 +100,7 @@ vector_specs:
     opnd0_r: 0xAAAAAAAA
     opnd1_r: 0xBBBBBBBB
     dest0_kind: 0b01
-    dest1_kind: 0b00
+    dest1_kind: 0b00 # OPND_DEST_NONE
     dest0_sel: 0 # EAX
   - _description: "inc EAX (~O)"
     unescaped_instr: 0x40
