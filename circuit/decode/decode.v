@@ -118,6 +118,13 @@ decode_opnds decode_opnds_x(
   .prefix_operand_16bit(prefix_operand_16bit),
   .prefix_address_16bit(prefix_address_16bit),
 
+  .opnd0_is_read(opnd0_is_read),
+  .opnd0_is_write(opnd0_is_write),
+  .opnd1_is_read(opnd1_is_read),
+  .opnd1_is_write(opnd1_is_write),
+  .opnd2_is_read(opnd2_is_read),
+  .opnd2_is_write(opnd2_is_write),
+
   // Outputs
   .disp_1byte(disp_1byte),
   .opnd0_r(opnd0_r),

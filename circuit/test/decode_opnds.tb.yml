@@ -22,6 +22,12 @@ inputs:
   - "1 reg_1byte"
   - "1 prefix_operand_16bit"
   - "1 prefix_address_16bit"
+  - "1 opnd0_is_read"
+  - "1 opnd0_is_write"
+  - "1 opnd1_is_read"
+  - "1 opnd1_is_write"
+  - "1 opnd2_is_read"
+  - "1 opnd2_is_write"
 outputs:
   - "1 disp_1byte"
   - "32 opnd0_r"

@@ -19,6 +19,13 @@ module decode_opnds(
   input prefix_operand_16bit,
   input prefix_address_16bit,
 
+  input opnd0_is_read,
+  input opnd0_is_write,
+  input opnd1_is_read,
+  input opnd1_is_write,
+  input opnd2_is_read,
+  input opnd2_is_write,
+
   output disp_1byte,
   output [31:0] opnd0_r,
   output [31:0] opnd1_r,

@@ -3,7 +3,7 @@
 module decode_opnds_tb();
 reg clk, reset;
 reg [31:0] current_vec, error_count;
-reg [636:0] test_vectors [127:0];
+reg [642:0] test_vectors [127:0];
 reg [71:0] unescaped_instr;
 reg [31:0] eax;
 reg [31:0] ebx;
@@ -25,6 +25,12 @@ reg [0:0] imm_1byte;
 reg [0:0] reg_1byte;
 reg [0:0] prefix_operand_16bit;
 reg [0:0] prefix_address_16bit;
+reg [0:0] opnd0_is_read;
+reg [0:0] opnd0_is_write;
+reg [0:0] opnd1_is_read;
+reg [0:0] opnd1_is_write;
+reg [0:0] opnd2_is_read;
+reg [0:0] opnd2_is_write;
 reg [0:0] exp_disp_1byte;
 wire [0:0] disp_1byte;
 reg [31:0] exp_opnd0_r;
@@ -63,6 +69,12 @@ decode_opnds dut(
 .reg_1byte(reg_1byte),
 .prefix_operand_16bit(prefix_operand_16bit),
 .prefix_address_16bit(prefix_address_16bit),
+.opnd0_is_read(opnd0_is_read),
+.opnd0_is_write(opnd0_is_write),
+.opnd1_is_read(opnd1_is_read),
+.opnd1_is_write(opnd1_is_write),
+.opnd2_is_read(opnd2_is_read),
+.opnd2_is_write(opnd2_is_write),
 .disp_1byte(disp_1byte),
 .opnd0_r(opnd0_r),
 .opnd1_r(opnd1_r),
@@ -86,7 +98,7 @@ initial
   end
 always @(posedge clk)
   begin
-    #1; { unescaped_instr, eax, ebx, ecx, edx, esi, edi, esp, ebp, hint1_is_write, hint1_address, hint1_data, hint2_is_write, hint2_address, hint2_data, opc, opnd_form, imm_1byte, reg_1byte, prefix_operand_16bit, prefix_address_16bit, exp_disp_1byte, exp_opnd0_r, exp_opnd1_r, exp_opnd2_r, exp_dest0_kind, exp_dest1_kind, exp_dest0_sel, exp_dest1_sel } = test_vectors[current_vec];
+    #1; { unescaped_instr, eax, ebx, ecx, edx, esi, edi, esp, ebp, hint1_is_write, hint1_address, hint1_data, hint2_is_write, hint2_address, hint2_data, opc, opnd_form, imm_1byte, reg_1byte, prefix_operand_16bit, prefix_address_16bit, opnd0_is_read, opnd0_is_write, opnd1_is_read, opnd1_is_write, opnd2_is_read, opnd2_is_write, exp_disp_1byte, exp_opnd0_r, exp_opnd1_r, exp_opnd2_r, exp_dest0_kind, exp_dest1_kind, exp_dest0_sel, exp_dest1_sel } = test_vectors[current_vec];
   end
 always @(negedge clk)
   begin
@@ -149,7 +161,7 @@ end
 
       current_vec = current_vec + 1;
 
-      if (test_vectors[current_vec] === 637'bx) begin
+      if (test_vectors[current_vec] === 643'bx) begin
         $display("TBGEN-DONE decode_opnds %0d errors=%0d", current_vec, error_count);
         $finish;
       end
