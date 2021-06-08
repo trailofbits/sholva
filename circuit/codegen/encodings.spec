@@ -5,9 +5,10 @@
 #
 # ...where FOO is the name of the instruction class, and SPEC1, etc. are
 # encoding specifications. Each specification takes the following form, with
-# `[]` indicating "optional" and `{X,Y}` indicating "choice":
+# `[]` indicating "optional", `{X,Y}` indicating "choice", and `+` after either
+# `[]` or `{}` indicating "one or more".
 #
-#  [x]HH[/D][+r{b,w,d,*}][+i{b,w,d,*}][~{I,D,M,O,MI,MR,RM,OI,AI,AO,RMI,MRI,MRC,ZO}]
+#  [x]HH[/D][+r{b,w,d,*}][+i{b,w,d,*}][~{I,D,M,O,MI,MR,RM,OI,AI,AO,RMI,MRI,MRC,ZO}][~{r,w,W,x}+]
 #
 # Where:
 # * `x` indicates that that the `0Fh` opcode escape was used;
@@ -32,32 +33,37 @@
 #   - `~MRI`: Trinary, r/m of ModR/M for r(+w), reg of ModR/M for read, immediate for read
 #   - `~MRC`: Trinary, r/m of ModR/M for r(+w), reg of ModR/M for read, implicit CL reg for read
 #   - `~ZO`: No explicit operands whatsoever
+# * `~{r,w,W,x}+` indicates the concrete read-write semantics of each operand, one operand
+#   per character:
+#   - `r`: operand is read-only
+#   - `w`: operand is write-only
+#   - `W`: operand is read+write
+#   - `x`: operand is not read from or written to
 #
 # By way of example: here's the encoding form for `AND r/m32, imm8`:
-#    CMD_AND:83/4+ib+MI
+#    CMD_AND:83/4+ib+MI~Wr
 #
 # Or `MOV r32, imm32`:
-#    CMD_MOV:B8+rd+id+OI
+#    CMD_MOV:B8+rd+id+OI~Wr
 
 # Misc notes:
 #
 # * These specs are definitely an overapproximation in some places.
 #   For example, there are some MOV forms below that we probably shouldn't allow.
-#
-# * These specs are not enough, on their own, to fully interpret the operand
-#   semantics of an instruction. See `operands.spec` for a complementary
-#   spec.
 
 
-CMD_ADD:00~MR,01~MR,02~RM,03~RM,04+ib~AI,05+i*~AI,80/0+ib~MI,81/0+i*~MI,83/0+ib~MI
-CMD_ADC:10~MR,11~MR,12~RM,13~RM,14+ib~AI,15+i*~AI,80/2+ib~MI,81/2+i*~MI,83/2+ib~MI
-CMD_AND:20~MR,21~MR,22~RM,23~RM,24+ib~AI,25+i*~AI,80/4+ib~MI,81/4+i*~MI,83/4+ib~MI
-CMD_BSF:xBC~RM
-CMD_BSR:xBD~RM
-CMD_BT:xA3~MR,xBA/4+ib~MI
-CMD_BTC:xBB~MR,xBA/7+ib~MI
-CMD_BTR:xB3~MR,xBA/6+ib~MI
-CMD_BTS:xAB~MR,xBA/5+ib~MI
+CMD_ADD:00~MR~Wr,01~MR,02~RM~Wr,03~RM~Wr,04+ib~AI~Wr,05+i*~AI~Wr,80/0+ib~MI~Wr,81/0+i*~MI~Wr,83/0+ib~MI~Wr
+
+CMD_ADC:10~MR~Wr,11~MR~Wr,12~RM~Wr,13~RM~Wr,14+ib~AI~Wr,15+i*~AI~Wr,80/2+ib~MI~Wr,81/2+i*~MI~Wr,83/2+ib~MI~Wr
+
+CMD_AND:20~MR~Wr,21~MR~Wr,22~RM~Wr,23~RM~Wr,24+ib~AI~Wr,25+i*~AI~Wr,80/4+ib~MI~Wr,81/4+i*~MI~Wr,83/4+ib~MI~Wr
+
+CMD_BSF:xBC~RM~wr
+CMD_BSR:xBD~RM~wr
+CMD_BT:xA3~MR,xBA/4+ib~MI~wr
+CMD_BTC:xBB~MR,xBA/7+ib~MI~Wr
+CMD_BTR:xB3~MR,xBA/6+ib~MI~Wr
+CMD_BTS:xAB~MR,xBA/5+ib~MI~Wr
 
 # TODO(ww): Figure out rel16/32 notation.
 # CMD_CALL:E8,9A,FF/2,FF/3

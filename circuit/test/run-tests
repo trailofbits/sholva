@@ -5,6 +5,9 @@
 
 require_relative "./codegen/common"
 
+require "pathname"
+require "yaml"
+
 def find_vvps
   Dir["*.tb.vvp"]
 end
@@ -17,6 +20,11 @@ puts "1..#{vvps.size}"
 
 vvps.each_with_index do |vvp, i|
   lines = `vvp #{vvp} -lxt2`.split "\n"
+
+  failures = lines
+    .select { |l| l.start_with? "TBGEN-FAIL" }
+    .map! { |f| [f.split[1].split(":")[1].to_i, f.split(" ", 3)[2]] }
+
   done = lines.find { |l| l.start_with? "TBGEN-DONE" }.split
   testcase = done[1]
   ntests = done[2].to_i
@@ -26,9 +34,16 @@ vvps.each_with_index do |vvp, i|
     puts "ok #{i + 1} #{testcase} ran #{ntests} internal tests"
   else
     puts "not ok #{i + 1} #{testcase} ran #{ntests} internal tests, #{nerrors} failed"
+
+    spec = begin
+      spec_path = Pathname.new(vvp).sub_ext ".yml"
+      YAML.safe_load spec_path.read
+    end
+
+    failures.each do |f|
+      verbose "failed ##{f[0]}: #{spec["vector_specs"][f[0]]["_description"]}: #{f[1]}"
+    end
+
     exit 1
   end
-
-  verbose ntests
-  verbose nerrors
 end

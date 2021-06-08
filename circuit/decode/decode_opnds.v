@@ -413,12 +413,15 @@ assign opnd1_r = opnd1_is_reg ? opnd1_r_regval :
 assign disp_1byte = 1'd0;
 assign opnd2_r = 32'd0;
 
-// TODO(ww): Temporary. These will eventually need to be selected based
-// on the types of opndN and whether they're being written to.
 // TODO(ww): Is this the right place for this? Maybe we should do it
 // further on in instruction decoding, when looking at `opc` more closely.
-assign dest0_kind = `OPND_DEST_REG_1HOT;
-assign dest1_kind = `OPND_DEST_NONE;
+assign dest0_kind = opnd0_is_reg ? `OPND_DEST_REG_1HOT
+                  : opnd0_is_mem ? `OPND_DEST_MEM_1HOT
+                  : `OPND_DEST_NONE;
+
+assign dest1_kind = opnd1_is_reg ? `OPND_DEST_REG_1HOT
+                  : opnd1_is_mem ? `OPND_DEST_MEM_1HOT
+                  : `OPND_DEST_NONE;
 
 assign dest0_sel = dest0_kind[`OPND_DEST_REG] ?
                                  { 29'b0, opnd0_r_regsel } : 32'b0;

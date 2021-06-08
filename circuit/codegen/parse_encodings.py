@@ -12,22 +12,24 @@ _ENCODINGS_SPEC = _HERE / "encodings.spec"
 _COMMANDS_JSON = _HERE / "commands.json"
 
 
+# Valid operand encoding identifiers (values are corresponding arities).
 _OPERAND_ENCODINGS = {
-    "I",
-    "D",
-    "M",
-    "O",
-    "MI",
-    "MR",
-    "RM",
-    "OI",
-    "AI",
-    "AO",
-    "RMI",
-    "MRI",
-    "MRC",
-    "ZO",
+    "I": 1,
+    "D": 1,
+    "M": 1,
+    "O": 1,
+    "MI": 2,
+    "MR": 2,
+    "RM": 2,
+    "OI": 2,
+    "AI": 2,
+    "AO": 2,
+    "RMI": 3,
+    "MRI": 3,
+    "MRC": 3,
+    "ZO": 0,
 }
+_OPERAND_MODES = {"r", "w", "W", "x"}
 _MODIFIERS = {"ib", "iw", "id", "i*", "rb", "rw", "rd", "r*"}
 
 
@@ -35,12 +37,16 @@ _MODIFIERS = {"ib", "iw", "id", "i*", "rb", "rw", "rd", "r*"}
 class Encoding:
     opc: int
     op_enc: str
+    num_opnds: int
     ext: Optional[int]
     esc: bool
     ib: bool
     iw_or_id: bool
     rb: bool
     rw_or_rd: bool
+    opnd0_mode: str
+    opnd1_mode: str
+    opnd2_mode: str
 
     @classmethod
     def parse(cls, raw_enc):
@@ -49,7 +55,23 @@ class Encoding:
             raw_enc = raw_enc[1:]
 
         enc_body, op_enc = raw_enc.split("~", 1)
-        assert op_enc in _OPERAND_ENCODINGS, f"unknown operand encoding: {op_enc}"
+
+        if "~" in op_enc:
+            op_enc, opnd_modes = op_enc.split("~", 1)
+            opnd_modes = list(opnd_modes)
+            assert (
+                len(opnd_modes) <= 3
+            ), f"more modes than plausible operands: {len(opnd_modes)}"
+            assert all(
+                m in _OPERAND_MODES for m in opnd_modes
+            ), f"unknown opnd mode(s): {opnd_modes}"
+            opnd_modes += ["x"] * (3 - len(opnd_modes))
+        else:
+            opnd_modes = list("xxx")
+
+        assert (
+            op_enc in _OPERAND_ENCODINGS.keys()
+        ), f"unknown operand encoding: {op_enc}"
 
         enc_body, *modifiers = enc_body.split("+")
 
@@ -76,7 +98,20 @@ class Encoding:
             assert False, f"bad encoding: {raw_enc}"
 
         assert opc < 2 ** 8, f"oversized opcode: {opc}"
-        return cls(opc, op_enc, ext, esc, ib, iw_or_id, rb, rw_or_rd)
+        return cls(
+            opc,
+            op_enc,
+            _OPERAND_ENCODINGS[op_enc],
+            ext,
+            esc,
+            ib,
+            iw_or_id,
+            rb,
+            rw_or_rd,
+            opnd_modes[0],
+            opnd_modes[1],
+            opnd_modes[2],
+        )
 
 
 @dataclass(frozen=True)
