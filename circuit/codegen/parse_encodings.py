@@ -145,7 +145,7 @@ def main():
         specs.append(asdict(Spec(cmd, encs)))
 
     with _COMMANDS_JSON.open(mode="w+") as io:
-        print(json.dumps(specs), file=io)
+        print(json.dumps(specs, sort_keys=True, indent=4), file=io)
 
 
 if __name__ == "__main__":
