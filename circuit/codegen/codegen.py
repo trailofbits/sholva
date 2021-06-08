@@ -286,6 +286,54 @@ def _gen_opc_map_v(commands):
             arity_exprs.append((f"2'd{arity}", arity_expr))
         print(_assign("opnd_count", _ternary_chain(arity_exprs)), file=io)
 
+        # Generate the opnd{0,1,2}_is_{read,write} assignments.
+        for n in [0, 1, 2]:
+            _br(io, 2)
+
+            opndN_is_read_exprs = []
+            opndN_is_write_exprs = []
+            for cmd in commands:
+                for enc in cmd["encs"]:
+                    opndN_mode = enc[f"opnd{n}_mode"]
+
+                    enc_expr = _and(
+                        _bool(enc["esc"], "is_2byte"), _opc_eq(enc["opc"])
+                    )
+                    if enc["ext"] is not None:
+                        enc_expr = _and(enc_expr, _opc_ext_eq(enc["ext"]))
+
+                    # This encoding reads from this operand.
+                    if opndN_mode == "W" or opndN_mode == "r":
+                        opndN_is_read_exprs.append(enc_expr)
+
+                    # This encoding writes to this operand.
+                    if opndN_mode == "W" or opndN_mode == "w":
+                        opndN_is_write_exprs.append(enc_expr)
+
+            if len(opndN_is_read_exprs) > 0:
+                opndN_is_read_expr = functools.reduce(_or, opndN_is_read_exprs)
+            else:
+                opndN_is_read_expr = "1'b0"
+
+            print(
+                _assign(f"opnd{n}_is_read", opndN_is_read_expr),
+                file=io,
+            )
+
+            _br(io, 2)
+
+            if len(opndN_is_write_exprs) > 0:
+                opndN_is_write_expr = functools.reduce(_or, opndN_is_write_exprs)
+            else:
+                opndN_is_write_expr = "1'b0"
+
+            print(
+                _assign(
+                    f"opnd{n}_is_write", opndN_is_write_expr
+                ),
+                file=io,
+            )
+
 
 def main():
     assert _COMMANDS_JSON.exists(), f"codegen dep missing: {_COMMANDS_JSON}"
