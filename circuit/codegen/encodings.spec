@@ -52,7 +52,7 @@
 #   For example, there are some MOV forms below that we probably shouldn't allow.
 
 
-CMD_ADD:00~MR~Wr,01~MR,02~RM~Wr,03~RM~Wr,04+ib~AI~Wr,05+i*~AI~Wr,80/0+ib~MI~Wr,81/0+i*~MI~Wr,83/0+ib~MI~Wr
+CMD_ADD:00~MR~Wr,01~MR~Wr,02~RM~Wr,03~RM~Wr,04+ib~AI~Wr,05+i*~AI~Wr,80/0+ib~MI~Wr,81/0+i*~MI~Wr,83/0+ib~MI~Wr
 
 CMD_ADC:10~MR~Wr,11~MR~Wr,12~RM~Wr,13~RM~Wr,14+ib~AI~Wr,15+i*~AI~Wr,80/2+ib~MI~Wr,81/2+i*~MI~Wr,83/2+ib~MI~Wr
 

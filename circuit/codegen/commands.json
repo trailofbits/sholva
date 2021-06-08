@@ -24,8 +24,8 @@
                 "num_opnds": 2,
                 "op_enc": "MR",
                 "opc": 1,
-                "opnd0_mode": "x",
-                "opnd1_mode": "x",
+                "opnd0_mode": "W",
+                "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false
