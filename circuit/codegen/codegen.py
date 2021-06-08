@@ -35,6 +35,9 @@ _OPND_ENC_MAP = {
     "ZO": ("OPND_ENC_NONE", 0),
 }
 
+_V_TRUE = "1'b1"
+_V_FALSE = "1'b0"
+
 
 def _header():
     """
@@ -311,7 +314,7 @@ def _gen_opc_map_v(commands):
             if len(opndN_is_read_exprs) > 0:
                 opndN_is_read_expr = functools.reduce(_or, opndN_is_read_exprs)
             else:
-                opndN_is_read_expr = "1'b0"
+                opndN_is_read_expr = _V_FALSE
 
             print(
                 _assign(f"opnd{n}_is_read", opndN_is_read_expr),
@@ -323,7 +326,7 @@ def _gen_opc_map_v(commands):
             if len(opndN_is_write_exprs) > 0:
                 opndN_is_write_expr = functools.reduce(_or, opndN_is_write_exprs)
             else:
-                opndN_is_write_expr = "1'b0"
+                opndN_is_write_expr = _V_FALSE
 
             print(
                 _assign(f"opnd{n}_is_write", opndN_is_write_expr),
