@@ -361,7 +361,7 @@ wire [31:0] opnd1_r_mem_effective_base = (modrm_rm_is_reg_indirect || ~sib_no_ba
                                          ? opnd1_r_mem_selected_base : 32'b0;
 
 // Finally, actually calculate our effective memory address for operand#0 and operand#1.
-wire [31:0] opnd0_r_mem_addr = 32'b0;
+wire [31:0] opnd0_r_mem_addr;
 agu opnd0_r_mem_agu(
   .scale(opnd0_r_mem_scale),
   .index(opnd0_r_mem_effective_index),
@@ -371,7 +371,7 @@ agu opnd0_r_mem_agu(
   .address(opnd0_r_mem_addr)
 );
 
-wire [31:0] opnd1_r_mem_addr = 32'b0;
+wire [31:0] opnd1_r_mem_addr;
 agu opnd1_r_mem_agu(
   .scale(opnd1_r_mem_scale),
   .index(opnd1_r_mem_effective_index),
@@ -381,19 +381,14 @@ agu opnd1_r_mem_agu(
   .address(opnd1_r_mem_addr)
 );
 
-// TODO(ww): Use hint1_valid/hint2_valid? Necessary?
-wire [31:0] opnd0_r_memval = (~hint1_is_write && hint1_address == opnd0_r_mem_addr)
-                                ? hint1_data :
-                                (~hint2_is_write && hint2_address == opnd0_r_mem_addr)
-                                ? hint2_data : 32'b0;
+wire [31:0] opnd0_r_memval = (~hint1_is_write && hint1_address == opnd0_r_mem_addr) ? hint1_data
+                           : (~hint2_is_write && hint2_address == opnd0_r_mem_addr) ? hint2_data
+                           : 32'b0;
 
 
-// TODO(ww): Use hint1_valid/hint2_valid? Necessary?
-// wire [31:0] opnd1_r_memval = 32'b0;
-wire [31:0] opnd1_r_memval = (~hint1_is_write && hint1_address == opnd1_r_mem_addr)
-                                ? hint1_data :
-                                (~hint2_is_write && hint2_address == opnd1_r_mem_addr)
-                                ? hint2_data : 32'b0;
+wire [31:0] opnd1_r_memval = (~hint1_is_write && hint1_address == opnd1_r_mem_addr) ? hint1_data
+                           : (~hint2_is_write && hint2_address == opnd1_r_mem_addr) ? hint2_data
+                           : 32'b0;
 
 
 ///

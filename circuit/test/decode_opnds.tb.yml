@@ -229,7 +229,6 @@ vector_specs:
     dest0_kind: 0b01
     dest1_kind: 0b00
     dest0_sel: 0 # EAX
-  # - _description: "add EAX, 0xffffffff (s-ext, ~MI)"
   - _description: "add EAX, [ESP] ([ESP]=0xaaaaaaaa)"
     unescaped_instr: 0x240403
     eax: 0xbbbbbbbb
