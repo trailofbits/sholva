@@ -422,11 +422,13 @@ assign opnd2_r = 32'd0;
 
 // TODO(ww): Is this the right place for this? Maybe we should do it
 // further on in instruction decoding, when looking at `opc` more closely.
-assign dest0_kind = opnd0_is_reg ? `OPND_DEST_REG_1HOT
+assign dest0_kind = !opnd0_is_write ? `OPND_DEST_NONE
+                  : opnd0_is_reg ? `OPND_DEST_REG_1HOT
                   : opnd0_is_mem ? `OPND_DEST_MEM_1HOT
                   : `OPND_DEST_NONE;
 
-assign dest1_kind = opnd1_is_reg ? `OPND_DEST_REG_1HOT
+assign dest1_kind = !opnd1_is_write ? `OPND_DEST_NONE
+                  : opnd1_is_reg ? `OPND_DEST_REG_1HOT
                   : opnd1_is_mem ? `OPND_DEST_MEM_1HOT
                   : `OPND_DEST_NONE;
 

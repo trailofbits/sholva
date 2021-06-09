@@ -83,7 +83,7 @@ CMD_IDIV:F6/7~M~Wr,F7/7~M~Wr
 
 CMD_IMUL:69+i*~RMI,6B+ib~RMI,F6/5~M,F7/5~M,xAF~RM
 
-CMD_INC:40+r*~O,FE/0~M,FF/0~M
+CMD_INC:40+r*~O~Wr,FE/0~M~Wr,FF/0~M~Wr
 CMD_Jcc:70~D,71~D,72~D,73~D,74~D,75~D,76~D,77~D,78~D,79~D,7A~D,7B~D,7C~D,7D~D,7E~D,7F~D,x80~D,x81~D,x82~D,x83~D,x84~D,x85~D,x86~D,x87~D,x88~D,x89~D,x8A~D,x8B~D,x8C~D,x8D~D,x8E~D,x8F~D
 CMD_SETcc:x90~M,x91~M,x92~M,x93~M,x94~M,x95~M,x96~M,x97~M,x98~M,x99~M,x9A~M,x9B~M,x9C~M,x9D~M,x9E~M,x9F~M
 CMD_JCXZ:E3~D
@@ -93,7 +93,7 @@ CMD_LODS:AC~ZO,AD~ZO
 CMD_LOOP:E0~D,E1~D,E2~D
 
 # TODO(ww): Support A0, A1, A2, A3?
-CMD_MOV:88~MR,89~MR,8A~RM,8B~RM,8C~MR,8E~RM,B0+rb+ib~OI,B8+r*+i*~OI,C6/0+ib~MI,C7/0+i*~MI
+CMD_MOV:88~MR~wr,89~MR~wr,8A~RM~wr,8B~RM~wr,8C~MR~wr,8E~RM~wr,B0+rb+ib~OI~wr,B8+r*+i*~OI~wr,C6/0+ib~MI~wr,C7/0+i*~MI~wr
 
 CMD_MOVS:A4~ZO,A5~ZO
 CMD_MOVSX:63~RM,xBE~RM,xBF~RM
@@ -134,5 +134,5 @@ CMD_TEST:84~MR,85~MR,A8+ib~I,A9+i*~I,F6/0+ib~MI,F7/0+i*~MI
 # NOTE(ww): SDM lists XCHG 86 and 87 as both RM and MR, which doesn't make a lot of sense.
 # Only the RM is represented here, since only one form is needed to cover all
 # possible valid encodings.
-CMD_XCHG:86~RM,87~RM,90+r*~AO
+CMD_XCHG:86~RM~WW,87~RM~WW,90+r*~AO~WW
 CMD_XOR:30~MR,31~MR,32~RM,33~RM,34+ib~I,35+i*~I,80/6+ib~MI,81/6+i*~MI,83/6+ib~MI

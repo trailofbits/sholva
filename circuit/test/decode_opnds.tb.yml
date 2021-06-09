@@ -45,6 +45,8 @@ vector_specs:
     ebx: 0xBBBBBBBB
     opnd_form: 10 # OPND_ENC_EAX_REG
     prefix_address_16bit: 0
+    opnd0_is_write: 1
+    opnd1_is_write: 1
     opnd0_r: 0xAAAAAAAA
     opnd1_r: 0xBBBBBBBB
     dest0_kind: 0b01
@@ -56,6 +58,8 @@ vector_specs:
     eax: 0xAAAAAAAA
     opnd_form: 10 # OPND_ENC_EAX_REG
     prefix_address_16bit: 0
+    opnd0_is_write: 1
+    opnd1_is_write: 1
     opnd0_r: 0xAAAAAAAA
     opnd1_r: 0xAAAAAAAA
     dest0_kind: 0b01
@@ -68,6 +72,8 @@ vector_specs:
     edx: 0xDDDDDDDD
     opnd_form: 7 # OPND_ENC_MODREGRM_REG_RM
     prefix_address_16bit: 0
+    opnd0_is_write: 1
+    opnd1_is_write: 1
     opnd0_r: 0xCCCCCCCC
     opnd1_r: 0xDDDDDDDD
     dest0_kind: 0b01
@@ -80,6 +86,8 @@ vector_specs:
     edx: 0xDDDDDDDD
     opnd_form: 7 # OPND_ENC_MODREGRM_REG_RM
     prefix_address_16bit: 0
+    opnd0_is_write: 1
+    opnd1_is_write: 1
     opnd0_r: 0xDDDDDDDD
     opnd1_r: 0xCCCCCCCC
     dest0_kind: 0b01
@@ -92,6 +100,7 @@ vector_specs:
     ebx: 0xBBBBBBBB
     opnd_form: 6 # OPND_ENC_MODREGRM_RM_REG
     prefix_address_16bit: 0
+    opnd0_is_write: 1
     opnd0_r: 0xAAAAAAAA
     opnd1_r: 0xBBBBBBBB
     dest0_kind: 0b01
@@ -103,6 +112,7 @@ vector_specs:
     ebx: 0xBBBBBBBB
     opnd_form: 7 # OPND_ENC_MODREGRM_REG_RM
     prefix_address_16bit: 0
+    opnd0_is_write: 1
     opnd0_r: 0xAAAAAAAA
     opnd1_r: 0xBBBBBBBB
     dest0_kind: 0b01
@@ -113,6 +123,7 @@ vector_specs:
     eax: 0xAAAAAAAA
     opnd_form: 4 # OPND_ENC_REG
     prefix_address_16bit: 0
+    opnd0_is_write: 1
     opnd0_r: 0xAAAAAAAA
     opnd1_r: x
     dest0_kind: 0b01
@@ -123,6 +134,7 @@ vector_specs:
     ebx: 0xBBBBBBBB
     opnd_form: 4 # OPND_ENC_REG
     prefix_address_16bit: 0
+    opnd0_is_write: 1
     opnd0_r: 0xBBBBBBBB
     opnd1_r: x
     dest0_kind: 0b01
@@ -133,6 +145,7 @@ vector_specs:
     ecx: 0xCCCCCCCC
     opnd_form: 4 # OPND_ENC_REG
     prefix_address_16bit: 0
+    opnd0_is_write: 1
     opnd0_r: 0xCCCCCCCC
     opnd1_r: x
     dest0_kind: 0b01
@@ -143,6 +156,7 @@ vector_specs:
     edx: 0xDDDDDDDD
     opnd_form: 4 # OPND_ENC_REG
     prefix_address_16bit: 0
+    opnd0_is_write: 1
     opnd0_r: 0xDDDDDDDD
     opnd1_r: x
     dest0_kind: 0b01
@@ -153,6 +167,7 @@ vector_specs:
     esi: 0x12121212
     opnd_form: 4 # OPND_ENC_REG
     prefix_address_16bit: 0
+    opnd0_is_write: 1
     opnd0_r: 0x12121212
     opnd1_r: x
     dest0_kind: 0b01
@@ -163,6 +178,7 @@ vector_specs:
     edi: 0x13131313
     opnd_form: 4 # OPND_ENC_REG
     prefix_address_16bit: 0
+    opnd0_is_write: 1
     opnd0_r: 0x13131313
     opnd1_r: x
     dest0_kind: 0b01
@@ -173,6 +189,7 @@ vector_specs:
     esp: 0x14141414
     opnd_form: 4 # OPND_ENC_REG
     prefix_address_16bit: 0
+    opnd0_is_write: 1
     opnd0_r: 0x14141414
     opnd1_r: x
     dest0_kind: 0b01
@@ -183,6 +200,7 @@ vector_specs:
     ebp: 0x15151515
     opnd_form: 4 # OPND_ENC_REG
     prefix_address_16bit: 0
+    opnd0_is_write: 1
     opnd0_r: 0x15151515
     opnd1_r: x
     dest0_kind: 0b01
@@ -193,6 +211,7 @@ vector_specs:
     eax: 0x99999999
     opnd_form: 9 # OPND_ENC_EAX_IMM
     prefix_address_16bit: 0
+    opnd0_is_write: 1
     opnd0_r: 0x99999999
     opnd1_r: x
     dest0_kind: 0b01
@@ -204,6 +223,7 @@ vector_specs:
     ebx: 0xcdcdcdcd
     opnd_form: 6 # OPND_ENC_MODREGRM_RM_REG
     prefix_address_16bit: 0
+    opnd0_is_write: 1
     opnd0_r: 0xabababab
     opnd1_r: 0xcdcdcdcd
     dest0_kind: 0b01
@@ -218,6 +238,7 @@ vector_specs:
     hint1_is_write: 0
     hint1_address: 0xffffdda8
     hint1_data: 0xaaaaaaaa
+    opnd0_is_write: 1
     opnd0_r: 0xbbbbbbbb
     opnd1_r: 0xaaaaaaaa
     dest0_kind: 0b01 # reg
