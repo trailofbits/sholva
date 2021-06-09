@@ -215,7 +215,7 @@ vector_specs:
     opnd0_r: 0x99999999
     opnd1_r: x
     dest0_kind: 0b01
-    dest1_kind: 0b10
+    dest1_kind: 0b00 # none
     dest0_sel: 0 # EAX
   - _description: "add EAX, EBX (~MR)"
     unescaped_instr: 0xd801
@@ -242,4 +242,4 @@ vector_specs:
     opnd0_r: 0xbbbbbbbb
     opnd1_r: 0xaaaaaaaa
     dest0_kind: 0b01 # reg
-    dest1_kind: 0b10 # mem
+    dest1_kind: 0b00 # none

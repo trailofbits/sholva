@@ -100,6 +100,7 @@ decode decode_instr(
   .hint1_is_write(hint1_is_write),
   .hint1_address(hint1_address),
   .hint1_data(hint1_data),
+
   .hint2_is_write(hint2_is_write),
   .hint2_address(hint2_address),
   .hint2_data(hint2_data),

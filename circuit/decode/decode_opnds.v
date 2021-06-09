@@ -389,6 +389,7 @@ wire [31:0] opnd0_r_memval = (~hint1_is_write && hint1_address == opnd0_r_mem_ad
 
 
 // TODO(ww): Use hint1_valid/hint2_valid? Necessary?
+// wire [31:0] opnd1_r_memval = 32'b0;
 wire [31:0] opnd1_r_memval = (~hint1_is_write && hint1_address == opnd1_r_mem_addr)
                                 ? hint1_data :
                                 (~hint2_is_write && hint2_address == opnd1_r_mem_addr)
