@@ -39,55 +39,48 @@ module decode_opnds(
 
 `include "funcs.v"
 
+wire has_imm;
+wire has_modrm;
+wire has_sib;
+wire has_disp;
+
+wire [7:0] modrm;
+wire [7:0] sib;
+
+wire modrm_rm_is_reg_direct;
+
+wire opnd0_modrm_rm;
+wire opnd0_modrm_reg;
+wire opnd1_modrm_rm;
+wire opnd1_modrm_reg;
+
+decode_opnd_signals decode_opnd_signals_x(
+  // Inputs
+  .unescaped_instr(unescaped_instr),
+  .opc(opc),
+  .opnd_form(opnd_form),
+  .prefix_address_16bit(prefix_address_16bit),
+
+  // Outputs
+  .has_imm(has_imm),
+  .has_modrm(has_modrm),
+  .has_sib(has_sib),
+  .has_disp(has_disp),
+
+  .modrm(modrm),
+  .sib(sib),
+
+  .modrm_rm_is_reg_direct(modrm_rm_is_reg_direct),
+
+  .opnd0_modrm_rm(opnd0_modrm_rm),
+  .opnd0_modrm_reg(opnd0_modrm_reg),
+  .opnd1_modrm_rm(opnd1_modrm_rm),
+  .opnd1_modrm_reg(opnd1_modrm_reg)
+);
+
 wire [15:0] opnd_form_1hot = one_hot16(opnd_form);
 wire [63:0] opc_1hot = one_hot64(opc);
 
-// Whether we have any immediate byte(s).
-wire has_imm = opnd_form_1hot[`OPND_ENC_IMM] ||
-               opnd_form_1hot[`OPND_ENC_MODREGRM_RM_IMM] ||
-               opnd_form_1hot[`OPND_ENC_REG_IMM] ||
-               opnd_form_1hot[`OPND_ENC_EAX_IMM] ||
-               opnd_form_1hot[`OPND_ENC_MODREGRM_REG_RM_IMM] ||
-               opnd_form_1hot[`OPND_ENC_MODREGRM_RM_REG_IMM];
-
-
-// ModR/M encodings where R/M is operand#0 (i.e. op.d=0)
-wire opnd0_modrm_rm = opnd_form_1hot[`OPND_ENC_MODREGRM_RM] ||
-                      opnd_form_1hot[`OPND_ENC_MODREGRM_RM_IMM] ||
-                      opnd_form_1hot[`OPND_ENC_MODREGRM_RM_REG] ||
-                      opnd_form_1hot[`OPND_ENC_MODREGRM_RM_REG_IMM] ||
-                      opnd_form_1hot[`OPND_ENC_MODREGRM_RM_REG_CL];
-
-// ModR/M encodings where REG is operand#0 (i.e. op.d=1)
-wire opnd0_modrm_reg = opnd_form_1hot[`OPND_ENC_MODREGRM_REG_RM] ||
-                       opnd_form_1hot[`OPND_ENC_MODREGRM_REG_RM_IMM];
-
-// ModR/M encodings where R/M is operand#1.
-wire opnd1_modrm_rm = opnd0_modrm_reg;
-
-// ModR/M encodings where REG is operand#1.
-wire opnd1_modrm_reg = opnd_form_1hot[`OPND_ENC_MODREGRM_RM_REG] ||
-                       opnd_form_1hot[`OPND_ENC_MODREGRM_RM_REG_IMM] ||
-                       opnd_form_1hot[`OPND_ENC_MODREGRM_RM_REG_CL];
-
-// Whether we have a ModR/M byte supplying one or more operands.
-wire has_modrm = opnd0_modrm_rm || opnd0_modrm_reg;
-
-// The actual ModR/M byte, if `has_modrm`.
-wire [7:0] modrm = unescaped_instr[15:8];
-
-// Whether ModR/M.rm indicates a register, i.e. "register direct".
-wire modrm_rm_is_reg_direct = modrm[7:6] == 2'b11;
-
-// Intel SDM Vol. 2A Table 2-1/2-2/2-3: the SIB byte is only present when all
-// of the following conditions hold:
-//  * The ModR/M byte is present;
-//  * We are not performing a 16-bit addressing operation;
-//  * We are not in register direct mode and ModR/M.rm == 0b100
-wire has_sib = has_modrm
-               && ~prefix_address_16bit
-               && ~modrm_rm_is_reg_direct
-               && modrm[2:0] == 3'b100;
 
 // Whether ModR/M.rm indicates a register indirect selector,
 // i.e. a base address (and maybe a displacement).
@@ -96,34 +89,15 @@ wire modrm_rm_is_reg_indirect = ~has_sib
                              && modrm[7:6] != 2'b00
                              && modrm[2:0] != 3'b101;
 
-// The actual SIB byte, if `has_sib`.
-wire [7:0] maybe_sib = unescaped_instr[23:16];
-
-wire [2:0] sib_base_regsel = maybe_sib[2:0];
-wire [2:0] sib_index_regsel = maybe_sib[5:3];
-wire [1:0] sib_scale = maybe_sib[7:6];
+wire [2:0] sib_base_regsel = sib[2:0];
+wire [2:0] sib_index_regsel = sib[5:3];
+wire [1:0] sib_scale = sib[7:6];
 
 // SIB.base == 0b101 indicates scaled-index mode with no base register.
 wire sib_no_base = sib_base_regsel == 3'b101 && modrm[7:6] == 2'b00;
 
 // SIB.index == 0b100 indicates no index while in SIB addressing mode.
 wire sib_no_index = sib_index_regsel == 3'b100;
-
-// Whether we have displacement byte(s).
-// Displacement byte(s) are present in two cases:
-// First, when all of the following conditions hold:
-// * The ModR/M byte is present;
-// * We are not in register direct mode;
-// * One of:
-//   * We are in a displacement-only mode (ModR/M.rm == 0b101 and ModR/M.mod == 0b00)
-//   * We are in an indirect + displacement addressing mode (ModR/M.mod == 0b01 or 0b10)
-// Second, when we are in a displacement-only encoding (i.e., no ModR/M whatsoever).
-// TODO(ww): Handle that second case.
-wire has_disp = (has_modrm
-                   && ~modrm_rm_is_reg_direct
-                   && ((modrm[2:0] == 3'b101 && modrm[7:6] == 2'b00)
-                       || (modrm[7:6] == 2'b01 || modrm[7:6] == 2'b10)))
-                || opnd_form_1hot[`OPND_ENC_DISP];
 
 // wire disp8 = has_disp && modrm[7:6] == 2'b01;
 // wire disp32 = has_disp && modrm[7:6] == 2'b01;
