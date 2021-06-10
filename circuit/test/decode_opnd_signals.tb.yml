@@ -45,5 +45,25 @@ vector_specs:
     modrm_rm_is_reg_direct: 1
     opnd0_modrm_reg: 1
     opnd1_modrm_rm: 1
-  # - _description: "add EAX, [ESP] (modrm + sib)"
-  #   unescaped_instr: 0x240403
+  - _description: "add EAX, [ESP] (modrm + sib)"
+    unescaped_instr: 0x240403
+    opnd_form: 6 # OPND_ENC_MODREGRM_RM_REG
+    has_imm: 0
+    has_modrm: 1
+    has_sib: 1
+    has_disp: 0
+    modrm: 0x04
+    sib: 0x24
+    opnd0_modrm_rm: 1
+    opnd1_modrm_reg: 1 # TODO(ww): Think about whether this is right.
+  - _description: "add EAX, [ESP+8] (modrm + sib + disp8)"
+    unescaped_instr: 0x08244403
+    opnd_form: 6 # OPND_ENC_MODREGRM_RM_REG
+    has_imm: 0
+    has_modrm: 1
+    has_sib: 1
+    has_disp: 1
+    modrm: 0x44
+    sib: 0x24
+    opnd0_modrm_rm: 1
+    opnd1_modrm_reg: 1 # TODO(ww): Think about whether this is right.
