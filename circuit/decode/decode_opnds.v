@@ -57,7 +57,6 @@ wire opnd1_modrm_reg;
 decode_opnd_signals decode_opnd_signals_x(
   // Inputs
   .unescaped_instr(unescaped_instr),
-  .opc(opc),
   .opnd_form(opnd_form),
   .prefix_address_16bit(prefix_address_16bit),
 

@@ -11,6 +11,7 @@ MODULES := fetch \
 	mux8_32 \
 	regfile \
 	decode_opnds \
+	decode_opnd_signals \
 	alu \
 	agu \
 	tiny86

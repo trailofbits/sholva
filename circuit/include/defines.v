@@ -12,7 +12,7 @@
 `define OPND_DEST_MEM_1HOT  2'b10
 `define OPND_DEST_NONE      2'b00
 
-// No operands.
+// No operands, or a special case that we'll handle independently.
 `define OPND_ENC_NONE 4'd0
 
 // Unary, immediate operand.

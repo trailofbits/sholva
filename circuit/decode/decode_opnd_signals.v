@@ -3,7 +3,6 @@
 
 module decode_opnd_signals(
   input [71:0] unescaped_instr,
-  input [5:0] opc,
   input [3:0] opnd_form,
   input prefix_address_16bit,
 
@@ -26,7 +25,6 @@ module decode_opnd_signals(
 `include "funcs.v"
 
 wire [15:0] opnd_form_1hot = one_hot16(opnd_form);
-wire [63:0] opc_1hot = one_hot64(opc);
 
 // Whether we have any immediate byte(s).
 assign has_imm = opnd_form_1hot[`OPND_ENC_IMM] ||
