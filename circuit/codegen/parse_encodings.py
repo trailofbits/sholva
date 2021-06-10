@@ -57,18 +57,17 @@ class Encoding:
 
         enc_body, op_enc = raw_enc.split("~", 1)
 
-        if "~" in op_enc:
-            op_enc, opnd_modes = op_enc.split("~", 1)
-            opnd_modes = list(opnd_modes)
-            assert (
-                len(opnd_modes) <= 3
-            ), f"more modes than plausible operands: {len(opnd_modes)}"
-            assert all(
-                m in _OPERAND_MODES for m in opnd_modes
-            ), f"unknown opnd mode(s): {opnd_modes}"
-            opnd_modes += ["x"] * (3 - len(opnd_modes))
-        else:
-            opnd_modes = list("xxx")
+        assert "~" in op_enc, f"missing operand modes for {raw_enc}"
+
+        op_enc, opnd_modes = op_enc.split("~", 1)
+        opnd_modes = list(opnd_modes)
+        assert (
+            len(opnd_modes) <= 3
+        ), f"more modes than plausible operands: {len(opnd_modes)}"
+        assert all(
+            m in _OPERAND_MODES for m in opnd_modes
+        ), f"unknown opnd mode(s): {opnd_modes}"
+        opnd_modes += ["x"] * (3 - len(opnd_modes))
 
         assert (
             op_enc in _OPERAND_ENCODINGS.keys()
