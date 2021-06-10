@@ -15,7 +15,6 @@ MODULES := fetch \
 	agu \
 	tiny86
 
-TB_SPECS := $(addsuffix .tb.yml,$(MODULES))
 TESTBENCHES := $(addsuffix .tb.gen.v,$(MODULES))
 TESTVECTORS := $(addsuffix .tv,$(MODULES))
 TESTBENCH_EXES := $(addsuffix .tb.vvp,$(MODULES))

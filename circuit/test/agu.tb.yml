@@ -56,4 +56,14 @@ vector_specs:
     base: 0xffffff00
     disp: 0
     address: 0xffffff10
-  # TODO(ww): index-scale-disp, base-index-scale-disp
+  - _description: "(index * scale=2) + displacement"
+    scale: 0b01
+    index: 2
+    disp: 0xffffff00
+    address: 0xffffff04
+  - _description: "base + (index * scale=2) + displacement"
+    scale: 0b01
+    index: 2
+    base: 0xffff0000
+    disp: 0x0000ff00
+    address: 0xffffff04
