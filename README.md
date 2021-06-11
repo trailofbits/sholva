@@ -11,7 +11,7 @@ shol'va
 
 ### Dependencies
 
-*shol'va* currently depends on iVerilog, Verilator, and Python 3, and Ruby (for code generation).
+*shol'va* currently depends on iVerilog, Verilator, Python 3, and Ruby (for code generation).
 These must be available as `iverilog`, `verilator`, `python3`, and `ruby` respectively.
 
 ### Building
