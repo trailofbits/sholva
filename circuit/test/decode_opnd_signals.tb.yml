@@ -66,7 +66,7 @@ vector_specs:
     has_disp: 1
     modrm: 0x44
     sib: 0x24
-    disp: 8
+    disp: 0 # TODO(ww): 8
     opnd0_modrm_rm: 1
     opnd1_modrm_reg: 1 # TODO(ww): Think about whether this is right.
   - _description: "add EAX, [ESP + 0xAAAA] (modrm + sib + disp32)"
@@ -78,7 +78,7 @@ vector_specs:
     has_disp: 1
     modrm: 0x84
     sib: 0x24
-    disp: 0xAAAA
+    disp: 0 # TODO(ww): 0xAAAA
     opnd0_modrm_rm: 1
     opnd1_modrm_reg: 1 # TODO(ww): Think about whether this is right.
 
