@@ -67,3 +67,15 @@ vector_specs:
     sib: 0x24
     opnd0_modrm_rm: 1
     opnd1_modrm_reg: 1 # TODO(ww): Think about whether this is right.
+  - _description: "add EAX, [ESP + 0xAAAA] (modrm + sib + disp32)"
+    unescaped_instr: 0x0000aaaa248403
+    opnd_form: 6 # OPND_ENC_MODREGRM_RM_REG
+    has_imm: 0
+    has_modrm: 1
+    has_sib: 1
+    has_disp: 1
+    modrm: 0x84
+    sib: 0x24
+    opnd0_modrm_rm: 1
+    opnd1_modrm_reg: 1 # TODO(ww): Think about whether this is right.
+
