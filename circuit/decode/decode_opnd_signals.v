@@ -13,6 +13,7 @@ module decode_opnd_signals(
 
   output [7:0] modrm,
   output [7:0] sib,
+  output [31:0] disp,
 
   output modrm_rm_is_reg_direct,
 
@@ -92,4 +93,7 @@ assign has_disp = (has_modrm
                    && ((modrm[2:0] == 3'b101 && modrm[7:6] == 2'b00)
                        || (modrm[7:6] == 2'b01 || modrm[7:6] == 2'b10)))
                 || opnd_form_1hot[`OPND_ENC_DISP];
+
+assign disp = has_disp ? 32'd0 : 32'd0;
+
 endmodule
