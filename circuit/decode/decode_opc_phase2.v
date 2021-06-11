@@ -9,7 +9,13 @@ module decode_opc_phase2(
   output [3:0] opnd_form,
   output [1:0] opnd_count,
   output imm_1byte,
-  output reg_1byte
+  output reg_1byte,
+  output opnd0_is_read,
+  output opnd0_is_write,
+  output opnd1_is_read,
+  output opnd1_is_write,
+  output opnd2_is_read,
+  output opnd2_is_write
 
   // TODO: outputs:
   // some wires for operand sizes (8/16/32)

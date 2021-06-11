@@ -34,4 +34,4 @@ lint:
 
 .PHONY: check
 check:
-	$(MAKE) -C circuit/test check
+	@$(MAKE) -C circuit/test check

@@ -12,7 +12,7 @@
 `define OPND_DEST_MEM_1HOT  2'b10
 `define OPND_DEST_NONE      2'b00
 
-// No operands.
+// No operands, or a special case that we'll handle independently.
 `define OPND_ENC_NONE 4'd0
 
 // Unary, immediate operand.
@@ -26,6 +26,9 @@
 
 // Unary, reg of opcode bits operand.
 `define OPND_ENC_REG 4'd4
+
+// Unary, implicit accumulator reg for r(+w).
+`define OPND_ENC_EAX 4'd14
 
 // Binary, r/m of ModR/M for r(+w) and immediate for read.
 `define OPND_ENC_MODREGRM_RM_IMM 4'd5

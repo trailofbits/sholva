@@ -9,6 +9,13 @@ module decode(
   input [31:0] esp,
   input [31:0] ebp,
 
+  input hint1_is_write,
+  input [31:0] hint1_address,
+  input [31:0] hint1_data,
+  input hint2_is_write,
+  input [31:0] hint2_address,
+  input [31:0] hint2_data,
+
   output [5:0] opc,
   output [31:0] opnd0_r,
   output [31:0] opnd1_r,
@@ -55,6 +62,13 @@ wire [3:0] opnd_form;
 wire [1:0] opnd_count;
 wire imm_1byte;
 wire reg_1byte;
+wire opnd0_is_read;
+wire opnd0_is_write;
+wire opnd1_is_read;
+wire opnd1_is_write;
+wire opnd2_is_read;
+wire opnd2_is_write;
+
 
 decode_opc_phase2 decode_opc_phase2_x(
   .unescaped_instr(unescaped_instr),
@@ -64,7 +78,13 @@ decode_opc_phase2 decode_opc_phase2_x(
   .opnd_form(opnd_form),
   .opnd_count(opnd_count),
   .imm_1byte(imm_1byte),
-  .reg_1byte(reg_1byte)
+  .reg_1byte(reg_1byte),
+  .opnd0_is_read(opnd0_is_read),
+  .opnd0_is_write(opnd0_is_write),
+  .opnd1_is_read(opnd1_is_read),
+  .opnd1_is_write(opnd1_is_write),
+  .opnd2_is_read(opnd2_is_read),
+  .opnd2_is_write(opnd2_is_write)
 );
 
 // Decode operands (phase 1): take the operand form and some information about widths,
@@ -84,12 +104,26 @@ decode_opnds decode_opnds_x(
   .esp(esp),
   .ebp(ebp),
 
+  .hint1_is_write(hint1_is_write),
+  .hint1_address(hint1_address),
+  .hint1_data(hint1_data),
+  .hint2_is_write(hint2_is_write),
+  .hint2_address(hint2_address),
+  .hint2_data(hint2_data),
+
   .opc(opc),
   .opnd_form(opnd_form),
   .imm_1byte(imm_1byte),
   .reg_1byte(reg_1byte),
   .prefix_operand_16bit(prefix_operand_16bit),
   .prefix_address_16bit(prefix_address_16bit),
+
+  .opnd0_is_read(opnd0_is_read),
+  .opnd0_is_write(opnd0_is_write),
+  .opnd1_is_read(opnd1_is_read),
+  .opnd1_is_write(opnd1_is_write),
+  .opnd2_is_read(opnd2_is_read),
+  .opnd2_is_write(opnd2_is_write),
 
   // Outputs
   .disp_1byte(disp_1byte),

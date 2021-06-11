@@ -1,0 +1,84 @@
+module: decode_opnd_signals
+file: ../decode/decode_opnd_signals.v
+inputs:
+  - "72 unescaped_instr"
+  - "4 opnd_form"
+  - "1 prefix_address_16bit"
+outputs:
+  - "1 has_imm"
+  - "1 has_modrm"
+  - "1 has_sib"
+  - "1 has_disp"
+  - "8 modrm"
+  - "8 sib"
+  - "32 disp"
+  - "1 modrm_rm_is_reg_direct"
+  - "1 opnd0_modrm_rm"
+  - "1 opnd0_modrm_reg"
+  - "1 opnd1_modrm_rm"
+  - "1 opnd1_modrm_reg"
+vector_specs:
+  - _description: "push EAX (no imm/modrm/sib/disp)"
+    unescaped_instr: 0x50
+    opnd_form: 0 # OPND_ENC_NONE
+    has_imm: 0
+    has_sib: 0
+    has_disp: 0
+  - _description: "add EAX, EBX (modrm, ~MR)"
+    unescaped_instr: 0xd801
+    opnd_form: 6 # OPND_ENC_MODREGRM_RM_REG
+    has_imm: 0
+    has_modrm: 1
+    has_sib: 0
+    has_disp: 0
+    modrm: 0xd8
+    modrm_rm_is_reg_direct: 1
+    opnd0_modrm_rm: 1
+    opnd1_modrm_reg: 1
+  - _description: "add EAX, EBX (modrm, ~RM)"
+    unescaped_instr: 0xc303
+    opnd_form: 7 # OPND_ENC_MODREGRM_REG_RM
+    has_imm: 0
+    has_modrm: 1
+    has_sib: 0
+    has_disp: 0
+    modrm: 0xc3
+    modrm_rm_is_reg_direct: 1
+    opnd0_modrm_reg: 1
+    opnd1_modrm_rm: 1
+  - _description: "add EAX, [ESP] (modrm + sib)"
+    unescaped_instr: 0x240403
+    opnd_form: 6 # OPND_ENC_MODREGRM_RM_REG
+    has_imm: 0
+    has_modrm: 1
+    has_sib: 1
+    has_disp: 0
+    modrm: 0x04
+    sib: 0x24
+    opnd0_modrm_rm: 1
+    opnd1_modrm_reg: 1 # TODO(ww): Think about whether this is right.
+  - _description: "add EAX, [ESP+8] (modrm + sib + disp8)"
+    unescaped_instr: 0x08244403
+    opnd_form: 6 # OPND_ENC_MODREGRM_RM_REG
+    has_imm: 0
+    has_modrm: 1
+    has_sib: 1
+    has_disp: 1
+    modrm: 0x44
+    sib: 0x24
+    disp: 0 # TODO(ww): 8
+    opnd0_modrm_rm: 1
+    opnd1_modrm_reg: 1 # TODO(ww): Think about whether this is right.
+  - _description: "add EAX, [ESP + 0xAAAA] (modrm + sib + disp32)"
+    unescaped_instr: 0x0000aaaa248403
+    opnd_form: 6 # OPND_ENC_MODREGRM_RM_REG
+    has_imm: 0
+    has_modrm: 1
+    has_sib: 1
+    has_disp: 1
+    modrm: 0x84
+    sib: 0x24
+    disp: 0 # TODO(ww): 0xAAAA
+    opnd0_modrm_rm: 1
+    opnd1_modrm_reg: 1 # TODO(ww): Think about whether this is right.
+

@@ -2,6 +2,7 @@ TBGEN := ./codegen/tbgen
 TVGEN := ./codegen/tvgen
 
 MODULES := fetch \
+	decode_hint \
 	decode_prefix \
 	decode_opc_phase1 \
 	decode_opc_phase2 \
@@ -10,36 +11,39 @@ MODULES := fetch \
 	mux8_32 \
 	regfile \
 	decode_opnds \
+	decode_opnd_signals \
 	alu \
+	agu \
 	tiny86
 
-TB_SPECS := $(addsuffix .tb.yml,$(MODULES))
 TESTBENCHES := $(addsuffix .tb.gen.v,$(MODULES))
 TESTVECTORS := $(addsuffix .tv,$(MODULES))
 TESTBENCH_EXES := $(addsuffix .tb.vvp,$(MODULES))
 
 .PHONY: all
-all: $(TESTBENCH_EXES)
+all: $(TESTBENCH_EXES) $(TESTVECTORS)
 
-.PHONT: check
-check: $(TESTBENCH_EXES)
+.PHONY: check
+check: all
 	@./run-tests
 
-$(TESTBENCH_EXES): $(TESTBENCHES) $(TESTVECTORS)
+.PHONY: clean
+clean:
+	rm -rf $(TESTBENCHES) $(TESTVECTORS) $(TESTBENCH_EXES) *.vcd
+
+%.tb.yml: $(TBGEN) $(TVGEN)
+
+%.tb.gen.v: %.tb.yml
+	$(TBGEN) $<
+
+%.tv: %.tb.yml
+	$(TVGEN) $<
+
+%.tb.vvp: %.tb.gen.v
 	iverilog -o $@ \
 		-I.. -I../include \
 		-y.. \
 		-y../.. \
 		-y../decode \
 		-y../execute \
-		$(basename $@).gen.v
-
-$(TESTBENCHES): $(TB_SPECS) $(TBGEN)
-	$(TBGEN) $(basename $(basename $@)).yml
-
-$(TESTVECTORS): $(TB_SPECS) $(TVGEN)
-	$(TVGEN) $(basename $(basename $@)).tb.yml
-
-.PHONY: clean
-clean:
-	rm -rf $(TESTBENCHES) $(TESTVECTORS) $(TESTBENCH_EXES) *.vcd
+		$<

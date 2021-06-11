@@ -1,0 +1,25 @@
+module: decode_hint
+file: ../decode/decode_hint.v
+inputs:
+  - "72 raw_hint"
+outputs:
+  - "1 valid_hint"
+  - "2 mask"
+  - "1 is_write"
+  - "32 address"
+  - "32 data"
+vector_specs:
+  - _description: "0xaaaaaaaa @ 0xffffddac (read, dword)"
+    raw_hint: 0x82ffffddacaaaaaaaa
+    valid_hint: 0b1
+    mask: 0b10 # dword
+    is_write: 0b0 # read
+    address: 0xffffddac
+    data: 0xaaaaaaaa
+  - _description: "0x65666666 @ 0xffffddac (write, dword)"
+    raw_hint: 0x86ffffddac65666666
+    valid_hint: 0b1
+    mask: 0b10 # dword
+    is_write: 0b1 # write
+    address: 0xffffddac
+    data: 0x65666666

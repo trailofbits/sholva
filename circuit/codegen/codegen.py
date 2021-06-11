@@ -22,6 +22,7 @@ _OPND_ENC_MAP = {
     "D": ("OPND_ENC_DISP", 1),
     "M": ("OPND_ENC_MODREGRM_RM", 1),
     "O": ("OPND_ENC_REG", 1),
+    "A": ("OPND_ENC_EAX", 1),
     "MI": ("OPND_ENC_MODREGRM_RM_IMM", 2),
     "MR": ("OPND_ENC_MODREGRM_RM_REG", 2),
     "RM": ("OPND_ENC_MODREGRM_REG_RM", 2),
@@ -33,6 +34,9 @@ _OPND_ENC_MAP = {
     "MRC": ("OPND_ENC_MODREGRM_RM_REG_CL", 3),
     "ZO": ("OPND_ENC_NONE", 0),
 }
+
+_V_TRUE = "1'b1"
+_V_FALSE = "1'b0"
 
 
 def _header():
@@ -284,6 +288,50 @@ def _gen_opc_map_v(commands):
             )
             arity_exprs.append((f"2'd{arity}", arity_expr))
         print(_assign("opnd_count", _ternary_chain(arity_exprs)), file=io)
+
+        # Generate the opnd{0,1,2}_is_{read,write} assignments.
+        for n in [0, 1, 2]:
+            _br(io, 2)
+
+            opndN_is_read_exprs = []
+            opndN_is_write_exprs = []
+            for cmd in commands:
+                for enc in cmd["encs"]:
+                    opndN_mode = enc[f"opnd{n}_mode"]
+
+                    enc_expr = _and(_bool(enc["esc"], "is_2byte"), _opc_eq(enc["opc"]))
+                    if enc["ext"] is not None:
+                        enc_expr = _and(enc_expr, _opc_ext_eq(enc["ext"]))
+
+                    # This encoding reads from this operand.
+                    if opndN_mode == "W" or opndN_mode == "r":
+                        opndN_is_read_exprs.append(enc_expr)
+
+                    # This encoding writes to this operand.
+                    if opndN_mode == "W" or opndN_mode == "w":
+                        opndN_is_write_exprs.append(enc_expr)
+
+            if len(opndN_is_read_exprs) > 0:
+                opndN_is_read_expr = functools.reduce(_or, opndN_is_read_exprs)
+            else:
+                opndN_is_read_expr = _V_FALSE
+
+            print(
+                _assign(f"opnd{n}_is_read", opndN_is_read_expr),
+                file=io,
+            )
+
+            _br(io, 2)
+
+            if len(opndN_is_write_exprs) > 0:
+                opndN_is_write_expr = functools.reduce(_or, opndN_is_write_exprs)
+            else:
+                opndN_is_write_expr = _V_FALSE
+
+            print(
+                _assign(f"opnd{n}_is_write", opndN_is_write_expr),
+                file=io,
+            )
 
 
 def main():
