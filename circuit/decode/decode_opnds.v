@@ -26,7 +26,6 @@ module decode_opnds(
   input opnd2_is_read,
   input opnd2_is_write,
 
-  output disp_1byte,
   output [31:0] opnd0_r,
   output [31:0] opnd1_r,
   output [31:0] opnd2_r,
@@ -103,9 +102,6 @@ wire sib_no_base = sib_base_regsel == 3'b101 && modrm[7:6] == 2'b00;
 
 // SIB.index == 0b100 indicates no index while in SIB addressing mode.
 wire sib_no_index = sib_index_regsel == 3'b100;
-
-// TODO(ww): Actually extract the disp byte(s) here, maybe with a separate module.
-// NOTE(ww): disp8 needs to be sign extended.
 
 ///
 /// OPERAND EXTRACTION
@@ -263,8 +259,10 @@ wire [2:0] opnd1_r_mem_base_regsel =
     `REG_EDI : opndX_r_mem_base_regsel;
 
 
-wire [31:0] opnd0_r_mem_disp = 32'b0; // TODO
-wire [31:0] opnd1_r_mem_disp = 32'b0; // TODO
+// TODO(ww): Route disp into one of these, depending on which operand
+// needs it.
+wire [31:0] opnd0_r_mem_disp = 32'b0;
+wire [31:0] opnd1_r_mem_disp = 32'b0;
 
 wire [31:0] opnd0_r_mem_selected_index;
 mux8_32 mux8_32_opnd0_mem_index(
@@ -388,8 +386,6 @@ assign opnd1_r = opnd1_is_reg ? opnd1_r_regval :
                  opnd1_is_mem ? opnd1_r_memval : 32'b0;
 
 
-// TODO(ww): Temporary assignments, to make testing easier.
-assign disp_1byte = 1'd0;
 assign opnd2_r = 32'd0;
 
 // TODO(ww): Is this the right place for this? Maybe we should do it
