@@ -90,8 +90,6 @@ decode_opc_phase2 decode_opc_phase2_x(
 // Decode operands (phase 1): take the operand form and some information about widths,
 // return concrete operand (read) values and a write selector.
 
-wire disp_1byte;
-
 decode_opnds decode_opnds_x(
   // Inputs
   .unescaped_instr(unescaped_instr),
@@ -126,7 +124,6 @@ decode_opnds decode_opnds_x(
   .opnd2_is_write(opnd2_is_write),
 
   // Outputs
-  .disp_1byte(disp_1byte),
   .opnd0_r(opnd0_r),
   .opnd1_r(opnd1_r),
   .opnd2_r(opnd2_r),

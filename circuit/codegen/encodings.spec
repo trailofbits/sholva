@@ -8,7 +8,7 @@
 # `[]` indicating "optional", `{X,Y}` indicating "choice", and `+` after either
 # `[]` or `{}` indicating "one or more".
 #
-#  [x]HH[/D][+r{b,w,d,*}][+i{b,w,d,*}][~{I,D,M,O,MI,MR,RM,OI,AI,AO,RMI,MRI,MRC,ZO}][~{r,w,W,x}+]
+#  [x]HH[/D][+r{b,w,d,*}][+i{b,w,d,*}][~{I,D{8,32},M,O,MI,MR,RM,OI,AI,AO,RMI,MRI,MRC,ZO}][~{r,w,W,x}+]
 #
 # Where:
 # * `x` indicates that that the `0Fh` opcode escape was used;
@@ -20,7 +20,8 @@
 #   (of the specified width: byte, word, or dword), or `*` for both word and dword
 # * `~I`, `~D`, `~M`, `~O`, `~MI`, `~MR`, `~RM`, ~OI`, `~ZO` indicate the operand encoding:
 #   - `~I`: Unary, immediate only
-#   - `~D`: Unary, displacement only
+#   - `~D8`: Unary, 8-bit displacement only
+#   - `~D32`: Unary, 32-bit displacement only
 #   - `~M`: Unary, r/m of ModR/M only
 #   - `~O`: Unary, reg of lower opcode bits only
 #   - `~A`: Unary, implicit accumulator reg for r(+w)
@@ -84,13 +85,15 @@ CMD_IDIV:F6/7~M~Wr,F7/7~M~Wr
 CMD_IMUL:69+i*~RMI~wrr,6B+ib~RMI~wrr,F6/5~M~Wr,F7/5~M~wWr,xAF~RM~Wr
 
 CMD_INC:40+r*~O~Wr,FE/0~M~Wr,FF/0~M~Wr
-CMD_Jcc:70~D~r,71~D~r,72~D~r,73~D~r,74~D~r,75~D~r,76~D~r,77~D~r,78~D~r,79~D~r,7A~D~r,7B~D~r,7C~D~r,7D~D~r,7E~D~r,7F~D~r,x80~D~r,x81~D~r,x82~D~r,x83~D~r,x84~D~r,x85~D~r,x86~D~r,x87~D~r,x88~D~r,x89~D~r,x8A~D~r,x8B~D~r,x8C~D~r,x8D~D~r,x8E~D~r,x8F~D~r
+CMD_Jcc:70~D8~r,71~D8~r,72~D8~r,73~D8~r,74~D8~r,75~D8~r,76~D8~r,77~D8~r,78~D8~r,79~D8~r,7A~D8~r,7B~D8~r,7C~D8~r,7D~D8~r,7E~D8~r,7F~D8~r,x80~D32~r,x81~D32~r,x82~D32~r,x83~D32~r,x84~D32~r,x85~D32~r,x86~D32~r,x87~D32~r,x88~D32~r,x89~D32~r,x8A~D32~r,x8B~D32~r,x8C~D32~r,x8D~D32~r,x8E~D32~r,x8F~D32~r
 CMD_SETcc:x90~M~w,x91~M~w,x92~M~w,x93~M~w,x94~M~w,x95~M~w,x96~M~w,x97~M~w,x98~M~w,x99~M~w,x9A~M~w,x9B~M~w,x9C~M~w,x9D~M~w,x9E~M~w,x9F~M~w
-CMD_JCXZ:E3~D~r
-CMD_JMP:EA~D~r,EB~D~r,E9~D~r,FF/4~M~r,FF/5~D~r
+CMD_JCXZ:E3~D8~r
+
+# TODO(ww): Do we need to support far jumps?
+CMD_JMP:EB~D8~r,E9~D32~r,FF/4~M~r
 CMD_LEA:8D~RM~wr
 CMD_LODS:AC~ZO~wr,AD~ZO~wr
-CMD_LOOP:E0~D~rr,E1~D~rr,E2~D~rr
+CMD_LOOP:E0~D8~rr,E1~D8~rr,E2~D8~rr
 
 # TODO(ww): Support A0, A1, A2, A3?
 CMD_MOV:88~MR~wr,89~MR~wr,8A~RM~wr,8B~RM~wr,8C~MR~wr,8E~RM~wr,B0+rb+ib~OI~wr,B8+r*+i*~OI~wr,C6/0+ib~MI~wr,C7/0+i*~MI~wr

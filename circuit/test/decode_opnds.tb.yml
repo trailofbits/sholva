@@ -29,7 +29,6 @@ inputs:
   - "1 opnd2_is_read"
   - "1 opnd2_is_write"
 outputs:
-  - "1 disp_1byte"
   - "32 opnd0_r"
   - "32 opnd1_r"
   - "32 opnd2_r"

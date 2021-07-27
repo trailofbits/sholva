@@ -10,6 +10,8 @@ module decode_opnd_signals(
   output has_modrm,
   output has_sib,
   output has_disp,
+  output is_disp8,
+  output is_disp32,
 
   output [7:0] modrm,
   output [7:0] sib,
@@ -92,8 +94,31 @@ assign has_disp = (has_modrm
                    && ~modrm_rm_is_reg_direct
                    && ((modrm[2:0] == 3'b101 && modrm[7:6] == 2'b00)
                        || (modrm[7:6] == 2'b01 || modrm[7:6] == 2'b10)))
-                || opnd_form_1hot[`OPND_ENC_DISP];
+                || opnd_form_1hot[`OPND_ENC_DISP8]
+                || opnd_form_1hot[`OPND_ENC_DISP32];
 
-assign disp = has_disp ? 32'd0 : 32'd0;
+// Whether our displacement is a single byte.
+assign is_disp8 = has_disp
+                  && (opnd_form_1hot[`OPND_ENC_DISP8]
+                      || (has_modrm && modrm[7:6] == 2'b01));
+
+// Whether our displacement is 32 bits.
+assign is_disp32 = has_disp
+                   && (opnd_form_1hot[`OPND_ENC_DISP32]
+                       || (has_modrm
+                           && ((modrm[2:0] == 3'b101 && modrm[7:6] == 2'b00)
+                               || (modrm[7:6] == 2'b10))));
+
+// Actually grab our displacement bytes, with the region depending
+// on whether we have a ModR/M and/or SIB byte preceeding.
+// Sign-extend as necessary.
+// TODO(ww): This could definitely be optimized.
+assign disp = has_disp ?
+              (has_modrm ?
+                (has_sib ?
+                  (is_disp8 ? (sext8_32(unescaped_instr[31:24])) : (unescaped_instr[55:24]))    // ModR/M and SIB
+                  : (is_disp8 ? (sext8_32(unescaped_instr[23:16])) : (unescaped_instr[47:16]))) // ModR/M only, no SIB
+                : (is_disp8 ? (sext8_32(unescaped_instr[15:8])) : (unescaped_instr[39:8])))     // No ModR/M or SIB
+              : 32'd0;                                                                          // No disp whatsoever
 
 endmodule

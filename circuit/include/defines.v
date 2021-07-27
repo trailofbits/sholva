@@ -18,8 +18,8 @@
 // Unary, immediate operand.
 `define OPND_ENC_IMM 4'd1
 
-// Unary, displacement operand.
-`define OPND_ENC_DISP 4'd2
+// Unary, 8-bit displacement operand.
+`define OPND_ENC_DISP8 4'd2
 
 // Unary, r/m of ModR/M operand.
 `define OPND_ENC_MODREGRM_RM 4'd3
@@ -57,8 +57,11 @@
 // Trinary, r/m of ModR/M for r(+w), reg of ModR/M for read, implicit CL reg for read.
 `define OPND_ENC_MODREGRM_RM_REG_CL 4'd13
 
+// Unary, 32-bit displacement operand.
+`define OPND_ENC_DISP32 4'd14
+
 // Unknown operand encoding, should never be hit.
-`define OPND_ENC_UNKNOWN 4'd15
+`define OPND_ENC_UNKNOWN 4'dx
 
 // EFLAGS bits we care about
 `define EFLAGS_CF 32'd0
