@@ -81,4 +81,13 @@ vector_specs:
     disp: 0 # TODO(ww): 0xAAAA
     opnd0_modrm_rm: 1
     opnd1_modrm_reg: 1 # TODO(ww): Think about whether this is right.
+  - _description: "jne 0x12 (disp8)"
+    unescaped_instr: 0x1275
+    opnd_form: 2 # OPND_ENC_DISP8
+    has_imm: 0
+    has_modrm: 0
+    has_sib: 0
+    has_disp: 1
+    modrm: x
+    disp: 0 # TODO(ww): 0x12
 

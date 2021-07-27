@@ -19,7 +19,8 @@ _OPC_MAP_GEN_V = _HERE / "opc_map.gen.v"
 
 _OPND_ENC_MAP = {
     "I": ("OPND_ENC_IMM", 1),
-    "D": ("OPND_ENC_DISP", 1),
+    "D8": ("OPND_ENC_DISP8", 1),
+    "D32": ("OPND_ENC_DISP32", 1),
     "M": ("OPND_ENC_MODREGRM_RM", 1),
     "O": ("OPND_ENC_REG", 1),
     "A": ("OPND_ENC_EAX", 1),

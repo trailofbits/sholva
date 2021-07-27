@@ -15,7 +15,8 @@ _COMMANDS_JSON = _HERE / "commands.json"
 # Valid operand encoding identifiers (values are corresponding arities).
 _OPERAND_ENCODINGS = {
     "I": 1,
-    "D": 1,
+    "D8": 1,
+    "D32": 1,
     "M": 1,
     "O": 1,
     "A": 1,

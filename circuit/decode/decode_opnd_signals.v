@@ -92,7 +92,8 @@ assign has_disp = (has_modrm
                    && ~modrm_rm_is_reg_direct
                    && ((modrm[2:0] == 3'b101 && modrm[7:6] == 2'b00)
                        || (modrm[7:6] == 2'b01 || modrm[7:6] == 2'b10)))
-                || opnd_form_1hot[`OPND_ENC_DISP];
+                || opnd_form_1hot[`OPND_ENC_DISP8]
+                || opnd_form_1hot[`OPND_ENC_DISP32];
 
 assign disp = has_disp ? 32'd0 : 32'd0;
 
