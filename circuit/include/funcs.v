@@ -22,3 +22,10 @@ function [15:0] one_hot16;
     one_hot16[binary] = 1'b1;
   end
 endfunction
+
+function [31:0] sext8_32;
+  input [7:0] x;
+  begin
+    sext8_32 = x;
+  end
+endfunction

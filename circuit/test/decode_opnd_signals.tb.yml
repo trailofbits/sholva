@@ -70,7 +70,7 @@ vector_specs:
     is_disp32: 0
     modrm: 0x44
     sib: 0x24
-    disp: 0 # TODO(ww): 8
+    disp: 8
     opnd0_modrm_rm: 1
     opnd1_modrm_reg: 1 # TODO(ww): Think about whether this is right.
   - _description: "add EAX, [ESP + 0xAAAA] (modrm + sib + disp32)"
@@ -83,10 +83,10 @@ vector_specs:
     is_disp32: 1
     modrm: 0x84
     sib: 0x24
-    disp: 0 # TODO(ww): 0xAAAA
+    disp: 0xAAAA
     opnd0_modrm_rm: 1
     opnd1_modrm_reg: 1 # TODO(ww): Think about whether this is right.
-  - _description: "jne 0x12 (disp8)"
+  - _description: "jne 0x14 (disp8)"
     unescaped_instr: 0x1275
     opnd_form: 2 # OPND_ENC_DISP8
     has_imm: 0
@@ -95,5 +95,15 @@ vector_specs:
     has_disp: 1
     is_disp8: 1
     modrm: x
-    disp: 0 # TODO(ww): 0x12
-
+    disp: 0x12 # NOTE(ww): 0x12 for relative JNE
+  - _description: "jmp 0xa (disp32)"
+    unescaped_instr: 0x00000006e9
+    opnd_form: 14 # OPND_ENC_DISP32
+    has_imm: 0
+    has_modrm: 0
+    has_sib: 0
+    has_disp: 1
+    is_disp8: 0
+    is_disp32: 1
+    modrm: x
+    disp: 0x6 # NOTE(ww): 0x6 for relative JMP
