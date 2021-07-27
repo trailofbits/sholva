@@ -26,6 +26,6 @@ endfunction
 function [31:0] sext8_32;
   input [7:0] x;
   begin
-    sext8_32 = x;
+    sext8_32 = {{24{x[7]}}, x};
   end
 endfunction
