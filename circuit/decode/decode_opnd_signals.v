@@ -10,6 +10,8 @@ module decode_opnd_signals(
   output has_modrm,
   output has_sib,
   output has_disp,
+  output is_disp8,
+  output is_disp32,
 
   output [7:0] modrm,
   output [7:0] sib,
@@ -94,6 +96,18 @@ assign has_disp = (has_modrm
                        || (modrm[7:6] == 2'b01 || modrm[7:6] == 2'b10)))
                 || opnd_form_1hot[`OPND_ENC_DISP8]
                 || opnd_form_1hot[`OPND_ENC_DISP32];
+
+// Whether our displacement is a single byte.
+assign is_disp8 = has_disp
+                  && (opnd_form_1hot[`OPND_ENC_DISP8]
+                      || (has_modrm && modrm[7:6] == 2'b01));
+
+// Whether our displacement is 32 bits.
+assign is_disp32 = has_disp
+                   && (opnd_form_1hot[`OPND_ENC_DISP32]
+                       || (has_modrm
+                           && ((modrm[2:0] == 3'b101 && modrm[7:6] == 2'b00)
+                               || (modrm[7:6] == 2'b10))));
 
 assign disp = has_disp ? 32'd0 : 32'd0;
 

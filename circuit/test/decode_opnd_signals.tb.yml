@@ -9,6 +9,8 @@ outputs:
   - "1 has_modrm"
   - "1 has_sib"
   - "1 has_disp"
+  - "1 is_disp8"
+  - "1 is_disp32"
   - "8 modrm"
   - "8 sib"
   - "32 disp"
@@ -64,6 +66,8 @@ vector_specs:
     has_modrm: 1
     has_sib: 1
     has_disp: 1
+    is_disp8: 1
+    is_disp32: 0
     modrm: 0x44
     sib: 0x24
     disp: 0 # TODO(ww): 8
@@ -76,6 +80,7 @@ vector_specs:
     has_modrm: 1
     has_sib: 1
     has_disp: 1
+    is_disp32: 1
     modrm: 0x84
     sib: 0x24
     disp: 0 # TODO(ww): 0xAAAA
@@ -88,6 +93,7 @@ vector_specs:
     has_modrm: 0
     has_sib: 0
     has_disp: 1
+    is_disp8: 1
     modrm: x
     disp: 0 # TODO(ww): 0x12
 

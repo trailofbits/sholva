@@ -43,6 +43,8 @@ wire has_imm;
 wire has_modrm;
 wire has_sib;
 wire has_disp;
+wire is_disp8;
+wire is_disp32;
 
 wire [7:0] modrm;
 wire [7:0] sib;
@@ -66,6 +68,8 @@ decode_opnd_signals decode_opnd_signals_x(
   .has_modrm(has_modrm),
   .has_sib(has_sib),
   .has_disp(has_disp),
+  .is_disp8(is_disp8),
+  .is_disp32(is_disp32),
 
   .modrm(modrm),
   .sib(sib),
@@ -99,9 +103,6 @@ wire sib_no_base = sib_base_regsel == 3'b101 && modrm[7:6] == 2'b00;
 
 // SIB.index == 0b100 indicates no index while in SIB addressing mode.
 wire sib_no_index = sib_index_regsel == 3'b100;
-
-// wire disp8 = has_disp && modrm[7:6] == 2'b01;
-// wire disp32 = has_disp && modrm[7:6] == 2'b01;
 
 // TODO(ww): Actually extract the disp byte(s) here, maybe with a separate module.
 // NOTE(ww): disp8 needs to be sign extended.
