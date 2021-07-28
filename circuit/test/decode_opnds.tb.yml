@@ -241,17 +241,17 @@ vector_specs:
     opnd1_r: 0xaaaaaaaa
     dest0_kind: 0b01 # reg
     dest1_kind: 0b00 # none
-  # - _description: "add EAX, [ESP+8] ([ESP+8]=0xfefefefe)"
-  #   unescaped_instr: 0x08244403
-  #   eax: 0xbbbbbbbb
-  #   esp: 0xaaaaaa00
-  #   opnd_form: 7 # OPND_ENC_MODREGRM_REG_RM
-  #   hint1_is_write: 0
-  #   hint1_address: 0xaaaaaa08
-  #   hint1_data: 0xfefefefe
-  #   opnd0_is_write: 1
-  #   opnd0_r: 0xbbbbbbbb
-  #   opnd1_r: 0xfefefefe
-  #   dest0_kind: 0b01
-  #   dest1_kind: 0b00
-  #   dest0_sel: 0 # EAX
+  - _description: "add EAX, [ESP+8] ([ESP+8]=0xfefefefe)"
+    unescaped_instr: 0x08244403
+    eax: 0xbbbbbbbb
+    esp: 0xaaaaaa00
+    opnd_form: 7 # OPND_ENC_MODREGRM_REG_RM
+    hint1_is_write: 0
+    hint1_address: 0xaaaaaa08
+    hint1_data: 0xfefefefe
+    opnd0_is_write: 1
+    opnd0_r: 0xbbbbbbbb
+    opnd1_r: 0xfefefefe
+    dest0_kind: 0b01
+    dest1_kind: 0b00
+    dest0_sel: 0 # EAX
