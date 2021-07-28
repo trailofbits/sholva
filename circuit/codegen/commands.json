@@ -2633,6 +2633,25 @@
         ]
     },
     {
+        "cmd": "CMD_LAHF",
+        "encs": [
+            {
+                "esc": false,
+                "ext": null,
+                "ib": false,
+                "iw_or_id": false,
+                "num_opnds": 0,
+                "op_enc": "ZO",
+                "opc": 159,
+                "opnd0_mode": "r",
+                "opnd1_mode": "x",
+                "opnd2_mode": "x",
+                "rb": false,
+                "rw_or_rd": false
+            }
+        ]
+    },
+    {
         "cmd": "CMD_SBB",
         "encs": [
             {

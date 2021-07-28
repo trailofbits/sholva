@@ -199,6 +199,29 @@ wire [31:0] mu_result = 32'b0; // TODO
 // The "meta" unit is responsible for various instructions that manipulate
 // EFLAGS or other non-GPR/memory architectural state directly.
 
+wire exe_is_meta = opc_1hot[`CMD_STC]  |
+                   opc_1hot[`CMD_STD]  |
+                   opc_1hot[`CMD_CLC]  |
+                   opc_1hot[`CMD_CLD]  |
+                   opc_1hot[`CMD_LAHF] |
+                   opc_1hot[`CMD_SAHF];
+
+wire ah_wr;
+wire [7:0] ah_out;
+wire [5:0] meta_status_out;
+
+
+// TODO(ww): Need to actually wire up opnd0_r to EAX to LAHF/SAHF.
+meta meta_x(
+  .opc(opc),
+  .ah_in(opnd0_r[15:8]),
+  .status_in(status_in),
+
+  .ah_wr(ah_wr),
+  .ah_out(ah_out),
+  .status_out(meta_status_out)
+);
+
 ///
 /// END META UNIT
 ///
@@ -207,9 +230,10 @@ assign opnd0_w = exe_is_alu ? alu_result :
                  exe_is_mu  ? mu_result  :
                               32'b0;
 
-// Only ALU operations modify the eflags.
-// TODO(ww): That's wrong: some of our dedicated meta instructions will also
-// directly modify eflags.
-assign o_eflags = exe_is_alu ? alu_eflags : eflags;
+// Update our flag state based on whichever execution unit actually took effect.
+// Only the ALU and meta units can modify flag state, so we don't need to check
+// for the move unit here.
+assign o_eflags = exe_is_alu ? alu_eflags
+                  : (exe_is_meta ? eflags : eflags);
 
 endmodule
