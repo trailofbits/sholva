@@ -23,4 +23,7 @@ assign status_out = opc_1hot[`CMD_CLC] ? {status_in[`STAT_AF], 1'b0, status_in[3
                   : opc_1hot[`CMD_STD] ? status_in
                   : status_in;
 
+assign ah_wr = opc_1hot[`CMD_LAHF];
+assign ah_out = ah_wr ? ah_in : ah_in; // TODO(ww): actually set this.
+
 endmodule

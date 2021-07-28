@@ -2,3 +2,7 @@
 // do NOT edit it by hand
 // (opc)_(ah_in)_(status_in)_(ah_wr)_(ah_out)_(status_out)
 
+// CLC (clear carry)
+001010_11111111_111111_0_11111111_101111
+// STC (set carry)
+110010_11111111_000000_0_11111111_010000

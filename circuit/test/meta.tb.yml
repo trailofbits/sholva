@@ -8,4 +8,18 @@ outputs:
   - "1 ah_wr"
   - "8 ah_out"
   - "6 status_out"
-vector_specs: []
+vector_specs:
+  - _description: "CLC (clear carry)"
+    opc: 10 # CLC
+    ah_in: 0xff
+    status_in: 0b111111
+    ah_wr: 0
+    ah_out: 0xff
+    status_out: 0b101111
+  - _description: "STC (set carry)"
+    opc: 50 # STC
+    ah_in: 0xff
+    status_in: 0b000000
+    ah_wr: 0
+    ah_out: 0xff
+    status_out: 0b010000
