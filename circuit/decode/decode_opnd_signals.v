@@ -21,8 +21,10 @@ module decode_opnd_signals(
 
   output opnd0_modrm_rm,
   output opnd0_modrm_reg,
+  output opnd0_disp,
   output opnd1_modrm_rm,
-  output opnd1_modrm_reg
+  output opnd1_modrm_reg,
+  output opnd1_disp
 );
 
 `include "funcs.v"
@@ -120,5 +122,18 @@ assign disp = has_disp ?
                   : (is_disp8 ? (sext8_32(unescaped_instr[23:16])) : (unescaped_instr[47:16]))) // ModR/M only, no SIB
                 : (is_disp8 ? (sext8_32(unescaped_instr[15:8])) : (unescaped_instr[39:8])))     // No ModR/M or SIB
               : 32'd0;                                                                          // No disp whatsoever
+
+// Determine which of our operands actually uses the disp bytes.
+// Instructions that are disp-only (OPND_ENC_DISP8/OPND_ENC_DISP32) always
+// use it for operand#0; for all others it depends on which operand is using
+// the relevant parts of the ModR/M.
+// TODO(ww): Not 100% sure these are correct -- ModR/M includes a disp32-only
+// encoding that *seems* to map to the operand that takes the R/M field, but
+// I'm not positive about that.
+assign opnd0_disp = opnd_form_1hot[`OPND_ENC_DISP8]
+                    || opnd_form_1hot[`OPND_ENC_DISP32]
+                    || (has_disp && opnd0_modrm_rm);
+
+assign opnd1_disp = has_disp && opnd1_modrm_rm;
 
 endmodule

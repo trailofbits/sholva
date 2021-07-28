@@ -53,8 +53,10 @@ wire modrm_rm_is_reg_direct;
 
 wire opnd0_modrm_rm;
 wire opnd0_modrm_reg;
+wire opnd0_disp;
 wire opnd1_modrm_rm;
 wire opnd1_modrm_reg;
+wire opnd1_disp;
 
 decode_opnd_signals decode_opnd_signals_x(
   // Inputs
@@ -78,8 +80,10 @@ decode_opnd_signals decode_opnd_signals_x(
 
   .opnd0_modrm_rm(opnd0_modrm_rm),
   .opnd0_modrm_reg(opnd0_modrm_reg),
+  .opnd0_disp(opnd0_disp),
   .opnd1_modrm_rm(opnd1_modrm_rm),
-  .opnd1_modrm_reg(opnd1_modrm_reg)
+  .opnd1_modrm_reg(opnd1_modrm_reg),
+  .opnd1_disp(opnd1_disp)
 );
 
 wire [15:0] opnd_form_1hot = one_hot16(opnd_form);
