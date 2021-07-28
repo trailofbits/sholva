@@ -17,8 +17,10 @@ outputs:
   - "1 modrm_rm_is_reg_direct"
   - "1 opnd0_modrm_rm"
   - "1 opnd0_modrm_reg"
+  - "1 opnd0_disp"
   - "1 opnd1_modrm_rm"
   - "1 opnd1_modrm_reg"
+  - "1 opnd1_disp"
 vector_specs:
   - _description: "push EAX (no imm/modrm/sib/disp)"
     unescaped_instr: 0x50
@@ -50,18 +52,20 @@ vector_specs:
     opnd1_modrm_rm: 1
   - _description: "add EAX, [ESP] (modrm + sib)"
     unescaped_instr: 0x240403
-    opnd_form: 6 # OPND_ENC_MODREGRM_RM_REG
+    opnd_form: 7 # OPND_ENC_MODREGRM_REG_RM
     has_imm: 0
     has_modrm: 1
     has_sib: 1
     has_disp: 0
     modrm: 0x04
     sib: 0x24
-    opnd0_modrm_rm: 1
-    opnd1_modrm_reg: 1 # TODO(ww): Think about whether this is right.
+    opnd0_modrm_rm: 0
+    opnd0_modrm_reg: 1
+    opnd1_modrm_rm: 1
+    opnd1_modrm_reg: 0
   - _description: "add EAX, [ESP+8] (modrm + sib + disp8)"
     unescaped_instr: 0x08244403
-    opnd_form: 6 # OPND_ENC_MODREGRM_RM_REG
+    opnd_form: 7 # OPND_ENC_MODREGRM_REG_RM
     has_imm: 0
     has_modrm: 1
     has_sib: 1
@@ -71,11 +75,14 @@ vector_specs:
     modrm: 0x44
     sib: 0x24
     disp: 8
-    opnd0_modrm_rm: 1
-    opnd1_modrm_reg: 1 # TODO(ww): Think about whether this is right.
+    opnd0_modrm_reg: 1
+    opnd0_modrm_rm: 0
+    opnd1_modrm_reg: 0
+    opnd1_modrm_rm: 1
+    opnd1_disp: 1
   - _description: "add EAX, [ESP + 0xAAAA] (modrm + sib + disp32)"
     unescaped_instr: 0x0000aaaa248403
-    opnd_form: 6 # OPND_ENC_MODREGRM_RM_REG
+    opnd_form: 7 # OPND_ENC_MODREGRM_REG_RM
     has_imm: 0
     has_modrm: 1
     has_sib: 1
@@ -84,8 +91,11 @@ vector_specs:
     modrm: 0x84
     sib: 0x24
     disp: 0xAAAA
-    opnd0_modrm_rm: 1
-    opnd1_modrm_reg: 1 # TODO(ww): Think about whether this is right.
+    opnd0_modrm_reg: 1
+    opnd0_modrm_rm: 0
+    opnd1_modrm_reg: 0
+    opnd1_modrm_rm: 1
+    opnd1_disp: 1
   - _description: "jne 0x14 (disp8)"
     unescaped_instr: 0x1275
     opnd_form: 2 # OPND_ENC_DISP8
@@ -97,6 +107,7 @@ vector_specs:
     is_disp32: 0
     modrm: x
     disp: 0x12 # NOTE(ww): 0x12 for relative JNE
+    opnd0_disp: 1
   - _description: "jmp 0xa (disp32)"
     unescaped_instr: 0x00000006e9
     opnd_form: 14 # OPND_ENC_DISP32
@@ -108,3 +119,4 @@ vector_specs:
     is_disp32: 1
     modrm: x
     disp: 0x6 # NOTE(ww): 0x6 for relative JMP
+    opnd0_disp: 1
