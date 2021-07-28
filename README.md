@@ -27,6 +27,8 @@ Independently, you can run *shol'va*'s self tests:
 
 ```bash
 $ make check
+# or limit the checks to a subset
+$ make check CHECKS="alu fetch execute"
 ```
 
 You can also run *shol'va*'s modules through Verilator's linter.

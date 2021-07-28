@@ -1,0 +1,11 @@
+module: meta
+file: ../execute/meta.v
+inputs:
+  - "6 opc"
+  - "8 ah_in"
+  - "6 status_in"
+outputs:
+  - "1 ah_wr"
+  - "8 ah_out"
+  - "6 status_out"
+vector_specs: []

@@ -1,3 +1,4 @@
+`include "defines.v"
 `include "codegen/commands.gen.v"
 
 module meta(
@@ -14,6 +15,12 @@ module meta(
 
 wire [63:0] opc_1hot = one_hot64(opc);
 
-// assign status_out = opc_1hot[`];
+// TODO(ww): Figure out the direction flag; that's not in the compressed status
+// at the moment.
+assign status_out = opc_1hot[`CMD_CLC] ? {status_in[`STAT_AF], 1'b0, status_in[3:0]}
+                  : opc_1hot[`CMD_CLD] ? status_in
+                  : opc_1hot[`CMD_STC] ? {status_in[`STAT_AF], 1'b1, status_in[3:0]}
+                  : opc_1hot[`CMD_STD] ? status_in
+                  : status_in;
 
 endmodule
