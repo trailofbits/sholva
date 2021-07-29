@@ -4,6 +4,7 @@ inputs:
   - "72 unescaped_instr"
   - "4 opnd_form"
   - "1 prefix_address_16bit"
+  - "1 prefix_operand_16bit"
 outputs:
   - "1 has_imm"
   - "1 has_modrm"

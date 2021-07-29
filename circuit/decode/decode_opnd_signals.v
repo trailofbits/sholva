@@ -5,6 +5,7 @@ module decode_opnd_signals(
   input [71:0] unescaped_instr,
   input [3:0] opnd_form,
   input prefix_address_16bit,
+  input prefix_operand_16bit,
 
   output has_imm,
   output has_modrm,
