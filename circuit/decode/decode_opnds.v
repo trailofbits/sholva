@@ -48,6 +48,7 @@ wire is_disp32;
 wire [7:0] modrm;
 wire [7:0] sib;
 wire [31:0] disp;
+wire [31:0] imm;
 
 wire modrm_rm_is_reg_direct;
 
@@ -77,6 +78,7 @@ decode_opnd_signals decode_opnd_signals_x(
   .modrm(modrm),
   .sib(sib),
   .disp(disp),
+  .imm(imm),
 
   .modrm_rm_is_reg_direct(modrm_rm_is_reg_direct),
 

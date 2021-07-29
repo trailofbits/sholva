@@ -18,6 +18,7 @@ module decode_opnd_signals(
   output [7:0] modrm,
   output [7:0] sib,
   output [31:0] disp,
+  output [31:0] imm,
 
   output modrm_rm_is_reg_direct,
 
@@ -137,5 +138,17 @@ assign opnd0_disp = opnd_form_1hot[`OPND_ENC_DISP8]
                     || (has_disp && opnd0_modrm_rm);
 
 assign opnd1_disp = has_disp && opnd1_modrm_rm;
+
+// Finally, immediate handling.
+// Immediates are 32, 16, or 8 bits. 8-bit immediates have special opcodes,
+// which we have signaled for us by the imm_1byte wire. We distinguish the
+// 16-bit case from the 32-bit case with the prefix_operand_16bit wire.
+
+wire is_imm8 = has_imm && imm_1byte;
+wire is_imm16 = has_imm && prefix_operand_16bit;
+wire has_imm32 = has_imm && ~(is_imm8 || ~is_imm16);
+
+// TODO(ww): Do this.
+assign imm = 32'b0;
 
 endmodule

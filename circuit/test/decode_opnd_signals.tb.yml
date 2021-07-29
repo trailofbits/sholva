@@ -16,6 +16,7 @@ outputs:
   - "8 modrm"
   - "8 sib"
   - "32 disp"
+  - "32 imm"
   - "1 modrm_rm_is_reg_direct"
   - "1 opnd0_modrm_rm"
   - "1 opnd0_modrm_reg"
