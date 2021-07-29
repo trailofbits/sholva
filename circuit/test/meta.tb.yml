@@ -37,3 +37,17 @@ vector_specs:
     ah_wr: 0
     ah_out: 0xff
     status_out: 0b1000000
+  - _description: "SAHF (AH -> EFLAGS), all set"
+    opc: 44 # SAHF
+    ah_in: 0b11010111 # bit 1 of EFLAGS is always high
+    status_in: 0b1000000
+    ah_wr: 0
+    ah_out: 0b11010111
+    status_out: 0b1111111
+  - _description: "SAHF (AH -> EFLAGS), all clear"
+    opc: 44
+    ah_in: 0b00000010
+    status_in: 0b1111111
+    ah_wr: 0
+    ah_out: 0b00000010
+    status_out: 0b1000000 # bit 6 of compressed status is DF, not modified
