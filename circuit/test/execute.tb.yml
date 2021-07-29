@@ -16,3 +16,11 @@ vector_specs:
     opnd1_r: 0x90abcdef
     o_eflags: 658
     opnd0_w: 0xa2e02467
+  - _description: "execute CMD_STC (meta op, set CF)"
+    opc: 50 # CMD_STC
+    eflags: 0
+    o_eflags: 1 # NOTE(ww): EFLAGS.CF is bit 0
+  - _description: "execute CMD_CLC (meta op, clear CF)"
+    opc: 10 # CMD_CLC
+    eflags: 1
+    o_eflags: 0 # NOTE(ww): EFLAGS.CF is bit 0
