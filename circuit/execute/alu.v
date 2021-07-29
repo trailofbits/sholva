@@ -2,11 +2,11 @@
 
 module alu(
   input [13:0] cntl,
-  input [5:0] status_in,
+  input [6:0] status_in,
   input [31:0] opnd0_r,
   input [31:0] opnd1_r,
 
-  output [5:0] status_out,
+  output [6:0] status_out,
   output [31:0] result
 );
 
@@ -63,6 +63,9 @@ assign status_out[`STAT_OF] = of_no_wr     ? status_in[`STAT_OF] :
 
 assign status_out[`STAT_AF] = af_no_wr ? status_in[`STAT_AF] :
                                          opnd0_r_tmp[4] ^ opnd1_r_tmp[4] ^ stat_result[4];
+
+// The ALU never modifies the direction flag.
+assign status_out[`STAT_DF] = status_in[`STAT_DF];
 
 // TODO(ww): Maybe get rid of alu_no_wr entirely and check it only in execute.v.
 assign result = alu_no_wr ? 32'b0 : stat_result[31:0];

@@ -3,23 +3,23 @@ file: ../execute/meta.v
 inputs:
   - "6 opc"
   - "8 ah_in"
-  - "6 status_in"
+  - "7 status_in"
 outputs:
   - "1 ah_wr"
   - "8 ah_out"
-  - "6 status_out"
+  - "7 status_out"
 vector_specs:
   - _description: "CLC (clear carry)"
     opc: 10 # CLC
     ah_in: 0xff
-    status_in: 0b111111
+    status_in: 0b1111111
     ah_wr: 0
     ah_out: 0xff
-    status_out: 0b101111
+    status_out: 0b1101111
   - _description: "STC (set carry)"
     opc: 50 # STC
     ah_in: 0xff
-    status_in: 0b000000
+    status_in: 0b0000000
     ah_wr: 0
     ah_out: 0xff
-    status_out: 0b010000
+    status_out: 0b0010000

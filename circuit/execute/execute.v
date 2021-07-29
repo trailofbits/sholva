@@ -119,7 +119,8 @@ wire [13:0] alu_cntl = {
                       };
 
 // Input arithmetic flag states.
-wire [5:0] status_in = {
+wire [6:0] status_in = {
+                          eflags[`EFLAGS_DF],
                           eflags[`EFLAGS_AF],
                           eflags[`EFLAGS_CF],
                           eflags[`EFLAGS_PF],
@@ -128,7 +129,7 @@ wire [5:0] status_in = {
                           eflags[`EFLAGS_OF]
                        };
 
-wire [5:0] alu_status_out;
+wire [6:0] alu_status_out;
 wire [31:0] alu_result;
 
 alu alu_x(
@@ -208,7 +209,7 @@ wire exe_is_meta = opc_1hot[`CMD_STC]  |
 
 wire ah_wr;
 wire [7:0] ah_out;
-wire [5:0] meta_status_out;
+wire [6:0] meta_status_out;
 
 
 // TODO(ww): Need to actually wire up opnd0_r to EAX to LAHF/SAHF.
