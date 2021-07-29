@@ -223,6 +223,23 @@ meta meta_x(
   .status_out(meta_status_out)
 );
 
+// Mash any flag changes from the meta unit back into our prospective EFLAGS.
+wire [31:0] meta_eflags = {
+                            eflags[31:12],
+                            meta_status_out[`STAT_OF], // not actually modified
+                            meta_status_out[`STAT_DF],
+                            eflags[`EFLAGS_IF],
+                            eflags[`EFLAGS_TF],
+                            meta_status_out[`STAT_SF],
+                            meta_status_out[`STAT_ZF],
+                            eflags[5], // reserved
+                            meta_status_out[`STAT_AF],
+                            eflags[3], // reserved
+                            meta_status_out[`STAT_PF],
+                            eflags[1], // reserved
+                            meta_status_out[`STAT_CF]
+                          };
+
 ///
 /// END META UNIT
 ///
@@ -235,6 +252,6 @@ assign opnd0_w = exe_is_alu ? alu_result :
 // Only the ALU and meta units can modify flag state, so we don't need to check
 // for the move unit here.
 assign o_eflags = exe_is_alu ? alu_eflags
-                  : (exe_is_meta ? eflags : eflags);
+                  : (exe_is_meta ? meta_eflags : eflags);
 
 endmodule
