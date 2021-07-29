@@ -208,18 +208,18 @@ wire exe_is_meta = opc_1hot[`CMD_STC]  |
                    opc_1hot[`CMD_SAHF];
 
 wire ah_wr;
-wire [7:0] ah_out;
+wire [31:0] meta_result;
 wire [6:0] meta_status_out;
 
 
 // TODO(ww): Need to actually wire up opnd0_r to EAX to LAHF/SAHF.
 meta meta_x(
   .opc(opc),
-  .ah_in(opnd0_r[15:8]),
+  .opnd_in(opnd0_r),
   .status_in(status_in),
 
   .ah_wr(ah_wr),
-  .ah_out(ah_out),
+  .result(meta_result),
   .status_out(meta_status_out)
 );
 
