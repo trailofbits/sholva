@@ -64,6 +64,7 @@ decode_opnd_signals decode_opnd_signals_x(
   .opnd_form(opnd_form),
   .prefix_address_16bit(prefix_address_16bit),
   .prefix_operand_16bit(prefix_operand_16bit),
+  .imm_1byte(imm_1byte),
 
   // Outputs
   .has_imm(has_imm),
