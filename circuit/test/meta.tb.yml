@@ -23,3 +23,17 @@ vector_specs:
     ah_wr: 0
     ah_out: 0xff
     status_out: 0b0010000
+  - _description: "CLD (clear direction)"
+    opc: 11 # CLD
+    ah_in: 0xff
+    status_in: 0b1111111
+    ah_wr: 0
+    ah_out: 0xff
+    status_out: 0b0111111
+  - _description: "STD (set direction)"
+    opc: 51 # STD
+    ah_in: 0xff
+    status_in: 0b0000000
+    ah_wr: 0
+    ah_out: 0xff
+    status_out: 0b1000000
