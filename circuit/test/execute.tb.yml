@@ -19,8 +19,16 @@ vector_specs:
   - _description: "execute CMD_STC (meta op, set CF)"
     opc: 50 # CMD_STC
     eflags: 0
-    o_eflags: 1 # NOTE(ww): EFLAGS.CF is bit 0
+    o_eflags: 1 # EFLAGS.CF is bit 0
   - _description: "execute CMD_CLC (meta op, clear CF)"
     opc: 10 # CMD_CLC
     eflags: 1
-    o_eflags: 0 # NOTE(ww): EFLAGS.CF is bit 0
+    o_eflags: 0 # EFLAGS.CF is bit 0
+  - _description: "execute CMD_STD (meta op, set DF)"
+    opc: 51 # CMD_STD
+    eflags: 0b00000000000
+    o_eflags: 0b10000000000 # EFLAGS.DF is bit 10
+  - _description: "execute CMD_CLD (meta, op, clear DF)"
+    opc: 11 # CMD_CLD
+    eflags: 0b11010110101
+    o_eflags: 0b01010110101
