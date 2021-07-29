@@ -1,0 +1,53 @@
+module: meta
+file: ../execute/meta.v
+inputs:
+  - "6 opc"
+  - "32 opnd_in"
+  - "7 status_in"
+outputs:
+  - "1 ah_wr"
+  - "32 result"
+  - "7 status_out"
+vector_specs:
+  - _description: "CLC (clear carry)"
+    opc: 10 # CLC
+    opnd_in: 0xff
+    status_in: 0b1111111
+    ah_wr: 0
+    result: 0xff
+    status_out: 0b1101111
+  - _description: "STC (set carry)"
+    opc: 50 # STC
+    opnd_in: 0xff
+    status_in: 0b0000000
+    ah_wr: 0
+    result: 0xff
+    status_out: 0b0010000
+  - _description: "CLD (clear direction)"
+    opc: 11 # CLD
+    opnd_in: 0xff
+    status_in: 0b1111111
+    ah_wr: 0
+    result: 0xff
+    status_out: 0b0111111
+  - _description: "STD (set direction)"
+    opc: 51 # STD
+    opnd_in: 0xff
+    status_in: 0b0000000
+    ah_wr: 0
+    result: 0xff
+    status_out: 0b1000000
+  - _description: "SAHF (AH -> EFLAGS), all set"
+    opc: 44 # SAHF
+    opnd_in: 0b1101011100000000 # bit 1 of EFLAGS is always high
+    status_in: 0b1000001
+    ah_wr: 0
+    result: 0b1101011100000000
+    status_out: 0b1111111
+  - _description: "SAHF (AH -> EFLAGS), all clear"
+    opc: 44
+    opnd_in: 0b0000001000000000
+    status_in: 0b1111111
+    ah_wr: 0
+    result: 0b0000001000000000
+    status_out: 0b1000001 # DF and OF not modified

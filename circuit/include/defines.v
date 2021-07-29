@@ -81,6 +81,7 @@
 `define STAT_PF 3'd3
 `define STAT_CF 3'd4
 `define STAT_AF 3'd5
+`define STAT_DF 3'd6
 
 // GPR numbering for register selectors/identification
 // NOTE(ww): Weird numbering here is the canonical x86 numbering.

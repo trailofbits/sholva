@@ -14,6 +14,7 @@ MODULES := fetch \
 	decode_opnd_signals \
 	alu \
 	agu \
+	meta \
 	tiny86
 
 TESTBENCHES := $(addsuffix .tb.gen.v,$(MODULES))
@@ -25,7 +26,7 @@ all: $(TESTBENCH_EXES) $(TESTVECTORS)
 
 .PHONY: check
 check: all
-	@./run-tests
+	@./run-tests $(CHECKS)
 
 .PHONY: clean
 clean:

@@ -12,7 +12,12 @@ def find_vvps
   Dir["*.tb.vvp"]
 end
 
-vvps = find_vvps
+vvps = if ARGF.argv.empty?
+  find_vvps
+else
+  ARGF.argv.map { |check| "#{check}.tb.vvp" }
+end
+
 barf "no testbenches found; run make?" if vvps.empty?
 verbose "discovered #{vvps.size} tests: #{vvps}"
 

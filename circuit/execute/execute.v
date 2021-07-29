@@ -119,7 +119,8 @@ wire [13:0] alu_cntl = {
                       };
 
 // Input arithmetic flag states.
-wire [5:0] status_in = {
+wire [6:0] status_in = {
+                          eflags[`EFLAGS_DF],
                           eflags[`EFLAGS_AF],
                           eflags[`EFLAGS_CF],
                           eflags[`EFLAGS_PF],
@@ -128,7 +129,7 @@ wire [5:0] status_in = {
                           eflags[`EFLAGS_OF]
                        };
 
-wire [5:0] alu_status_out;
+wire [6:0] alu_status_out;
 wire [31:0] alu_result;
 
 alu alu_x(
@@ -199,6 +200,46 @@ wire [31:0] mu_result = 32'b0; // TODO
 // The "meta" unit is responsible for various instructions that manipulate
 // EFLAGS or other non-GPR/memory architectural state directly.
 
+wire exe_is_meta = opc_1hot[`CMD_STC]  |
+                   opc_1hot[`CMD_STD]  |
+                   opc_1hot[`CMD_CLC]  |
+                   opc_1hot[`CMD_CLD]  |
+                   opc_1hot[`CMD_LAHF] |
+                   opc_1hot[`CMD_SAHF];
+
+wire ah_wr;
+wire [31:0] meta_result;
+wire [6:0] meta_status_out;
+
+
+// TODO(ww): Need to actually wire up opnd0_r to EAX to LAHF/SAHF.
+meta meta_x(
+  .opc(opc),
+  .opnd_in(opnd0_r),
+  .status_in(status_in),
+
+  .ah_wr(ah_wr),
+  .result(meta_result),
+  .status_out(meta_status_out)
+);
+
+// Mash any flag changes from the meta unit back into our prospective EFLAGS.
+wire [31:0] meta_eflags = {
+                            eflags[31:12],
+                            meta_status_out[`STAT_OF], // not actually modified
+                            meta_status_out[`STAT_DF],
+                            eflags[`EFLAGS_IF],
+                            eflags[`EFLAGS_TF],
+                            meta_status_out[`STAT_SF],
+                            meta_status_out[`STAT_ZF],
+                            eflags[5], // reserved
+                            meta_status_out[`STAT_AF],
+                            eflags[3], // reserved
+                            meta_status_out[`STAT_PF],
+                            eflags[1], // reserved
+                            meta_status_out[`STAT_CF]
+                          };
+
 ///
 /// END META UNIT
 ///
@@ -207,9 +248,10 @@ assign opnd0_w = exe_is_alu ? alu_result :
                  exe_is_mu  ? mu_result  :
                               32'b0;
 
-// Only ALU operations modify the eflags.
-// TODO(ww): That's wrong: some of our dedicated meta instructions will also
-// directly modify eflags.
-assign o_eflags = exe_is_alu ? alu_eflags : eflags;
+// Update our flag state based on whichever execution unit actually took effect.
+// Only the ALU and meta units can modify flag state, so we don't need to check
+// for the move unit here.
+assign o_eflags = exe_is_alu ? alu_eflags
+                  : (exe_is_meta ? meta_eflags : eflags);
 
 endmodule
