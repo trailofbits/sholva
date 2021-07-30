@@ -347,8 +347,6 @@ def _gen_imm_v():
     with _IMM_GEN_V.open(mode="w+") as io:
         print(_header(), file=io)
 
-        imm_expr = "32'd0"
-
         # This is a little bit of a brain-bender: for every instruction that can
         # take an immediate, that immediate can come in one of three forms:
         # 8, 16, or 32-bit. We need to perform different amounts of sign extension
