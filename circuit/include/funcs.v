@@ -29,3 +29,10 @@ function [31:0] sext8_32;
     sext8_32 = {{24{x[7]}}, x};
   end
 endfunction
+
+function [31:0] sext16_32;
+  input [15:0] x;
+  begin
+    sext16_32 = {{{16{x[15]}}}, x};
+  end
+endfunction

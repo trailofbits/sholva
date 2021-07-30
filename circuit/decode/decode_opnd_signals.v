@@ -2,7 +2,7 @@
 `include "defines.v"
 
 module decode_opnd_signals(
-  input [71:0] unescaped_instr,
+  input [87:0] unescaped_instr,
   input [3:0] opnd_form,
   input prefix_address_16bit,
   input prefix_operand_16bit,
@@ -148,7 +148,6 @@ wire is_imm8 = has_imm && imm_1byte;
 wire is_imm16 = has_imm && prefix_operand_16bit;
 wire has_imm32 = has_imm && ~(is_imm8 || ~is_imm16);
 
-// TODO(ww): Do this.
-assign imm = 32'b0;
+`include "codegen/imm.gen.v"
 
 endmodule

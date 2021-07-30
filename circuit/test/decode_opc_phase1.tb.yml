@@ -1,12 +1,12 @@
 module: decode_opc_phase1
 file: ../decode/decode_opc_phase1.v
 inputs:
-  - "80 unprefixed_instr"
+  - "88 unprefixed_instr"
 outputs:
   - "1 is_2byte"
-  - "72 unescaped_instr"
+  - "88 unescaped_instr"
 vector_specs:
   - _description: "ADD eax, ebx (no escape)"
     unprefixed_instr: 0x9090909090909090d801
     is_2byte: 0
-    unescaped_instr: 0x90909090909090d801
+    unescaped_instr: 0x9090909090909090d801

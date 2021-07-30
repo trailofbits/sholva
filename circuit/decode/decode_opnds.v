@@ -2,7 +2,7 @@
 `include "defines.v"
 
 module decode_opnds(
-  input [71:0] unescaped_instr,
+  input [87:0] unescaped_instr,
   input [31:0] eax, ebx, ecx, edx, esi, edi, esp, ebp,
 
   input hint1_is_write,

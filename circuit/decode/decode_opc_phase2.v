@@ -2,7 +2,7 @@
 `include "codegen/commands.gen.v"
 
 module decode_opc_phase2(
-  input [71:0] unescaped_instr,
+  input [87:0] unescaped_instr,
   input is_2byte,
 
   output [5:0] opc,
