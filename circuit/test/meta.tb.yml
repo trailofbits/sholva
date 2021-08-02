@@ -51,3 +51,17 @@ vector_specs:
     ah_wr: 0
     result: 0b0000001000000000
     status_out: 0b1000001 # DF and OF not modified
+  - _description: "CMC (complement carry)"
+    opc: 12
+    opnd_in: 0xff
+    status_in: 0b1111111
+    ah_wr: 0
+    result: 0xff
+    status_out: 0b1101111
+  - _description: "CMC (complement carry)"
+    opc: 12
+    opnd_in: 0xff
+    status_in: 0b0000000
+    ah_wr: 0
+    result: 0xff
+    status_out: 0b0010000
