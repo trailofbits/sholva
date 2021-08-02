@@ -392,7 +392,13 @@ def _gen_imm_v():
                         ),
                         _chain_imm_leaves(16),
                     ),
-                    _chain_imm_leaves(8),
+                    _ternary(
+                        "has_disp",
+                        _ternary(
+                            "is_disp8", _chain_imm_leaves(24), _chain_imm_leaves(40)
+                        ),
+                        _chain_imm_leaves(8),
+                    )
                 ),
                 _chain_imm_leaves(0),
             ),

@@ -123,3 +123,87 @@ vector_specs:
     modrm: x
     disp: 0x6 # NOTE(ww): 0x6 for relative JMP
     opnd0_disp: 1
+  - _description: "add EAX, 0x05 (imm8)"
+    unescaped_instr: 0x05c083
+    opnd_form: 5 # OPND_ENC_MODREGRM_RM_IMM
+    prefix_address_16bit: 0
+    prefix_operand_16bit: 0
+    imm_1byte: 1
+    has_imm: 1
+    has_modrm: 1
+    has_sib: 0
+    has_disp: 0
+    is_disp8: 0
+    is_disp32: 0
+    modrm: 0xc0
+    sib: x
+    imm: 0x05
+    modrm_rm_is_reg_direct: 1
+    opnd0_modrm_rm: 1
+  - _description: "add EAX, 0xaa (sext, imm8)"
+    unescaped_instr: 0xaac083
+    opnd_form: 5 # OPND_ENC_MODREGRM_RM_IMM
+    prefix_address_16bit: 0
+    prefix_operand_16bit: 0
+    imm_1byte: 1
+    has_imm: 1
+    has_modrm: 1
+    has_sib: 0
+    has_disp: 0
+    is_disp8: 0
+    is_disp32: 0
+    modrm: 0xc0
+    sib: x
+    imm: 0xffffffaa
+    modrm_rm_is_reg_direct: 1
+    opnd0_modrm_rm: 1
+  - _description: "add [eax], 0x05 (imm8)"
+    unescaped_instr: 0x050080
+    opnd_form: 5 # OPND_ENC_MODREGRM_RM_IMM
+    prefix_address_16bit: 0
+    prefix_operand_16bit: 0
+    imm_1byte: 1
+    has_imm: 1
+    has_modrm: 1
+    has_sib: 0
+    has_disp: 0
+    modrm: 0x00
+    sib: x
+    imm: 0x05
+    opnd0_modrm_rm: 1
+  - _description: "add [eax], word 0x0505 (imm16)"
+    unescaped_instr: 0x05050081
+    opnd_form: 5 # OPND_ENC_MODREGRM_RM_IMM
+    prefix_address_16bit: 0
+    prefix_operand_16bit: 1
+    imm_1byte: 0
+    has_imm: 1
+    has_modrm: 1
+    has_sib: 0
+    has_disp: 0
+    modrm: 0x00
+    sib: x
+    imm: 0x0505
+    opnd0_modrm_rm: 1
+
+  # - _description: "add DWORD PTR [eax+0xbbbb],0xaaaa (disp32, imm32)"
+  #   unescaped_instr: 0x0000aaaa0000bbbb8081
+  #   opnd_form: 5 # OPND_ENC_MODREGRM_RM_IMM
+  #   prefix_address_16bit: 0
+  #   prefix_operand_16bit: 0
+  #   imm_1byte: 0
+  #   has_imm: 1
+  #   has_modrm: 1
+  #   has_sib: 0
+  #   has_disp: 1
+  #   is_disp8: 0
+  #   is_disp32: 1
+  #   modrm: 0x80
+  #   sib: x
+  #   disp: 0xbbbb
+  #   imm: 0xaaaa
+  #   opnd0_modrm_rm: 1
+  #   opnd0_modrm_reg: 1
+  #   opnd1_modrm_rm: 1
+  #   opnd1_modrm_reg: 1
+  #   opnd0_disp: 0xbbbb
