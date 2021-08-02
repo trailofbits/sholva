@@ -8,7 +8,7 @@
 # `[]` indicating "optional", `{X,Y}` indicating "choice", and `+` after either
 # `[]` or `{}` indicating "one or more".
 #
-#  [x]HH[/D][+r{b,w,d,*}][+i{b,w,d,*}][~{I,D{8,32},M,O,MI,MR,RM,OI,AI,AO,RMI,MRI,MRC,ZO}][~{r,w,W,x}+]
+#  [x]HH[/D][+r{b,w,d,*}][+i{b,w,d,*}][~{I,D{8,32},M,O,MI,MR,RM,OI,AI,AO,RMI,MRI,MRC,ZO}][~{r,w,W,x}+][~{Z,S}]
 #
 # Where:
 # * `x` indicates that that the `0Fh` opcode escape was used;
@@ -41,6 +41,8 @@
 #   - `w`: operand is write-only
 #   - `W`: operand is read+write
 #   - `x`: operand is not read from or written to
+# * `~{Z,S}` indicates the sign- or zero-extension semantics of the "source" operand,
+#   when applicable.
 #
 # By way of example: here's the encoding form for `AND r/m32, imm8`:
 #    CMD_AND:83/4+ib+MI~Wr
@@ -54,11 +56,11 @@
 #   For example, there are some MOV forms below that we probably shouldn't allow.
 
 
-CMD_ADD:00~MR~Wr,01~MR~Wr,02~RM~Wr,03~RM~Wr,04+ib~AI~Wr,05+i*~AI~Wr,80/0+ib~MI~Wr,81/0+i*~MI~Wr,83/0+ib~MI~Wr
+CMD_ADD:00~MR~Wr,01~MR~Wr,02~RM~Wr,03~RM~Wr,04+ib~AI~Wr,05+i*~AI~Wr,80/0+ib~MI~Wr,81/0+i*~MI~Wr,83/0+ib~MI~Wr~S
 
-CMD_ADC:10~MR~Wr,11~MR~Wr,12~RM~Wr,13~RM~Wr,14+ib~AI~Wr,15+i*~AI~Wr,80/2+ib~MI~Wr,81/2+i*~MI~Wr,83/2+ib~MI~Wr
+CMD_ADC:10~MR~Wr,11~MR~Wr,12~RM~Wr,13~RM~Wr,14+ib~AI~Wr,15+i*~AI~Wr,80/2+ib~MI~Wr,81/2+i*~MI~Wr,83/2+ib~MI~Wr~S
 
-CMD_AND:20~MR~Wr,21~MR~Wr,22~RM~Wr,23~RM~Wr,24+ib~AI~Wr,25+i*~AI~Wr,80/4+ib~MI~Wr,81/4+i*~MI~Wr,83/4+ib~MI~Wr
+CMD_AND:20~MR~Wr,21~MR~Wr,22~RM~Wr,23~RM~Wr,24+ib~AI~Wr,25+i*~AI~Wr,80/4+ib~MI~Wr,81/4+i*~MI~Wr,83/4+ib~MI~Wr~S
 
 CMD_BSF:xBC~RM~wr
 CMD_BSR:xBD~RM~wr
@@ -70,7 +72,7 @@ CMD_BTS:xAB~MR~Wr,xBA/5+ib~MI~Wr
 # TODO(ww): Figure out rel16/32 notation.
 # CMD_CALL:E8,9A,FF/2,FF/3
 
-CMD_CBW:98~A~W
+CMD_CBW:98~A~W~S
 CMD_CLC:F8~ZO~x
 CMD_CLD:FC~ZO~x
 CMD_CMC:F5~ZO~x
@@ -99,8 +101,8 @@ CMD_LOOP:E0~D8~rr,E1~D8~rr,E2~D8~rr
 CMD_MOV:88~MR~wr,89~MR~wr,8A~RM~wr,8B~RM~wr,8C~MR~wr,8E~RM~wr,B0+rb+ib~OI~wr,B8+r*+i*~OI~wr,C6/0+ib~MI~wr,C7/0+i*~MI~wr
 
 CMD_MOVS:A4~ZO~wr,A5~ZO~wr
-CMD_MOVSX:63~RM~wr,xBE~RM~wr,xBF~RM~wr
-CMD_MOVZX:xB6~RM~wr,xB7~RM~wr
+CMD_MOVSX:63~RM~wr,xBE~RM~wr,xBF~RM~wr~S
+CMD_MOVZX:xB6~RM~wr,xB7~RM~wr~Z
 
 # TODO(ww): MUL writes to EDX:EAX, figure that out.
 CMD_MUL:F6/4~M~Wr,F7/4~M~wWr

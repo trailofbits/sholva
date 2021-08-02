@@ -14,7 +14,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -28,7 +29,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -42,7 +44,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -56,7 +59,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -70,7 +74,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -84,7 +89,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -98,7 +104,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -112,7 +119,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -126,7 +134,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": "S"
             }
         ]
     },
@@ -145,7 +154,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -159,7 +169,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -173,7 +184,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -187,7 +199,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -201,7 +214,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -215,7 +229,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -229,7 +244,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -243,7 +259,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -257,7 +274,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": "S"
             }
         ]
     },
@@ -276,7 +294,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -290,7 +309,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -304,7 +324,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -318,7 +339,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -332,7 +354,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -346,7 +369,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -360,7 +384,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -374,7 +399,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -388,7 +414,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": "S"
             }
         ]
     },
@@ -407,7 +434,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             }
         ]
     },
@@ -426,7 +454,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             }
         ]
     },
@@ -445,7 +474,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": true,
@@ -459,7 +489,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             }
         ]
     },
@@ -478,7 +509,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": true,
@@ -492,7 +524,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             }
         ]
     },
@@ -511,7 +544,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": true,
@@ -525,7 +559,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             }
         ]
     },
@@ -544,7 +579,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": true,
@@ -558,7 +594,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             }
         ]
     },
@@ -577,7 +614,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": "S"
             }
         ]
     },
@@ -596,7 +634,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             }
         ]
     },
@@ -615,7 +654,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             }
         ]
     },
@@ -634,7 +674,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             }
         ]
     },
@@ -653,7 +694,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -667,7 +709,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -681,7 +724,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -695,7 +739,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -709,7 +754,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -723,7 +769,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -737,7 +784,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -751,7 +799,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -765,7 +814,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             }
         ]
     },
@@ -784,7 +834,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -798,7 +849,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             }
         ]
     },
@@ -817,7 +869,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             }
         ]
     },
@@ -836,7 +889,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": true
+                "rw_or_rd": true,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -850,7 +904,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -864,7 +919,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             }
         ]
     },
@@ -883,7 +939,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -897,7 +954,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             }
         ]
     },
@@ -916,7 +974,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -930,7 +989,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             }
         ]
     },
@@ -949,7 +1009,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "r",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -963,7 +1024,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "r",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -977,7 +1039,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -991,7 +1054,8 @@
                 "opnd1_mode": "W",
                 "opnd2_mode": "r",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": true,
@@ -1005,7 +1069,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             }
         ]
     },
@@ -1024,7 +1089,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": true
+                "rw_or_rd": true,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -1038,7 +1104,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -1052,7 +1119,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             }
         ]
     },
@@ -1071,7 +1139,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -1085,7 +1154,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -1099,7 +1169,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -1113,7 +1184,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -1127,7 +1199,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -1141,7 +1214,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -1155,7 +1229,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -1169,7 +1244,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -1183,7 +1259,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -1197,7 +1274,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -1211,7 +1289,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -1225,7 +1304,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -1239,7 +1319,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -1253,7 +1334,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -1267,7 +1349,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -1281,7 +1364,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": true,
@@ -1295,7 +1379,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": true,
@@ -1309,7 +1394,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": true,
@@ -1323,7 +1409,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": true,
@@ -1337,7 +1424,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": true,
@@ -1351,7 +1439,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": true,
@@ -1365,7 +1454,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": true,
@@ -1379,7 +1469,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": true,
@@ -1393,7 +1484,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": true,
@@ -1407,7 +1499,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": true,
@@ -1421,7 +1514,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": true,
@@ -1435,7 +1529,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": true,
@@ -1449,7 +1544,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": true,
@@ -1463,7 +1559,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": true,
@@ -1477,7 +1574,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": true,
@@ -1491,7 +1589,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": true,
@@ -1505,7 +1604,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             }
         ]
     },
@@ -1524,7 +1624,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": true,
@@ -1538,7 +1639,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": true,
@@ -1552,7 +1654,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": true,
@@ -1566,7 +1669,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": true,
@@ -1580,7 +1684,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": true,
@@ -1594,7 +1699,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": true,
@@ -1608,7 +1714,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": true,
@@ -1622,7 +1729,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": true,
@@ -1636,7 +1744,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": true,
@@ -1650,7 +1759,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": true,
@@ -1664,7 +1774,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": true,
@@ -1678,7 +1789,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": true,
@@ -1692,7 +1804,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": true,
@@ -1706,7 +1819,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": true,
@@ -1720,7 +1834,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": true,
@@ -1734,7 +1849,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             }
         ]
     },
@@ -1753,7 +1869,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             }
         ]
     },
@@ -1772,7 +1889,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -1786,7 +1904,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -1800,7 +1919,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             }
         ]
     },
@@ -1819,7 +1939,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             }
         ]
     },
@@ -1838,7 +1959,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -1852,7 +1974,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             }
         ]
     },
@@ -1871,7 +1994,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -1885,7 +2009,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -1899,7 +2024,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             }
         ]
     },
@@ -1918,7 +2044,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -1932,7 +2059,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -1946,7 +2074,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -1960,7 +2089,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -1974,7 +2104,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -1988,7 +2119,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -2002,7 +2134,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": true,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -2016,7 +2149,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": true
+                "rw_or_rd": true,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -2030,7 +2164,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -2044,7 +2179,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             }
         ]
     },
@@ -2063,7 +2199,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -2077,7 +2214,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             }
         ]
     },
@@ -2096,7 +2234,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": true,
@@ -2110,7 +2249,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": true,
@@ -2124,7 +2264,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": "S"
             }
         ]
     },
@@ -2143,7 +2284,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": true,
@@ -2157,7 +2299,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": "Z"
             }
         ]
     },
@@ -2176,7 +2319,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -2190,7 +2334,8 @@
                 "opnd1_mode": "W",
                 "opnd2_mode": "r",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             }
         ]
     },
@@ -2209,7 +2354,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -2223,7 +2369,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             }
         ]
     },
@@ -2242,7 +2389,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             }
         ]
     },
@@ -2261,7 +2409,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -2275,7 +2424,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             }
         ]
     },
@@ -2294,7 +2444,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -2308,7 +2459,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -2322,7 +2474,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -2336,7 +2489,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -2350,7 +2504,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -2364,7 +2519,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -2378,7 +2534,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -2392,7 +2549,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -2406,7 +2564,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             }
         ]
     },
@@ -2425,7 +2584,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": true
+                "rw_or_rd": true,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -2439,7 +2599,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             }
         ]
     },
@@ -2458,7 +2619,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             }
         ]
     },
@@ -2477,7 +2639,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             }
         ]
     },
@@ -2496,7 +2659,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": true
+                "rw_or_rd": true,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -2510,7 +2674,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -2524,7 +2689,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -2538,7 +2704,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             }
         ]
     },
@@ -2557,7 +2724,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             }
         ]
     },
@@ -2576,7 +2744,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             }
         ]
     },
@@ -2595,7 +2764,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -2609,7 +2779,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             }
         ]
     },
@@ -2628,7 +2799,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             }
         ]
     },
@@ -2647,7 +2819,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             }
         ]
     },
@@ -2666,7 +2839,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -2680,7 +2854,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -2694,7 +2869,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -2708,7 +2884,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -2722,7 +2899,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -2736,7 +2914,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -2750,7 +2929,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -2764,7 +2944,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -2778,7 +2959,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             }
         ]
     },
@@ -2797,7 +2979,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -2811,7 +2994,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             }
         ]
     },
@@ -2830,7 +3014,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "r",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": true,
@@ -2844,7 +3029,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "r",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             }
         ]
     },
@@ -2863,7 +3049,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "r",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": true,
@@ -2877,7 +3064,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "r",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             }
         ]
     },
@@ -2896,7 +3084,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             }
         ]
     },
@@ -2915,7 +3104,8 @@
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             }
         ]
     },
@@ -2934,7 +3124,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -2948,7 +3139,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             }
         ]
     },
@@ -2967,7 +3159,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -2981,7 +3174,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -2995,7 +3189,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -3009,7 +3204,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -3023,7 +3219,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -3037,7 +3234,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -3051,7 +3249,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -3065,7 +3264,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -3079,7 +3279,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             }
         ]
     },
@@ -3098,7 +3299,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -3112,7 +3314,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -3126,7 +3329,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -3140,7 +3344,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -3154,7 +3359,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -3168,7 +3374,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             }
         ]
     },
@@ -3187,7 +3394,8 @@
                 "opnd1_mode": "W",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -3201,7 +3409,8 @@
                 "opnd1_mode": "W",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -3215,7 +3424,8 @@
                 "opnd1_mode": "W",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": true
+                "rw_or_rd": true,
+                "source_sign_ext": null
             }
         ]
     },
@@ -3234,7 +3444,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -3248,7 +3459,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -3262,7 +3474,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -3276,7 +3489,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -3290,7 +3504,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -3304,7 +3519,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -3318,7 +3534,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -3332,7 +3549,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             },
             {
                 "esc": false,
@@ -3346,7 +3564,8 @@
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
                 "rb": false,
-                "rw_or_rd": false
+                "rw_or_rd": false,
+                "source_sign_ext": null
             }
         ]
     }
