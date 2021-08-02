@@ -1,7 +1,7 @@
 module: decode_opc_phase2
 file: ../decode/decode_opc_phase2.v
 inputs:
-  - "72 unescaped_instr"
+  - "80 unescaped_instr"
   - "1 is_2byte"
 outputs:
   - "6 opc"

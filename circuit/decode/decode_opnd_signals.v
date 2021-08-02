@@ -2,9 +2,11 @@
 `include "defines.v"
 
 module decode_opnd_signals(
-  input [71:0] unescaped_instr,
+  input [87:0] unescaped_instr,
   input [3:0] opnd_form,
   input prefix_address_16bit,
+  input prefix_operand_16bit,
+  input imm_1byte,
 
   output has_imm,
   output has_modrm,
@@ -16,6 +18,7 @@ module decode_opnd_signals(
   output [7:0] modrm,
   output [7:0] sib,
   output [31:0] disp,
+  output [31:0] imm,
 
   output modrm_rm_is_reg_direct,
 
@@ -67,7 +70,7 @@ assign has_modrm = opnd0_modrm_rm || opnd0_modrm_reg;
 assign modrm = unescaped_instr[15:8];
 
 // Whether ModR/M.rm indicates a register, i.e. "register direct".
-assign modrm_rm_is_reg_direct = modrm[7:6] == 2'b11;
+assign modrm_rm_is_reg_direct = has_modrm && modrm[7:6] == 2'b11;
 
 // Intel SDM Vol. 2A Table 2-1/2-2/2-3: the SIB byte is only present when all
 // of the following conditions hold:
@@ -135,5 +138,16 @@ assign opnd0_disp = opnd_form_1hot[`OPND_ENC_DISP8]
                     || (has_disp && opnd0_modrm_rm);
 
 assign opnd1_disp = has_disp && opnd1_modrm_rm;
+
+// Finally, immediate handling.
+// Immediates are 32, 16, or 8 bits. 8-bit immediates have special opcodes,
+// which we have signaled for us by the imm_1byte wire. We distinguish the
+// 16-bit case from the 32-bit case with the prefix_operand_16bit wire.
+
+wire is_imm8 = has_imm && imm_1byte;
+wire is_imm16 = has_imm && prefix_operand_16bit;
+wire has_imm32 = has_imm && ~(is_imm8 || ~is_imm16);
+
+`include "codegen/imm.gen.v"
 
 endmodule

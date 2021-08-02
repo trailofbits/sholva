@@ -16,6 +16,7 @@ _HERE = _US.parent
 _COMMANDS_JSON = _HERE / "commands.json"
 _COMMANDS_GEN_V = _HERE / "commands.gen.v"
 _OPC_MAP_GEN_V = _HERE / "opc_map.gen.v"
+_IMM_GEN_V = _HERE / "imm.gen.v"
 
 _OPND_ENC_MAP = {
     "I": ("OPND_ENC_IMM", 1),
@@ -178,6 +179,13 @@ def _1hot(width, n):
     return (((width - 1) - n) * "0") + "1" + ((width - (((width - 1) - n) + 1)) * "0")
 
 
+def _sextN_32(n, var, x, y):
+    """
+    Emit a call to `sextN_32` for the given range in `var`.
+    """
+    return _paren(f"sext{n}_32({var}[{x}:{y}])")
+
+
 def _gen_commands_v(commands):
     """
     Generate `commands.gen.v`.
@@ -335,6 +343,71 @@ def _gen_opc_map_v(commands):
             )
 
 
+def _gen_imm_v():
+    with _IMM_GEN_V.open(mode="w+") as io:
+        print(_header(), file=io)
+
+        # This is a little bit of a brain-bender: for every instruction that can
+        # take an immediate, that immediate can come in one of three forms:
+        # 8, 16, or 32-bit. We need to perform different amounts of sign extension
+        # for each of these cases, *while also* accessing different parts of the
+        # `unescaped_instr` (since we might be dealing with an instruction that
+        # has a ModR/M byte, or SIB, or displacement, or none of the above).
+        #
+        # `imm_leaves_unrealized` is our generic representation of immediate handling,
+        # without any reference to concrete offsets into `unescaped_instr`.
+        # For each concrete case, we realize it.
+        imm_leaves_unrealized = [
+            (lambda x: _sextN_32(8, "unescaped_instr", x + 7, x), "is_imm8"),
+            (lambda x: _sextN_32(16, "unescaped_instr", x + 15, x), "is_imm16"),
+            (lambda x: _paren(f"unescaped_instr[{x + 31}:{x}]"), "is_imm32"),
+        ]
+
+        def _chain_imm_leaves(offset):
+            # Why +8? The first byte of unescaped_instr is the opcode, so we always skip it.
+            imm_leaves = [
+                (expr_f(offset + 8), pred) for (expr_f, pred) in imm_leaves_unrealized
+            ]
+            return _ternary_chain(imm_leaves)
+
+        # Next, our decision tree: we build up the appropriate concrete offset
+        # to the immediate byte(s) based on whether our instruction:
+        # * Has a ModR/M byte (+8)
+        # * Has a SIB byte (+8)
+        # * Has a displacement...
+        #   * If that displacement is 8 bits (+8)
+        #   * If that displacement is 32 bits (+32)
+        # We bail out at the top level if we don't have any immediate byte(s) at all.
+        # Also, note that each offset above is relative to the end of the opcode byte.
+        imm_decisions = _ternary(
+            "has_imm",
+            _ternary(
+                "has_modrm",
+                _ternary(
+                    "has_sib",
+                    _ternary(
+                        "has_disp",
+                        _ternary(
+                            "is_disp8", _chain_imm_leaves(24), _chain_imm_leaves(48)
+                        ),
+                        _chain_imm_leaves(16),
+                    ),
+                    _ternary(
+                        "has_disp",
+                        _ternary(
+                            "is_disp8", _chain_imm_leaves(16), _chain_imm_leaves(40)
+                        ),
+                        _chain_imm_leaves(8),
+                    )
+                ),
+                _chain_imm_leaves(0),
+            ),
+            "32'd0",
+        )
+
+        print(_assign("imm", imm_decisions), file=io)
+
+
 def main():
     assert _COMMANDS_JSON.exists(), f"codegen dep missing: {_COMMANDS_JSON}"
 
@@ -344,6 +417,7 @@ def main():
 
     _gen_commands_v(commands)
     _gen_opc_map_v(commands)
+    _gen_imm_v()
 
 
 if __name__ == "__main__":

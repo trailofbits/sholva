@@ -28,7 +28,7 @@ module decode(
 
 // Decode prefix: Extract prefix information from the raw instruction.
 
-wire [79:0] unprefixed_instr;
+wire [87:0] unprefixed_instr;
 wire prefix_operand_16bit;
 wire prefix_address_16bit;
 wire [1:0] prefix_rep;
@@ -47,7 +47,7 @@ decode_prefix decode_prefix_x(
 // Decode opcode (phase 1): detect an opcode escape and truncate as appropriate.
 
 wire is_2byte;
-wire [71:0] unescaped_instr;
+wire [87:0] unescaped_instr;
 
 decode_opc_phase1 decode_opc_phase1_x(
   .unprefixed_instr(unprefixed_instr),

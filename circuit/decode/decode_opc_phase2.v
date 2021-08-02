@@ -2,7 +2,7 @@
 `include "codegen/commands.gen.v"
 
 module decode_opc_phase2(
-  input [71:0] unescaped_instr,
+  input [87:0] unescaped_instr,
   input is_2byte,
 
   output [5:0] opc,
@@ -16,10 +16,6 @@ module decode_opc_phase2(
   output opnd1_is_write,
   output opnd2_is_read,
   output opnd2_is_write
-
-  // TODO: outputs:
-  // some wires for operand sizes (8/16/32)
-  // some wires for whether operands are sign/zero extended
 );
 
 wire opc_8byte = ~unescaped_instr[0];

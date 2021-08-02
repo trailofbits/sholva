@@ -1,7 +1,7 @@
 module: decode_opnds
 file: ../decode/decode_opnds.v
 inputs:
-  - "72 unescaped_instr"
+  - "88 unescaped_instr"
   - "32 eax"
   - "32 ebx"
   - "32 ecx"

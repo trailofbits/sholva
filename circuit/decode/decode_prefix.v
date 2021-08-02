@@ -1,7 +1,7 @@
 module decode_prefix(
   input [95:0] raw_instr,
 
-  output [79:0] unprefixed_instr,
+  output [87:0] unprefixed_instr,
   output prefix_operand_16bit,
   output prefix_address_16bit,
   output [1:0] prefix_rep,
@@ -22,7 +22,7 @@ assign prefix_count = (prefix_rep != 2'd0 && (prefix_operand_16bit || prefix_add
                       2'd2 : (prefix_rep != 2'd0 || prefix_operand_16bit || prefix_address_16bit) ?
                       2'd1 : 2'd0;
 
-assign unprefixed_instr = (prefix_count == 2'd2) ? raw_instr[95:16] :
-                          (prefix_count == 2'd1) ? raw_instr[87:8] : raw_instr[79:0];
+assign unprefixed_instr = (prefix_count == 2'd2) ? {8'd0, raw_instr[95:16]} :
+                          (prefix_count == 2'd1) ? raw_instr[95:8] : raw_instr[87:0];
 
 endmodule
