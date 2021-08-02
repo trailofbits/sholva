@@ -185,6 +185,19 @@ vector_specs:
     sib: x
     imm: 0x0505
     opnd0_modrm_rm: 1
+  - _description: "add eax, 0xfefefefe (imm32)"
+    unescaped_instr: 0xfefefefe05
+    opnd_form: 9 # OPND_ENC_EAX_IMM
+    prefix_address_16bit: 0
+    prefix_operand_16bit: 0
+    imm_1byte: 0
+    has_imm: 1
+    has_modrm: 0
+    has_sib: 0
+    has_disp: 0
+    modrm: x
+    sib: x
+    imm: 0xfefefefe
 
   # - _description: "add DWORD PTR [eax+0xbbbb],0xaaaa (disp32, imm32)"
   #   unescaped_instr: 0x0000aaaa0000bbbb8081

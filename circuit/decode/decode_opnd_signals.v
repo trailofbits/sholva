@@ -70,7 +70,7 @@ assign has_modrm = opnd0_modrm_rm || opnd0_modrm_reg;
 assign modrm = unescaped_instr[15:8];
 
 // Whether ModR/M.rm indicates a register, i.e. "register direct".
-assign modrm_rm_is_reg_direct = modrm[7:6] == 2'b11;
+assign modrm_rm_is_reg_direct = has_modrm && modrm[7:6] == 2'b11;
 
 // Intel SDM Vol. 2A Table 2-1/2-2/2-3: the SIB byte is only present when all
 // of the following conditions hold:
