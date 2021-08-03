@@ -69,7 +69,7 @@ class Encoding:
             assert sign_spec in _EXTENSION_MODES, f"invalid extension mode: {sign_spec}"
         else:
             opnd_modes = rest
-            sign_spec = None
+            sign_spec = "Z"
 
         opnd_modes = list(opnd_modes)
         assert (

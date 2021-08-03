@@ -15,7 +15,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -30,7 +30,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -45,7 +45,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -60,7 +60,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -75,7 +75,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -90,7 +90,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -105,7 +105,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -120,7 +120,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -155,7 +155,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -170,7 +170,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -185,7 +185,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -200,7 +200,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -215,7 +215,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -230,7 +230,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -245,7 +245,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -260,7 +260,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -295,7 +295,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -310,7 +310,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -325,7 +325,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -340,7 +340,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -355,7 +355,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -370,7 +370,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -385,7 +385,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -400,7 +400,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -435,7 +435,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             }
         ]
     },
@@ -455,7 +455,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             }
         ]
     },
@@ -475,7 +475,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": true,
@@ -490,7 +490,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             }
         ]
     },
@@ -510,7 +510,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": true,
@@ -525,7 +525,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             }
         ]
     },
@@ -545,7 +545,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": true,
@@ -560,7 +560,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             }
         ]
     },
@@ -580,7 +580,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": true,
@@ -595,7 +595,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             }
         ]
     },
@@ -635,7 +635,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             }
         ]
     },
@@ -655,7 +655,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             }
         ]
     },
@@ -675,7 +675,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             }
         ]
     },
@@ -695,7 +695,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -710,7 +710,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -725,7 +725,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -740,7 +740,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -755,7 +755,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -770,7 +770,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -785,7 +785,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -800,7 +800,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -815,7 +815,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             }
         ]
     },
@@ -835,7 +835,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -850,7 +850,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             }
         ]
     },
@@ -870,7 +870,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             }
         ]
     },
@@ -890,7 +890,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": true,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -905,7 +905,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -920,7 +920,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             }
         ]
     },
@@ -940,7 +940,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -955,7 +955,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             }
         ]
     },
@@ -975,7 +975,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -990,7 +990,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             }
         ]
     },
@@ -1010,7 +1010,7 @@
                 "opnd2_mode": "r",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -1025,7 +1025,7 @@
                 "opnd2_mode": "r",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -1040,7 +1040,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -1055,7 +1055,7 @@
                 "opnd2_mode": "r",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": true,
@@ -1070,7 +1070,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             }
         ]
     },
@@ -1090,7 +1090,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": true,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -1105,7 +1105,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -1120,7 +1120,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             }
         ]
     },
@@ -1140,7 +1140,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -1155,7 +1155,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -1170,7 +1170,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -1185,7 +1185,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -1200,7 +1200,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -1215,7 +1215,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -1230,7 +1230,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -1245,7 +1245,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -1260,7 +1260,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -1275,7 +1275,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -1290,7 +1290,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -1305,7 +1305,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -1320,7 +1320,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -1335,7 +1335,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -1350,7 +1350,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -1365,7 +1365,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": true,
@@ -1380,7 +1380,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": true,
@@ -1395,7 +1395,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": true,
@@ -1410,7 +1410,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": true,
@@ -1425,7 +1425,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": true,
@@ -1440,7 +1440,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": true,
@@ -1455,7 +1455,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": true,
@@ -1470,7 +1470,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": true,
@@ -1485,7 +1485,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": true,
@@ -1500,7 +1500,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": true,
@@ -1515,7 +1515,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": true,
@@ -1530,7 +1530,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": true,
@@ -1545,7 +1545,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": true,
@@ -1560,7 +1560,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": true,
@@ -1575,7 +1575,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": true,
@@ -1590,7 +1590,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": true,
@@ -1605,7 +1605,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             }
         ]
     },
@@ -1625,7 +1625,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": true,
@@ -1640,7 +1640,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": true,
@@ -1655,7 +1655,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": true,
@@ -1670,7 +1670,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": true,
@@ -1685,7 +1685,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": true,
@@ -1700,7 +1700,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": true,
@@ -1715,7 +1715,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": true,
@@ -1730,7 +1730,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": true,
@@ -1745,7 +1745,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": true,
@@ -1760,7 +1760,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": true,
@@ -1775,7 +1775,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": true,
@@ -1790,7 +1790,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": true,
@@ -1805,7 +1805,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": true,
@@ -1820,7 +1820,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": true,
@@ -1835,7 +1835,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": true,
@@ -1850,7 +1850,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             }
         ]
     },
@@ -1870,7 +1870,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             }
         ]
     },
@@ -1890,7 +1890,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -1905,7 +1905,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -1920,7 +1920,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             }
         ]
     },
@@ -1940,7 +1940,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             }
         ]
     },
@@ -1960,7 +1960,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -1975,7 +1975,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             }
         ]
     },
@@ -1995,7 +1995,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -2010,7 +2010,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -2025,7 +2025,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             }
         ]
     },
@@ -2045,7 +2045,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -2060,7 +2060,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -2075,7 +2075,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -2090,7 +2090,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -2105,7 +2105,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -2120,7 +2120,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -2135,7 +2135,7 @@
                 "opnd2_mode": "x",
                 "rb": true,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -2150,7 +2150,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": true,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -2165,7 +2165,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -2180,7 +2180,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             }
         ]
     },
@@ -2200,7 +2200,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -2215,7 +2215,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             }
         ]
     },
@@ -2235,7 +2235,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": true,
@@ -2250,7 +2250,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": true,
@@ -2285,7 +2285,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": true,
@@ -2320,7 +2320,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -2335,7 +2335,7 @@
                 "opnd2_mode": "r",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             }
         ]
     },
@@ -2355,7 +2355,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -2370,7 +2370,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             }
         ]
     },
@@ -2390,7 +2390,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             }
         ]
     },
@@ -2410,7 +2410,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -2425,7 +2425,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             }
         ]
     },
@@ -2445,7 +2445,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -2460,7 +2460,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -2475,7 +2475,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -2490,7 +2490,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -2505,7 +2505,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -2520,7 +2520,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -2535,7 +2535,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -2550,7 +2550,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -2565,7 +2565,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             }
         ]
     },
@@ -2585,7 +2585,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": true,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -2600,7 +2600,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             }
         ]
     },
@@ -2620,7 +2620,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             }
         ]
     },
@@ -2640,7 +2640,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             }
         ]
     },
@@ -2660,7 +2660,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": true,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -2675,7 +2675,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -2690,7 +2690,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -2705,7 +2705,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             }
         ]
     },
@@ -2725,7 +2725,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             }
         ]
     },
@@ -2745,7 +2745,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             }
         ]
     },
@@ -2765,7 +2765,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -2780,7 +2780,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             }
         ]
     },
@@ -2800,7 +2800,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             }
         ]
     },
@@ -2820,7 +2820,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             }
         ]
     },
@@ -2840,7 +2840,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -2855,7 +2855,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -2870,7 +2870,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -2885,7 +2885,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -2900,7 +2900,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -2915,7 +2915,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -2930,7 +2930,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -2945,7 +2945,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -2960,7 +2960,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             }
         ]
     },
@@ -2980,7 +2980,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -2995,7 +2995,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             }
         ]
     },
@@ -3015,7 +3015,7 @@
                 "opnd2_mode": "r",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": true,
@@ -3030,7 +3030,7 @@
                 "opnd2_mode": "r",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             }
         ]
     },
@@ -3050,7 +3050,7 @@
                 "opnd2_mode": "r",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": true,
@@ -3065,7 +3065,7 @@
                 "opnd2_mode": "r",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             }
         ]
     },
@@ -3085,7 +3085,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             }
         ]
     },
@@ -3105,7 +3105,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             }
         ]
     },
@@ -3125,7 +3125,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -3140,7 +3140,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             }
         ]
     },
@@ -3160,7 +3160,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -3175,7 +3175,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -3190,7 +3190,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -3205,7 +3205,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -3220,7 +3220,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -3235,7 +3235,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -3250,7 +3250,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -3265,7 +3265,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -3280,7 +3280,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             }
         ]
     },
@@ -3300,7 +3300,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -3315,7 +3315,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -3330,7 +3330,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -3345,7 +3345,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -3360,7 +3360,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -3375,7 +3375,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             }
         ]
     },
@@ -3395,7 +3395,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -3410,7 +3410,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -3425,7 +3425,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": true,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             }
         ]
     },
@@ -3445,7 +3445,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -3460,7 +3460,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -3475,7 +3475,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -3490,7 +3490,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -3505,7 +3505,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -3520,7 +3520,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -3535,7 +3535,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -3550,7 +3550,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             },
             {
                 "esc": false,
@@ -3565,7 +3565,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": null
+                "source_sign_ext": "Z"
             }
         ]
     }
