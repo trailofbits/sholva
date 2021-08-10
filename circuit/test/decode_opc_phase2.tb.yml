@@ -15,7 +15,21 @@ outputs:
   - "1 opnd1_is_write"
   - "1 opnd2_is_read"
   - "1 opnd2_is_write"
+  - "1 source_is_sext"
 vector_specs:
+  - _description: "ADD eax, byte 0xff (source_is_sext)"
+    unescaped_instr: 0xffc083
+    is_2byte: 0
+    opc: 0 # CMD_ADD
+    opnd_form: 5 # OPND_ENC_MODREGRM_RM_IMM
+    opnd_count: 2
+    imm_1byte: 1
+    reg_1byte: 0
+    opnd0_is_read: 1
+    opnd0_is_write: 1
+    opnd1_is_read: 1
+    opnd1_is_write: 0
+    source_is_sext: 1
   - _description: "ADD eax, ebx"
     unescaped_instr: 0x90909090909090d801
     is_2byte: 0
