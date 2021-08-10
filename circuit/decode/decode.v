@@ -68,6 +68,7 @@ wire opnd1_is_read;
 wire opnd1_is_write;
 wire opnd2_is_read;
 wire opnd2_is_write;
+wire source_is_sext;
 
 
 decode_opc_phase2 decode_opc_phase2_x(
@@ -84,7 +85,8 @@ decode_opc_phase2 decode_opc_phase2_x(
   .opnd1_is_read(opnd1_is_read),
   .opnd1_is_write(opnd1_is_write),
   .opnd2_is_read(opnd2_is_read),
-  .opnd2_is_write(opnd2_is_write)
+  .opnd2_is_write(opnd2_is_write),
+  .source_is_sext(source_is_sext)
 );
 
 // Decode operands (phase 1): take the operand form and some information about widths,

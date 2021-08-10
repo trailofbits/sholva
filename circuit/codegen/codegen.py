@@ -342,6 +342,20 @@ def _gen_opc_map_v(commands):
                 file=io,
             )
 
+        _br(io, 2)
+
+        # Generate the "source_is_sext" assignment.
+        source_is_sext_exprs = []
+        for cmd in commands:
+            for enc in cmd["encs"]:
+                if enc["source_sign_ext"] != "S":
+                    continue
+                enc_expr = _and(_bool(enc["esc"], "is_2byte"), _opc_eq(enc["opc"]))
+                if enc["ext"] is not None:
+                    enc_expr = _and(enc_expr, _opc_ext_eq(enc["ext"]))
+                source_is_sext_exprs.append(enc_expr)
+        print(_assign("source_is_sext", functools.reduce(_or, source_is_sext_exprs)), file=io)
+
 
 def _gen_imm_v():
     with _IMM_GEN_V.open(mode="w+") as io:
