@@ -6,6 +6,7 @@ inputs:
   - "1 prefix_address_16bit"
   - "1 prefix_operand_16bit"
   - "1 imm_1byte"
+  - "1 source_is_sext"
 outputs:
   - "1 has_imm"
   - "1 has_modrm"

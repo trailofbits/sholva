@@ -7,6 +7,7 @@ module decode_opnd_signals(
   input prefix_address_16bit,
   input prefix_operand_16bit,
   input imm_1byte,
+  input source_is_sext,
 
   output has_imm,
   output has_modrm,
