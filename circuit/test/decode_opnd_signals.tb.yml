@@ -274,3 +274,18 @@ vector_specs:
     imm: 0x1111
     opnd0_modrm_rm: 1
     opnd0_disp: 1
+  - _description: "add AX, 0xaaaa (zext)"
+    unescaped_instr: 0xaaaa05
+    opnd_form: 9 # OPND_ENC_EAX_IMM
+    prefix_operand_16bit: 1
+    has_imm: 1
+    has_modrm: 0
+    has_sib: 0
+    has_disp: 0
+    is_disp32: 0
+    modrm: x
+    sib: x
+    disp: x
+    imm: 0x0000aaaa
+    opnd0_modrm_rm: 0
+    opnd0_disp: 0
