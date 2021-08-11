@@ -147,6 +147,7 @@ vector_specs:
     prefix_address_16bit: 0
     prefix_operand_16bit: 0
     imm_1byte: 1
+    source_is_sext: 1
     has_imm: 1
     has_modrm: 1
     has_sib: 0
