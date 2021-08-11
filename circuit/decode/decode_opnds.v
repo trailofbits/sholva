@@ -25,6 +25,7 @@ module decode_opnds(
   input opnd1_is_write,
   input opnd2_is_read,
   input opnd2_is_write,
+  input source_is_sext,
 
   output [31:0] opnd0_r,
   output [31:0] opnd1_r,

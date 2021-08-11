@@ -124,6 +124,7 @@ decode_opnds decode_opnds_x(
   .opnd1_is_write(opnd1_is_write),
   .opnd2_is_read(opnd2_is_read),
   .opnd2_is_write(opnd2_is_write),
+  .source_is_sext(source_is_sext),
 
   // Outputs
   .opnd0_r(opnd0_r),
