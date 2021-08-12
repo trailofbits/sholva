@@ -36,3 +36,17 @@ function [31:0] sext16_32;
     sext16_32 = {{{16{x[15]}}}, x};
   end
 endfunction
+
+function [31:0] zext8_32;
+  input [7:0] x;
+  begin
+    zext8_32 = {{24{1'b0}}, x};
+  end
+endfunction
+
+function [31:0] zext16_32;
+  input [15:0] x;
+  begin
+    zext16_32 = {{{16{1'b0}}}, x};
+  end
+endfunction

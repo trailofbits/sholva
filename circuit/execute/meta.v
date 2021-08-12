@@ -34,6 +34,7 @@ wire [6:0] ah_to_status = {
 
 assign status_out = opc_1hot[`CMD_CLC] ? {status_in[6:5], 1'b0, status_in[3:0]}
                   : opc_1hot[`CMD_CLD] ? {1'b0, status_in[5:0]}
+                  : opc_1hot[`CMD_CMC] ? {status_in[6:5], ~status_in[4], status_in[3:0]}
                   : opc_1hot[`CMD_STC] ? {status_in[6:5], 1'b1, status_in[3:0]}
                   : opc_1hot[`CMD_STD] ? {1'b1, status_in[5:0]}
                   : opc_1hot[`CMD_SAHF] ? ah_to_status

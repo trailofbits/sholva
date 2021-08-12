@@ -28,6 +28,7 @@ inputs:
   - "1 opnd1_is_write"
   - "1 opnd2_is_read"
   - "1 opnd2_is_write"
+  - "1 source_is_sext"
 outputs:
   - "32 opnd0_r"
   - "32 opnd1_r"

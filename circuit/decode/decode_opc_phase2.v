@@ -15,7 +15,8 @@ module decode_opc_phase2(
   output opnd1_is_read,
   output opnd1_is_write,
   output opnd2_is_read,
-  output opnd2_is_write
+  output opnd2_is_write,
+  output source_is_sext
 );
 
 wire opc_8byte = ~unescaped_instr[0];

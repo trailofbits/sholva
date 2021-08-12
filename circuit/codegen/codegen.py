@@ -186,6 +186,22 @@ def _sextN_32(n, var, x, y):
     return _paren(f"sext{n}_32({var}[{x}:{y}])")
 
 
+def _zextN_32(n, var, x, y):
+    """
+    Emit a call to `zextN_32` for the given range in `var`.
+    """
+    return _paren(f"zext{n}_32({var}[{x}:{y}])")
+
+
+def _extN_32(n, var, x, y):
+    """
+    Emits a ternary for `{s,z}extN_32` for the given range in `var`.
+
+    The ternary is predicated on the `source_is_sext` wire.
+    """
+    return _ternary("source_is_sext", _sextN_32(n, var, x, y), _zextN_32(n, var, x, y))
+
+
 def _gen_commands_v(commands):
     """
     Generate `commands.gen.v`.
@@ -342,6 +358,23 @@ def _gen_opc_map_v(commands):
                 file=io,
             )
 
+        _br(io, 2)
+
+        # Generate the "source_is_sext" assignment.
+        source_is_sext_exprs = []
+        for cmd in commands:
+            for enc in cmd["encs"]:
+                if enc["source_sign_ext"] != "S":
+                    continue
+                enc_expr = _and(_bool(enc["esc"], "is_2byte"), _opc_eq(enc["opc"]))
+                if enc["ext"] is not None:
+                    enc_expr = _and(enc_expr, _opc_ext_eq(enc["ext"]))
+                source_is_sext_exprs.append(enc_expr)
+        print(
+            _assign("source_is_sext", functools.reduce(_or, source_is_sext_exprs)),
+            file=io,
+        )
+
 
 def _gen_imm_v():
     with _IMM_GEN_V.open(mode="w+") as io:
@@ -358,8 +391,8 @@ def _gen_imm_v():
         # without any reference to concrete offsets into `unescaped_instr`.
         # For each concrete case, we realize it.
         imm_leaves_unrealized = [
-            (lambda x: _sextN_32(8, "unescaped_instr", x + 7, x), "is_imm8"),
-            (lambda x: _sextN_32(16, "unescaped_instr", x + 15, x), "is_imm16"),
+            (lambda x: _extN_32(8, "unescaped_instr", x + 7, x), "is_imm8"),
+            (lambda x: _extN_32(16, "unescaped_instr", x + 15, x), "is_imm16"),
             (lambda x: _paren(f"unescaped_instr[{x + 31}:{x}]"), "is_imm32"),
         ]
 
@@ -398,7 +431,7 @@ def _gen_imm_v():
                             "is_disp8", _chain_imm_leaves(16), _chain_imm_leaves(40)
                         ),
                         _chain_imm_leaves(8),
-                    )
+                    ),
                 ),
                 _chain_imm_leaves(0),
             ),

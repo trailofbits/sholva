@@ -33,6 +33,7 @@ _OPERAND_ENCODINGS = {
 }
 _OPERAND_MODES = {"r", "w", "W", "x"}
 _MODIFIERS = {"ib", "iw", "id", "i*", "rb", "rw", "rd", "r*"}
+_EXTENSION_MODES = {"S", "Z"}
 
 
 @dataclass(frozen=True)
@@ -49,6 +50,7 @@ class Encoding:
     opnd0_mode: str
     opnd1_mode: str
     opnd2_mode: str
+    source_sign_ext: Optional[str]
 
     @classmethod
     def parse(cls, raw_enc):
@@ -60,7 +62,15 @@ class Encoding:
 
         assert "~" in op_enc, f"missing operand modes for {raw_enc}"
 
-        op_enc, opnd_modes = op_enc.split("~", 1)
+        op_enc, rest = op_enc.split("~", 1)
+
+        if "~" in rest:
+            opnd_modes, sign_spec = rest.split("~", 1)
+            assert sign_spec in _EXTENSION_MODES, f"invalid extension mode: {sign_spec}"
+        else:
+            opnd_modes = rest
+            sign_spec = "Z"
+
         opnd_modes = list(opnd_modes)
         assert (
             len(opnd_modes) <= 3
@@ -112,6 +122,7 @@ class Encoding:
             opnd_modes[0],
             opnd_modes[1],
             opnd_modes[2],
+            sign_spec,
         )
 
 
