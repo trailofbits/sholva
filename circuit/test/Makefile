@@ -15,6 +15,7 @@ MODULES := fetch \
 	alu \
 	agu \
 	meta \
+	move \
 	tiny86
 
 TESTBENCHES := $(addsuffix .tb.gen.v,$(MODULES))

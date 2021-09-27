@@ -16,7 +16,7 @@ wire op_is_move = cntl;
 wire op_is_swap = ~op_is_move;
 
 // Move or swap, we always perform SRC -> DST.
-assign opnd0_w = op_is_move ? opnd1_r : opnd1_r;
+assign opnd0_w = opnd1_r;
 
 // For swaps, we also perform the second half.
 assign opnd1_w = op_is_swap ? opnd0_r : opnd1_r;

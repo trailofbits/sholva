@@ -1,0 +1,22 @@
+module: move
+file: ../execute/move.v
+inputs:
+  - "1 cntl"
+  - "32 opnd0_r"
+  - "32 opnd1_r"
+outputs:
+  - "32 opnd0_w"
+  - "32 opnd1_w"
+vector_specs:
+  - _description: "move (one-way)"
+    cntl: 0b1
+    opnd0_r: 0xAAAAAAAA
+    opnd1_r: 0xBBBBBBBB
+    opnd0_w: 0xBBBBBBBB
+    opnd1_w: 0xBBBBBBBB
+  - _description: "swap (two-way)"
+    cntl: 0b0
+    opnd0_r: 0xAAAAAAAA
+    opnd1_r: 0xBBBBBBBB
+    opnd0_w: 0xBBBBBBBB
+    opnd1_w: 0xAAAAAAAA
