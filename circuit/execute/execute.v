@@ -189,8 +189,8 @@ wire exe_is_mu = opc_1hot[`CMD_MOV]   |
 // XCHG is the only swap operation, so far.
 wire mu_cntl = exe_is_mu && !opc_1hot[`CMD_XCHG];
 
-wire [31:0] mu_opnd0_w = 32'b0; // TODO
-wire [31:0] mu_opnd1_w = 32'b0; // TODO
+wire [31:0] mu_opnd0_w;
+wire [31:0] mu_opnd1_w;
 
 move move_x(
   .cntl(mu_cntl),
@@ -266,7 +266,8 @@ assign opnd1_w = exe_is_mu ? mu_opnd1_w :
 // Update our flag state based on whichever execution unit actually took effect.
 // Only the ALU and meta units can modify flag state, so we don't need to check
 // for the move unit here.
-assign o_eflags = exe_is_alu ? alu_eflags
-                  : (exe_is_meta ? meta_eflags : eflags);
+assign o_eflags = exe_is_alu  ? alu_eflags  :
+                  exe_is_meta ? meta_eflags :
+                                eflags      ;
 
 endmodule

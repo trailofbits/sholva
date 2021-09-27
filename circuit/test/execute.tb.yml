@@ -35,3 +35,9 @@ vector_specs:
     opc: 11 # CMD_CLD
     eflags: 0b11010110101
     o_eflags: 0b01010110101
+  - _description: "execute CMD_MOV (move op)"
+    opc: 28 # CMD_MOV
+    opnd0_r: 0xaaaaaaaa
+    opnd1_r: 0xbbbbbbbb
+    opnd0_w: 0xbbbbbbbb
+    opnd1_w: 0xbbbbbbbb
