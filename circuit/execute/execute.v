@@ -187,7 +187,17 @@ wire exe_is_mu = opc_1hot[`CMD_MOV]   |
                  opc_1hot[`CMD_MOVZX] |
                  opc_1hot[`CMD_XCHG];
 
-wire [31:0] mu_result = 32'b0; // TODO
+wire [31:0] mu_opnd0_w = 32'b0; // TODO
+wire [31:0] mu_opnd1_w = 32'b0; // TODO
+
+move move_x(
+  .opc(opc),
+  .opnd0_r(opnd0_r),
+  .opnd1_r(opnd1_r),
+
+  .opnd0_w(mu_opnd0_w),
+  .opnd1_w(mu_opnd1_w)
+);
 
 ///
 /// END MOVE UNIT
@@ -244,9 +254,9 @@ wire [31:0] meta_eflags = {
 /// END META UNIT
 ///
 
-assign opnd0_w = exe_is_alu ? alu_result :
-                 exe_is_mu  ? mu_result  :
-                              32'b0;
+assign opnd0_w = exe_is_alu ? alu_result  :
+                 exe_is_mu  ? mu_opnd0_w  :
+                              opnd0_r     ; // No operation? Use the input.
 
 // Update our flag state based on whichever execution unit actually took effect.
 // Only the ALU and meta units can modify flag state, so we don't need to check
