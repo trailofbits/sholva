@@ -101,8 +101,8 @@ CMD_LOOP:E0~D8~rr,E1~D8~rr,E2~D8~rr
 CMD_MOV:88~MR~wr,89~MR~wr,8A~RM~wr,8B~RM~wr,8C~MR~wr,8E~RM~wr,B0+rb+ib~OI~wr,B8+r*+i*~OI~wr,C6/0+ib~MI~wr,C7/0+i*~MI~wr
 
 CMD_MOVS:A4~ZO~wr,A5~ZO~wr
-CMD_MOVSX:63~RM~wr,xBE~RM~wr,xBF~RM~wr~S
-CMD_MOVZX:xB6~RM~wr,xB7~RM~wr~Z
+CMD_MOVSX:63~RM~wr~S,xBE~RM~wr~S,xBF~RM~wr~S
+CMD_MOVZX:xB6~RM~wr~Z,xB7~RM~wr~Z
 
 # TODO(ww): MUL writes to EDX:EAX, figure that out.
 CMD_MUL:F6/4~M~Wr,F7/4~M~wWr

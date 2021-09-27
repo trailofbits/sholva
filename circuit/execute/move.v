@@ -3,7 +3,7 @@
 
 module move(
   // Inputs.
-  input [5:0] opc,
+  input cntl,
   input [31:0] opnd0_r,
   input [31:0] opnd1_r,
 
@@ -11,5 +11,14 @@ module move(
   output [31:0] opnd0_w,
   output [31:0] opnd1_w
 );
+
+wire op_is_move = cntl;
+wire op_is_swap = ~op_is_move;
+
+// Move or swap, we always perform SRC -> DST.
+assign opnd0_w = op_is_move ? opnd1_r : opnd1_r;
+
+// For swaps, we also perform the second half.
+assign opnd1_w = op_is_swap ? opnd0_r : opnd1_r;
 
 endmodule

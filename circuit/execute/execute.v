@@ -9,9 +9,8 @@ module execute(
   // TODO(ww): Input signal for 8/16/32 bit opnds
 
   output [31:0] o_eflags,
-  output [31:0] opnd0_w
-  // TODO: opndN_w for outputs
-  // output [31:0] opnd1_w,
+  output [31:0] opnd0_w,
+  output [31:0] opnd1_w
 );
 
 `include "funcs.v"
@@ -102,21 +101,21 @@ wire alu_clear_of = opc_1hot[`CMD_AND] |
                     opc_1hot[`CMD_TEST];
 
 wire [13:0] alu_cntl = {
-                        alu_clear_of,  // 13
-                        alu_clear_cf,  // 12
-                        alu_no_flags,  // 11
-                        alu_op_sub,    // 10
-                        alu_no_wr,     // 9
-                        alu_src_inc,   // 8
-                        alu_use_carry, // 7
-                        alu_op_div,    // 6
-                        alu_op_mul,    // 5
-                        alu_op_xor,    // 4
-                        alu_op_or,     // 3
-                        alu_op_and,    // 2
-                        alu_op_add,    // 1
-                        alu_src_inv    // 0
-                      };
+                          alu_clear_of,  // 13
+                          alu_clear_cf,  // 12
+                          alu_no_flags,  // 11
+                          alu_op_sub,    // 10
+                          alu_no_wr,     // 9
+                          alu_src_inc,   // 8
+                          alu_use_carry, // 7
+                          alu_op_div,    // 6
+                          alu_op_mul,    // 5
+                          alu_op_xor,    // 4
+                          alu_op_or,     // 3
+                          alu_op_and,    // 2
+                          alu_op_add,    // 1
+                          alu_src_inv    // 0
+                       };
 
 // Input arithmetic flag states.
 wire [6:0] status_in = {
@@ -187,11 +186,14 @@ wire exe_is_mu = opc_1hot[`CMD_MOV]   |
                  opc_1hot[`CMD_MOVZX] |
                  opc_1hot[`CMD_XCHG];
 
+// XCHG is the only swap operation, so far.
+wire mu_cntl = exe_is_mu && !opc_1hot[`CMD_XCHG];
+
 wire [31:0] mu_opnd0_w = 32'b0; // TODO
 wire [31:0] mu_opnd1_w = 32'b0; // TODO
 
 move move_x(
-  .opc(opc),
+  .cntl(mu_cntl),
   .opnd0_r(opnd0_r),
   .opnd1_r(opnd1_r),
 
@@ -257,6 +259,9 @@ wire [31:0] meta_eflags = {
 assign opnd0_w = exe_is_alu ? alu_result  :
                  exe_is_mu  ? mu_opnd0_w  :
                               opnd0_r     ; // No operation? Use the input.
+
+assign opnd1_w = exe_is_mu ? mu_opnd1_w :
+                             opnd1_r    ; // TODO(ww): Others.
 
 // Update our flag state based on whichever execution unit actually took effect.
 // Only the ALU and meta units can modify flag state, so we don't need to check

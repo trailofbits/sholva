@@ -8,6 +8,7 @@ inputs:
 outputs:
   - "32 o_eflags"
   - "32 opnd0_w"
+  - "32 opnd1_w"
 vector_specs:
   - _description: "execute CMD_ADD (ALU_OP_ADD)"
     opc: 0 # CMD_ADD
@@ -16,6 +17,8 @@ vector_specs:
     opnd1_r: 0x90abcdef
     o_eflags: 658
     opnd0_w: 0xa2e02467
+    # TODO(ww): Is this reasonable behavior?
+    opnd1_w: 0x90abcdef
   - _description: "execute CMD_STC (meta op, set CF)"
     opc: 50 # CMD_STC
     eflags: 0

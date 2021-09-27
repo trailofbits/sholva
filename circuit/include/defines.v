@@ -109,3 +109,10 @@
 `define ALU_NO_FLAGS  4'd11
 `define ALU_CLEAR_CF  4'd12
 `define ALU_CLEAR_OF  4'd13
+
+// Move unit control signals.
+// The first bit controls whether we're doing a "move" (SRC -> DST)
+// or a "swap" (OP1 -> x, OP2 -> OP1, x -> OP2) operation.
+// We don't have any other bits yet.
+`define MU_MOVE 1'b0
+`define MU_SWAP 1'b1
