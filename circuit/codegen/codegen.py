@@ -118,6 +118,25 @@ def _opc_eq(rhs):
     return _eq("unescaped_instr[7:0]", _lit(8, rhs))
 
 
+def _basic_enc_expr(enc):
+    """
+    Return a generic expression for selecting against an instruction encoding.
+    """
+    if enc["opc_reg_bits"]:
+        # All embedded register operand forms are single-byte, so we keep
+        # it simple here.
+        # TODO(ww): Do we need something else here? We shouldn't since the 0-bit
+        # form of all embedded register encodings is also valid (as EAX), but
+        # maybe I'm forgetting something.
+        enc_expr = _eq("opc_without_regs", _lit(8, enc["opc"]))
+    else:
+        enc_expr = _and(_bool(enc["esc"], "is_2byte"), _opc_eq(enc["opc"]))
+
+    if enc["ext"] is not None:
+        enc_expr = _and(enc_expr, _opc_ext_eq(enc["ext"]))
+    return enc_expr
+
+
 def _opc_ext_eq(rhs):
     """
     Emit an equality expression against the opcode extension bits (reg of ModR/M)
@@ -251,14 +270,7 @@ def _gen_opc_map_v(commands):
         for cmd in commands:
             enc_exprs = []
             for enc in cmd["encs"]:
-                if enc["opc_reg_bits"]:
-                    # All embedded register operand forms are single-byte, so we keep
-                    # it simple here.
-                    enc_expr = _eq("opc_without_regs", _lit(8, enc["opc"]))
-                else:
-                    enc_expr = _and(_bool(enc["esc"], "is_2byte"), _opc_eq(enc["opc"]))
-                if enc["ext"] is not None:
-                    enc_expr = _and(enc_expr, _opc_ext_eq(enc["ext"]))
+                enc_expr = _basic_enc_expr(enc)
                 enc_exprs.append(enc_expr)
             cmd_expr = functools.reduce(_or, enc_exprs)
             cmd_exprs.append((_asdef(cmd["cmd"]), cmd_expr))
@@ -276,11 +288,7 @@ def _gen_opc_map_v(commands):
         for opnd_enc, op_encs in opnd_enc_map.items():
             enc_exprs = []
             for op_enc in op_encs:
-                enc_expr = _and(
-                    _bool(op_enc["esc"], "is_2byte"), _opc_eq(op_enc["opc"])
-                )
-                if op_enc["ext"] is not None:
-                    enc_expr = _and(enc_expr, _opc_ext_eq(op_enc["ext"]))
+                enc_expr = _basic_enc_expr(op_enc)
                 enc_exprs.append(enc_expr)
             opnd_enc_expr = functools.reduce(_or, enc_exprs)
             opnd_enc_exprs.append((_asdef(_OPND_ENC_MAP[opnd_enc][0]), opnd_enc_expr))
@@ -303,9 +311,7 @@ def _gen_opc_map_v(commands):
 
         rb_form_exprs = []
         for enc in rb_forms:
-            rb_form_expr = _and(_bool(enc["esc"], "is_2byte"), _opc_eq(enc["opc"]))
-            if enc["ext"] is not None:
-                rb_form_expr = _and(rb_form_expr, _opc_ext_eq(enc["ext"]))
+            rb_form_expr = _basic_enc_expr(enc)
             rb_form_exprs.append(rb_form_expr)
         print(_assign("reg_1byte", functools.reduce(_or, rb_form_exprs)), file=io)
 
@@ -313,9 +319,7 @@ def _gen_opc_map_v(commands):
 
         ib_form_exprs = []
         for enc in ib_forms:
-            ib_form_expr = _and(_bool(enc["esc"], "is_2byte"), _opc_eq(enc["opc"]))
-            if enc["ext"] is not None:
-                ib_form_expr = _and(ib_form_expr, _opc_ext_eq(enc["ext"]))
+            ib_form_expr = _basic_enc_expr(enc)
             ib_form_exprs.append(ib_form_expr)
         print(_assign("imm_1byte", functools.reduce(_or, ib_form_exprs)), file=io)
 
@@ -343,9 +347,7 @@ def _gen_opc_map_v(commands):
                 for enc in cmd["encs"]:
                     opndN_mode = enc[f"opnd{n}_mode"]
 
-                    enc_expr = _and(_bool(enc["esc"], "is_2byte"), _opc_eq(enc["opc"]))
-                    if enc["ext"] is not None:
-                        enc_expr = _and(enc_expr, _opc_ext_eq(enc["ext"]))
+                    enc_expr = _basic_enc_expr(enc)
 
                     # This encoding reads from this operand.
                     if opndN_mode == "W" or opndN_mode == "r":
@@ -385,9 +387,7 @@ def _gen_opc_map_v(commands):
             for enc in cmd["encs"]:
                 if enc["source_sign_ext"] != "S":
                     continue
-                enc_expr = _and(_bool(enc["esc"], "is_2byte"), _opc_eq(enc["opc"]))
-                if enc["ext"] is not None:
-                    enc_expr = _and(enc_expr, _opc_ext_eq(enc["ext"]))
+                enc_expr = _basic_enc_expr(enc)
                 source_is_sext_exprs.append(enc_expr)
         print(
             _assign("source_is_sext", functools.reduce(_or, source_is_sext_exprs)),
