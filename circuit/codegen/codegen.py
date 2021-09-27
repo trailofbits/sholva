@@ -87,7 +87,14 @@ def _lit(w, n):
     """
     Emit a literal (`n`) of `w` bits.
     """
-    return f"{w}'h{n:x}"
+    # Readability: use binary, hex, etc. based on some common widths.
+    if w == 2:
+        lit = f"b{n:b}"
+    elif w == 8:
+        lit = f"h{n:x}"
+    else:
+        lit = f"d{n}"
+    return f"{w}'{lit}"
 
 
 def _assign(lhs, rhs):
@@ -323,7 +330,7 @@ def _gen_opc_map_v(commands):
             arity_expr = functools.reduce(
                 _or, [_eq("opnd_form", _asdef(form)) for form in forms]
             )
-            arity_exprs.append((f"2'd{arity}", arity_expr))
+            arity_exprs.append((_lit(2, arity), arity_expr))
         print(_assign("opnd_count", _ternary_chain(arity_exprs)), file=io)
 
         # Generate the opnd{0,1,2}_is_{read,write} assignments.
