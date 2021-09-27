@@ -83,6 +83,13 @@ def _define(name, val):
     return f"`define {name} {val}"
 
 
+def _lit(w, n):
+    """
+    Emit a literal (`n`) of `w` bits.
+    """
+    return f"{w}'h{n:x}"
+
+
 def _assign(lhs, rhs):
     """
     Emit an assignment statement.
@@ -101,7 +108,7 @@ def _opc_eq(rhs):
     """
     Emit an equality expression against the opcode bits of the instruction.
     """
-    return _eq("unescaped_instr[7:0]", f"8'h{rhs:x}")
+    return _eq("unescaped_instr[7:0]", _lit(8, rhs))
 
 
 def _opc_ext_eq(rhs):
@@ -109,7 +116,7 @@ def _opc_ext_eq(rhs):
     Emit an equality expression against the opcode extension bits (reg of ModR/M)
     of the instruction.
     """
-    return _eq("unescaped_instr[12:10]", f"3'h{rhs:x}")
+    return _eq("unescaped_instr[12:10]", _lit(3, rhs))
 
 
 def _and(lhs, rhs):
@@ -211,8 +218,8 @@ def _gen_commands_v(commands):
 
         # Numeric forms.
         for idx, cmd in enumerate(commands):
-            print(_define(cmd["cmd"], f"6'd{idx}"), file=io)
-        print(_define("CMD_UNKNOWN", f"6'd{idx + 1}"), file=io)
+            print(_define(cmd["cmd"], _lit(6, idx)), file=io)
+        print(_define("CMD_UNKNOWN",  _lit(6, idx + 1)), file=io)
 
         _br(io, 2)
 
@@ -237,7 +244,12 @@ def _gen_opc_map_v(commands):
         for cmd in commands:
             enc_exprs = []
             for enc in cmd["encs"]:
-                enc_expr = _and(_bool(enc["esc"], "is_2byte"), _opc_eq(enc["opc"]))
+                if enc["opc_reg_bits"]:
+                    # All embedded register operand forms are single-byte, so we keep
+                    # it simple here.
+                    enc_expr = _eq("opc_without_regs", _lit(8, enc["opc"]))
+                else:
+                    enc_expr = _and(_bool(enc["esc"], "is_2byte"), _opc_eq(enc["opc"]))
                 if enc["ext"] is not None:
                     enc_expr = _and(enc_expr, _opc_ext_eq(enc["ext"]))
                 enc_exprs.append(enc_expr)

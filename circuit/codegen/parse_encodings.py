@@ -39,6 +39,7 @@ _EXTENSION_MODES = {"S", "Z"}
 @dataclass(frozen=True)
 class Encoding:
     opc: int
+    opc_reg_bits: bool
     op_enc: str
     num_opnds: int
     ext: Optional[int]
@@ -108,9 +109,12 @@ class Encoding:
         else:
             assert False, f"bad encoding: {raw_enc}"
 
+        opc_reg_bits = op_enc in {"O", "OI", "AO"}
+
         assert opc < 2 ** 8, f"oversized opcode: {opc}"
         return cls(
             opc,
+            opc_reg_bits,
             op_enc,
             _OPERAND_ENCODINGS[op_enc],
             ext,
