@@ -30,12 +30,19 @@ outputs:
   - "32 o_eflags"
 vector_specs:
   - _description: "update one GPR (EBX)"
+
+    # INPUTS
     i_ebx: 0xAAAAAAAA
     dest0_kind: 0b01 # OPND_DEST_REG
     dest0_sel: 3 # EBX
     opnd0_w: 0xBBBBBBBB
+
+    # OUTPUTS
     o_ebx: 0xBBBBBBBB
+
   - _description: "update two GPRs (ECX:EDX)"
+
+    # INPUTS
     i_ecx: 0x11111111
     i_edx: 0x22222222
     dest0_kind: 0b01
@@ -44,17 +51,44 @@ vector_specs:
     dest1_sel: 2 # EDX
     opnd0_w: 0x33333333
     opnd1_w: 0x44444444
+
+    # OUTPUTS
     o_ecx: 0x33333333
     o_edx: 0x44444444
+
   - _description: "update no GPRs (kind is not reg)"
+
+    # INPUTS
     i_eax: 0xAAAAAAAA
     dest0_kind: 0b10 # OPND_DEST_MEM
     dest0_sel: 0 # EAX
     opnd0_w: 0xBBBBBBBB
+
+    # OUTPUTS
     o_eax: 0xAAAAAAAA
+
   - _description: "update EIP"
+
+    # INPUTS
     next_eip: 0x41414141
+
+    # OUTPUTS
     o_eip: 0x41414141
+
   - _description: "update EFLAGS"
+
+    # INPUTS
     next_eflags: 0x12121212
+
+    # OUTPUTS
     o_eflags: 0x12121212
+
+  - _description: "update ECX"
+
+    # INPUTS
+    dest0_kind: 0b01
+    dest0_sel: 1
+    opnd0_w: 0x11111111
+
+    # OUTPUTS
+    o_ecx: 0x11111111

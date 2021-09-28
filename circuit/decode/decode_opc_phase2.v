@@ -19,10 +19,10 @@ module decode_opc_phase2(
   output source_is_sext
 );
 
-wire opc_8byte = ~unescaped_instr[0];
-
-wire opc_assign_rm = ~unescaped_instr[1];
-wire opc_assign_reg = ~opc_assign_reg;
+// A convenience assignment for the opcode byte, with any register operand bits
+// masked off. There aren't any 2-byte encodings that use the embedded operand
+// form, so we don't need any special casing here.
+wire [7:0] opc_without_regs = unescaped_instr[7:0] & 8'b11111000;
 
 // Off to the races.
 `include "codegen/opc_map.gen.v"

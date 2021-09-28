@@ -256,3 +256,17 @@ vector_specs:
     dest0_kind: 0b01
     dest1_kind: 0b00
     dest0_sel: 0 # EAX
+  - _description: "lea ecx, [(eax * 2) + ebx + 2] (eax=0xaaaaaaaa, ebx=0xbbbbbbbb) (~RM)"
+    unescaped_instr: 0x02434c8d
+    eax: 0xaaaaaaaa
+    ebx: 0xbbbbbbbb
+    opc: 25 # CMD_LEA
+    opnd_form: 7 # OPND_ENC_MODREGRM_REG_RM
+    opnd0_is_read: 0
+    opnd0_is_write: 1
+    opnd1_is_read: 1
+    opnd1_is_write: 0
+    opnd0_r: x
+    opnd1_r: 0x11111111
+    dest0_kind: 0b01
+    dest0_sel: 1 # ECX

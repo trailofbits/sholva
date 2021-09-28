@@ -21,15 +21,33 @@ outputs:
   - "32 dest1_sel"
 vector_specs:
   - _description: "ADD eax, ebx (eax=0x12345678, ebx=0x90abcdef)"
+
+    # INPUTS
     raw_instr: 0x90909090909090909090d801
     eax: 0x12345678
     ebx: 0x90abcdef
     esp: 0xffffddb0
-    eip: 0x0804900a
-    eflags: 0x00000202
+
+    # OUTPUTS
     opc: 0 # CMD_ADD
     opnd0_r: 0x12345678
     opnd1_r: 0x90abcdef
     dest0_kind: 1 # OPND_DEST_REG_1HOT
     dest1_kind: 0 # OPND_DEST_NONE
     dest0_sel: 0 # EAX
+
+  - _description: "lea ecx, [(eax * 2) + ebx + 2] (eax=0xaaaaaaaa, ebx=0xbbbbbbbb)"
+
+    # INPUTS
+    raw_instr: 0x02434c8d
+    eax: 0xaaaaaaaa
+    ebx: 0xbbbbbbbb
+
+    # OUTPUTS
+    opc: 25 # CMD_LEA
+    opnd0_r: 0 # NOTE(ww): We never read operand#0.
+    opnd1_r: 0x11111111
+    dest0_kind: 1 # OPND_DEST_REG_1HOT
+    dest1_kind: 0 # OPND_DEST_NONE
+    dest0_sel: 1 # ECX
+    dest1_sel: 0

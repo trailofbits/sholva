@@ -128,7 +128,8 @@ execute execute_x(
   .opnd1_r(opnd1_r),
 
   .o_eflags(next_eflags),
-  .opnd0_w(opnd0_w)
+  .opnd0_w(opnd0_w),
+  .opnd1_w(opnd1_w)
 );
 
 // Register writeback + updates.

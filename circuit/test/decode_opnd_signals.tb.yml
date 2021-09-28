@@ -289,3 +289,20 @@ vector_specs:
     imm: 0x0000aaaa
     opnd0_modrm_rm: 0
     opnd0_disp: 0
+  - _description: "lea ecx, [(eax * 2) + ebx + 2] (eax=0xaaaaaaaa, ebx=0xbbbbbbbb) (~RM)"
+    unescaped_instr: 0x02434c8d
+    opnd_form: 7 # OPND_ENC_MODREGRM_REG_RM
+    prefix_operand_16bit: 0
+    has_imm: 0
+    has_modrm: 1
+    has_sib: 1
+    has_disp: 1
+    is_disp8: 1
+    modrm: 0x4c
+    sib: 0x43
+    disp: 2
+    imm: x
+    opnd0_modrm_reg: 1
+    opnd1_modrm_rm: 1
+    opnd1_disp: 1
+    modrm_rm_is_reg_direct: 0
