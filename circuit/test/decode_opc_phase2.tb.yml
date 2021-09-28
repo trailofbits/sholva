@@ -52,3 +52,15 @@ vector_specs:
     opnd0_is_read: 1
     opnd0_is_write: 1
     opnd1_is_read: 1
+  - _description: "XCHG eax, ebx"
+    unescaped_instr: 0x93
+    is_2byte: 0
+    opc: 55 # CMD_XCHG
+    opnd_form: 10 # OPND_ENC_EAX_REG
+    opnd_count: 2
+    imm_1byte: x
+    reg_1byte: 0
+    opnd0_is_read: 1
+    opnd0_is_write: 1
+    opnd1_is_read: 1
+    opnd1_is_write: 1
