@@ -362,12 +362,19 @@ agu opnd1_r_mem_agu(
   .address(opnd1_r_mem_addr)
 );
 
-wire [31:0] opnd0_r_memval = (~hint1_is_write && hint1_address == opnd0_r_mem_addr) ? hint1_data
+// Edge case: LEA uses the AGU, but doesn't actually read memory.
+// When we have a "phony" operation like this, we return the computed effective
+// address rather than the matching hint's data.
+wire memop_is_phony = opc_1hot[`CMD_LEA];
+
+wire [31:0] opnd0_r_memval = memop_is_phony ? opnd0_r_mem_addr
+                           : (~hint1_is_write && hint1_address == opnd0_r_mem_addr) ? hint1_data
                            : (~hint2_is_write && hint2_address == opnd0_r_mem_addr) ? hint2_data
                            : 32'b0;
 
 
-wire [31:0] opnd1_r_memval = (~hint1_is_write && hint1_address == opnd1_r_mem_addr) ? hint1_data
+wire [31:0] opnd1_r_memval = memop_is_phony ? opnd1_r_mem_addr
+                           : (~hint1_is_write && hint1_address == opnd1_r_mem_addr) ? hint1_data
                            : (~hint2_is_write && hint2_address == opnd1_r_mem_addr) ? hint2_data
                            : 32'b0;
 

@@ -64,3 +64,15 @@ vector_specs:
     opnd0_is_write: 1
     opnd1_is_read: 1
     opnd1_is_write: 1
+  - _description: "lea ecx, [(eax * 2) + ebx + 2]"
+    unescaped_instr: 0x02434c8d
+    is_2byte: 0
+    opc: 25 # CMD_LEA
+    opnd_form: 7 # OPND_ENC_MODREGRM_REG_RM
+    opnd_count: 2
+    imm_1byte: 0
+    reg_1byte: 0
+    opnd0_is_read: 0
+    opnd0_is_write: 1
+    opnd1_is_read: 1
+    opnd1_is_write: 0

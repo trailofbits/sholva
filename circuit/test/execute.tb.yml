@@ -10,7 +10,7 @@ outputs:
   - "32 opnd0_w"
   - "32 opnd1_w"
 vector_specs:
-  - _description: "execute CMD_ADD (ALU_OP_ADD)"
+  - _description: "CMD_ADD (ALU_OP_ADD)"
     opc: 0 # CMD_ADD
     eflags: 514
     opnd0_r: 0x12345678
@@ -19,25 +19,31 @@ vector_specs:
     opnd0_w: 0xa2e02467
     # TODO(ww): Is this reasonable behavior?
     opnd1_w: 0x90abcdef
-  - _description: "execute CMD_STC (meta op, set CF)"
+  - _description: "CMD_STC (meta op, set CF)"
     opc: 50 # CMD_STC
     eflags: 0
     o_eflags: 1 # EFLAGS.CF is bit 0
-  - _description: "execute CMD_CLC (meta op, clear CF)"
+  - _description: "CMD_CLC (meta op, clear CF)"
     opc: 10 # CMD_CLC
     eflags: 1
     o_eflags: 0 # EFLAGS.CF is bit 0
-  - _description: "execute CMD_STD (meta op, set DF)"
+  - _description: "CMD_STD (meta op, set DF)"
     opc: 51 # CMD_STD
     eflags: 0b00000000000
     o_eflags: 0b10000000000 # EFLAGS.DF is bit 10
-  - _description: "execute CMD_CLD (meta, op, clear DF)"
+  - _description: "CMD_CLD (meta, op, clear DF)"
     opc: 11 # CMD_CLD
     eflags: 0b11010110101
     o_eflags: 0b01010110101
-  - _description: "execute CMD_MOV (move op)"
+  - _description: "CMD_MOV (move op)"
     opc: 28 # CMD_MOV
     opnd0_r: 0xaaaaaaaa
     opnd1_r: 0xbbbbbbbb
     opnd0_w: 0xbbbbbbbb
     opnd1_w: 0xbbbbbbbb
+  - _description: "CMD_LEA (move op)"
+    opc: 25 # CMD_LEA
+    opnd0_r: 0x00000000
+    opnd1_r: 0x11111111
+    opnd0_w: 0x11111111
+    opnd1_w: 0x11111111
