@@ -11,6 +11,7 @@ inputs:
   - "32 esp"
   - "32 ebp"
 outputs:
+  - "4 instr_len"
   - "6 opc"
   - "32 opnd0_r"
   - "32 opnd1_r"
@@ -19,17 +20,17 @@ outputs:
   - "2 dest1_kind"
   - "32 dest0_sel"
   - "32 dest1_sel"
-  - "4 instr_len"
 vector_specs:
   - _description: "ADD eax, ebx (eax=0x12345678, ebx=0x90abcdef)"
 
     # INPUTS
-    raw_instr: 0x90909090909090909090d801
+    raw_instr: 0xd801
     eax: 0x12345678
     ebx: 0x90abcdef
     esp: 0xffffddb0
 
     # OUTPUTS
+    instr_len: 2
     opc: 0 # CMD_ADD
     opnd0_r: 0x12345678
     opnd1_r: 0x90abcdef
@@ -45,6 +46,7 @@ vector_specs:
     ebx: 0xbbbbbbbb
 
     # OUTPUTS
+    instr_len: 4
     opc: 25 # CMD_LEA
     opnd0_r: 0 # NOTE(ww): We never read operand#0.
     opnd1_r: 0x11111111

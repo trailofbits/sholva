@@ -93,6 +93,8 @@ decode_opc_phase2 decode_opc_phase2_x(
 // Decode operands (phase 1): take the operand form and some information about widths,
 // return concrete operand (read) values and a write selector.
 
+wire [3:0] instr_body_len;
+
 decode_opnds decode_opnds_x(
   // Inputs
   .unescaped_instr(unescaped_instr),
@@ -128,6 +130,7 @@ decode_opnds decode_opnds_x(
   .source_is_sext(source_is_sext),
 
   // Outputs
+  .instr_body_len(instr_body_len),
   .opnd0_r(opnd0_r),
   .opnd1_r(opnd1_r),
   .opnd2_r(opnd2_r),
@@ -137,7 +140,9 @@ decode_opnds decode_opnds_x(
   .dest1_sel(dest1_sel)
 );
 
-assign instr_len = 4'd0;
-
+// The instruction length is the number of prefix bytes (0/1/2),
+// the core opcode length (1/2), the presence of ModR/M (0/1) and SIB (0/1),
+// and then the displacement (0/1/2/4) and immediate (0/1/2/4) bytes.
+assign instr_len = prefix_count + (is_2byte ? 4'd2 : 4'd1) + instr_body_len;
 
 endmodule

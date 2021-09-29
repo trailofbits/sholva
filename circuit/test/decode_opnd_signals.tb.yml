@@ -8,6 +8,7 @@ inputs:
   - "1 imm_1byte"
   - "1 source_is_sext"
 outputs:
+  - "4 imm_disp_len"
   - "1 has_imm"
   - "1 has_modrm"
   - "1 has_sib"
@@ -27,14 +28,25 @@ outputs:
   - "1 opnd1_disp"
 vector_specs:
   - _description: "push EAX (no imm/modrm/sib/disp)"
+
+    # INPUTS
     unescaped_instr: 0x50
     opnd_form: 0 # OPND_ENC_NONE
+
+    # OUTPUTS
+    imm_disp_len: 0
     has_imm: 0
     has_sib: 0
     has_disp: 0
+
   - _description: "add EAX, EBX (modrm, ~MR)"
+
+    # INPUTS
     unescaped_instr: 0xd801
     opnd_form: 6 # OPND_ENC_MODREGRM_RM_REG
+
+    # OUTPUTS
+    imm_disp_len: 0
     has_imm: 0
     has_modrm: 1
     has_sib: 0
@@ -43,9 +55,15 @@ vector_specs:
     modrm_rm_is_reg_direct: 1
     opnd0_modrm_rm: 1
     opnd1_modrm_reg: 1
+
   - _description: "add EAX, EBX (modrm, ~RM)"
+
+    # INPUTS
     unescaped_instr: 0xc303
     opnd_form: 7 # OPND_ENC_MODREGRM_REG_RM
+
+    # OUTPUTS
+    imm_disp_len: 0
     has_imm: 0
     has_modrm: 1
     has_sib: 0
@@ -54,9 +72,14 @@ vector_specs:
     modrm_rm_is_reg_direct: 1
     opnd0_modrm_reg: 1
     opnd1_modrm_rm: 1
+
   - _description: "add EAX, [ESP] (modrm + sib)"
+
+    # INPUTS
     unescaped_instr: 0x240403
     opnd_form: 7 # OPND_ENC_MODREGRM_REG_RM
+
+    # OUTPUTS
     has_imm: 0
     has_modrm: 1
     has_sib: 1
@@ -67,9 +90,14 @@ vector_specs:
     opnd0_modrm_reg: 1
     opnd1_modrm_rm: 1
     opnd1_modrm_reg: 0
+
   - _description: "add EAX, [ESP+8] (modrm + sib + disp8)"
+    # INPUTS
     unescaped_instr: 0x08244403
     opnd_form: 7 # OPND_ENC_MODREGRM_REG_RM
+
+    # OUTPUTS
+    imm_disp_len: 1
     has_imm: 0
     has_modrm: 1
     has_sib: 1
@@ -84,9 +112,15 @@ vector_specs:
     opnd1_modrm_reg: 0
     opnd1_modrm_rm: 1
     opnd1_disp: 1
+
   - _description: "add EAX, [ESP + 0xAAAA] (modrm + sib + disp32)"
+
+    # INPUTS
     unescaped_instr: 0x0000aaaa248403
     opnd_form: 7 # OPND_ENC_MODREGRM_REG_RM
+
+    # OUTPUTS
+    imm_disp_len: 4
     has_imm: 0
     has_modrm: 1
     has_sib: 1
@@ -100,9 +134,15 @@ vector_specs:
     opnd1_modrm_reg: 0
     opnd1_modrm_rm: 1
     opnd1_disp: 1
+
   - _description: "jne 0x14 (disp8)"
+
+    # INPUTS
     unescaped_instr: 0x1275
     opnd_form: 2 # OPND_ENC_DISP8
+
+    # OUTPUTS
+    imm_disp_len: 1
     has_imm: 0
     has_modrm: 0
     has_sib: 0
@@ -112,9 +152,15 @@ vector_specs:
     modrm: x
     disp: 0x12 # NOTE(ww): 0x12 for relative JNE
     opnd0_disp: 1
+
   - _description: "jmp 0xa (disp32)"
+
+    # INPUTS
     unescaped_instr: 0x00000006e9
     opnd_form: 14 # OPND_ENC_DISP32
+
+    # OUTPUTS
+    imm_disp_len: 4
     has_imm: 0
     has_modrm: 0
     has_sib: 0
@@ -124,12 +170,17 @@ vector_specs:
     modrm: x
     disp: 0x6 # NOTE(ww): 0x6 for relative JMP
     opnd0_disp: 1
+
   - _description: "add EAX, 0x05 (imm8)"
+    # INPUTS
     unescaped_instr: 0x05c083
     opnd_form: 5 # OPND_ENC_MODREGRM_RM_IMM
     prefix_address_16bit: 0
     prefix_operand_16bit: 0
     imm_1byte: 1
+
+    # OUTPUTS
+    imm_disp_len: 1
     has_imm: 1
     has_modrm: 1
     has_sib: 0
@@ -141,13 +192,19 @@ vector_specs:
     imm: 0x05
     modrm_rm_is_reg_direct: 1
     opnd0_modrm_rm: 1
+
   - _description: "add EAX, 0xaa (sext, imm8)"
+
+    # INPUTS
     unescaped_instr: 0xaac083
     opnd_form: 5 # OPND_ENC_MODREGRM_RM_IMM
     prefix_address_16bit: 0
     prefix_operand_16bit: 0
     imm_1byte: 1
     source_is_sext: 1
+
+    # OUTPUTS
+    imm_disp_len: 1
     has_imm: 1
     has_modrm: 1
     has_sib: 0
@@ -159,11 +216,17 @@ vector_specs:
     imm: 0xffffffaa
     modrm_rm_is_reg_direct: 1
     opnd0_modrm_rm: 1
-  - _description: "add EAX, 0xaa"
-    unescaped_instr: 0x000000aa05
+
+  - _description: "add EAX, 0xaa0000aa"
+
+    # INPUTS
+    unescaped_instr: 0xaa0000aa05
     opnd_form: 9 # OPND_ENC_EAX_IMM
     prefix_address_16bit: 0
     prefix_operand_16bit: 0
+
+    # OUTPUTS
+    imm_disp_len: 4
     has_imm: 1
     has_modrm: 0
     has_sib: 0
@@ -172,15 +235,21 @@ vector_specs:
     is_disp32: 0
     modrm: x
     sib: x
-    imm: 0x000000aa
+    imm: 0xaa0000aa
     modrm_rm_is_reg_direct: 0
     opnd0_modrm_rm: 0
+
   - _description: "add [eax], 0x05 (imm8)"
+
+    # INPUTS
     unescaped_instr: 0x050080
     opnd_form: 5 # OPND_ENC_MODREGRM_RM_IMM
     prefix_address_16bit: 0
     prefix_operand_16bit: 0
     imm_1byte: 1
+
+    # OUTPUTS
+    imm_disp_len: 1
     has_imm: 1
     has_modrm: 1
     has_sib: 0
@@ -189,12 +258,18 @@ vector_specs:
     sib: x
     imm: 0x05
     opnd0_modrm_rm: 1
+
   - _description: "add [eax], word 0x0505 (imm16)"
+
+    # INPUTS
     unescaped_instr: 0x05050081
     opnd_form: 5 # OPND_ENC_MODREGRM_RM_IMM
     prefix_address_16bit: 0
     prefix_operand_16bit: 1
     imm_1byte: 0
+
+    # OUTPUTS
+    imm_disp_len: 2
     has_imm: 1
     has_modrm: 1
     has_sib: 0
@@ -203,12 +278,18 @@ vector_specs:
     sib: x
     imm: 0x0505
     opnd0_modrm_rm: 1
+
   - _description: "add eax, 0xfefefefe (imm32)"
+
+    # INPUTS
     unescaped_instr: 0xfefefefe05
     opnd_form: 9 # OPND_ENC_EAX_IMM
     prefix_address_16bit: 0
     prefix_operand_16bit: 0
     imm_1byte: 0
+
+    # OUTPUTS
+    imm_disp_len: 4
     has_imm: 1
     has_modrm: 0
     has_sib: 0
@@ -216,9 +297,15 @@ vector_specs:
     modrm: x
     sib: x
     imm: 0xfefefefe
+
   - _description: "add [eax + 4], 0xfafbfcfd (disp8, imm32)"
+
+    # INPUTS
     unescaped_instr: 0xfafbfcfd044081
     opnd_form: 5 # OPND_ENC_MODREGRM_RM_IMM
+
+    # OUTPUTS
+    imm_disp_len: 5
     has_imm: 1
     has_modrm: 1
     has_sib: 0
@@ -230,9 +317,15 @@ vector_specs:
     imm: 0xfafbfcfd
     opnd0_modrm_rm: 1
     opnd0_disp: 1
+
   - _description: "add [eax + 0xAAAA], 0xfafbfcfd (disp32, imm32)"
+
+    # INPUTS
     unescaped_instr: 0xfafbfcfd0000aaaa8081
     opnd_form: 5 # OPND_ENC_MODREGRM_RM_IMM
+
+    # OUTPUTS
+    imm_disp_len: 8
     has_imm: 1
     has_modrm: 1
     has_sib: 0
@@ -245,9 +338,15 @@ vector_specs:
     imm: 0xfafbfcfd
     opnd0_modrm_rm: 1
     opnd0_disp: 1
+
   - _description: "add [EAX + (EBX * 4) + 0xBBBB], 0xAAAA (SIB, disp32, imm32)"
+
+    # INPUTS
     unescaped_instr: 0x0000aaaa0000bbbb988481
     opnd_form: 5 # OPND_ENC_MODREGRM_RM_IMM
+
+    # OUTPUTS
+    imm_disp_len: 8
     has_imm: 1
     has_modrm: 1
     has_sib: 1
@@ -259,10 +358,16 @@ vector_specs:
     imm: 0xAAAA
     opnd0_modrm_rm: 1
     opnd0_disp: 1
+
   - _description: "add [EAX + (EBX * 4) + 0xBBBB], 0x1111 (SIB, disp32, imm16)"
+
+    # INPUTS
     unescaped_instr: 0xbbbb11110000bbbb988481 # NOTE(ww): 0xbbbb at the end to prevent false positives
     opnd_form: 5 # OPND_ENC_MODREGRM_RM_IMM
     prefix_operand_16bit: 1
+
+    # OUTPUTS
+    imm_disp_len: 6
     has_imm: 1
     has_modrm: 1
     has_sib: 1
@@ -274,10 +379,16 @@ vector_specs:
     imm: 0x1111
     opnd0_modrm_rm: 1
     opnd0_disp: 1
+
   - _description: "add AX, 0xaaaa (zext)"
+
+    # INPUTS
     unescaped_instr: 0xaaaa05
     opnd_form: 9 # OPND_ENC_EAX_IMM
     prefix_operand_16bit: 1
+
+    # OUTPUTS
+    imm_disp_len: 2
     has_imm: 1
     has_modrm: 0
     has_sib: 0
@@ -289,10 +400,16 @@ vector_specs:
     imm: 0x0000aaaa
     opnd0_modrm_rm: 0
     opnd0_disp: 0
+
   - _description: "lea ecx, [(eax * 2) + ebx + 2] (eax=0xaaaaaaaa, ebx=0xbbbbbbbb) (~RM)"
+
+    # INPUTS
     unescaped_instr: 0x02434c8d
     opnd_form: 7 # OPND_ENC_MODREGRM_REG_RM
     prefix_operand_16bit: 0
+
+    # OUTPUTS
+    imm_disp_len: 1
     has_imm: 0
     has_modrm: 1
     has_sib: 1
