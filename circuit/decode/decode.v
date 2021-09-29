@@ -143,6 +143,6 @@ decode_opnds decode_opnds_x(
 // The instruction length is the number of prefix bytes (0/1/2),
 // the core opcode length (1/2), the presence of ModR/M (0/1) and SIB (0/1),
 // and then the displacement (0/1/2/4) and immediate (0/1/2/4) bytes.
-assign instr_len = prefix_count + (is_2byte ? 4'd2 : 4'd1) + instr_body_len;
+assign instr_len = {2'd0, prefix_count} + (is_2byte ? 4'd2 : 4'd1) + instr_body_len;
 
 endmodule
