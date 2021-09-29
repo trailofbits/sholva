@@ -16,6 +16,7 @@ module decode(
   input [31:0] hint2_address,
   input [31:0] hint2_data,
 
+  output [3:0] instr_len,
   output [5:0] opc,
   output [31:0] opnd0_r,
   output [31:0] opnd1_r,
@@ -135,6 +136,8 @@ decode_opnds decode_opnds_x(
   .dest0_sel(dest0_sel),
   .dest1_sel(dest1_sel)
 );
+
+assign instr_len = 4'd0;
 
 
 endmodule

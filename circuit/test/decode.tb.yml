@@ -19,6 +19,7 @@ outputs:
   - "2 dest1_kind"
   - "32 dest0_sel"
   - "32 dest1_sel"
+  - "4 instr_len"
 vector_specs:
   - _description: "ADD eax, ebx (eax=0x12345678, ebx=0x90abcdef)"
 
