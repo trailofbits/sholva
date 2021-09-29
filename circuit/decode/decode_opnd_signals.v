@@ -9,6 +9,7 @@ module decode_opnd_signals(
   input imm_1byte,
   input source_is_sext,
 
+  output [3:0] imm_disp_len,
   output has_imm,
   output has_modrm,
   output has_sib,
@@ -147,8 +148,17 @@ assign opnd1_disp = has_disp && opnd1_modrm_rm;
 
 wire is_imm8 = has_imm && imm_1byte;
 wire is_imm16 = has_imm && prefix_operand_16bit;
-wire has_imm32 = has_imm && ~(is_imm8 || ~is_imm16);
+wire is_imm32 = has_imm && (~is_imm8 && ~is_imm16);
 
 `include "codegen/imm.gen.v"
+
+wire [3:0] imm_len = is_imm32 ? 4 :
+                     is_imm16 ? 2 :
+                     is_imm8  ? 1 : 0;
+
+wire [3:0] disp_len = is_disp32 ? 4 :
+                      is_disp8  ? 1 : 0;
+
+assign imm_disp_len = imm_len + disp_len;
 
 endmodule

@@ -77,6 +77,7 @@ decode_hint decode_hint2(
 // Core instruction decoding: extract the core instruction semantics, decompose
 // operands into their concrete 32-bit values, extract reg/mem selectors for
 // writeback.
+wire [3:0] instr_len;
 wire [5:0] opc;
 wire [31:0] opnd0_r;
 wire [31:0] opnd1_r;
@@ -105,6 +106,7 @@ decode decode_instr(
   .hint2_address(hint2_address),
   .hint2_data(hint2_data),
 
+  .instr_len(instr_len),
   .opc(opc),
   .opnd0_r(opnd0_r),
   .opnd1_r(opnd1_r),

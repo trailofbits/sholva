@@ -27,6 +27,7 @@ module decode_opnds(
   input opnd2_is_write,
   input source_is_sext,
 
+  output [3:0] instr_body_len,
   output [31:0] opnd0_r,
   output [31:0] opnd1_r,
   output [31:0] opnd2_r,
@@ -39,6 +40,7 @@ module decode_opnds(
 
 `include "funcs.v"
 
+wire [3:0] imm_disp_len;
 wire has_imm;
 wire has_modrm;
 wire has_sib;
@@ -70,6 +72,7 @@ decode_opnd_signals decode_opnd_signals_x(
   .source_is_sext(source_is_sext),
 
   // Outputs
+  .imm_disp_len(imm_disp_len),
   .has_imm(has_imm),
   .has_modrm(has_modrm),
   .has_sib(has_sib),
@@ -418,5 +421,7 @@ assign dest0_sel = dest0_kind[`OPND_DEST_REG] ?
                                  { 29'b0, opnd0_r_regsel } : 32'b0;
 assign dest1_sel = dest1_kind[`OPND_DEST_REG] ?
                                  { 29'b0, opnd1_r_regsel } : 32'b0;
+
+assign instr_body_len = (has_modrm ? 4'd1 : 4'd0) + (has_sib ? 4'd1 : 4'd0) + imm_disp_len;
 
 endmodule
