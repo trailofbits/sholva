@@ -135,7 +135,8 @@ execute execute_x(
 );
 
 // Register writeback + updates.
-wire [31:0] next_eip = 32'd0; // TODO
+// TODO(ww): Control flow transfers.
+wire [31:0] next_eip = eip + {28'd0, instr_len};
 
 regfile regfile_x(
   .i_eax(eax),
