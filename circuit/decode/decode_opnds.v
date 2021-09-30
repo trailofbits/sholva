@@ -414,7 +414,10 @@ wire [31:0] opnd1_r_immval = imm;
 // NOTE(ww): Our displacement handling is simple, since we only support two
 // displacement operand forms and both are unary.
 
-wire opnd0_is_disp = 1'b0;
+wire opnd0_is_disp = opnd_form_1hot[`OPND_ENC_DISP8] ||
+                     opnd_form_1hot[`OPND_ENC_DISP32];
+
+wire [31:0] opnd0_r_dispval = disp;
 
 ///
 /// END DISPLACEMENT OPERANDS
@@ -431,9 +434,10 @@ wire opnd0_is_disp = 1'b0;
 // opndN_r_regval, opndN_r_memval, opndN_r_immval, etc.
 // TODO(ww): Also handle special operand fixups here. For example, opnd1_r
 // will be 32'b1 for CMD_NOT.
-assign opnd0_r = opnd0_is_reg ? opnd0_r_regval :
-                 opnd0_is_mem ? opnd0_r_memval :
-                 opnd0_is_imm ? opnd0_r_immval : 32'b0;
+assign opnd0_r = opnd0_is_reg  ? opnd0_r_regval  :
+                 opnd0_is_mem  ? opnd0_r_memval  :
+                 opnd0_is_imm  ? opnd0_r_immval  :
+                 opnd0_is_disp ? opnd0_r_dispval : 32'b0;
 
 assign opnd1_r = opnd1_is_reg ? opnd1_r_regval :
                  opnd1_is_mem ? opnd1_r_memval :
