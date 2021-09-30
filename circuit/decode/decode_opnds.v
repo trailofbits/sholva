@@ -136,6 +136,7 @@ wire opnd0_is_reg = opnd_form_1hot[`OPND_ENC_REG] ||
                     opnd_form_1hot[`OPND_ENC_MODREGRM_RM] ||
                     opnd_form_1hot[`OPND_ENC_EAX_IMM] ||
                     opnd_form_1hot[`OPND_ENC_EAX_REG] ||
+                    opnd_form_1hot[`OPND_ENC_REG_IMM] ||
                     (opnd0_modrm_rm && modrm_rm_is_reg_direct) ||
                     opnd0_modrm_reg;
 
@@ -386,6 +387,39 @@ wire [31:0] opnd1_r_memval = memop_is_phony ? opnd1_r_mem_addr
 /// END MEMORY OPERANDS
 ///
 
+///
+/// BEGIN IMMEDIATE OPERANDS
+///
+
+// TODO(ww): Trinary opcode forms where operand#2 is an immediate.
+
+wire opnd0_is_imm = opnd_form_1hot[`OPND_ENC_IMM];
+
+wire opnd1_is_imm = opnd_form_1hot[`OPND_ENC_MODREGRM_RM_IMM] ||
+                    opnd_form_1hot[`OPND_ENC_REG_IMM] ||
+                    opnd_form_1hot[`OPND_ENC_EAX_IMM];
+
+// Unconditionally assign these, since we'll mux them correctly later.
+wire [31:0] opnd0_r_immval = imm;
+wire [31:0] opnd1_r_immval = imm;
+
+///
+/// END IMMEDIATE OPERANDS
+///
+
+///
+/// BEGIN DISPLACEMENT OPERANDS
+///
+
+// NOTE(ww): Our displacement handling is simple, since we only support two
+// displacement operand forms and both are unary.
+
+wire opnd0_is_disp = 1'b0;
+
+///
+/// END DISPLACEMENT OPERANDS
+///
+
 // TODO(ww): Immediate and memory operands.
 // TODO(ww): "Implicit" immediates, like `INC reg` -> `ADD reg, 1`
 
@@ -398,9 +432,12 @@ wire [31:0] opnd1_r_memval = memop_is_phony ? opnd1_r_mem_addr
 // TODO(ww): Also handle special operand fixups here. For example, opnd1_r
 // will be 32'b1 for CMD_NOT.
 assign opnd0_r = opnd0_is_reg ? opnd0_r_regval :
-                 opnd0_is_mem ? opnd0_r_memval : 32'b0;
+                 opnd0_is_mem ? opnd0_r_memval :
+                 opnd0_is_imm ? opnd0_r_immval : 32'b0;
+
 assign opnd1_r = opnd1_is_reg ? opnd1_r_regval :
-                 opnd1_is_mem ? opnd1_r_memval : 32'b0;
+                 opnd1_is_mem ? opnd1_r_memval :
+                 opnd1_is_imm ? opnd1_r_immval : 32'b0;
 
 
 assign opnd2_r = 32'd0;

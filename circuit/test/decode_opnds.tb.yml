@@ -365,6 +365,41 @@ vector_specs:
     dest1_kind: 0b00
     dest0_sel: 0 # EAX
 
+  - _description: "add EAX, 0xaaaaaaaa (EAX=1)"
+
+    # INPUTS
+    unescaped_instr: 0xaaaaaaaa05
+    eax: 1
+    opnd_form: 9 # OPND_ENC_EAX_IMM
+    opnd0_is_read: 1
+    opnd0_is_write: 1
+    opnd1_is_read: 1
+
+    # OUTPUTS
+    instr_body_len: 4 # imm32
+    opnd0_r: 1
+    opnd1_r: 0xaaaaaaaa
+    dest0_kind: 0b01
+    dest1_kind: 0b00
+    dest0_sel: 0 # EAX
+
+  - _description: "mov EAX, 0xaaaaaaaa"
+
+    # INPUTS
+    unescaped_instr: 0xaaaaaaaab8
+    opnd_form: 8 # OPND_ENC_REG_IMM
+    opnd0_is_read: 0
+    opnd0_is_write: 1
+    opnd1_is_read: 1
+
+    # OUTPUTS
+    instr_body_len: 4 # imm32
+    opnd0_r: 0
+    opnd1_r: 0xaaaaaaaa
+    dest0_kind: 0b01
+    dest1_kind: 0b00
+    dest0_sel: 0 # EAX
+
   - _description: "lea ecx, [(eax * 2) + ebx + 2] (eax=0xaaaaaaaa, ebx=0xbbbbbbbb) (~RM)"
 
     # INPUTS
