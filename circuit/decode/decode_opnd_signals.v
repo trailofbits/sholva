@@ -49,7 +49,8 @@ assign opnd0_modrm_rm = opnd_form_1hot[`OPND_ENC_MODREGRM_RM] ||
                       opnd_form_1hot[`OPND_ENC_MODREGRM_RM_IMM] ||
                       opnd_form_1hot[`OPND_ENC_MODREGRM_RM_REG] ||
                       opnd_form_1hot[`OPND_ENC_MODREGRM_RM_REG_IMM] ||
-                      opnd_form_1hot[`OPND_ENC_MODREGRM_RM_REG_CL];
+                      opnd_form_1hot[`OPND_ENC_MODREGRM_RM_REG_CL] ||
+                      opnd_form_1hot[`OPND_ENC_MODREGRM_RM_CL];
 
 
 // ModR/M encodings where REG is operand#0 (i.e. op.d=1)

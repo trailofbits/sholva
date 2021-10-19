@@ -26,6 +26,7 @@ _OPERAND_ENCODINGS = {
     "OI": 2,
     "AI": 2,
     "AO": 2,
+    "MC": 2,
     "RMI": 3,
     "MRI": 3,
     "MRC": 3,

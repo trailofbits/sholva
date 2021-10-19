@@ -60,6 +60,9 @@
 // Unary, 32-bit displacement operand.
 `define OPND_ENC_DISP32 4'd14
 
+// Binary, r/m of ModR/M for r(+w), CL for read.
+`define OPND_ENC_MODREGRM_RM_CL 4'd15
+
 // Unknown operand encoding, should never be hit.
 `define OPND_ENC_UNKNOWN 4'dx
 

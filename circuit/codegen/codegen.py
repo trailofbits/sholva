@@ -31,6 +31,7 @@ _OPND_ENC_MAP = {
     "OI": ("OPND_ENC_REG_IMM", 2),
     "AI": ("OPND_ENC_EAX_IMM", 2),
     "AO": ("OPND_ENC_EAX_REG", 2),
+    "MC": ("OPND_ENC_MODREGRM_RM_CL", 2),
     "RMI": ("OPND_ENC_MODREGRM_REG_RM_IMM", 3),
     "MRI": ("OPND_ENC_MODREGRM_RM_REG_IMM", 3),
     "MRC": ("OPND_ENC_MODREGRM_RM_REG_CL", 3),

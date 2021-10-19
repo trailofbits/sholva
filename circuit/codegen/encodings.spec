@@ -31,6 +31,7 @@
 #   - `~OI`: Binary, reg of lower opcode bits for r(+w) and immediate for read
 #   - `~AI`: Binary, implicit accumulator reg for r(+w) and immediate for read
 #   - `~AO`: Binary, implicit accumulator reg for r(+w) and reg of opcode bits for r(+w)
+#   - `~MC`: Binary, r/m of ModR/M for r(+w) and CL for read
 #   - `~RMI`: Trinary, reg of Mod/RM for r(+w), r/m of ModR/M for read, immediate for read
 #   - `~MRI`: Trinary, r/m of ModR/M for r(+w), reg of ModR/M for read, immediate for read
 #   - `~MRC`: Trinary, r/m of ModR/M for r(+w), reg of ModR/M for read, implicit CL reg for read
@@ -152,15 +153,17 @@ CMD_XCHG:86~RM~WW,87~RM~WW,90+r*~AO~WW
 CMD_XOR:30~MR~Wr,31~MR~Wr,32~RM~Wr,33~RM~Wr,34+ib~I~Wr,35+i*~I~Wr,80/6+ib~MI~Wr,81/6+i*~MI~Wr,83/6+ib~MI~Wr~S
 
 # TODO(ww): Support all the hellish shift variants.
+# TODO(ww): Maybe remove RCL/RCR, since nothing uses them.
+# TODO(ww): Figure out how to differentiate the 8 bit semantics here.
 # NOTE(ww): x86's SAL and SHL semantics are identical, and share the same encoding.
 # NOTE(ww): D0/6 is undocumented but supposedly identical to D0/4. Worth supporting?
-CMD_SHL:D0/4~M~Wr
+CMD_SHL:D0/4~M~Wr,D2/4~MC~Wr,C0/4+ib~MI~Wr,D1/4~M~Wr,D3/4~MC~Wr,C1/4+ib~MI~Wr
 
-CMD_SAR:D0/7~M~Wr
-CMD_SHR:D0/5~M~Wr
+CMD_SAR:D0/7~M~Wr,D2/7~MC~Wr,C0/7+ib~MI~Wr,D1/7~M~Wr,D3/7~MC~Wr,C1/7+ib~MI~Wr
+CMD_SHR:D0/5~M~Wr,D2/5~MC~Wr,C0/5+ib~MI~Wr,D1/5~M~Wr,D3/5~MC~Wr,C1/5+ib~MI~Wr
 
-CMD_ROL:D0/0~M~Wr
-CMD_RCL:D0/2~M~Wr
+CMD_ROL:D0/0~M~Wr,D2/0~MC~Wr,C0/0+ib~MI~Wr,D1/0~M~Wr,D3/0~MC~Wr,C1/0+ib~MI~Wr
+CMD_RCL:D0/2~M~Wr,D2/2~MC~Wr,C0/2+ib~MI~Wr,D1/2~M~Wr,D3/2~MC~Wr,C1/2+ib~MI~Wr
 
-CMD_ROR:D0/1~M~Wr
-CMD_RCR:D0/3~M~Wr
+CMD_ROR:D0/1~M~Wr,D2/1~MC~Wr,C0/1+ib~MI~Wr,D1/1~M~Wr,D3/1~MC~Wr,C1/1+ib~MI~Wr
+CMD_RCR:D0/3~M~Wr,D2/3~MC~Wr,C0/3+ib~MI~Wr,D1/3~M~Wr,D3/3~MC~Wr,C1/3+ib~MI~Wr
