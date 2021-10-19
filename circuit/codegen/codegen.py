@@ -469,8 +469,8 @@ def main():
     commands = json.loads(_COMMANDS_JSON.read_text())
 
     assert (
-        len(commands) <= CMD_MAX
-    ), f"|commands| ({len(commands)}) > {CMD_MAX}; increase the wire size"
+        len(commands) < CMD_MAX
+    ), f"|commands| ({len(commands)}) >= {CMD_MAX}; increase the wire size"
 
     _gen_commands_v(commands)
     _gen_opc_map_v(commands)
