@@ -12,7 +12,7 @@ inputs:
   - "32 ebp"
 outputs:
   - "4 instr_len"
-  - "6 opc"
+  - "7 opc"
   - "32 opnd0_r"
   - "32 opnd1_r"
   - "32 opnd2_r"

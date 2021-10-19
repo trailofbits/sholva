@@ -40,6 +40,9 @@ _OPND_ENC_MAP = {
 _V_TRUE = "1'b1"
 _V_FALSE = "1'b0"
 
+CMD_WIRE_SIZE = 7
+CMD_MAX = (2 ** CMD_WIRE_SIZE) - 1
+
 
 def _header():
     """
@@ -244,13 +247,13 @@ def _gen_commands_v(commands):
 
         # Numeric forms.
         for idx, cmd in enumerate(commands):
-            print(_define(cmd["cmd"], _lit(6, idx)), file=io)
-        print(_define("CMD_UNKNOWN",  _lit(6, idx + 1)), file=io)
+            print(_define(cmd["cmd"], _lit(CMD_WIRE_SIZE, idx)), file=io)
+        print(_define("CMD_UNKNOWN", _lit(CMD_WIRE_SIZE, idx + 1)), file=io)
 
         _br(io, 2)
 
         # One-hot forms.
-        hotlen = 2 ** 6
+        hotlen = 2 ** CMD_WIRE_SIZE
         for idx, cmd in enumerate(commands):
             bitstring = _1hot(hotlen, idx)
             print(_define(f"{cmd['cmd']}_1HOT", f"{hotlen}'b{bitstring}"), file=io)
@@ -465,7 +468,9 @@ def main():
 
     commands = json.loads(_COMMANDS_JSON.read_text())
 
-    assert len(commands) < (2 ** 6) - 1, "|commands| > 63; increase the wire size"
+    assert (
+        len(commands) <= CMD_MAX
+    ), f"|commands| ({len(commands)}) > {CMD_MAX}; increase the wire size"
 
     _gen_commands_v(commands)
     _gen_opc_map_v(commands)

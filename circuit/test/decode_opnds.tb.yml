@@ -16,7 +16,7 @@ inputs:
   - "1 hint2_is_write"
   - "32 hint2_address"
   - "32 hint2_data"
-  - "6 opc"
+  - "7 opc"
   - "4 opnd_form"
   - "1 imm_1byte"
   - "1 reg_1byte"

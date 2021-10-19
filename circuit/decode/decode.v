@@ -17,7 +17,7 @@ module decode(
   input [31:0] hint2_data,
 
   output [3:0] instr_len,
-  output [5:0] opc,
+  output [6:0] opc,
   output [31:0] opnd0_r,
   output [31:0] opnd1_r,
   output [31:0] opnd2_r,

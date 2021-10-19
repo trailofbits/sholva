@@ -5,7 +5,7 @@ module decode_opc_phase2(
   input [87:0] unescaped_instr,
   input is_2byte,
 
-  output [5:0] opc,
+  output [6:0] opc,
   output [3:0] opnd_form,
   output [1:0] opnd_count,
   output imm_1byte,

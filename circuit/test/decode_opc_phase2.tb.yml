@@ -4,7 +4,7 @@ inputs:
   - "88 unescaped_instr"
   - "1 is_2byte"
 outputs:
-  - "6 opc"
+  - "7 opc"
   - "4 opnd_form"
   - "2 opnd_count"
   - "1 imm_1byte"

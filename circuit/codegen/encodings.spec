@@ -54,6 +54,10 @@
 #
 # * These specs are definitely an overapproximation in some places.
 #   For example, there are some MOV forms below that we probably shouldn't allow.
+#
+# * The order of spec definition in this file determines the "command number" in
+#   the generated Tiny86 circuit. As such, new specification lines should be added
+#   only at the bottom, to preserve the current order.
 
 
 CMD_ADD:00~MR~Wr,01~MR~Wr,02~RM~Wr,03~RM~Wr,04+ib~AI~Wr,05+i*~AI~Wr,80/0+ib~MI~Wr,81/0+i*~MI~Wr,83/0+ib~MI~Wr~S
@@ -123,8 +127,6 @@ CMD_PUSHA:60~ZO~x
 
 CMD_PUSHF:9C~ZO~x
 
-# CMD_Shift:C0/0,C0/1,C0/2,C0/3,C0/4,C0/5,C0/7,C1/1,C1/2,C1/3,C1/4,C1/5,C1/7,D0/0,D0/1,D0/2,D0/3,D0/4,D0/5,D0/7,D1/1,D1/2,D1/3,D1/4,D1/5,D1/7,D2/0,D2/1,D2/2,D2/3,D2/4,D2/5,D2/7,D3/0,D3/1,D3/2,D3/3,D3/4,D3/5,D3/7
-
 CMD_RET:C3~ZO~x,CB~ZO~x
 CMD_SAHF:9E~ZO~r
 CMD_LAHF:9F~ZO~r
@@ -148,3 +150,17 @@ CMD_TEST:84~MR~rr,85~MR~rr,A8+ib~I~rr,A9+i*~I~rr,F6/0+ib~MI~rr,F7/0+i*~MI~rr
 # possible valid encodings.
 CMD_XCHG:86~RM~WW,87~RM~WW,90+r*~AO~WW
 CMD_XOR:30~MR~Wr,31~MR~Wr,32~RM~Wr,33~RM~Wr,34+ib~I~Wr,35+i*~I~Wr,80/6+ib~MI~Wr,81/6+i*~MI~Wr,83/6+ib~MI~Wr~S
+
+# TODO(ww): Support all the hellish shift variants.
+# NOTE(ww): x86's SAL and SHL semantics are identical, and share the same encoding.
+# NOTE(ww): D0/6 is undocumented but supposedly identical to D0/4. Worth supporting?
+CMD_SHL:D0/4~M~Wr
+
+CMD_SAR:D0/7~M~Wr
+CMD_SHR:D0/5~M~Wr
+
+CMD_ROL:D0/0~M~Wr
+CMD_RCL:D0/2~M~Wr
+
+CMD_ROR:D0/1~M~Wr
+CMD_RCR:D0/3~M~Wr

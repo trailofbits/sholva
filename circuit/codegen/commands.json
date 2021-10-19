@@ -3787,5 +3787,152 @@
                 "source_sign_ext": "S"
             }
         ]
+    },
+    {
+        "cmd": "CMD_SHL",
+        "encs": [
+            {
+                "esc": false,
+                "ext": 4,
+                "ib": false,
+                "iw_or_id": false,
+                "num_opnds": 1,
+                "op_enc": "M",
+                "opc": 208,
+                "opc_reg_bits": false,
+                "opnd0_mode": "W",
+                "opnd1_mode": "r",
+                "opnd2_mode": "x",
+                "rb": false,
+                "rw_or_rd": false,
+                "source_sign_ext": "Z"
+            }
+        ]
+    },
+    {
+        "cmd": "CMD_SAR",
+        "encs": [
+            {
+                "esc": false,
+                "ext": 7,
+                "ib": false,
+                "iw_or_id": false,
+                "num_opnds": 1,
+                "op_enc": "M",
+                "opc": 208,
+                "opc_reg_bits": false,
+                "opnd0_mode": "W",
+                "opnd1_mode": "r",
+                "opnd2_mode": "x",
+                "rb": false,
+                "rw_or_rd": false,
+                "source_sign_ext": "Z"
+            }
+        ]
+    },
+    {
+        "cmd": "CMD_SHR",
+        "encs": [
+            {
+                "esc": false,
+                "ext": 5,
+                "ib": false,
+                "iw_or_id": false,
+                "num_opnds": 1,
+                "op_enc": "M",
+                "opc": 208,
+                "opc_reg_bits": false,
+                "opnd0_mode": "W",
+                "opnd1_mode": "r",
+                "opnd2_mode": "x",
+                "rb": false,
+                "rw_or_rd": false,
+                "source_sign_ext": "Z"
+            }
+        ]
+    },
+    {
+        "cmd": "CMD_ROL",
+        "encs": [
+            {
+                "esc": false,
+                "ext": 0,
+                "ib": false,
+                "iw_or_id": false,
+                "num_opnds": 1,
+                "op_enc": "M",
+                "opc": 208,
+                "opc_reg_bits": false,
+                "opnd0_mode": "W",
+                "opnd1_mode": "r",
+                "opnd2_mode": "x",
+                "rb": false,
+                "rw_or_rd": false,
+                "source_sign_ext": "Z"
+            }
+        ]
+    },
+    {
+        "cmd": "CMD_RCL",
+        "encs": [
+            {
+                "esc": false,
+                "ext": 2,
+                "ib": false,
+                "iw_or_id": false,
+                "num_opnds": 1,
+                "op_enc": "M",
+                "opc": 208,
+                "opc_reg_bits": false,
+                "opnd0_mode": "W",
+                "opnd1_mode": "r",
+                "opnd2_mode": "x",
+                "rb": false,
+                "rw_or_rd": false,
+                "source_sign_ext": "Z"
+            }
+        ]
+    },
+    {
+        "cmd": "CMD_ROR",
+        "encs": [
+            {
+                "esc": false,
+                "ext": 1,
+                "ib": false,
+                "iw_or_id": false,
+                "num_opnds": 1,
+                "op_enc": "M",
+                "opc": 208,
+                "opc_reg_bits": false,
+                "opnd0_mode": "W",
+                "opnd1_mode": "r",
+                "opnd2_mode": "x",
+                "rb": false,
+                "rw_or_rd": false,
+                "source_sign_ext": "Z"
+            }
+        ]
+    },
+    {
+        "cmd": "CMD_RCR",
+        "encs": [
+            {
+                "esc": false,
+                "ext": 3,
+                "ib": false,
+                "iw_or_id": false,
+                "num_opnds": 1,
+                "op_enc": "M",
+                "opc": 208,
+                "opc_reg_bits": false,
+                "opnd0_mode": "W",
+                "opnd1_mode": "r",
+                "opnd2_mode": "x",
+                "rb": false,
+                "rw_or_rd": false,
+                "source_sign_ext": "Z"
+            }
+        ]
     }
 ]

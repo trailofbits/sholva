@@ -2,7 +2,7 @@
 `include "codegen/commands.gen.v"
 
 module meta(
-  input [5:0] opc,
+  input [6:0] opc,
   input [31:0] opnd_in,
   input [6:0] status_in,
 
@@ -13,7 +13,7 @@ module meta(
 
 `include "funcs.v"
 
-wire [63:0] opc_1hot = one_hot64(opc);
+wire [127:0] opc_1hot = one_hot128(opc);
 
 // Take AH from opnd_in. opnd_in might not actually be EAX, so only
 // use it if we're sure.

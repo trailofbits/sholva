@@ -1,7 +1,7 @@
 `include "defines.v"
 
 module alu(
-  input [13:0] cntl,
+  input [17:0] cntl,
   input [6:0] status_in,
   input [31:0] opnd0_r,
   input [31:0] opnd1_r,
@@ -30,6 +30,10 @@ wire [32:0] result_or  = opnd0_r_tmp | opnd1_r_tmp;
 wire [32:0] result_xor = opnd0_r_tmp ^ opnd1_r_tmp;
 wire [32:0] result_mul = opnd0_r_tmp * opnd1_r_tmp;
 wire [32:0] result_div = opnd0_r_tmp / opnd1_r_tmp;
+wire [32:0] result_shl = opnd0_r_tmp << opnd1_r_tmp;
+wire [32:0] result_shr = opnd0_r_tmp >> opnd1_r_tmp;
+wire [31:0] result_rol = (opnd0_r << opnd1_r) | (opnd0_r >> (32 - opnd1_r));
+wire [31:0] result_ror = (opnd0_r >> opnd1_r) | (opnd0_r << (32 - opnd1_r));
 
 wire [32:0] stat_result = cntl[`ALU_OP_ADD] ? result_add :
                           cntl[`ALU_OP_SUB] ? result_sub :

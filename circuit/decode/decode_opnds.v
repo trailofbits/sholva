@@ -12,7 +12,7 @@ module decode_opnds(
   input [31:0] hint2_address,
   input [31:0] hint2_data,
 
-  input [5:0] opc,
+  input [6:0] opc,
   input [3:0] opnd_form,
   input imm_1byte,
   input reg_1byte,
@@ -96,7 +96,7 @@ decode_opnd_signals decode_opnd_signals_x(
 );
 
 wire [15:0] opnd_form_1hot = one_hot16(opnd_form);
-wire [63:0] opc_1hot = one_hot64(opc);
+wire [127:0] opc_1hot = one_hot128(opc);
 
 
 // Whether ModR/M.rm indicates a register indirect selector,
