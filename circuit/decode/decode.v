@@ -137,12 +137,18 @@ decode_opnds decode_opnds_x(
   .prefix_operand_16bit(prefix_operand_16bit),
   .prefix_address_16bit(prefix_address_16bit),
 
+  .opnd0_is_one(opnd0_is_one),
   .opnd0_is_read(opnd0_is_read),
   .opnd0_is_write(opnd0_is_write),
+
+  .opnd1_is_one(opnd1_is_one),
   .opnd1_is_read(opnd1_is_read),
   .opnd1_is_write(opnd1_is_write),
+
+  .opnd2_is_one(opnd2_is_one),
   .opnd2_is_read(opnd2_is_read),
   .opnd2_is_write(opnd2_is_write),
+
   .source_is_sext(source_is_sext),
 
   // Outputs

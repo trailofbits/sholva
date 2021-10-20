@@ -54,3 +54,19 @@ vector_specs:
     dest1_kind: 0 # OPND_DEST_NONE
     dest0_sel: 1 # ECX
     dest1_sel: 0
+
+  - _description: "inc EAX"
+
+    # INPUTS
+    raw_instr: 0x40
+    eax: 0xaaaaaa00
+
+    # OUTPUTS
+    instr_len: 1
+    opc: 20 # CMD_INC
+    opnd0_r: 0xaaaaaa00
+    opnd1_r: 1 # implicit 1
+    dest0_kind: 1 # OPND_DEST_REG_1HOT
+    dest1_kind: 0 # OPND_DEST_NONE
+    dest0_sel: 0 # EAX
+    dest1_sel: 0

@@ -19,12 +19,18 @@ module decode_opnds(
   input prefix_operand_16bit,
   input prefix_address_16bit,
 
+  input opnd0_is_one,
   input opnd0_is_read,
   input opnd0_is_write,
+
+  input opnd1_is_one,
   input opnd1_is_read,
   input opnd1_is_write,
+
+  input opnd2_is_one,
   input opnd2_is_read,
   input opnd2_is_write,
+
   input source_is_sext,
 
   output [3:0] instr_body_len,
@@ -423,23 +429,20 @@ wire [31:0] opnd0_r_dispval = disp;
 /// END DISPLACEMENT OPERANDS
 ///
 
-// TODO(ww): Immediate and memory operands.
-// TODO(ww): "Implicit" immediates, like `INC reg` -> `ADD reg, 1`
-
 ///
 /// END OPERAND EXTRACTION
 ///
 
-// TODO(ww): This eventually needs to be a multiplexor against
-// opndN_r_regval, opndN_r_memval, opndN_r_immval, etc.
-// TODO(ww): Also handle special operand fixups here. For example, opnd1_r
-// will be 32'b1 for CMD_NOT.
-assign opnd0_r = opnd0_is_reg  ? opnd0_r_regval  :
+// Operand multiplexors.
+
+assign opnd0_r = opnd0_is_one  ? 32'b1           :
+                 opnd0_is_reg  ? opnd0_r_regval  :
                  opnd0_is_mem  ? opnd0_r_memval  :
                  opnd0_is_imm  ? opnd0_r_immval  :
                  opnd0_is_disp ? opnd0_r_dispval : 32'b0;
 
-assign opnd1_r = opnd1_is_reg ? opnd1_r_regval :
+assign opnd1_r = opnd1_is_one  ? 32'b1         :
+                 opnd1_is_reg ? opnd1_r_regval :
                  opnd1_is_mem ? opnd1_r_memval :
                  opnd1_is_imm ? opnd1_r_immval : 32'b0;
 
