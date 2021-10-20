@@ -341,10 +341,11 @@ def _gen_opc_map_v(commands):
             arity_exprs.append((_lit(2, arity), arity_expr))
         print(_assign("opnd_count", _ternary_chain(arity_exprs)), file=io)
 
-        # Generate the opnd{0,1,2}_is_{read,write} assignments.
+        # Generate the opnd{0,1,2}_is_{one,read,write} assignments.
         for n in [0, 1, 2]:
             _br(io, 2)
 
+            opndN_is_one_exprs = []
             opndN_is_read_exprs = []
             opndN_is_write_exprs = []
             for cmd in commands:
@@ -353,6 +354,10 @@ def _gen_opc_map_v(commands):
 
                     enc_expr = _basic_enc_expr(enc)
 
+                    # This encoding "reads" a constant of 1 from this operand.
+                    if opndN_mode == "1":
+                        opndN_is_one_exprs.append(enc_expr)
+
                     # This encoding reads from this operand.
                     if opndN_mode == "W" or opndN_mode == "r":
                         opndN_is_read_exprs.append(enc_expr)
@@ -360,6 +365,18 @@ def _gen_opc_map_v(commands):
                     # This encoding writes to this operand.
                     if opndN_mode == "W" or opndN_mode == "w":
                         opndN_is_write_exprs.append(enc_expr)
+
+            if len(opndN_is_one_exprs) > 0:
+                opndN_is_one_expr = functools.reduce(_or, opndN_is_one_exprs)
+            else:
+                opndN_is_one_expr = _V_FALSE
+
+            print(
+                _assign(f"opnd{n}_is_one", opndN_is_one_expr),
+                file=io,
+            )
+
+            _br(io, 2)
 
             if len(opndN_is_read_exprs) > 0:
                 opndN_is_read_expr = functools.reduce(_or, opndN_is_read_exprs)

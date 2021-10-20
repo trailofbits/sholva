@@ -38,6 +38,7 @@
 #   - `~ZO`: No explicit operands whatsoever
 # * `~{r,w,W,x}+` indicates the concrete read-write semantics of each operand, one operand
 #   per character:
+#   - `1`: operand is an implicit `1`
 #   - `r`: operand is read-only
 #   - `w`: operand is write-only
 #   - `W`: operand is read+write
@@ -91,7 +92,7 @@ CMD_IDIV:F6/7~M~Wr,F7/7~M~Wr~S
 
 CMD_IMUL:69+i*~RMI~wrr~S,6B+ib~RMI~wrr~S,F6/5~M~Wr~S,F7/5~M~wWr~S,xAF~RM~Wr~S
 
-CMD_INC:40+r*~O~Wr,FE/0~M~Wr,FF/0~M~Wr
+CMD_INC:40+r*~O~W1,FE/0~M~W1,FF/0~M~W1
 CMD_Jcc:70~D8~r,71~D8~r,72~D8~r,73~D8~r,74~D8~r,75~D8~r,76~D8~r,77~D8~r,78~D8~r,79~D8~r,7A~D8~r,7B~D8~r,7C~D8~r,7D~D8~r,7E~D8~r,7F~D8~r,x80~D32~r,x81~D32~r,x82~D32~r,x83~D32~r,x84~D32~r,x85~D32~r,x86~D32~r,x87~D32~r,x88~D32~r,x89~D32~r,x8A~D32~r,x8B~D32~r,x8C~D32~r,x8D~D32~r,x8E~D32~r,x8F~D32~r
 CMD_SETcc:x90~M~w,x91~M~w,x92~M~w,x93~M~w,x94~M~w,x95~M~w,x96~M~w,x97~M~w,x98~M~w,x99~M~w,x9A~M~w,x9B~M~w,x9C~M~w,x9D~M~w,x9E~M~w,x9F~M~w
 CMD_JCXZ:E3~D8~r
@@ -143,7 +144,7 @@ CMD_STD:FD~ZO~x
 # NOTE(ww): SDM lists these as encoding "NA". Why?
 CMD_STOS:AA~ZO~wr,AB~ZO~wr
 
-CMD_SUB:28~MR~Wr,29~MR~Wr,2A~RM~Wr,2B~RM~Wr,2C+ib~I~Wr,2D+i*~I~Wr,80/5+ib~MI~Wr,81/5+i*~MI~Wr,83/5+ib~MI~Wr~S
+CMD_SUB:28~MR~W1,29~MR~W1,2A~RM~W1,2B~RM~W1,2C+ib~I~W1,2D+i*~I~W1,80/5+ib~MI~W1,81/5+i*~MI~W1,83/5+ib~MI~W1~S
 CMD_TEST:84~MR~rr,85~MR~rr,A8+ib~I~rr,A9+i*~I~rr,F6/0+ib~MI~rr,F7/0+i*~MI~rr
 
 # NOTE(ww): SDM lists XCHG 86 and 87 as both RM and MR, which doesn't make a lot of sense.
@@ -157,13 +158,13 @@ CMD_XOR:30~MR~Wr,31~MR~Wr,32~RM~Wr,33~RM~Wr,34+ib~I~Wr,35+i*~I~Wr,80/6+ib~MI~Wr,
 # TODO(ww): Figure out how to differentiate the 8 bit semantics here.
 # NOTE(ww): x86's SAL and SHL semantics are identical, and share the same encoding.
 # NOTE(ww): D0/6 is undocumented but supposedly identical to D0/4. Worth supporting?
-CMD_SHL:D0/4~M~Wr,D2/4~MC~Wr,C0/4+ib~MI~Wr,D1/4~M~Wr,D3/4~MC~Wr,C1/4+ib~MI~Wr
+CMD_SHL:D0/4~M~W1,D2/4~MC~Wr,C0/4+ib~MI~Wr,D1/4~M~W1,D3/4~MC~Wr,C1/4+ib~MI~Wr
 
-CMD_SAR:D0/7~M~Wr,D2/7~MC~Wr,C0/7+ib~MI~Wr,D1/7~M~Wr,D3/7~MC~Wr,C1/7+ib~MI~Wr
-CMD_SHR:D0/5~M~Wr,D2/5~MC~Wr,C0/5+ib~MI~Wr,D1/5~M~Wr,D3/5~MC~Wr,C1/5+ib~MI~Wr
+CMD_SAR:D0/7~M~W1,D2/7~MC~Wr,C0/7+ib~MI~Wr,D1/7~M~W1,D3/7~MC~Wr,C1/7+ib~MI~Wr
+CMD_SHR:D0/5~M~W1,D2/5~MC~Wr,C0/5+ib~MI~Wr,D1/5~M~W1,D3/5~MC~Wr,C1/5+ib~MI~Wr
 
-CMD_ROL:D0/0~M~Wr,D2/0~MC~Wr,C0/0+ib~MI~Wr,D1/0~M~Wr,D3/0~MC~Wr,C1/0+ib~MI~Wr
-CMD_RCL:D0/2~M~Wr,D2/2~MC~Wr,C0/2+ib~MI~Wr,D1/2~M~Wr,D3/2~MC~Wr,C1/2+ib~MI~Wr
+CMD_ROL:D0/0~M~W1,D2/0~MC~Wr,C0/0+ib~MI~Wr,D1/0~M~W1,D3/0~MC~Wr,C1/0+ib~MI~Wr
+CMD_RCL:D0/2~M~W1,D2/2~MC~Wr,C0/2+ib~MI~Wr,D1/2~M~W1,D3/2~MC~Wr,C1/2+ib~MI~Wr
 
-CMD_ROR:D0/1~M~Wr,D2/1~MC~Wr,C0/1+ib~MI~Wr,D1/1~M~Wr,D3/1~MC~Wr,C1/1+ib~MI~Wr
-CMD_RCR:D0/3~M~Wr,D2/3~MC~Wr,C0/3+ib~MI~Wr,D1/3~M~Wr,D3/3~MC~Wr,C1/3+ib~MI~Wr
+CMD_ROR:D0/1~M~W1,D2/1~MC~Wr,C0/1+ib~MI~Wr,D1/1~M~W1,D3/1~MC~Wr,C1/1+ib~MI~Wr
+CMD_RCR:D0/3~M~W1,D2/3~MC~Wr,C0/3+ib~MI~Wr,D1/3~M~W1,D3/3~MC~Wr,C1/3+ib~MI~Wr
