@@ -70,3 +70,17 @@ vector_specs:
     dest1_kind: 0 # OPND_DEST_NONE
     dest0_sel: 0 # EAX
     dest1_sel: 0
+
+  # - _description: "rcl al, 1"
+
+  #   # INPUTS
+  #   raw_instr: 0xd0d0
+  #   eax: 0xaabbccdd
+
+  #   # OUTPUTS
+  #   instr_len: 2
+  #   opc: 61 # CMD_RCL
+  #   opnd0_r: 0xaa # TODO(ww)
+  #   opnd1_r: 1 # implicit 1
+  #   dest0_kind: 1 # OPND_DEST_REG_1HOT
+  #   dest0_sel: 0 # EAX

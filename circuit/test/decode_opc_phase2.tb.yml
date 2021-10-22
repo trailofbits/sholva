@@ -121,3 +121,19 @@ vector_specs:
     opnd1_is_one: 1
     opnd1_is_read: 0
     opnd1_is_write: 0
+
+  - _description: "RCL al, 1"
+
+    # INPUTS
+    unescaped_instr: 0xd0d0
+    is_2byte: 0
+
+    # OUTPUTS
+    opc: 61 # CMD_RCL
+    opnd_form: 3 # OPND_ENC_MODREGRM_RM
+    opnd_count: 1
+    imm_1byte: 0 # TODO(ww)
+    reg_1byte: 1
+    opnd0_is_read: 1
+    opnd0_is_write: 1
+    opnd1_is_one: 1

@@ -146,7 +146,7 @@ def _opc_ext_eq(rhs):
     Emit an equality expression against the opcode extension bits (reg of ModR/M)
     of the instruction.
     """
-    return _eq("unescaped_instr[12:10]", _lit(3, rhs))
+    return _eq("unescaped_instr[13:11]", _lit(3, rhs))
 
 
 def _and(lhs, rhs):

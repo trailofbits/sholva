@@ -158,13 +158,11 @@ CMD_XOR:30~MR~Wr,31~MR~Wr,32~RM~Wr,33~RM~Wr,34+ib~I~Wr,35+i*~I~Wr,80/6+ib~MI~Wr,
 # TODO(ww): Figure out how to differentiate the 8 bit semantics here.
 # NOTE(ww): x86's SAL and SHL semantics are identical, and share the same encoding.
 # NOTE(ww): D0/6 is undocumented but supposedly identical to D0/4. Worth supporting?
-CMD_SHL:D0/4~M~W1,D2/4~MC~Wr,C0/4+ib~MI~Wr,D1/4~M~W1,D3/4~MC~Wr,C1/4+ib~MI~Wr
 
-CMD_SAR:D0/7~M~W1,D2/7~MC~Wr,C0/7+ib~MI~Wr,D1/7~M~W1,D3/7~MC~Wr,C1/7+ib~MI~Wr
-CMD_SHR:D0/5~M~W1,D2/5~MC~Wr,C0/5+ib~MI~Wr,D1/5~M~W1,D3/5~MC~Wr,C1/5+ib~MI~Wr
-
-CMD_ROL:D0/0~M~W1,D2/0~MC~Wr,C0/0+ib~MI~Wr,D1/0~M~W1,D3/0~MC~Wr,C1/0+ib~MI~Wr
-CMD_RCL:D0/2~M~W1,D2/2~MC~Wr,C0/2+ib~MI~Wr,D1/2~M~W1,D3/2~MC~Wr,C1/2+ib~MI~Wr
-
-CMD_ROR:D0/1~M~W1,D2/1~MC~Wr,C0/1+ib~MI~Wr,D1/1~M~W1,D3/1~MC~Wr,C1/1+ib~MI~Wr
-CMD_RCR:D0/3~M~W1,D2/3~MC~Wr,C0/3+ib~MI~Wr,D1/3~M~W1,D3/3~MC~Wr,C1/3+ib~MI~Wr
+CMD_SHL:D0/4+rb~M~W1,D2/4+rb~MC~Wr,C0/4+rb+ib~MI~Wr,D1/4~M~W1,D3/4~MC~Wr,C1/4+ib~MI~Wr
+CMD_SAR:D0/7+rb~M~W1,D2/7+rb~MC~Wr,C0/7+rb+ib~MI~Wr,D1/7~M~W1,D3/7~MC~Wr,C1/7+ib~MI~Wr
+CMD_SHR:D0/5+rb~M~W1,D2/5+rb~MC~Wr,C0/5+rb+ib~MI~Wr,D1/5~M~W1,D3/5~MC~Wr,C1/5+ib~MI~Wr
+CMD_ROL:D0/0+rb~M~W1,D2/0+rb~MC~Wr,C0/0+rb+ib~MI~Wr,D1/0~M~W1,D3/0~MC~Wr,C1/0+ib~MI~Wr
+CMD_RCL:D0/2+rb~M~W1,D2/2+rb~MC~Wr,C0/2+rb+ib~MI~Wr,D1/2~M~W1,D3/2~MC~Wr,C1/2+ib~MI~Wr
+CMD_ROR:D0/1+rb~M~W1,D2/1+rb~MC~Wr,C0/1+rb+ib~MI~Wr,D1/1~M~W1,D3/1~MC~Wr,C1/1+ib~MI~Wr
+CMD_RCR:D0/3+rb~M~W1,D2/3+rb~MC~Wr,C0/3+rb+ib~MI~Wr,D1/3~M~W1,D3/3~MC~Wr,C1/3+ib~MI~Wr
