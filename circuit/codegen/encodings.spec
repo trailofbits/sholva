@@ -14,8 +14,8 @@
 # * `x` indicates that that the `0Fh` opcode escape was used;
 # * `HH` is the core opcode byte
 # * `/D` indicates that the ModR/M reg field is used as an opcode extension
-# * `+rb`, `+rw`, `+rd` indicate that the lower three opcode bits are a register selector
-#   (of the specified width: byte, word, or dword), or `*` for both word and dword
+# * `+rb`, `+rw`, `+rd` indicate the width of any register operand(s) used
+#   (byte, word, or dword, or `*` for both word and dword).
 # * `+ib`, `+iw`, `+id` indicate that the instruction is followed by an immediate operand
 #   (of the specified width: byte, word, or dword), or `*` for both word and dword
 # * `~I`, `~D`, `~M`, `~O`, `~MI`, `~MR`, `~RM`, ~OI`, `~ZO` indicate the operand encoding:
