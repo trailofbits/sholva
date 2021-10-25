@@ -30,17 +30,22 @@ wire [32:0] result_or  = opnd0_r_tmp | opnd1_r_tmp;
 wire [32:0] result_xor = opnd0_r_tmp ^ opnd1_r_tmp;
 wire [32:0] result_mul = opnd0_r_tmp * opnd1_r_tmp;
 wire [32:0] result_div = opnd0_r_tmp / opnd1_r_tmp;
-wire [32:0] result_shl = opnd0_r_tmp << opnd1_r_tmp;
-wire [32:0] result_shr = opnd0_r_tmp >> opnd1_r_tmp;
+wire [31:0] result_shl = opnd0_r << opnd1_r;
+wire [31:0] result_shr = opnd0_r >> opnd1_r;
 wire [31:0] result_rol = (opnd0_r << opnd1_r) | (opnd0_r >> (32 - opnd1_r));
 wire [31:0] result_ror = (opnd0_r >> opnd1_r) | (opnd0_r << (32 - opnd1_r));
 
+// TODO(ww): CF handling for shift/rotate ops is incorrect here.
 wire [32:0] stat_result = cntl[`ALU_OP_ADD] ? result_add :
                           cntl[`ALU_OP_SUB] ? result_sub :
                           cntl[`ALU_OP_AND] ? result_and :
                           cntl[`ALU_OP_OR]  ? result_or  :
                           cntl[`ALU_OP_XOR] ? result_xor :
                           cntl[`ALU_OP_MUL] ? result_mul :
+                          cntl[`ALU_OP_SHL] ? {1'b0, result_shl} :
+                          cntl[`ALU_OP_SHR] ? {1'b0, result_shr} :
+                          cntl[`ALU_OP_ROL] ? {1'b0, result_rol} :
+                          cntl[`ALU_OP_ROR] ? {1'b0, result_ror} :
                                               result_div;
 
 // TODO(ww): Fill these in.
