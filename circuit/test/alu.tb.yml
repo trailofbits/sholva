@@ -1,7 +1,7 @@
 module: alu
 file: ../execute/alu.v
 inputs:
-  - "14 cntl"
+  - "18 cntl"
   - "7 status_in"
   - "32 opnd0_r"
   - "32 opnd1_r"

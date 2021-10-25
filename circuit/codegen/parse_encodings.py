@@ -26,12 +26,13 @@ _OPERAND_ENCODINGS = {
     "OI": 2,
     "AI": 2,
     "AO": 2,
+    "MC": 2,
     "RMI": 3,
     "MRI": 3,
     "MRC": 3,
     "ZO": 0,
 }
-_OPERAND_MODES = {"r", "w", "W", "x"}
+_OPERAND_MODES = {"1", "r", "w", "W", "x"}
 _MODIFIERS = {"ib", "iw", "id", "i*", "rb", "rw", "rd", "r*"}
 _EXTENSION_MODES = {"S", "Z"}
 

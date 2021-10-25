@@ -2,7 +2,7 @@
 `include "codegen/commands.gen.v"
 
 module execute(
-  input [5:0] opc,
+  input [6:0] opc,
   input [31:0] eflags,
   input [31:0] opnd0_r,
   input [31:0] opnd1_r,
@@ -15,7 +15,7 @@ module execute(
 
 `include "funcs.v"
 
-wire [63:0] opc_1hot = one_hot64(opc);
+wire [127:0] opc_1hot = one_hot128(opc);
 
 ///
 /// BEGIN ALU
@@ -62,6 +62,16 @@ wire alu_op_mul = opc_1hot[`CMD_MUL] |
 wire alu_op_div = opc_1hot[`CMD_DIV] |
                   opc_1hot[`CMD_IDIV];
 
+// TODO(ww): SHLD, SHRD.
+
+wire alu_op_shl = opc_1hot[`CMD_SHL];
+
+wire alu_op_shr = opc_1hot[`CMD_SHR];
+
+wire alu_op_rol = opc_1hot[`CMD_ROL];
+
+wire alu_op_ror = opc_1hot[`CMD_ROR];
+
 // Are we performing an ALU operation?
 wire exe_is_alu = alu_op_add |
                   alu_op_sub |
@@ -69,7 +79,11 @@ wire exe_is_alu = alu_op_add |
                   alu_op_or  |
                   alu_op_xor |
                   alu_op_mul |
-                  alu_op_div;
+                  alu_op_div |
+                  alu_op_shl |
+                  alu_op_shr |
+                  alu_op_rol |
+                  alu_op_ror ;
 
 // Auxiliary signals.
 wire alu_src_inv = opc_1hot[`CMD_SUB] |
@@ -100,7 +114,11 @@ wire alu_clear_of = opc_1hot[`CMD_AND] |
                     opc_1hot[`CMD_XOR] |
                     opc_1hot[`CMD_TEST];
 
-wire [13:0] alu_cntl = {
+wire [17:0] alu_cntl = {
+                          alu_op_ror,    // 17
+                          alu_op_rol,    // 16
+                          alu_op_shr,    // 15
+                          alu_op_shl,    // 14
                           alu_clear_of,  // 13
                           alu_clear_cf,  // 12
                           alu_no_flags,  // 11

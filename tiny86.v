@@ -78,7 +78,7 @@ decode_hint decode_hint2(
 // operands into their concrete 32-bit values, extract reg/mem selectors for
 // writeback.
 wire [3:0] instr_len;
-wire [5:0] opc;
+wire [6:0] opc;
 wire [31:0] opnd0_r;
 wire [31:0] opnd1_r;
 wire [31:0] opnd2_r;

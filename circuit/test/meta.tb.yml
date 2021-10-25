@@ -1,7 +1,7 @@
 module: meta
 file: ../execute/meta.v
 inputs:
-  - "6 opc"
+  - "7 opc"
   - "32 opnd_in"
   - "7 status_in"
 outputs:

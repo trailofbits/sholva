@@ -31,6 +31,7 @@ _OPND_ENC_MAP = {
     "OI": ("OPND_ENC_REG_IMM", 2),
     "AI": ("OPND_ENC_EAX_IMM", 2),
     "AO": ("OPND_ENC_EAX_REG", 2),
+    "MC": ("OPND_ENC_MODREGRM_RM_CL", 2),
     "RMI": ("OPND_ENC_MODREGRM_REG_RM_IMM", 3),
     "MRI": ("OPND_ENC_MODREGRM_RM_REG_IMM", 3),
     "MRC": ("OPND_ENC_MODREGRM_RM_REG_CL", 3),
@@ -39,6 +40,9 @@ _OPND_ENC_MAP = {
 
 _V_TRUE = "1'b1"
 _V_FALSE = "1'b0"
+
+CMD_WIRE_SIZE = 7
+CMD_MAX = (2 ** CMD_WIRE_SIZE) - 1
 
 
 def _header():
@@ -142,7 +146,7 @@ def _opc_ext_eq(rhs):
     Emit an equality expression against the opcode extension bits (reg of ModR/M)
     of the instruction.
     """
-    return _eq("unescaped_instr[12:10]", _lit(3, rhs))
+    return _eq("unescaped_instr[13:11]", _lit(3, rhs))
 
 
 def _and(lhs, rhs):
@@ -244,13 +248,13 @@ def _gen_commands_v(commands):
 
         # Numeric forms.
         for idx, cmd in enumerate(commands):
-            print(_define(cmd["cmd"], _lit(6, idx)), file=io)
-        print(_define("CMD_UNKNOWN",  _lit(6, idx + 1)), file=io)
+            print(_define(cmd["cmd"], _lit(CMD_WIRE_SIZE, idx)), file=io)
+        print(_define("CMD_UNKNOWN", _lit(CMD_WIRE_SIZE, idx + 1)), file=io)
 
         _br(io, 2)
 
         # One-hot forms.
-        hotlen = 2 ** 6
+        hotlen = 2 ** CMD_WIRE_SIZE
         for idx, cmd in enumerate(commands):
             bitstring = _1hot(hotlen, idx)
             print(_define(f"{cmd['cmd']}_1HOT", f"{hotlen}'b{bitstring}"), file=io)
@@ -337,10 +341,11 @@ def _gen_opc_map_v(commands):
             arity_exprs.append((_lit(2, arity), arity_expr))
         print(_assign("opnd_count", _ternary_chain(arity_exprs)), file=io)
 
-        # Generate the opnd{0,1,2}_is_{read,write} assignments.
+        # Generate the opnd{0,1,2}_is_{one,read,write} assignments.
         for n in [0, 1, 2]:
             _br(io, 2)
 
+            opndN_is_one_exprs = []
             opndN_is_read_exprs = []
             opndN_is_write_exprs = []
             for cmd in commands:
@@ -349,6 +354,10 @@ def _gen_opc_map_v(commands):
 
                     enc_expr = _basic_enc_expr(enc)
 
+                    # This encoding "reads" a constant of 1 from this operand.
+                    if opndN_mode == "1":
+                        opndN_is_one_exprs.append(enc_expr)
+
                     # This encoding reads from this operand.
                     if opndN_mode == "W" or opndN_mode == "r":
                         opndN_is_read_exprs.append(enc_expr)
@@ -356,6 +365,18 @@ def _gen_opc_map_v(commands):
                     # This encoding writes to this operand.
                     if opndN_mode == "W" or opndN_mode == "w":
                         opndN_is_write_exprs.append(enc_expr)
+
+            if len(opndN_is_one_exprs) > 0:
+                opndN_is_one_expr = functools.reduce(_or, opndN_is_one_exprs)
+            else:
+                opndN_is_one_expr = _V_FALSE
+
+            print(
+                _assign(f"opnd{n}_is_one", opndN_is_one_expr),
+                file=io,
+            )
+
+            _br(io, 2)
 
             if len(opndN_is_read_exprs) > 0:
                 opndN_is_read_expr = functools.reduce(_or, opndN_is_read_exprs)
@@ -465,7 +486,9 @@ def main():
 
     commands = json.loads(_COMMANDS_JSON.read_text())
 
-    assert len(commands) < (2 ** 6) - 1, "|commands| > 63; increase the wire size"
+    assert (
+        len(commands) < CMD_MAX
+    ), f"|commands| ({len(commands)}) >= {CMD_MAX}; increase the wire size"
 
     _gen_commands_v(commands)
     _gen_opc_map_v(commands)

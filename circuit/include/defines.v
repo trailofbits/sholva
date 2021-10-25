@@ -60,6 +60,9 @@
 // Unary, 32-bit displacement operand.
 `define OPND_ENC_DISP32 4'd14
 
+// Binary, r/m of ModR/M for r(+w), CL for read.
+`define OPND_ENC_MODREGRM_RM_CL 4'd15
+
 // Unknown operand encoding, should never be hit.
 `define OPND_ENC_UNKNOWN 4'dx
 
@@ -95,20 +98,24 @@
 `define REG_EBP 3'd5
 
 // ALU control signal numbering.
-`define ALU_SRC_INV   4'd0
-`define ALU_OP_ADD    4'd1
-`define ALU_OP_AND    4'd2
-`define ALU_OP_OR     4'd3
-`define ALU_OP_XOR    4'd4
-`define ALU_OP_MUL    4'd5
-`define ALU_OP_DIV    4'd6
-`define ALU_USE_CARRY 4'd7
-`define ALU_SRC_INC   4'd8
-`define ALU_NO_WR     4'd9
-`define ALU_OP_SUB    4'd10
-`define ALU_NO_FLAGS  4'd11
-`define ALU_CLEAR_CF  4'd12
-`define ALU_CLEAR_OF  4'd13
+`define ALU_SRC_INV   5'd0
+`define ALU_OP_ADD    5'd1
+`define ALU_OP_AND    5'd2
+`define ALU_OP_OR     5'd3
+`define ALU_OP_XOR    5'd4
+`define ALU_OP_MUL    5'd5
+`define ALU_OP_DIV    5'd6
+`define ALU_USE_CARRY 5'd7
+`define ALU_SRC_INC   5'd8
+`define ALU_NO_WR     5'd9
+`define ALU_OP_SUB    5'd10
+`define ALU_NO_FLAGS  5'd11
+`define ALU_CLEAR_CF  5'd12
+`define ALU_CLEAR_OF  5'd13
+`define ALU_OP_SHL    5'd14
+`define ALU_OP_SHR    5'd15
+`define ALU_OP_ROL    5'd16
+`define ALU_OP_ROR    5'd17
 
 // Move unit control signals.
 // The first bit controls whether we're doing a "move" (SRC -> DST)
