@@ -23,7 +23,8 @@ module decode_opc_phase2(
   output opnd2_is_read,
   output opnd2_is_write,
 
-  output source_is_sext
+  output source_is_sext,
+  output disp_is_rel
 );
 
 // A convenience assignment for the opcode byte, with any register operand bits

@@ -19,6 +19,7 @@ outputs:
   - "1 opnd2_is_read"
   - "1 opnd2_is_write"
   - "1 source_is_sext"
+  - "1 disp_is_rel"
 vector_specs:
   - _description: "ADD eax, byte 0xff (source_is_sext)"
 
