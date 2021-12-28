@@ -5,10 +5,10 @@
 #
 # ...where FOO is the name of the instruction class, and SPEC1, etc. are
 # encoding specifications. Each specification takes the following form, with
-# `[]` indicating "optional", `{X,Y}` indicating "choice", and `+` after either
-# `[]` or `{}` indicating "one or more".
+# `[]` indicating "optional", `{X,Y}` indicating "choice", `+` after either
+# `[]` or `{}` indicating "one or more", and `?` indicating "one or none".
 #
-#  [x]HH[/D][+r{b,w,d,*}][+i{b,w,d,*}][~{I,D{8,32},M,O,MI,MR,RM,OI,AI,AO,RMI,MRI,MRC,ZO}][~{r,w,W,x}+][~{Z,S}]
+#  [x]HH[/D][+r{b,w,d,*}][+i{b,w,d,*}][~{I,D{8,32}r?,M,O,MI,MR,RM,OI,AI,AO,RMI,MRI,MRC,ZO}][~{r,w,W,x}+][~{Z,S}]
 #
 # Where:
 # * `x` indicates that that the `0Fh` opcode escape was used;
@@ -20,8 +20,8 @@
 #   (of the specified width: byte, word, or dword), or `*` for both word and dword
 # * `~I`, `~D`, `~M`, `~O`, `~MI`, `~MR`, `~RM`, ~OI`, `~ZO` indicate the operand encoding:
 #   - `~I`: Unary, immediate only
-#   - `~D8`: Unary, 8-bit displacement only
-#   - `~D32`: Unary, 32-bit displacement only
+#   - `~D8r?`: Unary, 8-bit displacement only, r if displacement is relative
+#   - `~D32r?`: Unary, 32-bit displacement only, r if displacement is relative
 #   - `~M`: Unary, r/m of ModR/M only
 #   - `~O`: Unary, reg of lower opcode bits only
 #   - `~A`: Unary, implicit accumulator reg for r(+w)
@@ -74,9 +74,6 @@ CMD_BT:xA3~MR~rr,xBA/4+ib~MI~rr
 CMD_BTC:xBB~MR~Wr,xBA/7+ib~MI~Wr
 CMD_BTR:xB3~MR~Wr,xBA/6+ib~MI~Wr
 CMD_BTS:xAB~MR~Wr,xBA/5+ib~MI~Wr
-
-# TODO(ww): Figure out rel16/32 notation.
-# CMD_CALL:E8,9A,FF/2,FF/3
 
 CMD_CBW:98~A~W~S
 CMD_CLC:F8~ZO~x
@@ -166,3 +163,7 @@ CMD_ROL:D0/0+rb~M~W1,D2/0+rb~MC~Wr,C0/0+rb+ib~MI~Wr,D1/0~M~W1,D3/0~MC~Wr,C1/0+ib
 CMD_RCL:D0/2+rb~M~W1,D2/2+rb~MC~Wr,C0/2+rb+ib~MI~Wr,D1/2~M~W1,D3/2~MC~Wr,C1/2+ib~MI~Wr
 CMD_ROR:D0/1+rb~M~W1,D2/1+rb~MC~Wr,C0/1+rb+ib~MI~Wr,D1/1~M~W1,D3/1~MC~Wr,C1/1+ib~MI~Wr
 CMD_RCR:D0/3+rb~M~W1,D2/3+rb~MC~Wr,C0/3+rb+ib~MI~Wr,D1/3~M~W1,D3/3~MC~Wr,C1/3+ib~MI~Wr
+
+# TODO(ww): Figure out rel16/32 notation.
+# TODO(ww): Support `CALL 9A` and/or `CALL FF/3`?
+CMD_CALL:E8~D32r~r,FF/2~M~r

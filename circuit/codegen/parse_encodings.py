@@ -11,6 +11,13 @@ _HERE = Path(__file__).parent
 _ENCODINGS_SPEC = _HERE / "encodings.spec"
 _COMMANDS_JSON = _HERE / "commands.json"
 
+# Valid "pseudo" operand encoding identifiers.
+# These are decomposed into their true encoding identifier (the corresponding value)
+# and some additional encoding-specific semantics (e.g., D32r is a relative 32-bit displacement).
+_PSEUDO_OPERAND_ENCODINGS = {
+    "D32r": "D32",
+    "D8r": "D8",
+}
 
 # Valid operand encoding identifiers (values are corresponding arities).
 _OPERAND_ENCODINGS = {
@@ -40,19 +47,79 @@ _EXTENSION_MODES = {"S", "Z"}
 @dataclass(frozen=True)
 class Encoding:
     opc: int
+    """
+    The opcode byte for this encoding.
+    """
+
     opc_reg_bits: bool
+    """
+    Does the opcode byte include a register selector in its lowest 3 bits?
+    """
+
     op_enc: str
+    """
+    The "operand encoding" for this encoding. See `_OPERAND_ENCODINGS`.
+    """
+
     num_opnds: int
+    """
+    The number of explicit operands for this encoding.
+    """
+
     ext: Optional[int]
+    """
+    The value of the opcode extension, if this encoding has one.
+    """
+
     esc: bool
+    """
+    Does this encoding require an escape prefix?
+    """
+
     ib: bool
+    """
+    Is the immediate operand (if present) a byte?
+    """
+
     iw_or_id: bool
+    """
+    Is the immediate operand (if present) a word/dword?
+    """
+
     rb: bool
+    """
+    Is the register operand (if present) a byte?
+    """
+
     rw_or_rd: bool
+    """
+    Is the register operand (if present) a word/dword?
+    """
+
     opnd0_mode: str
+    """
+    The mode that the first operand is in. See `_OPERAND_MODES`.
+    """
+
     opnd1_mode: str
+    """
+    The mode that the second operand is in. See `_OPERAND_MODES`.
+    """
+
     opnd2_mode: str
-    source_sign_ext: Optional[str]
+    """
+    The mode that the third operand is in. See `_OPERAND_MODES`.
+    """
+
+    source_sign_ext: str
+    """
+    The sign extension mode for the "source" operand. See `_EXTENSION_MODES`.
+    """
+
+    disp_is_rel: bool
+    """
+    Is the displacement operand (if present) a relative displacement?
+    """
 
     @classmethod
     def parse(cls, raw_enc):
@@ -72,6 +139,7 @@ class Encoding:
         else:
             opnd_modes = rest
             sign_spec = "Z"
+        assert sign_spec is not None
 
         opnd_modes = list(opnd_modes)
         assert (
@@ -81,6 +149,15 @@ class Encoding:
             m in _OPERAND_MODES for m in opnd_modes
         ), f"unknown opnd mode(s): {opnd_modes}"
         opnd_modes += ["x"] * (3 - len(opnd_modes))
+
+        # Handle "pseudo" operand encodings by transforming them
+        # into their real encodings and extracting the special semantics.
+        # For now, the only special semantic is treating displacements
+        # as relative instead of absolute.
+        disp_is_rel = False
+        if op_enc in _PSEUDO_OPERAND_ENCODINGS:
+            disp_is_rel = True
+            op_enc = _PSEUDO_OPERAND_ENCODINGS[op_enc]
 
         assert (
             op_enc in _OPERAND_ENCODINGS.keys()
@@ -128,6 +205,7 @@ class Encoding:
             opnd_modes[1],
             opnd_modes[2],
             sign_spec,
+            disp_is_rel,
         )
 
 

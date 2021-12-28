@@ -415,6 +415,8 @@ def _gen_opc_map_v(commands):
             file=io,
         )
 
+        # TODO: Generate the "disp_is_rel" assignment.
+
 
 def _gen_imm_v():
     with _IMM_GEN_V.open(mode="w+") as io:
