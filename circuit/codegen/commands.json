@@ -1264,7 +1264,7 @@
         "cmd": "CMD_Jcc",
         "encs": [
             {
-                "disp_is_rel": false,
+                "disp_is_rel": true,
                 "esc": false,
                 "ext": null,
                 "ib": false,
@@ -1281,7 +1281,7 @@
                 "source_sign_ext": "Z"
             },
             {
-                "disp_is_rel": false,
+                "disp_is_rel": true,
                 "esc": false,
                 "ext": null,
                 "ib": false,
@@ -1298,7 +1298,7 @@
                 "source_sign_ext": "Z"
             },
             {
-                "disp_is_rel": false,
+                "disp_is_rel": true,
                 "esc": false,
                 "ext": null,
                 "ib": false,
@@ -1315,7 +1315,7 @@
                 "source_sign_ext": "Z"
             },
             {
-                "disp_is_rel": false,
+                "disp_is_rel": true,
                 "esc": false,
                 "ext": null,
                 "ib": false,
@@ -1332,7 +1332,7 @@
                 "source_sign_ext": "Z"
             },
             {
-                "disp_is_rel": false,
+                "disp_is_rel": true,
                 "esc": false,
                 "ext": null,
                 "ib": false,
@@ -1349,7 +1349,7 @@
                 "source_sign_ext": "Z"
             },
             {
-                "disp_is_rel": false,
+                "disp_is_rel": true,
                 "esc": false,
                 "ext": null,
                 "ib": false,
@@ -1366,7 +1366,7 @@
                 "source_sign_ext": "Z"
             },
             {
-                "disp_is_rel": false,
+                "disp_is_rel": true,
                 "esc": false,
                 "ext": null,
                 "ib": false,
@@ -1383,7 +1383,7 @@
                 "source_sign_ext": "Z"
             },
             {
-                "disp_is_rel": false,
+                "disp_is_rel": true,
                 "esc": false,
                 "ext": null,
                 "ib": false,
@@ -1400,7 +1400,7 @@
                 "source_sign_ext": "Z"
             },
             {
-                "disp_is_rel": false,
+                "disp_is_rel": true,
                 "esc": false,
                 "ext": null,
                 "ib": false,
@@ -1417,7 +1417,7 @@
                 "source_sign_ext": "Z"
             },
             {
-                "disp_is_rel": false,
+                "disp_is_rel": true,
                 "esc": false,
                 "ext": null,
                 "ib": false,
@@ -1434,7 +1434,7 @@
                 "source_sign_ext": "Z"
             },
             {
-                "disp_is_rel": false,
+                "disp_is_rel": true,
                 "esc": false,
                 "ext": null,
                 "ib": false,
@@ -1451,7 +1451,7 @@
                 "source_sign_ext": "Z"
             },
             {
-                "disp_is_rel": false,
+                "disp_is_rel": true,
                 "esc": false,
                 "ext": null,
                 "ib": false,
@@ -1468,7 +1468,7 @@
                 "source_sign_ext": "Z"
             },
             {
-                "disp_is_rel": false,
+                "disp_is_rel": true,
                 "esc": false,
                 "ext": null,
                 "ib": false,
@@ -1485,7 +1485,7 @@
                 "source_sign_ext": "Z"
             },
             {
-                "disp_is_rel": false,
+                "disp_is_rel": true,
                 "esc": false,
                 "ext": null,
                 "ib": false,
@@ -1502,7 +1502,7 @@
                 "source_sign_ext": "Z"
             },
             {
-                "disp_is_rel": false,
+                "disp_is_rel": true,
                 "esc": false,
                 "ext": null,
                 "ib": false,
@@ -1519,7 +1519,7 @@
                 "source_sign_ext": "Z"
             },
             {
-                "disp_is_rel": false,
+                "disp_is_rel": true,
                 "esc": false,
                 "ext": null,
                 "ib": false,
@@ -1536,7 +1536,7 @@
                 "source_sign_ext": "Z"
             },
             {
-                "disp_is_rel": false,
+                "disp_is_rel": true,
                 "esc": true,
                 "ext": null,
                 "ib": false,
@@ -1553,7 +1553,7 @@
                 "source_sign_ext": "Z"
             },
             {
-                "disp_is_rel": false,
+                "disp_is_rel": true,
                 "esc": true,
                 "ext": null,
                 "ib": false,
@@ -1570,7 +1570,7 @@
                 "source_sign_ext": "Z"
             },
             {
-                "disp_is_rel": false,
+                "disp_is_rel": true,
                 "esc": true,
                 "ext": null,
                 "ib": false,
@@ -1587,7 +1587,7 @@
                 "source_sign_ext": "Z"
             },
             {
-                "disp_is_rel": false,
+                "disp_is_rel": true,
                 "esc": true,
                 "ext": null,
                 "ib": false,
@@ -1604,7 +1604,7 @@
                 "source_sign_ext": "Z"
             },
             {
-                "disp_is_rel": false,
+                "disp_is_rel": true,
                 "esc": true,
                 "ext": null,
                 "ib": false,
@@ -1621,7 +1621,7 @@
                 "source_sign_ext": "Z"
             },
             {
-                "disp_is_rel": false,
+                "disp_is_rel": true,
                 "esc": true,
                 "ext": null,
                 "ib": false,
@@ -1638,7 +1638,7 @@
                 "source_sign_ext": "Z"
             },
             {
-                "disp_is_rel": false,
+                "disp_is_rel": true,
                 "esc": true,
                 "ext": null,
                 "ib": false,
@@ -1655,7 +1655,7 @@
                 "source_sign_ext": "Z"
             },
             {
-                "disp_is_rel": false,
+                "disp_is_rel": true,
                 "esc": true,
                 "ext": null,
                 "ib": false,
@@ -1672,7 +1672,7 @@
                 "source_sign_ext": "Z"
             },
             {
-                "disp_is_rel": false,
+                "disp_is_rel": true,
                 "esc": true,
                 "ext": null,
                 "ib": false,
@@ -1689,7 +1689,7 @@
                 "source_sign_ext": "Z"
             },
             {
-                "disp_is_rel": false,
+                "disp_is_rel": true,
                 "esc": true,
                 "ext": null,
                 "ib": false,
@@ -1706,7 +1706,7 @@
                 "source_sign_ext": "Z"
             },
             {
-                "disp_is_rel": false,
+                "disp_is_rel": true,
                 "esc": true,
                 "ext": null,
                 "ib": false,
@@ -1723,7 +1723,7 @@
                 "source_sign_ext": "Z"
             },
             {
-                "disp_is_rel": false,
+                "disp_is_rel": true,
                 "esc": true,
                 "ext": null,
                 "ib": false,
@@ -1740,7 +1740,7 @@
                 "source_sign_ext": "Z"
             },
             {
-                "disp_is_rel": false,
+                "disp_is_rel": true,
                 "esc": true,
                 "ext": null,
                 "ib": false,
@@ -1757,7 +1757,7 @@
                 "source_sign_ext": "Z"
             },
             {
-                "disp_is_rel": false,
+                "disp_is_rel": true,
                 "esc": true,
                 "ext": null,
                 "ib": false,
@@ -1774,7 +1774,7 @@
                 "source_sign_ext": "Z"
             },
             {
-                "disp_is_rel": false,
+                "disp_is_rel": true,
                 "esc": true,
                 "ext": null,
                 "ib": false,
@@ -1791,7 +1791,7 @@
                 "source_sign_ext": "Z"
             },
             {
-                "disp_is_rel": false,
+                "disp_is_rel": true,
                 "esc": true,
                 "ext": null,
                 "ib": false,
@@ -2090,7 +2090,7 @@
         "cmd": "CMD_JCXZ",
         "encs": [
             {
-                "disp_is_rel": false,
+                "disp_is_rel": true,
                 "esc": false,
                 "ext": null,
                 "ib": false,
@@ -2112,7 +2112,7 @@
         "cmd": "CMD_JMP",
         "encs": [
             {
-                "disp_is_rel": false,
+                "disp_is_rel": true,
                 "esc": false,
                 "ext": null,
                 "ib": false,
@@ -2129,7 +2129,7 @@
                 "source_sign_ext": "S"
             },
             {
-                "disp_is_rel": false,
+                "disp_is_rel": true,
                 "esc": false,
                 "ext": null,
                 "ib": false,

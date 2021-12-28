@@ -90,14 +90,16 @@ CMD_IDIV:F6/7~M~Wr,F7/7~M~Wr~S
 CMD_IMUL:69+i*~RMI~wrr~S,6B+ib~RMI~wrr~S,F6/5~M~Wr~S,F7/5~M~wWr~S,xAF~RM~Wr~S
 
 CMD_INC:40+r*~O~W1,FE/0~M~W1,FF/0~M~W1
-CMD_Jcc:70~D8~r,71~D8~r,72~D8~r,73~D8~r,74~D8~r,75~D8~r,76~D8~r,77~D8~r,78~D8~r,79~D8~r,7A~D8~r,7B~D8~r,7C~D8~r,7D~D8~r,7E~D8~r,7F~D8~r,x80~D32~r,x81~D32~r,x82~D32~r,x83~D32~r,x84~D32~r,x85~D32~r,x86~D32~r,x87~D32~r,x88~D32~r,x89~D32~r,x8A~D32~r,x8B~D32~r,x8C~D32~r,x8D~D32~r,x8E~D32~r,x8F~D32~r
+CMD_Jcc:70~D8r~r,71~D8r~r,72~D8r~r,73~D8r~r,74~D8r~r,75~D8r~r,76~D8r~r,77~D8r~r,78~D8r~r,79~D8r~r,7A~D8r~r,7B~D8r~r,7C~D8r~r,7D~D8r~r,7E~D8r~r,7F~D8r~r,x80~D32r~r,x81~D32r~r,x82~D32r~r,x83~D32r~r,x84~D32r~r,x85~D32r~r,x86~D32r~r,x87~D32r~r,x88~D32r~r,x89~D32r~r,x8A~D32r~r,x8B~D32r~r,x8C~D32r~r,x8D~D32r~r,x8E~D32r~r,x8F~D32r~r
 CMD_SETcc:x90~M~w,x91~M~w,x92~M~w,x93~M~w,x94~M~w,x95~M~w,x96~M~w,x97~M~w,x98~M~w,x99~M~w,x9A~M~w,x9B~M~w,x9C~M~w,x9D~M~w,x9E~M~w,x9F~M~w
-CMD_JCXZ:E3~D8~r
+CMD_JCXZ:E3~D8r~r
 
 # TODO(ww): Do we need to support far jumps?
-CMD_JMP:EB~D8~r~S,E9~D32~r,FF/4~M~r
+CMD_JMP:EB~D8r~r~S,E9~D32r~r,FF/4~M~r
 CMD_LEA:8D~RM~wr
 CMD_LODS:AC~ZO~wr,AD~ZO~wr
+
+# TODO(ww): These displacements are relative to the current EIP, not the next.
 CMD_LOOP:E0~D8~rr,E1~D8~rr,E2~D8~rr
 
 # TODO(ww): Support A0, A1, A2, A3?
