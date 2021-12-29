@@ -277,24 +277,32 @@ wire [31:0] meta_eflags = {
 /// END META UNIT
 ///
 
+///
+/// BEGIN CFU
+///
+
+// Every step changes the EIP in *some* way, so the CFU always runs.
+
+cfu cfu_x(
+  .opc(opc),
+  .eflags(eflags),
+  .eip(eip),
+  .instr_len(instr_len),
+  .address(opnd0_r),
+
+  .next_eip(next_eip)
+);
+
+///
+/// END CFU
+///
+
 assign opnd0_w = exe_is_alu ? alu_result  :
                  exe_is_mu  ? mu_opnd0_w  :
                               opnd0_r     ; // No operation? Use the input.
 
 assign opnd1_w = exe_is_mu ? mu_opnd1_w :
                              opnd1_r    ; // TODO(ww): Others.
-
-// The EIP immediately after our current one in decoding order, which may
-// or may not be our actual next EIP depending on control flow.
-wire [31:0] seq_eip = eip + {28'd0, instr_len};
-
-// TODO(ww): Control flow transfers.
-// Our next EIP is one of 4 cases:
-// 1. No control flow transfers: the next EIP in decoding order
-// 2. Control flow transfer, relative to the current EIP
-// 3. Control flow transfer, relative to the next EIP
-// 4. Control flow transfer, absolute displacement
-assign next_eip = seq_eip;
 
 // Update our flag state based on whichever execution unit actually took effect.
 // Only the ALU and meta units can modify flag state, so we don't need to check
