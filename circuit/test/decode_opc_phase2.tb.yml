@@ -152,3 +152,18 @@ vector_specs:
     opnd0_is_read: 1
     opnd0_is_write: 0
     disp_is_rel: 1
+
+  - _description: "JMP pcrel+4 (disp_is_rel)"
+
+    # INPUTS
+    unescaped_instr: 0x04eb
+    is_2byte: 0
+
+    # OUTPUTS
+    opc: 24 # CMD_JMP
+    opnd_form: 2 # OPND_ENC_DISP8
+    opnd_count: 1
+    opnd0_is_read: 1
+    opnd0_is_write: 0
+    source_is_sext: 1
+    disp_is_rel: 1

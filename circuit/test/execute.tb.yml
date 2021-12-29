@@ -3,10 +3,13 @@ file: ../execute/execute.v
 inputs:
   - "7 opc"
   - "32 eflags"
+  - "32 eip"
+  - "4 instr_len"
   - "32 opnd0_r"
   - "32 opnd1_r"
 outputs:
   - "32 o_eflags"
+  - "32 next_eip"
   - "32 opnd0_w"
   - "32 opnd1_w"
 vector_specs:

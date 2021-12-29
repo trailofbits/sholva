@@ -4,11 +4,14 @@
 module execute(
   input [6:0] opc,
   input [31:0] eflags,
+  input [31:0] eip,
+  input [3:0] instr_len,
   input [31:0] opnd0_r,
   input [31:0] opnd1_r,
   // TODO(ww): Input signal for 8/16/32 bit opnds
 
   output [31:0] o_eflags,
+  output [31:0] next_eip,
   output [31:0] opnd0_w,
   output [31:0] opnd1_w
 );
@@ -280,6 +283,18 @@ assign opnd0_w = exe_is_alu ? alu_result  :
 
 assign opnd1_w = exe_is_mu ? mu_opnd1_w :
                              opnd1_r    ; // TODO(ww): Others.
+
+// The EIP immediately after our current one in decoding order, which may
+// or may not be our actual next EIP depending on control flow.
+wire [31:0] seq_eip = eip + {28'd0, instr_len};
+
+// TODO(ww): Control flow transfers.
+// Our next EIP is one of 4 cases:
+// 1. No control flow transfers: the next EIP in decoding order
+// 2. Control flow transfer, relative to the current EIP
+// 3. Control flow transfer, relative to the next EIP
+// 4. Control flow transfer, absolute displacement
+assign next_eip = seq_eip;
 
 // Update our flag state based on whichever execution unit actually took effect.
 // Only the ALU and meta units can modify flag state, so we don't need to check
