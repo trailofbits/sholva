@@ -14,6 +14,7 @@ wire alu_src_inv = cntl[`ALU_SRC_INV];
 wire alu_src_inc = cntl[`ALU_SRC_INC];
 wire alu_use_carry = cntl[`ALU_USE_CARRY];
 wire alu_no_wr = cntl[`ALU_NO_WR];
+wire alu_no_flags = cntl[`ALU_NO_FLAGS];
 wire alu_clear_cf = cntl[`ALU_CLEAR_CF];
 wire alu_clear_of = cntl[`ALU_CLEAR_OF];
 
@@ -49,12 +50,12 @@ wire [32:0] stat_result = cntl[`ALU_OP_ADD] ? result_add :
                                               result_div;
 
 // TODO(ww): Fill these in.
-wire cf_no_wr = alu_no_wr; // NOTE(ww): CMD_DEC does not modify CF
-wire pf_no_wr = alu_no_wr;
-wire zf_no_wr = alu_no_wr;
-wire sf_no_wr = alu_no_wr;
-wire of_no_wr = alu_no_wr;
-wire af_no_wr = alu_no_wr;
+wire cf_no_wr = alu_no_flags | alu_no_wr; // NOTE(ww): CMD_DEC does not modify CF
+wire pf_no_wr = alu_no_flags | alu_no_wr;
+wire zf_no_wr = alu_no_flags | alu_no_wr;
+wire sf_no_wr = alu_no_flags | alu_no_wr;
+wire of_no_wr = alu_no_flags | alu_no_wr;
+wire af_no_wr = alu_no_flags | alu_no_wr;
 
 assign status_out[`STAT_CF] = cf_no_wr     ? status_in[`STAT_CF] :
                               alu_clear_cf ? 1'b0 :

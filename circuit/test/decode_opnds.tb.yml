@@ -422,3 +422,57 @@ vector_specs:
     opnd1_r: 0x11111111
     dest0_kind: 0b01
     dest0_sel: 1 # ECX
+
+  - _description: "call 0xffffffff (disp32)"
+
+    # INPUTS
+    unescaped_instr: 0xfffffffbe8
+    esp: 0x11223344
+    opc: 64 # CMD_CALLr
+    opnd_form: 14 # OPND_ENC_DISP32
+    opnd0_is_read: 1
+
+    # OUTPUTS
+    instr_body_len: 4 # disp32
+    opnd0_r: 0xfffffffb # NOTE(ww): Pre-adjustment.
+    opnd1_r: 0x11223344
+    opnd2_r: 4
+    dest0_kind: 0b00 # OPND_DEST_NONE
+    dest0_sel: 0
+    dest1_kind: 1 # OPND_DEST_REG_1HOT
+    dest1_sel: 4 # ESP
+
+  - _description: "call eax"
+
+    # INPUTS
+    unescaped_instr: 0xd0ff
+    eax: 0x11223344
+    esp: 0x55667788
+    opc: 64 # CMD_CALLi
+    opnd_form: 3 # OPND_ENC_MODREGRM_RM
+    opnd0_is_read: 1
+
+    # OUTPUTS
+    instr_body_len: 1 # ModR/M
+    opnd0_r: 0x11223344
+    opnd1_r: 0x55667788
+    opnd2_r: 4
+    dest0_kind: 0b00 # OPND_DEST_NONE
+    dest0_sel: 0
+    dest1_kind: 1 # OPND_DEST_REG_1HOT
+    dest1_sel: 4 # ESP
+
+  - _description: "JMP pcrel+4 (disp8)"
+
+    # INPUTS
+    unescaped_instr: 0x04eb
+    opc: 24 # CMD_JMPr
+    opnd_form: 2 # OPND_ENC_DISP8
+    opnd0_is_read: 1
+    source_is_sext: 1
+
+    # OUTPUTS:
+    instr_body_len: 1 # disp8
+    opnd0_r: 4 # NOTE(ww): Pre-adjustment.
+    dest0_kind: 0b00 # OPND_DEST_NONE
+    dest0_sel: 0

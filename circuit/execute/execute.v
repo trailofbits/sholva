@@ -4,11 +4,15 @@
 module execute(
   input [6:0] opc,
   input [31:0] eflags,
+  input [31:0] eip,
+  input [3:0] instr_len,
   input [31:0] opnd0_r,
   input [31:0] opnd1_r,
+  input [31:0] opnd2_r,
   // TODO(ww): Input signal for 8/16/32 bit opnds
 
   output [31:0] o_eflags,
+  output [31:0] next_eip,
   output [31:0] opnd0_w,
   output [31:0] opnd1_w
 );
@@ -42,11 +46,13 @@ wire alu_op_add = opc_1hot[`CMD_ADD] |
                   opc_1hot[`CMD_ADC] |
                   opc_1hot[`CMD_INC];
 
-wire alu_op_sub = opc_1hot[`CMD_SUB] |
-                  opc_1hot[`CMD_SBB] |
-                  opc_1hot[`CMD_DEC] |
-                  opc_1hot[`CMD_CMP] |
-                  opc_1hot[`CMD_CMPS];
+wire alu_op_sub = opc_1hot[`CMD_SUB]   |
+                  opc_1hot[`CMD_SBB]   |
+                  opc_1hot[`CMD_DEC]   |
+                  opc_1hot[`CMD_CMP]   |
+                  opc_1hot[`CMD_CMPS]  |
+                  opc_1hot[`CMD_CALLr] |
+                  opc_1hot[`CMD_CALLi] ;
 
 wire alu_op_and = opc_1hot[`CMD_AND] |
                   opc_1hot[`CMD_TEST];
@@ -100,7 +106,9 @@ wire alu_no_wr = opc_1hot[`CMD_CMP] |
                  opc_1hot[`CMD_CMPS] |
                  opc_1hot[`CMD_TEST];
 
-wire alu_no_flags = opc_1hot[`CMD_NOT];
+wire alu_no_flags = opc_1hot[`CMD_NOT]   |
+                    opc_1hot[`CMD_CALLr] |
+                    opc_1hot[`CMD_CALLi] ;
 
 // TODO(ww): Flesh these out more:
 // https://sandpile.org/x86/flags.htm
@@ -149,11 +157,19 @@ wire [6:0] status_in = {
 wire [6:0] alu_status_out;
 wire [31:0] alu_result;
 
+wire alu_op_is_call = opc_1hot[`CMD_CALLr] | opc_1hot[`CMD_CALLi];
+
+// When we're using the ALU as part of a CALL instruction, we need to do some
+// operand re-routing. Specifically, we need to use opnd#1 and opnd#2 as
+// opnd#0 and opnd#1 respectively.
+wire [31:0] alu_opnd0_r = alu_op_is_call ? opnd1_r : opnd0_r;
+wire [31:0] alu_opnd1_r = alu_op_is_call ? opnd2_r : opnd1_r;
+
 alu alu_x(
   .cntl(alu_cntl),
   .status_in(status_in),
-  .opnd0_r(opnd0_r),
-  .opnd1_r(opnd1_r),
+  .opnd0_r(alu_opnd0_r),
+  .opnd1_r(alu_opnd1_r),
 
   .status_out(alu_status_out),
   .result(alu_result)
@@ -274,12 +290,44 @@ wire [31:0] meta_eflags = {
 /// END META UNIT
 ///
 
+///
+/// BEGIN CFU
+///
+
+// Every step changes the EIP in *some* way, so the CFU always runs.
+
+cfu cfu_x(
+  .opc(opc),
+  .eflags(eflags),
+  .eip(eip),
+  .instr_len(instr_len),
+  .address(opnd0_r),
+
+  .next_eip(next_eip)
+);
+
+///
+/// END CFU
+///
+
+// The CFU never *directly* affects the write operands. But it can *influence*
+// them, e.g. if the instruction is a CALL, by operating in tandem with the ALU.
+// When that happens, `exe_is_alu` is high and we apply the result correctly.
+// See the HACK note below.
+
 assign opnd0_w = exe_is_alu ? alu_result  :
                  exe_is_mu  ? mu_opnd0_w  :
                               opnd0_r     ; // No operation? Use the input.
 
-assign opnd1_w = exe_is_mu ? mu_opnd1_w :
-                             opnd1_r    ; // TODO(ww): Others.
+// HACK(ww): Route alu_result into opnd1_w if and only if we're executing the
+// ALU in the context of a "fused" operation (so far, only CALL). We do this
+// because the ALU performs the stack adjustment for us and other parts of the
+// circuit expect to do the ESP writeback via opnd#1 (since opnd0_r is used
+// for the EIP adjustment). See the construction of dest1_kind and dest1_sel
+// during operand decoding for more context.
+assign opnd1_w = exe_is_mu                    ? mu_opnd1_w :
+                 exe_is_alu && alu_op_is_call ? alu_result :
+                                                opnd1_r    ; // TODO(ww): Others.
 
 // Update our flag state based on whichever execution unit actually took effect.
 // Only the ALU and meta units can modify flag state, so we don't need to check

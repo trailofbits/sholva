@@ -19,6 +19,7 @@ outputs:
   - "1 opnd2_is_read"
   - "1 opnd2_is_write"
   - "1 source_is_sext"
+  - "1 disp_is_rel"
 vector_specs:
   - _description: "ADD eax, byte 0xff (source_is_sext)"
 
@@ -137,3 +138,32 @@ vector_specs:
     opnd0_is_read: 1
     opnd0_is_write: 1
     opnd1_is_one: 1
+
+  - _description: "CALL 0xffffffff (disp_is_rel)"
+
+    # INPUTS
+    unescaped_instr: 0xfffffffbe8
+    is_2byte: 0
+
+    # OUTPUTS
+    opc: 64 # CMD_CALLr
+    opnd_form: 14 # OPND_ENC_DISP32
+    opnd_count: 1
+    opnd0_is_read: 1
+    opnd0_is_write: 0
+    disp_is_rel: 1
+
+  - _description: "JMP pcrel+4 (disp_is_rel)"
+
+    # INPUTS
+    unescaped_instr: 0x04eb
+    is_2byte: 0
+
+    # OUTPUTS
+    opc: 24 # CMD_JMPr
+    opnd_form: 2 # OPND_ENC_DISP8
+    opnd_count: 1
+    opnd0_is_read: 1
+    opnd0_is_write: 0
+    source_is_sext: 1
+    disp_is_rel: 1

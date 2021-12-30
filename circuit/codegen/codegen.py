@@ -4,10 +4,10 @@
 # from "commands.json", which in turn is generated from "encodings.spec"
 # by "parse_encodings.py"
 
-import functools
 import json
 from collections import defaultdict
 from datetime import datetime
+from functools import reduce
 from pathlib import Path
 from textwrap import dedent
 
@@ -276,7 +276,7 @@ def _gen_opc_map_v(commands):
             for enc in cmd["encs"]:
                 enc_expr = _basic_enc_expr(enc)
                 enc_exprs.append(enc_expr)
-            cmd_expr = functools.reduce(_or, enc_exprs)
+            cmd_expr = reduce(_or, enc_exprs)
             cmd_exprs.append((_asdef(cmd["cmd"]), cmd_expr))
         print(_assign("opc", _ternary_chain(cmd_exprs, _asdef("CMD_UNKNOWN"))), file=io)
 
@@ -294,7 +294,7 @@ def _gen_opc_map_v(commands):
             for op_enc in op_encs:
                 enc_expr = _basic_enc_expr(op_enc)
                 enc_exprs.append(enc_expr)
-            opnd_enc_expr = functools.reduce(_or, enc_exprs)
+            opnd_enc_expr = reduce(_or, enc_exprs)
             opnd_enc_exprs.append((_asdef(_OPND_ENC_MAP[opnd_enc][0]), opnd_enc_expr))
         print(
             _assign(
@@ -317,7 +317,7 @@ def _gen_opc_map_v(commands):
         for enc in rb_forms:
             rb_form_expr = _basic_enc_expr(enc)
             rb_form_exprs.append(rb_form_expr)
-        print(_assign("reg_1byte", functools.reduce(_or, rb_form_exprs)), file=io)
+        print(_assign("reg_1byte", reduce(_or, rb_form_exprs)), file=io)
 
         _br(io, 2)
 
@@ -325,7 +325,7 @@ def _gen_opc_map_v(commands):
         for enc in ib_forms:
             ib_form_expr = _basic_enc_expr(enc)
             ib_form_exprs.append(ib_form_expr)
-        print(_assign("imm_1byte", functools.reduce(_or, ib_form_exprs)), file=io)
+        print(_assign("imm_1byte", reduce(_or, ib_form_exprs)), file=io)
 
         _br(io, 2)
 
@@ -335,9 +335,7 @@ def _gen_opc_map_v(commands):
             arity_map[arity].append(form)
         arity_exprs = []
         for arity, forms in arity_map.items():
-            arity_expr = functools.reduce(
-                _or, [_eq("opnd_form", _asdef(form)) for form in forms]
-            )
+            arity_expr = reduce(_or, [_eq("opnd_form", _asdef(form)) for form in forms])
             arity_exprs.append((_lit(2, arity), arity_expr))
         print(_assign("opnd_count", _ternary_chain(arity_exprs)), file=io)
 
@@ -367,7 +365,7 @@ def _gen_opc_map_v(commands):
                         opndN_is_write_exprs.append(enc_expr)
 
             if len(opndN_is_one_exprs) > 0:
-                opndN_is_one_expr = functools.reduce(_or, opndN_is_one_exprs)
+                opndN_is_one_expr = reduce(_or, opndN_is_one_exprs)
             else:
                 opndN_is_one_expr = _V_FALSE
 
@@ -379,7 +377,7 @@ def _gen_opc_map_v(commands):
             _br(io, 2)
 
             if len(opndN_is_read_exprs) > 0:
-                opndN_is_read_expr = functools.reduce(_or, opndN_is_read_exprs)
+                opndN_is_read_expr = reduce(_or, opndN_is_read_exprs)
             else:
                 opndN_is_read_expr = _V_FALSE
 
@@ -391,7 +389,7 @@ def _gen_opc_map_v(commands):
             _br(io, 2)
 
             if len(opndN_is_write_exprs) > 0:
-                opndN_is_write_expr = functools.reduce(_or, opndN_is_write_exprs)
+                opndN_is_write_expr = reduce(_or, opndN_is_write_exprs)
             else:
                 opndN_is_write_expr = _V_FALSE
 
@@ -411,9 +409,18 @@ def _gen_opc_map_v(commands):
                 enc_expr = _basic_enc_expr(enc)
                 source_is_sext_exprs.append(enc_expr)
         print(
-            _assign("source_is_sext", functools.reduce(_or, source_is_sext_exprs)),
+            _assign("source_is_sext", reduce(_or, source_is_sext_exprs)),
             file=io,
         )
+
+        # Generate the "disp_is_rel" assignment.
+        disp_is_rel_exprs = []
+        for cmd in commands:
+            for enc in cmd["encs"]:
+                if not enc["disp_is_rel"]:
+                    continue
+                disp_is_rel_exprs.append(_basic_enc_expr(enc))
+        print(_assign("disp_is_rel", reduce(_or, disp_is_rel_exprs)), file=io)
 
 
 def _gen_imm_v():

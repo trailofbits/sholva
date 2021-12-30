@@ -120,23 +120,26 @@ decode decode_instr(
 
 // Execute
 wire [31:0] next_eflags;
+wire [31:0] next_eip;
 wire [31:0] opnd0_w;
-wire [31:0] opnd1_w; // TODO
+wire [31:0] opnd1_w;
 
 execute execute_x(
   .opc(opc),
   .eflags(eflags),
+  .eip(eip),
+  .instr_len(instr_len),
   .opnd0_r(opnd0_r),
   .opnd1_r(opnd1_r),
+  .opnd2_r(opnd2_r),
 
   .o_eflags(next_eflags),
+  .next_eip(next_eip),
   .opnd0_w(opnd0_w),
   .opnd1_w(opnd1_w)
 );
 
 // Register writeback + updates.
-// TODO(ww): Control flow transfers.
-wire [31:0] next_eip = eip + {28'd0, instr_len};
 
 regfile regfile_x(
   .i_eax(eax),

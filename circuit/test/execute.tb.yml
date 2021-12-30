@@ -3,47 +3,98 @@ file: ../execute/execute.v
 inputs:
   - "7 opc"
   - "32 eflags"
+  - "32 eip"
+  - "4 instr_len"
   - "32 opnd0_r"
   - "32 opnd1_r"
+  - "32 opnd2_r"
 outputs:
   - "32 o_eflags"
+  - "32 next_eip"
   - "32 opnd0_w"
   - "32 opnd1_w"
 vector_specs:
   - _description: "CMD_ADD (ALU_OP_ADD)"
+
+    # INPUTS
     opc: 0 # CMD_ADD
     eflags: 514
     opnd0_r: 0x12345678
     opnd1_r: 0x90abcdef
+
+    # OUTPUTS
     o_eflags: 658
     opnd0_w: 0xa2e02467
     # TODO(ww): Is this reasonable behavior?
     opnd1_w: 0x90abcdef
+
   - _description: "CMD_STC (meta op, set CF)"
+
+    # INPUTS
     opc: 50 # CMD_STC
     eflags: 0
+
+    # OUTPUTS
     o_eflags: 1 # EFLAGS.CF is bit 0
   - _description: "CMD_CLC (meta op, clear CF)"
+
+    # INPUTS
     opc: 10 # CMD_CLC
     eflags: 1
+
+    # OUTPUTS
     o_eflags: 0 # EFLAGS.CF is bit 0
+
   - _description: "CMD_STD (meta op, set DF)"
+
+    # INPUTS
     opc: 51 # CMD_STD
     eflags: 0b00000000000
+
+    # OUTPUTS
     o_eflags: 0b10000000000 # EFLAGS.DF is bit 10
+
   - _description: "CMD_CLD (meta, op, clear DF)"
+
+    # INPUTS
     opc: 11 # CMD_CLD
     eflags: 0b11010110101
+
+    # OUTPUTS
     o_eflags: 0b01010110101
+
   - _description: "CMD_MOV (move op)"
+
+    # INPUTS
     opc: 28 # CMD_MOV
     opnd0_r: 0xaaaaaaaa
     opnd1_r: 0xbbbbbbbb
     opnd0_w: 0xbbbbbbbb
     opnd1_w: 0xbbbbbbbb
+
   - _description: "CMD_LEA (move op)"
+
+    # INPUTS
     opc: 25 # CMD_LEA
     opnd0_r: 0x00000000
     opnd1_r: 0x11111111
+
+    # OUTPUTS
     opnd0_w: 0x11111111
     opnd1_w: 0x11111111
+
+  - _description: "CMD_CALLr (fused cfu + alu op)"
+
+    # INPUTS
+    opc: 64 # CMD_CALLr
+    eflags: 0x514
+    eip: 0x8049014
+    instr_len: 5
+    opnd0_r: 0xffffffe7 # disp32
+    opnd1_r: 1000 # ESP
+    opnd2_r: 4 # stack adjust
+
+    o_eflags: 0x514 # assert no flag changes despite ALU
+    next_eip: 0x8049000
+    opnd0_w: 996 # dupe of opnd1, not used
+    opnd1_w: 996

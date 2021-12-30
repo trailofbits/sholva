@@ -1,7 +1,7 @@
 # routines and constants common to both `tbgen` and `tvgen`
 
 HELP = !!ARGV.delete("-h") || !!ARGV.delete("--help")
-VERBOSE = !!ARGV.delete("--verbose") || ENV.key?("VERBOSE")
+VERBOSE = !!ARGV.delete("--verbose") || ENV.key?("VERBOSE") || ENV.key?("V")
 
 MAX_TEST_VECTORS = 128
 
