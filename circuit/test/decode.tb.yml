@@ -97,6 +97,8 @@ vector_specs:
     opnd0_r: 0x1230 # pre-adjust
     opnd1_r: 0xaabbccdd
     opnd2_r: 4
+    dest1_kind: 1 # OPND_DEST_REG_1HOT
+    dest1_sel: 4 # ESP
 
   - _description: "call eax (absolute indirect)"
 
@@ -111,3 +113,6 @@ vector_specs:
     opnd0_r: 0xaabbccdd
     opnd1_r: 0x11223344
     opnd2_r: 4
+    dest1_kind: 1 # OPND_DEST_REG_1HOT
+    dest1_sel: 4 # ESP
+

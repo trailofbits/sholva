@@ -438,7 +438,9 @@ vector_specs:
     opnd1_r: 0x11223344
     opnd2_r: 4
     dest0_kind: 0b00 # OPND_DEST_NONE
-    dest0_sel: x
+    dest0_sel: 0
+    dest1_kind: 1 # OPND_DEST_REG_1HOT
+    dest1_sel: 4 # ESP
 
   - _description: "call eax"
 
@@ -456,7 +458,9 @@ vector_specs:
     opnd1_r: 0x55667788
     opnd2_r: 4
     dest0_kind: 0b00 # OPND_DEST_NONE
-    dest0_sel: x
+    dest0_sel: 0
+    dest1_kind: 1 # OPND_DEST_REG_1HOT
+    dest1_sel: 4 # ESP
 
   - _description: "JMP pcrel+4 (disp8)"
 
@@ -471,4 +475,4 @@ vector_specs:
     instr_body_len: 1 # disp8
     opnd0_r: 4 # NOTE(ww): Pre-adjustment.
     dest0_kind: 0b00 # OPND_DEST_NONE
-    dest0_sel: x
+    dest0_sel: 0

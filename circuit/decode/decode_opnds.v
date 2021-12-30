@@ -484,20 +484,38 @@ assign opnd2_r = opnd2_is_phony ? opnd2_r_phonyval : 32'b0;
 
 // TODO(ww): Is this the right place for this? Maybe we should do it
 // further on in instruction decoding, when looking at `opc` more closely.
-assign dest0_kind = !opnd0_is_write ? `OPND_DEST_NONE
-                  : opnd0_is_reg ? `OPND_DEST_REG_1HOT
-                  : opnd0_is_mem ? `OPND_DEST_MEM_1HOT
-                  : `OPND_DEST_NONE;
 
-assign dest1_kind = !opnd1_is_write ? `OPND_DEST_NONE
-                  : opnd1_is_reg ? `OPND_DEST_REG_1HOT
-                  : opnd1_is_mem ? `OPND_DEST_MEM_1HOT
-                  : `OPND_DEST_NONE;
+// Figure out the *kind* of destination(s) for our operation.
+// In most cases it's the same as the source of the operand.
+// The main edge case is "phony" operands, which are synthesized and don't
+// have explicit read/write semantics. These need to be fixed up manually.
+// TODO(ww): Clean this up. In particular, the decision of which
+// destination operand to use for phony operands is subjective and hard to follow:
+// I decided to use `dest1` below since `opnd1` is a phony-sourced `ESP`,
+// but that makes routing the adjusted `ESP` from the ALU more tedious elsewhere
+// (since the ALU otherwise gets its result routed to `opnd0` by default).
+
+wire dest1_is_phony_esp = stack_adjust_phonies;
+
+assign dest0_kind = !opnd0_is_write ? `OPND_DEST_NONE     :
+                    opnd0_is_reg    ? `OPND_DEST_REG_1HOT :
+                    opnd0_is_mem    ? `OPND_DEST_MEM_1HOT :
+                                      `OPND_DEST_NONE     ;
+
+// Special case, per above: dest1 might be ESP if we're doing a CALL.
+assign dest1_kind = dest1_is_phony_esp ? `OPND_DEST_REG_1HOT :
+                    !opnd1_is_write    ? `OPND_DEST_NONE     :
+                    opnd1_is_reg       ? `OPND_DEST_REG_1HOT :
+                    opnd1_is_mem       ? `OPND_DEST_MEM_1HOT :
+                                         `OPND_DEST_NONE     ;
 
 assign dest0_sel = dest0_kind[`OPND_DEST_REG] ?
                                  { 29'b0, opnd0_r_regsel } : 32'b0;
+
+// Same ESP special case for CALL.
 assign dest1_sel = dest1_kind[`OPND_DEST_REG] ?
-                                 { 29'b0, opnd1_r_regsel } : 32'b0;
+  (dest1_is_phony_esp ? { 29'b0, `REG_ESP } : { 29'b0, opnd1_r_regsel }) :
+  32'b0;
 
 assign instr_body_len = (has_modrm ? 4'd1 : 4'd0) + (has_sib ? 4'd1 : 4'd0) + imm_disp_len;
 
