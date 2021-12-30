@@ -430,24 +430,57 @@ wire [31:0] opnd0_r_dispval = disp;
 ///
 
 ///
+/// BEGIN PHONY OPERANDS
+///
+
+// In addition to all of the "real" operand types above, we also have a couple
+// of "phony" operands that we produce to simplify other parts of the circuit.
+// Some are already signaled for us: for example, `opndN_is_one` tells us that
+// an operand has an implicit value of 1. Others need to be checked below.
+
+// For CALL instructions, we introduce two phony operands: opnd1 becomes
+// ESP, and opnd2 becomes the immediate 4. We do this so that we can re-use
+// the ALU for stack adjustment during CALL's execution.
+// TODO(ww): RET needs two phonies as well.
+
+wire stack_adjust_phonies = opc_1hot[`CMD_CALLr] | opc_1hot[`CMD_CALLi];
+
+wire opnd0_is_phony = opnd0_is_one;
+
+wire opnd1_is_phony = opnd1_is_one | stack_adjust_phonies;
+
+wire opnd2_is_phony = opnd2_is_one | stack_adjust_phonies;
+
+wire [31:0] opnd0_r_phonyval = 32'b1;
+
+wire [31:0] opnd1_r_phonyval = opnd1_is_one         ? 32'b1 :
+                               stack_adjust_phonies ? esp   : 32'b0;
+
+wire [31:0] opnd2_r_phonyval = opnd2_is_one         ? 32'b1 :
+                               stack_adjust_phonies ? 32'd4 : 32'b0;
+
+///
+/// END PHONY OPERANDS
+///
+
+///
 /// END OPERAND EXTRACTION
 ///
 
 // Operand multiplexors.
 
-assign opnd0_r = opnd0_is_one  ? 32'b1           :
-                 opnd0_is_reg  ? opnd0_r_regval  :
-                 opnd0_is_mem  ? opnd0_r_memval  :
-                 opnd0_is_imm  ? opnd0_r_immval  :
-                 opnd0_is_disp ? opnd0_r_dispval : 32'b0;
+assign opnd0_r = opnd0_is_phony  ? opnd0_r_phonyval :
+                 opnd0_is_reg    ? opnd0_r_regval   :
+                 opnd0_is_mem    ? opnd0_r_memval   :
+                 opnd0_is_imm    ? opnd0_r_immval   :
+                 opnd0_is_disp   ? opnd0_r_dispval  : 32'b0;
 
-assign opnd1_r = opnd1_is_one  ? 32'b1         :
-                 opnd1_is_reg ? opnd1_r_regval :
-                 opnd1_is_mem ? opnd1_r_memval :
-                 opnd1_is_imm ? opnd1_r_immval : 32'b0;
+assign opnd1_r = opnd1_is_phony  ? opnd1_r_phonyval :
+                 opnd1_is_reg    ? opnd1_r_regval   :
+                 opnd1_is_mem    ? opnd1_r_memval   :
+                 opnd1_is_imm    ? opnd1_r_immval   : 32'b0;
 
-
-assign opnd2_r = 32'd0;
+assign opnd2_r = opnd2_is_phony ? opnd2_r_phonyval : 32'b0;
 
 // TODO(ww): Is this the right place for this? Maybe we should do it
 // further on in instruction decoding, when looking at `opc` more closely.

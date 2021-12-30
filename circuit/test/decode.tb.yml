@@ -89,19 +89,25 @@ vector_specs:
 
     # INPUTS
     raw_instr: 0x00001230e8
+    esp: 0xaabbccdd
 
     # OUTPUTS
     instr_len: 5
     opc: 64 # CMD_CALLr
     opnd0_r: 0x1230 # pre-adjust
+    opnd1_r: 0xaabbccdd
+    opnd2_r: 4
 
   - _description: "call eax (absolute indirect)"
 
     # INPUTS
     raw_instr: 0xd0ff
     eax: 0xaabbccdd
+    esp: 0x11223344
 
     # OUTPUTS
     instr_len: 2
     opc: 65 # CMD_CALLi
     opnd0_r: 0xaabbccdd
+    opnd1_r: 0x11223344
+    opnd2_r: 4

@@ -427,6 +427,7 @@ vector_specs:
 
     # INPUTS
     unescaped_instr: 0xfffffffbe8
+    esp: 0x11223344
     opc: 64 # CMD_CALLr
     opnd_form: 14 # OPND_ENC_DISP32
     opnd0_is_read: 1
@@ -434,6 +435,8 @@ vector_specs:
     # OUTPUTS
     instr_body_len: 4 # disp32
     opnd0_r: 0xfffffffb # NOTE(ww): Pre-adjustment.
+    opnd1_r: 0x11223344
+    opnd2_r: 4
     dest0_kind: 0b00 # OPND_DEST_NONE
     dest0_sel: x
 
@@ -442,6 +445,7 @@ vector_specs:
     # INPUTS
     unescaped_instr: 0xd0ff
     eax: 0x11223344
+    esp: 0x55667788
     opc: 64 # CMD_CALLi
     opnd_form: 3 # OPND_ENC_MODREGRM_RM
     opnd0_is_read: 1
@@ -449,6 +453,8 @@ vector_specs:
     # OUTPUTS
     instr_body_len: 1 # ModR/M
     opnd0_r: 0x11223344
+    opnd1_r: 0x55667788
+    opnd2_r: 4
     dest0_kind: 0b00 # OPND_DEST_NONE
     dest0_sel: x
 
