@@ -123,7 +123,6 @@ wire [31:0] next_eflags;
 wire [31:0] next_eip;
 wire [31:0] opnd0_w;
 wire [31:0] opnd1_w;
-wire [31:0] opnd2_w; // TODO
 
 execute execute_x(
   .opc(opc),
@@ -137,8 +136,7 @@ execute execute_x(
   .o_eflags(next_eflags),
   .next_eip(next_eip),
   .opnd0_w(opnd0_w),
-  .opnd1_w(opnd1_w),
-  .opnd2_w(opnd2_w)
+  .opnd1_w(opnd1_w)
 );
 
 // Register writeback + updates.
