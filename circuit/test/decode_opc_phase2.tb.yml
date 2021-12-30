@@ -160,7 +160,7 @@ vector_specs:
     is_2byte: 0
 
     # OUTPUTS
-    opc: 24 # CMD_JMP
+    opc: 24 # CMD_JMPr
     opnd_form: 2 # OPND_ENC_DISP8
     opnd_count: 1
     opnd0_is_read: 1

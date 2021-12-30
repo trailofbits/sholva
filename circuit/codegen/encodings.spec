@@ -95,7 +95,8 @@ CMD_SETcc:x90~M~w,x91~M~w,x92~M~w,x93~M~w,x94~M~w,x95~M~w,x96~M~w,x97~M~w,x98~M~
 CMD_JCXZ:E3~D8r~r
 
 # TODO(ww): Do we need to support far jumps?
-CMD_JMP:EB~D8r~r~S,E9~D32r~r,FF/4~M~r
+CMD_JMPr:EB~D8r~r~S,E9~D32r~r
+
 CMD_LEA:8D~RM~wr
 CMD_LODS:AC~ZO~wr,AD~ZO~wr
 
@@ -172,7 +173,9 @@ CMD_RCR:D0/3+rb~M~W1,D2/3+rb~MC~Wr,C0/3+rb+ib~MI~Wr,D1/3~M~W1,D3/3~MC~Wr,C1/3+ib
 # This is done to simplify other parts of the circuit. It could probably be done
 # just as well/easily with an additional flag on each encoding spec instead,
 # but this was a little simpler to quickly implement.
-
 # TODO(ww): Support `CALL 9A` and/or `CALL FF/3`?
 CMD_CALLr:E8~D32r~r
 CMD_CALLi:FF/2~M~r
+
+# NOTE(ww): This is down here so as not to muck up the implicit numbering.
+CMD_JMPi:FF/4~M~r

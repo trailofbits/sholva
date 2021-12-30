@@ -2109,7 +2109,7 @@
         ]
     },
     {
-        "cmd": "CMD_JMP",
+        "cmd": "CMD_JMPr",
         "encs": [
             {
                 "disp_is_rel": true,
@@ -2137,23 +2137,6 @@
                 "num_opnds": 1,
                 "op_enc": "D32",
                 "opc": 233,
-                "opc_reg_bits": false,
-                "opnd0_mode": "r",
-                "opnd1_mode": "x",
-                "opnd2_mode": "x",
-                "rb": false,
-                "rw_or_rd": false,
-                "source_sign_ext": "Z"
-            },
-            {
-                "disp_is_rel": false,
-                "esc": false,
-                "ext": 4,
-                "ib": false,
-                "iw_or_id": false,
-                "num_opnds": 1,
-                "op_enc": "M",
-                "opc": 255,
                 "opc_reg_bits": false,
                 "opnd0_mode": "r",
                 "opnd1_mode": "x",
@@ -4785,6 +4768,28 @@
                 "disp_is_rel": false,
                 "esc": false,
                 "ext": 2,
+                "ib": false,
+                "iw_or_id": false,
+                "num_opnds": 1,
+                "op_enc": "M",
+                "opc": 255,
+                "opc_reg_bits": false,
+                "opnd0_mode": "r",
+                "opnd1_mode": "x",
+                "opnd2_mode": "x",
+                "rb": false,
+                "rw_or_rd": false,
+                "source_sign_ext": "Z"
+            }
+        ]
+    },
+    {
+        "cmd": "CMD_JMPi",
+        "encs": [
+            {
+                "disp_is_rel": false,
+                "esc": false,
+                "ext": 4,
                 "ib": false,
                 "iw_or_id": false,
                 "num_opnds": 1,

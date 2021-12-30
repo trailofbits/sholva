@@ -26,11 +26,12 @@ wire [127:0] opc_1hot = one_hot128(opc);
 // TODO: Evaluate Jcc, LOOP, JCXZ conditions here.
 wire cf_xfer = opc_1hot[`CMD_CALLr]  ||
                opc_1hot[`CMD_CALLi]  ||
-               opc_1hot[`CMD_JMP]    ||
+               opc_1hot[`CMD_JMPr]   ||
+               opc_1hot[`CMD_JMPi]   ||
                opc_1hot[`CMD_RET]    ;
 
-// TODO: Handle absolute/relative transfers. Only relative is currently supported.
-wire cf_xfer_absolute = 1'b0;
+// TODO: Support other absolute indirect semantics.
+wire cf_xfer_absolute = opc_1hot[`CMD_CALLi] | opc_1hot[`CMD_JMPi];
 
 // The EIP immediately after our current one in decoding order, which may
 // or may not be our actual next EIP depending on control flow.
