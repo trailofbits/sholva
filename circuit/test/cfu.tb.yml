@@ -30,3 +30,14 @@ vector_specs:
 
     # OUTPUTS
     next_eip: 0x8049000
+
+  - _description: "CMD_CALLi (unconditional, abs xfer)"
+
+    # INPUTS
+    opc: 65 # CMD_CALLi
+    eip: 0x12345678
+    instr_len: 2
+    address: 0xaabbccdd
+
+    # OUTPUTS
+    next_eip: 0xaabbccdd
