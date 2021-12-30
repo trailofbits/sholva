@@ -7,11 +7,13 @@ inputs:
   - "4 instr_len"
   - "32 opnd0_r"
   - "32 opnd1_r"
+  - "32 opnd2_r"
 outputs:
   - "32 o_eflags"
   - "32 next_eip"
   - "32 opnd0_w"
   - "32 opnd1_w"
+  - "32 opnd2_w"
 vector_specs:
   - _description: "CMD_ADD (ALU_OP_ADD)"
     opc: 0 # CMD_ADD

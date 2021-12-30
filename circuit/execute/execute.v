@@ -8,12 +8,14 @@ module execute(
   input [3:0] instr_len,
   input [31:0] opnd0_r,
   input [31:0] opnd1_r,
+  input [31:0] opnd2_r,
   // TODO(ww): Input signal for 8/16/32 bit opnds
 
   output [31:0] o_eflags,
   output [31:0] next_eip,
   output [31:0] opnd0_w,
-  output [31:0] opnd1_w
+  output [31:0] opnd1_w,
+  output [31:0] opnd2_w
 );
 
 `include "funcs.v"
@@ -303,6 +305,8 @@ assign opnd0_w = exe_is_alu ? alu_result  :
 
 assign opnd1_w = exe_is_mu ? mu_opnd1_w :
                              opnd1_r    ; // TODO(ww): Others.
+
+assign opnd2_w = 32'b0; // TODO(ww)
 
 // Update our flag state based on whichever execution unit actually took effect.
 // Only the ALU and meta units can modify flag state, so we don't need to check
