@@ -166,6 +166,13 @@ CMD_RCL:D0/2+rb~M~W1,D2/2+rb~MC~Wr,C0/2+rb+ib~MI~Wr,D1/2~M~W1,D3/2~MC~Wr,C1/2+ib
 CMD_ROR:D0/1+rb~M~W1,D2/1+rb~MC~Wr,C0/1+rb+ib~MI~Wr,D1/1~M~W1,D3/1~MC~Wr,C1/1+ib~MI~Wr
 CMD_RCR:D0/3+rb~M~W1,D2/3+rb~MC~Wr,C0/3+rb+ib~MI~Wr,D1/3~M~W1,D3/3~MC~Wr,C1/3+ib~MI~Wr
 
-# TODO(ww): Figure out rel16/32 notation.
+# NOTE(ww): The CALL opcodes are broken up into `r` and `i` variants,
+# denoting whether they perform a "relative" control flow transfer (value in displacement,
+# relative to EIP) or an "indirect absolute" control flow transfer (value in ModR/M).
+# This is done to simplify other parts of the circuit. It could probably be done
+# just as well/easily with an additional flag on each encoding spec instead,
+# but this was a little simpler to quickly implement.
+
 # TODO(ww): Support `CALL 9A` and/or `CALL FF/3`?
-CMD_CALL:E8~D32r~r,FF/2~M~r
+CMD_CALLr:E8~D32r~r
+CMD_CALLi:FF/2~M~r

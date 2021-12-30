@@ -24,9 +24,10 @@ wire [127:0] opc_1hot = one_hot128(opc);
 // Are we performing a control flow "transfer," i.e. doing anything other
 // than moving the EIP to the next instruction in the text stream?
 // TODO: Evaluate Jcc, LOOP, JCXZ conditions here.
-wire cf_xfer = opc_1hot[`CMD_CALL] ||
-               opc_1hot[`CMD_JMP]  ||
-               opc_1hot[`CMD_RET]  ;
+wire cf_xfer = opc_1hot[`CMD_CALLr]  ||
+               opc_1hot[`CMD_CALLi]  ||
+               opc_1hot[`CMD_JMP]    ||
+               opc_1hot[`CMD_RET]    ;
 
 // TODO: Handle absolute/relative transfers. Only relative is currently supported.
 wire cf_xfer_absolute = 1'b0;

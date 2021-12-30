@@ -20,10 +20,10 @@ vector_specs:
     # OUTPUTS
     next_eip: 0x1005
 
-  - _description: "CMD_CALL (unconditional, rel xfer)"
+  - _description: "CMD_CALLr (unconditional, rel xfer)"
 
     # INPUTS
-    opc: 64 # CMD_CALL
+    opc: 64 # CMD_CALLr
     eip: 0x8049014
     instr_len: 5
     address: 0xffffffe7

@@ -4757,7 +4757,7 @@
         ]
     },
     {
-        "cmd": "CMD_CALL",
+        "cmd": "CMD_CALLr",
         "encs": [
             {
                 "disp_is_rel": true,
@@ -4775,7 +4775,12 @@
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
-            },
+            }
+        ]
+    },
+    {
+        "cmd": "CMD_CALLi",
+        "encs": [
             {
                 "disp_is_rel": false,
                 "esc": false,
