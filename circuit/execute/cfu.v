@@ -21,10 +21,32 @@ module cfu(
 
 wire [127:0] opc_1hot = one_hot128(opc);
 
+// Are we performing a conditional jump?
+// TODO(ww): Need appropriate control wires for `ECX == 0`.
+wire cmd_is_jcc = opc_1hot[`CMD_JO]   ||
+                  opc_1hot[`CMD_JCXZ] ||
+                  opc_1hot[`CMD_JNO]  ||
+                  opc_1hot[`CMD_JNO]  ||
+                  opc_1hot[`CMD_JB]   ||
+                  opc_1hot[`CMD_JAE]  ||
+                  opc_1hot[`CMD_JE]   ||
+                  opc_1hot[`CMD_JNE]  ||
+                  opc_1hot[`CMD_JBE]  ||
+                  opc_1hot[`CMD_JA]   ||
+                  opc_1hot[`CMD_JS]   ||
+                  opc_1hot[`CMD_JNS]  ||
+                  opc_1hot[`CMD_JP]   ||
+                  opc_1hot[`CMD_JNP]  ||
+                  opc_1hot[`CMD_JL]   ||
+                  opc_1hot[`CMD_JNL]  ||
+                  opc_1hot[`CMD_JLE]  ||
+                  opc_1hot[`CMD_JG]   ;
+
 // Are we performing a control flow "transfer," i.e. doing anything other
 // than moving the EIP to the next instruction in the text stream?
 // TODO: Evaluate Jcc, LOOP, JCXZ conditions here.
-wire cf_xfer = opc_1hot[`CMD_CALLr]  ||
+wire cf_xfer = cmd_is_jcc            ||
+               opc_1hot[`CMD_CALLr]  ||
                opc_1hot[`CMD_CALLi]  ||
                opc_1hot[`CMD_JMPr]   ||
                opc_1hot[`CMD_JMPi]   ||
