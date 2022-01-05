@@ -10,6 +10,7 @@
 module cfu(
   input [6:0] opc,
   input [31:0] eflags,
+  input ecx_is_zero,
   input [31:0] eip,
   input [3:0] instr_len,
   input [31:0] address,
@@ -22,7 +23,6 @@ module cfu(
 wire [127:0] opc_1hot = one_hot128(opc);
 
 // Are we performing a conditional jump?
-// TODO(ww): Need appropriate control wires for `ECX == 0`.
 wire cmd_is_jcc = opc_1hot[`CMD_JO]   ||
                   opc_1hot[`CMD_JCXZ] ||
                   opc_1hot[`CMD_JNO]  ||
@@ -41,6 +41,8 @@ wire cmd_is_jcc = opc_1hot[`CMD_JO]   ||
                   opc_1hot[`CMD_JNL]  ||
                   opc_1hot[`CMD_JLE]  ||
                   opc_1hot[`CMD_JG]   ;
+
+// TODO: Evaluate each `CMD_Jcc` here against `eflags` and `ecx_is_zero`.
 
 // Are we performing a control flow "transfer," i.e. doing anything other
 // than moving the EIP to the next instruction in the text stream?

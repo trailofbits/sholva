@@ -3,6 +3,7 @@ file: ../execute/execute.v
 inputs:
   - "7 opc"
   - "32 eflags"
+  - "1 ecx_is_zero"
   - "32 eip"
   - "4 instr_len"
   - "32 opnd0_r"

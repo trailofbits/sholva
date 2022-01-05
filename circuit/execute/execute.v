@@ -4,6 +4,7 @@
 module execute(
   input [6:0] opc,
   input [31:0] eflags,
+  input ecx_is_zero,
   input [31:0] eip,
   input [3:0] instr_len,
   input [31:0] opnd0_r,
@@ -299,6 +300,7 @@ wire [31:0] meta_eflags = {
 cfu cfu_x(
   .opc(opc),
   .eflags(eflags),
+  .ecx_is_zero(ecx_is_zero),
   .eip(eip),
   .instr_len(instr_len),
   .address(opnd0_r),
