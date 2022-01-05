@@ -90,7 +90,7 @@ CMD_IDIV:F6/7~M~Wr,F7/7~M~Wr~S
 CMD_IMUL:69+i*~RMI~wrr~S,6B+ib~RMI~wrr~S,F6/5~M~Wr~S,F7/5~M~wWr~S,xAF~RM~Wr~S
 
 CMD_INC:40+r*~O~W1,FE/0~M~W1,FF/0~M~W1
-CMD_Jcc:70~D8r~r,71~D8r~r,72~D8r~r,73~D8r~r,74~D8r~r,75~D8r~r,76~D8r~r,77~D8r~r,78~D8r~r,79~D8r~r,7A~D8r~r,7B~D8r~r,7C~D8r~r,7D~D8r~r,7E~D8r~r,7F~D8r~r,x80~D32r~r,x81~D32r~r,x82~D32r~r,x83~D32r~r,x84~D32r~r,x85~D32r~r,x86~D32r~r,x87~D32r~r,x88~D32r~r,x89~D32r~r,x8A~D32r~r,x8B~D32r~r,x8C~D32r~r,x8D~D32r~r,x8E~D32r~r,x8F~D32r~r
+CMD_JO:70~D8r~r,x80~D32r~r
 CMD_SETcc:x90~M~w,x91~M~w,x92~M~w,x93~M~w,x94~M~w,x95~M~w,x96~M~w,x97~M~w,x98~M~w,x99~M~w,x9A~M~w,x9B~M~w,x9C~M~w,x9D~M~w,x9E~M~w,x9F~M~w
 CMD_JCXZ:E3~D8r~r
 
@@ -179,3 +179,22 @@ CMD_CALLi:FF/2~M~r
 
 # NOTE(ww): This is down here so as not to muck up the implicit numbering.
 CMD_JMPi:FF/4~M~r
+
+# NOTE(ww): Same as CMD_JMPi above: these are here to preserve the implicit numbering.
+# NOTE(ww): There's an obvious lower-bits pattern here that, if I was feeling a little more
+# clever, could be used to reduce the number of separate `CMD_J*` lines needed.
+CMD_JNO:71~D8r~r,x81~D32r~r
+CMD_JB:72~D8r~r,x82~D32r~r
+CMD_JAE:73~D8r~r,x83~D32r~r
+CMD_JE:74~D8r~r,x84~D32r~r
+CMD_JNE:75~D8r~r,x85~D32r~r
+CMD_JBE:76~D8r~r,x86~D32r~r
+CMD_JA:77~D8r~r,x87~D32r~r
+CMD_JS:78~D8r~r,x88~D32r~r
+CMD_JNS:79~D8r~r,x89~D32r~r
+CMD_JP:7A~D8r~r,x8A~D32r~r
+CMD_JNP:7B~D8r~r,x8B~D32r~r
+CMD_JL:7C~D8r~r,x8C~D32r~r
+CMD_JNL:7D~D8r~r,x8D~D32r~r
+CMD_JLE:7E~D8r~r,x8E~D32r~r
+CMD_JG:7F~D8r~r,x8F~D32r~r
