@@ -116,3 +116,12 @@ vector_specs:
     dest1_kind: 1 # OPND_DEST_REG_1HOT
     dest1_sel: 4 # ESP
 
+  - _description: "jle 0x8049039 <main+0x2c> (rel8)"
+
+    # INPUTS
+    raw_instr: 0x117e
+
+    # OUTPUTS
+    instr_len: 2
+    opc: 80 # CMD_JLE
+    opnd0_r: 0x11 # pre-adjust
