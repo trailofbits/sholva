@@ -33,14 +33,14 @@ vector_specs:
     address: 0xffffddac
     data: 0x65666666
 
-  # - _description: "0x0000000b @ 0xffc51af8 (read, dword)"
+  - _description: "0x0000000b @ 0xff991d28 (read, dword)"
 
-  #   # INPUTS
-  #   raw_hint: 0x82ffc51af80b000000
+    # INPUTS
+    raw_hint: 0x82ff991d280000000b
 
-  #   # OUTPUTS
-  #   valid_hint: 0b1
-  #   mask: 0b10 # dword
-  #   is_write: 0b0 # read
-  #   address: 0xffc51af8
-  #   data: 0x0b
+    # OUTPUTS
+    valid_hint: 0b1
+    mask: 0b10 # dword
+    is_write: 0b0 # read
+    address: 0xff991d28
+    data: 0x0b
