@@ -80,7 +80,7 @@ CMD_CLC:F8~ZO~x
 CMD_CLD:FC~ZO~x
 CMD_CMC:F5~ZO~x
 
-CMD_CMP:38~MR~rr,39~MR~rr,3A~RM~rr,3B~RM~rr,3C+ib~I~rr,3D+i*~I~rr,80/7+ib~MI~rr,81/7+i*~MI~rr,83/7+ib~MI~rr
+CMD_CMP:38~MR~rr~S,39~MR~rr~S,3A~RM~rr~S,3B~RM~rr~S,3C+ib~I~rr~S,3D+i*~I~rr~S,80/7+ib~MI~rr~S,81/7+i*~MI~rr~S,83/7+ib~MI~rr
 CMD_CMPS:A6~ZO~rr,A7~ZO~rr
 CMD_CWD:99~ZO~Wr~S
 CMD_DEC:48+r*~O~W,FE/1~M~W,FF/1~M~W
