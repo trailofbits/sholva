@@ -181,3 +181,4 @@ vector_specs:
     imm_1byte: 1
     opnd0_is_read: 1
     opnd1_is_read: 1
+    source_is_sext: 1

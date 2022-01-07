@@ -107,7 +107,7 @@
 `define ALU_OP_DIV    5'd6   // Perform a DIV
 `define ALU_USE_CARRY 5'd7   // Use the carry-in bit as part of the operation.
 `define ALU_SRC_INC   5'd8   // Increment the source (TODO(ww): Why did I add this?)
-`define ALU_NO_WR     5'd9   // Do not write the result, including any flag changes
+`define ALU_NO_WR     5'd9   // Do not write the result (but maybe modify the flags)
 `define ALU_OP_SUB    5'd10  // Perform a SUB
 `define ALU_NO_FLAGS  5'd11  // Do not modify the flags
 `define ALU_CLEAR_CF  5'd12  // Always clear CF

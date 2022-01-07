@@ -132,17 +132,17 @@ vector_specs:
     opc: 80 # CMD_JLE
     opnd0_r: 0x11 # pre-adjust
 
-  # - _description: "cmp DWORD PTR [ebp-0x4],0xa (ebp=0xffc51afc)"
+  - _description: "cmp DWORD PTR [ebp-0x4],0xa (ebp=0xffc51afc)"
 
-  #   # INPUTS
-  #   raw_instr: 0x0afc7d83
-  #   ebp: 0xffc51afc
-  #   hint1_is_write: 0 # read
-  #   hint1_address: 0xffc51af8 # ebp - 4
-  #   hint1_data: 0xb
+    # INPUTS
+    raw_instr: 0x0afc7d83
+    ebp: 0xffc51afc
+    hint1_is_write: 0 # read
+    hint1_address: 0xffc51af8 # ebp - 4
+    hint1_data: 0xb
 
-  #   # OUTPUTS
-  #   instr_len: 4
-  #   opc: 13 # CMD_CMP
-  #   opnd0_r: 0x0b
-  #   opnd1_r: 0x0a
+    # OUTPUTS
+    instr_len: 4
+    opc: 13 # CMD_CMP
+    opnd0_r: 0x0b
+    opnd1_r: 0x0a

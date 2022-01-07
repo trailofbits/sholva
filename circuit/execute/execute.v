@@ -103,10 +103,12 @@ wire alu_use_carry = opc_1hot[`CMD_ADC] |
 wire alu_src_inc = opc_1hot[`CMD_SUB] |
                    opc_1hot[`CMD_SBB];
 
+// These commands do not use the ALU's 32-bit result.
 wire alu_no_wr = opc_1hot[`CMD_CMP] |
                  opc_1hot[`CMD_CMPS] |
                  opc_1hot[`CMD_TEST];
 
+// These commands do not use the ALU to modify the EFLAGS.
 wire alu_no_flags = opc_1hot[`CMD_NOT]   |
                     opc_1hot[`CMD_CALLr] |
                     opc_1hot[`CMD_CALLi] ;

@@ -915,7 +915,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": "Z"
+                "source_sign_ext": "S"
             }
         ]
     },
