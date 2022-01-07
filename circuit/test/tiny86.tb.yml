@@ -92,7 +92,7 @@ vector_specs:
 
     # OUTPUTS
     o_esp: 0xffc5a4c0 # esp(0xffc5a4c4) - 4
-    o_ebp: x # TODO: 0xffd7b39c
+    o_ebp: 0xffc5a4cc
     o_eip: 0x8049000
     o_eflags: 2
 
