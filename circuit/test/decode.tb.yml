@@ -146,3 +146,7 @@ vector_specs:
     opc: 13 # CMD_CMP
     opnd0_r: 0x0b
     opnd1_r: 0x0a
+    dest0_kind: 0 # OPND_DEST_NONE
+    dest1_kind: 0 # OPND_DEST_NONE
+    dest0_sel: 0
+    dest1_sel: 0

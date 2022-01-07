@@ -76,11 +76,11 @@ vector_specs:
       status_out: 0b0110010
       result: 0xfffffffe
 
-    - _description: "ALU_OP_SUB (11 SUB 10), sign flag in, no write, all statuses cleared"
+    - _description: "ALU_OP_SUB (11 SUB 10), sign+carry in, no write, all statuses cleared"
 
       # INPUTS
       cntl: 0b000000011000000000
-      status_in: 0b0000010
+      status_in: 0b0010010
       opnd0_r: 0x0b
       opnd1_r: 0x0a
 

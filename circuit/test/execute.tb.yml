@@ -37,6 +37,7 @@ vector_specs:
 
     # OUTPUTS
     o_eflags: 1 # EFLAGS.CF is bit 0
+
   - _description: "CMD_CLC (meta op, clear CF)"
 
     # INPUTS
@@ -103,8 +104,8 @@ vector_specs:
   - _description: "CMD_CMP"
 
     # INPUTS
-    opc: 13
-    eflags: 0x00000086
+    opc: 13 # CMD_CMP
+    eflags: 0x00000087
     eip: 0x08049022
     instr_len: 4
     opnd0_r: 0x0b

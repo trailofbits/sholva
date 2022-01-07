@@ -19,7 +19,7 @@ else
 end
 
 barf "no testbenches found; run make?" if vvps.empty?
-verbose "discovered #{vvps.size} tests: #{vvps}"
+verbose "discovered #{vvps.size} testbenches: #{vvps}"
 
 puts "1..#{vvps.size}"
 
