@@ -129,7 +129,7 @@ vector_specs:
     o_esp: 0xffffd9c8
     o_ebp: 0xffffd9cc
     o_eip: 0x08049026 # eip + 4
-    o_eflags: x # TODO(ww): should be 2 # all flags except reserved cleared
+    o_eflags: 2 # TODO(ww): should be 2 # all flags except reserved cleared
 
   - _description: "jle 8049039 <main+0x2c> (branch not taken)"
 
