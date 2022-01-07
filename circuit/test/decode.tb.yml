@@ -10,6 +10,12 @@ inputs:
   - "32 edi"
   - "32 esp"
   - "32 ebp"
+  - "1 hint1_is_write"
+  - "32 hint1_address"
+  - "32 hint1_data"
+  - "1 hint2_is_write"
+  - "32 hint2_address"
+  - "32 hint2_data"
 outputs:
   - "4 instr_len"
   - "7 opc"
@@ -116,3 +122,31 @@ vector_specs:
     dest1_kind: 1 # OPND_DEST_REG_1HOT
     dest1_sel: 4 # ESP
 
+  - _description: "jle 0x8049039 <main+0x2c> (rel8)"
+
+    # INPUTS
+    raw_instr: 0x117e
+
+    # OUTPUTS
+    instr_len: 2
+    opc: 80 # CMD_JLE
+    opnd0_r: 0x11 # pre-adjust
+
+  - _description: "cmp DWORD PTR [ebp-0x4],0xa (ebp=0xffc51afc)"
+
+    # INPUTS
+    raw_instr: 0x0afc7d83
+    ebp: 0xffc51afc
+    hint1_is_write: 0 # read
+    hint1_address: 0xffc51af8 # ebp - 4
+    hint1_data: 0xb
+
+    # OUTPUTS
+    instr_len: 4
+    opc: 13 # CMD_CMP
+    opnd0_r: 0x0b
+    opnd1_r: 0x0a
+    dest0_kind: 0 # OPND_DEST_NONE
+    dest1_kind: 0 # OPND_DEST_NONE
+    dest0_sel: 0
+    dest1_sel: 0

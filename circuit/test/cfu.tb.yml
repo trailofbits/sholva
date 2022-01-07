@@ -3,6 +3,7 @@ file: ../execute/cfu.v
 inputs:
   - "7 opc"
   - "32 eflags"
+  - "1 ecx_is_zero"
   - "32 eip"
   - "4 instr_len"
   - "32 address"
@@ -41,3 +42,28 @@ vector_specs:
 
     # OUTPUTS
     next_eip: 0xaabbccdd
+
+  - _description: "CMD_JLE (conditional, rel xfer (disp8), not taken)"
+
+    # INPUTS
+    opc: 80 # CMD_JLE
+    eflags: 0x02 # not taken: ZF=0 and SF=OF=0
+    eip: 0x08049026
+    instr_len: 2
+    address: 0x11
+
+    # OUTPUTS
+    next_eip: 0x08049028
+
+  - _description: "CMD_JLE (conditional, rel xfer (disp8), taken)"
+
+    # INPUTS
+    opc: 80 # CMD_JLE
+    eflags: 0b0000000001000010 # taken: ZF=1
+    eip: 0x08049026
+    instr_len: 2
+    address: 0x11
+
+    # OUTPUTS
+    next_eip: 0x08049039
+

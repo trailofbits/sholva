@@ -8,6 +8,8 @@ module decode_hint(
   output [31:0] data
 );
 
+`include "funcs.v"
+
 wire [7:0] meta = raw_hint[71:64];
 
 assign mask = meta[1:0];

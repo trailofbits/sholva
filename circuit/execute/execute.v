@@ -4,6 +4,7 @@
 module execute(
   input [6:0] opc,
   input [31:0] eflags,
+  input ecx_is_zero,
   input [31:0] eip,
   input [3:0] instr_len,
   input [31:0] opnd0_r,
@@ -102,10 +103,12 @@ wire alu_use_carry = opc_1hot[`CMD_ADC] |
 wire alu_src_inc = opc_1hot[`CMD_SUB] |
                    opc_1hot[`CMD_SBB];
 
+// These commands do not use the ALU's 32-bit result.
 wire alu_no_wr = opc_1hot[`CMD_CMP] |
                  opc_1hot[`CMD_CMPS] |
                  opc_1hot[`CMD_TEST];
 
+// These commands do not use the ALU to modify the EFLAGS.
 wire alu_no_flags = opc_1hot[`CMD_NOT]   |
                     opc_1hot[`CMD_CALLr] |
                     opc_1hot[`CMD_CALLi] ;
@@ -145,13 +148,13 @@ wire [17:0] alu_cntl = {
 
 // Input arithmetic flag states.
 wire [6:0] status_in = {
-                          eflags[`EFLAGS_DF],
-                          eflags[`EFLAGS_AF],
-                          eflags[`EFLAGS_CF],
-                          eflags[`EFLAGS_PF],
-                          eflags[`EFLAGS_ZF],
-                          eflags[`EFLAGS_SF],
-                          eflags[`EFLAGS_OF]
+                          eflags[`EFLAGS_DF], // 6
+                          eflags[`EFLAGS_AF], // 5
+                          eflags[`EFLAGS_CF], // 4
+                          eflags[`EFLAGS_PF], // 3
+                          eflags[`EFLAGS_ZF], // 2
+                          eflags[`EFLAGS_SF], // 1
+                          eflags[`EFLAGS_OF]  // 0
                        };
 
 wire [6:0] alu_status_out;
@@ -299,6 +302,7 @@ wire [31:0] meta_eflags = {
 cfu cfu_x(
   .opc(opc),
   .eflags(eflags),
+  .ecx_is_zero(ecx_is_zero),
   .eip(eip),
   .instr_len(instr_len),
   .address(opnd0_r),

@@ -311,8 +311,13 @@ mux8_32 mux8_32_opnd1_mem_index(
   .out(opnd1_r_mem_selected_index)
 );
 
-wire [31:0] opnd0_r_mem_effective_index = sib_no_index ? 32'b0 : opnd0_r_mem_selected_index;
-wire [31:0] opnd1_r_mem_effective_index = sib_no_index ? 32'b0 : opnd1_r_mem_selected_index;
+// NOTE(ww): Without a SIB byte, we never have an index register (in 32-bit mode, which
+// is all we care about). With a SIB byte, we have an index register only when
+// the SIB byte explicitly says so (per `sib_no_index`).
+wire no_index = !has_sib || sib_no_index;
+
+wire [31:0] opnd0_r_mem_effective_index = no_index ? 32'b0 : opnd0_r_mem_selected_index;
+wire [31:0] opnd1_r_mem_effective_index = no_index ? 32'b0 : opnd1_r_mem_selected_index;
 
 wire [31:0] opnd0_r_mem_selected_base;
 mux8_32 mux8_32_opnd0_mem_base(

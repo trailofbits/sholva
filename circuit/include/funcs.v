@@ -59,3 +59,10 @@ function [31:0] zext16_32;
     zext16_32 = {{{16{1'b0}}}, x};
   end
 endfunction
+
+function [31:0] swap_endian;
+  input [31:0] x;
+  begin
+    swap_endian = {x[7:0], x[15:8], x[23:16], x[31:24]};
+  end
+endfunction

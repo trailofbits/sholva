@@ -119,6 +119,8 @@ decode decode_instr(
 
 
 // Execute
+wire ecx_is_zero = ecx == 32'b0;
+
 wire [31:0] next_eflags;
 wire [31:0] next_eip;
 wire [31:0] opnd0_w;
@@ -127,6 +129,7 @@ wire [31:0] opnd1_w;
 execute execute_x(
   .opc(opc),
   .eflags(eflags),
+  .ecx_is_zero(ecx_is_zero),
   .eip(eip),
   .instr_len(instr_len),
   .opnd0_r(opnd0_r),

@@ -39,3 +39,7 @@ lint:
 .PHONY: check
 check:
 	@$(MAKE) -C circuit/test check
+
+.PHONY: clean
+clean:
+	$(MAKE) -C circuit/test clean
