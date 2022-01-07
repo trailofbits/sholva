@@ -99,3 +99,17 @@ vector_specs:
     next_eip: 0x8049000
     opnd0_w: 996 # dupe of opnd1, not used
     opnd1_w: 996
+
+  - _description: "CMD_CMP"
+
+    # INPUTS
+    opc: 13
+    eflags: 0x00000086
+    eip: 0x08049022
+    instr_len: 4
+    opnd0_r: 0x0b
+    opnd1_r: 0x0a
+
+    o_eflags: 2
+    next_eip: 0x08049026
+    opnd1_w: x # write operation ignored
