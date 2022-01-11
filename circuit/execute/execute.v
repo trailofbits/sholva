@@ -337,9 +337,9 @@ assign opnd0_w = exe_is_alu ? alu_result  :
 // for the EIP adjustment or other "primary" instruction semantic).
 // See the construction of dest1_kind and dest1_sel during operand decoding for
 // more context.
-assign opnd1_w = exe_is_mu                    ? mu_opnd1_w :
+assign opnd1_w = exe_is_mu                            ? mu_opnd1_w :
                  exe_is_alu && alu_op_is_stack_adjust ? alu_result :
-                                                opnd1_r    ; // TODO(ww): Others.
+                 opnd1_r                                           ; // TODO(ww): Others.
 
 // Update our flag state based on whichever execution unit actually took effect.
 // Only the ALU and meta units can modify flag state, so we don't need to check
