@@ -151,6 +151,6 @@ vector_specs:
 
     # OUTPUTS
     o_eax: 0x1 # unchanged
-    o_esp: 0xffffd9c0 # TODO
+    o_esp: 0xffffd9bc
     o_eip: 0x08049007 # i_eip + 2
     o_eflags: 2 # unchanged

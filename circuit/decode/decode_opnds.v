@@ -446,7 +446,10 @@ wire [31:0] opnd0_r_dispval = disp;
 // the ALU for stack adjustment during CALL's execution.
 // TODO(ww): RET needs two phonies as well.
 
-wire stack_adjust_phonies = opc_1hot[`CMD_CALLr] | opc_1hot[`CMD_CALLi];
+wire stack_adjust_phonies = opc_1hot[`CMD_CALLr] |
+                            opc_1hot[`CMD_CALLi] |
+                            opc_1hot[`CMD_PUSH]  |
+                            opc_1hot[`CMD_POP]   ;
 
 wire opnd1_is_phony = opnd1_is_one | stack_adjust_phonies;
 
