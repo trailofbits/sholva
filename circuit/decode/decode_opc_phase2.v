@@ -11,7 +11,6 @@ module decode_opc_phase2(
   output imm_1byte,
   output reg_1byte,
 
-  output opnd0_is_one,
   output opnd0_is_read,
   output opnd0_is_write,
 
@@ -19,7 +18,6 @@ module decode_opc_phase2(
   output opnd1_is_read,
   output opnd1_is_write,
 
-  output opnd2_is_one,
   output opnd2_is_read,
   output opnd2_is_write,
 

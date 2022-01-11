@@ -19,7 +19,6 @@ module decode_opnds(
   input prefix_operand_16bit,
   input prefix_address_16bit,
 
-  input opnd0_is_one,
   input opnd0_is_read,
   input opnd0_is_write,
 
@@ -27,7 +26,6 @@ module decode_opnds(
   input opnd1_is_read,
   input opnd1_is_write,
 
-  input opnd2_is_one,
   input opnd2_is_read,
   input opnd2_is_write,
 
@@ -450,19 +448,14 @@ wire [31:0] opnd0_r_dispval = disp;
 
 wire stack_adjust_phonies = opc_1hot[`CMD_CALLr] | opc_1hot[`CMD_CALLi];
 
-wire opnd0_is_phony = opnd0_is_one;
-
 wire opnd1_is_phony = opnd1_is_one | stack_adjust_phonies;
 
-wire opnd2_is_phony = opnd2_is_one | stack_adjust_phonies;
-
-wire [31:0] opnd0_r_phonyval = 32'b1;
+wire opnd2_is_phony = stack_adjust_phonies;
 
 wire [31:0] opnd1_r_phonyval = opnd1_is_one         ? 32'b1 :
                                stack_adjust_phonies ? esp   : 32'b0;
 
-wire [31:0] opnd2_r_phonyval = opnd2_is_one         ? 32'b1 :
-                               stack_adjust_phonies ? 32'd4 : 32'b0;
+wire [31:0] opnd2_r_phonyval = stack_adjust_phonies ? 32'd4 : 32'b0;
 
 ///
 /// END PHONY OPERANDS
@@ -474,8 +467,7 @@ wire [31:0] opnd2_r_phonyval = opnd2_is_one         ? 32'b1 :
 
 // Operand multiplexors.
 
-assign opnd0_r = opnd0_is_phony  ? opnd0_r_phonyval :
-                 opnd0_is_reg    ? opnd0_r_regval   :
+assign opnd0_r = opnd0_is_reg    ? opnd0_r_regval   :
                  opnd0_is_mem    ? opnd0_r_memval   :
                  opnd0_is_imm    ? opnd0_r_immval   :
                  opnd0_is_disp   ? opnd0_r_dispval  : 32'b0;

@@ -64,7 +64,6 @@ wire [1:0] opnd_count;
 wire imm_1byte;
 wire reg_1byte;
 
-wire opnd0_is_one;
 wire opnd0_is_read;
 wire opnd0_is_write;
 
@@ -72,7 +71,6 @@ wire opnd1_is_one;
 wire opnd1_is_read;
 wire opnd1_is_write;
 
-wire opnd2_is_one;
 wire opnd2_is_read;
 wire opnd2_is_write;
 
@@ -92,7 +90,6 @@ decode_opc_phase2 decode_opc_phase2_x(
   .imm_1byte(imm_1byte),
   .reg_1byte(reg_1byte),
 
-  .opnd0_is_one(opnd0_is_one),
   .opnd0_is_read(opnd0_is_read),
   .opnd0_is_write(opnd0_is_write),
 
@@ -100,7 +97,6 @@ decode_opc_phase2 decode_opc_phase2_x(
   .opnd1_is_read(opnd1_is_read),
   .opnd1_is_write(opnd1_is_write),
 
-  .opnd2_is_one(opnd2_is_one),
   .opnd2_is_read(opnd2_is_read),
   .opnd2_is_write(opnd2_is_write),
 
@@ -139,7 +135,6 @@ decode_opnds decode_opnds_x(
   .prefix_operand_16bit(prefix_operand_16bit),
   .prefix_address_16bit(prefix_address_16bit),
 
-  .opnd0_is_one(opnd0_is_one),
   .opnd0_is_read(opnd0_is_read),
   .opnd0_is_write(opnd0_is_write),
 
@@ -147,7 +142,6 @@ decode_opnds decode_opnds_x(
   .opnd1_is_read(opnd1_is_read),
   .opnd1_is_write(opnd1_is_write),
 
-  .opnd2_is_one(opnd2_is_one),
   .opnd2_is_read(opnd2_is_read),
   .opnd2_is_write(opnd2_is_write),
 
