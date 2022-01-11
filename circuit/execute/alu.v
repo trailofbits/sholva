@@ -26,7 +26,10 @@ wire [32:0] opnd1_r_tmp = { 1'b0, opnd1_r };
 
 wire [32:0] result_add = opnd0_r_tmp + opnd1_r_tmp + carry_in;
 wire [32:0] result_sub = opnd0_r_tmp - opnd1_r_tmp + carry_in;
-wire [32:0] result_and = opnd0_r_tmp & opnd1_r_tmp;
+// NOTE(ww): This *should* be a 32-bit wire like the others,
+// but Yosys optimizes out the AND on the first bit (since it's always `0 & 0`)
+// and thinks that `result_and[0]` is subsequently undriven.
+wire [31:0] result_and = opnd0_r & opnd1_r;
 wire [32:0] result_or  = opnd0_r_tmp | opnd1_r_tmp;
 wire [32:0] result_xor = opnd0_r_tmp ^ opnd1_r_tmp;
 wire [32:0] result_mul = opnd0_r_tmp * opnd1_r_tmp;
@@ -39,7 +42,7 @@ wire [31:0] result_ror = (opnd0_r >> opnd1_r) | (opnd0_r << (32 - opnd1_r));
 // TODO(ww): CF handling for shift/rotate ops is incorrect here.
 wire [32:0] stat_result = cntl[`ALU_OP_ADD] ? result_add :
                           cntl[`ALU_OP_SUB] ? result_sub :
-                          cntl[`ALU_OP_AND] ? result_and :
+                          cntl[`ALU_OP_AND] ? {1'b0, result_and} :
                           cntl[`ALU_OP_OR]  ? result_or  :
                           cntl[`ALU_OP_XOR] ? result_xor :
                           cntl[`ALU_OP_MUL] ? result_mul :

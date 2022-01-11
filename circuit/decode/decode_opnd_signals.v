@@ -153,12 +153,12 @@ wire is_imm32 = has_imm && (~is_imm8 && ~is_imm16);
 
 `include "codegen/imm.gen.v"
 
-wire [3:0] imm_len = is_imm32 ? 4 :
-                     is_imm16 ? 2 :
-                     is_imm8  ? 1 : 0;
+wire [2:0] imm_len = is_imm32 ? 3'd4 :
+                     is_imm16 ? 3'd2 :
+                     is_imm8  ? 3'd1 : 3'd0;
 
-wire [3:0] disp_len = is_disp32 ? 4 :
-                      is_disp8  ? 1 : 0;
+wire [2:0] disp_len = is_disp32 ? 3'd4 :
+                      is_disp8  ? 3'd1 : 3'd0;
 
 assign imm_disp_len = imm_len + disp_len;
 
