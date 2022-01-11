@@ -365,16 +365,17 @@ def _gen_opc_map_v(commands):
                         opndN_is_write_exprs.append(enc_expr)
 
             if len(opndN_is_one_exprs) > 0:
+                # For now, we only expect operand#1 to be one.
+                # Other parts of the circuit will need to be updated if this changes,
+                # so explicitly catch it early here.
+                assert n == 1, f"barf: opnd#{n} has unexpected 'one' value"
+
                 opndN_is_one_expr = reduce(_or, opndN_is_one_exprs)
-            else:
-                opndN_is_one_expr = _V_FALSE
-
-            print(
-                _assign(f"opnd{n}_is_one", opndN_is_one_expr),
-                file=io,
-            )
-
-            _br(io, 2)
+                print(
+                    _assign(f"opnd{n}_is_one", opndN_is_one_expr),
+                    file=io,
+                )
+                _br(io, 2)
 
             if len(opndN_is_read_exprs) > 0:
                 opndN_is_read_expr = reduce(_or, opndN_is_read_exprs)
