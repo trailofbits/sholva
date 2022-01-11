@@ -331,11 +331,12 @@ assign opnd0_w = exe_is_alu ? alu_result  :
                               opnd0_r     ; // No operation? Use the input.
 
 // HACK(ww): Route alu_result into opnd1_w if and only if we're executing the
-// ALU in the context of a "fused" operation (so far, only CALL). We do this
+// ALU in the context of a stack adjustment operation. We do this
 // because the ALU performs the stack adjustment for us and other parts of the
 // circuit expect to do the ESP writeback via opnd#1 (since opnd0_r is used
-// for the EIP adjustment). See the construction of dest1_kind and dest1_sel
-// during operand decoding for more context.
+// for the EIP adjustment or other "primary" instruction semantic).
+// See the construction of dest1_kind and dest1_sel during operand decoding for
+// more context.
 assign opnd1_w = exe_is_mu                    ? mu_opnd1_w :
                  exe_is_alu && alu_op_is_stack_adjust ? alu_result :
                                                 opnd1_r    ; // TODO(ww): Others.
