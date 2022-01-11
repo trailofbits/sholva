@@ -169,9 +169,9 @@ wire alu_op_is_stack_adjust = opc_1hot[`CMD_CALLr] |
                               opc_1hot[`CMD_PUSH]  |
                               opc_1hot[`CMD_POP]   ;
 
-// When we're using the ALU as part of a CALL instruction, we need to do some
-// operand re-routing. Specifically, we need to use opnd#1 and opnd#2 as
-// opnd#0 and opnd#1 respectively.
+// When we're using the ALU as part of a stack-adjusting instruction, we need
+// to do some operand re-routing. Specifically, we need to use opnd#1 and
+// opnd#2 as opnd#0 and opnd#1 respectively.
 wire [31:0] alu_opnd0_r = alu_op_is_stack_adjust ? opnd1_r : opnd0_r;
 wire [31:0] alu_opnd1_r = alu_op_is_stack_adjust ? opnd2_r : opnd1_r;
 
