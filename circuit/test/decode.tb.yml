@@ -150,3 +150,23 @@ vector_specs:
     dest1_kind: 0 # OPND_DEST_NONE
     dest0_sel: 0
     dest1_sel: 0
+
+  - _description: "POP ebx ([esp]=1)"
+
+    # INPUTS
+    raw_instr: 0x5b
+    esp: 0xffffd9b8
+    hint1_is_write: 0 # read
+    hint1_address: 0xffffd9b8
+    hint1_data: 0x01
+
+    # OUTPUTS
+    instr_len: 1
+    opc: 37 # CMD_POP
+    opnd0_r: x # TODO 1 # [esp]
+    opnd1_r: 0xffffd9b8
+    opnd2_r: 4
+    dest0_kind: 1 # OPND_DEST_REG_1HOT
+    dest1_kind: 1 # OPND_DEST_REG_1HOT
+    dest0_sel: 3 # EBX
+    dest1_sel: 4 # ESP

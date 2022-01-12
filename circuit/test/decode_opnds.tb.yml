@@ -494,3 +494,26 @@ vector_specs:
     instr_body_len: 3
     opnd0_r: 0x0b
     opnd1_r: 0x0a
+
+  - _description: "POP ebx [esp]=1"
+
+    # INPUTS
+    unescaped_instr: 0x5b
+    esp: 0xffffd9b8
+    hint1_is_write: 0
+    hint1_address: 0xffffd9b8
+    hint1_data: 0x01
+    opc: 37 # CMD_POP
+    opnd_form: 4 # OPND_ENC_REG
+    opnd0_is_read: 0
+    opnd0_is_write: 1
+
+    # OUTPUTS
+    instr_body_len: 0
+    opnd0_r: x # TODO 0x01 # [ESP]
+    opnd1_r: 0xffffd9b8 # ESP
+    opnd2_r: 4 # ESP adjust
+    dest0_kind: 0b01 # OPND_DEST_REG_1HOT
+    dest1_kind: 0b01 # OPND_DEST_REG_1HOT
+    dest0_sel: 3 # EBX
+    dest1_sel: 4 # ESP

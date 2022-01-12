@@ -136,7 +136,9 @@ wire sib_no_index = sib_index_regsel == 3'b100;
 
 
 // Is operand#0 a register?
-wire opnd0_is_reg = opnd_form_1hot[`OPND_ENC_REG] ||
+// NOTE: This doesn't tell us whether operand#0 is read, written, or both.
+// For example, `POP r32` has a register for `operand#0`, but only writes to it.
+wire opnd0_is_reg = (opnd_form_1hot[`OPND_ENC_REG]) ||
                     opnd_form_1hot[`OPND_ENC_MODREGRM_RM] ||
                     opnd_form_1hot[`OPND_ENC_EAX_IMM] ||
                     opnd_form_1hot[`OPND_ENC_EAX_REG] ||
@@ -221,19 +223,19 @@ mux8_32 mux8_32_opnd1_reg(
 // Is operand#0 a memory address?
 // TODO(ww): Missing anything?
 wire opnd0_r_is_mem_modrm = (opnd0_modrm_rm && ~modrm_rm_is_reg_direct);
-wire opnd0_is_mem = opnd0_r_is_mem_modrm ||
-                    opc_1hot[`CMD_MOVS] ||
-                    opc_1hot[`CMD_CMPS] ||
-                    opc_1hot[`CMD_SCAS];
+wire opnd0_is_mem = opnd0_r_is_mem_modrm |
+                    opc_1hot[`CMD_MOVS]  |
+                    opc_1hot[`CMD_CMPS]  |
+                    opc_1hot[`CMD_SCAS]  ;
 
 // Is operand#1 a memory address?
 // TODO(ww): Missing anything?
 wire opnd1_r_is_mem_modrm = (opnd1_modrm_rm && ~modrm_rm_is_reg_direct);
-wire opnd1_is_mem = opnd1_r_is_mem_modrm ||
-                    opc_1hot[`CMD_MOVS] ||
-                    opc_1hot[`CMD_CMPS] ||
-                    opc_1hot[`CMD_STOS] ||
-                    opc_1hot[`CMD_LODS];
+wire opnd1_is_mem = opnd1_r_is_mem_modrm |
+                    opc_1hot[`CMD_MOVS]  |
+                    opc_1hot[`CMD_CMPS]  |
+                    opc_1hot[`CMD_STOS]  |
+                    opc_1hot[`CMD_LODS]  ;
 
 // To actually calculate our effective addresses for operand#0 and operand#1,
 // we need to get the (scale, index, base, displacement) for each, or
@@ -265,16 +267,15 @@ wire [2:0] opndX_r_mem_base_regsel =
     modrm[2:0] : 3'b000;
 
 wire [2:0] opnd0_r_mem_base_regsel =
-  (opc_1hot[`CMD_MOVS] || opc_1hot[`CMD_STOS] || opc_1hot[`CMD_SCAS]) ?
-    `REG_EDI :
-  (opc_1hot[`CMD_CMPS]) ?
-    `REG_ESI : opndX_r_mem_base_regsel;
+  opc_1hot[`CMD_MOVS] | opc_1hot[`CMD_STOS] | opc_1hot[`CMD_SCAS] ? `REG_EDI :
+  opc_1hot[`CMD_CMPS]                                             ? `REG_ESI :
+  // opc_1hot[`CMD_POP]                                              ? `REG_ESP :
+  opndX_r_mem_base_regsel                                                    ;
 
 wire [2:0] opnd1_r_mem_base_regsel =
-  (opc_1hot[`CMD_MOVS] || opc_1hot[`CMD_LODS]) ?
-    `REG_ESI :
-  (opc_1hot[`CMD_CMPS]) ?
-    `REG_EDI : opndX_r_mem_base_regsel;
+  opc_1hot[`CMD_MOVS] | opc_1hot[`CMD_LODS] ? `REG_ESI :
+  opc_1hot[`CMD_CMPS]                       ? `REG_EDI :
+  opndX_r_mem_base_regsel                              ;
 
 wire [31:0] opnd0_r_mem_disp = opnd0_disp ? disp : 32'b0;
 wire [31:0] opnd1_r_mem_disp = opnd1_disp ? disp : 32'b0;
@@ -470,15 +471,15 @@ wire [31:0] opnd2_r_phonyval = stack_adjust_phonies ? 32'd4 : 32'b0;
 
 // Operand multiplexors.
 
-assign opnd0_r = opnd0_is_reg    ? opnd0_r_regval   :
-                 opnd0_is_mem    ? opnd0_r_memval   :
-                 opnd0_is_imm    ? opnd0_r_immval   :
-                 opnd0_is_disp   ? opnd0_r_dispval  : 32'b0;
+assign opnd0_r = opnd0_is_reg  ? opnd0_r_regval   :
+                 opnd0_is_mem  ? opnd0_r_memval   :
+                 opnd0_is_imm  ? opnd0_r_immval   :
+                 opnd0_is_disp ? opnd0_r_dispval  : 32'b0;
 
-assign opnd1_r = opnd1_is_phony  ? opnd1_r_phonyval :
-                 opnd1_is_reg    ? opnd1_r_regval   :
-                 opnd1_is_mem    ? opnd1_r_memval   :
-                 opnd1_is_imm    ? opnd1_r_immval   : 32'b0;
+assign opnd1_r = opnd1_is_phony ? opnd1_r_phonyval :
+                 opnd1_is_reg   ? opnd1_r_regval   :
+                 opnd1_is_mem   ? opnd1_r_memval   :
+                 opnd1_is_imm   ? opnd1_r_immval   : 32'b0;
 
 assign opnd2_r = opnd2_is_phony ? opnd2_r_phonyval : 32'b0;
 

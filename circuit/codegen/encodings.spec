@@ -116,7 +116,7 @@ CMD_NEG:F6/3~M~W,F7/3~M~W
 CMD_NOP:x1F/0~M~W
 CMD_NOT:F6/2~M~W1,F7/2~M~W1
 CMD_OR:08~MR~Wr,09~MR~Wr,0A~RM~Wr,0B~RM~Wr,0C+ib~I~Wr,0D+i*~I~Wr,80/1+ib~MI~Wr,81/1+i*~MI~Wr,83/1+ib~MI~Wr~S
-CMD_POP:58+r*~O~W,8F/0~M~W
+CMD_POP:58+r*~O~w,8F/0~M~w
 
 # TODO(ww): r/w semantics for POPA?
 CMD_POPA:61~ZO~x
