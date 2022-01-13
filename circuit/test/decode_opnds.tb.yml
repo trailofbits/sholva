@@ -578,5 +578,5 @@ vector_specs:
     opnd2_r: 4 # esp adjust
     dest0_kind: 0b10 # OPND_DEST_MEM_1HOT
     dest1_kind: 0b01 # OPND_DEST_REG_1HOT
-    dest0_sel: # TODO 0xffffd9bc # [ebx]
+    dest0_sel: x # TODO 0xffffd9bc # [ebx]
     dest1_sel: 4 # ESP
