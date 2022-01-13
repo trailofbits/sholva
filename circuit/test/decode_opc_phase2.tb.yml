@@ -194,3 +194,18 @@ vector_specs:
     opnd0_is_read: 0
     opnd0_is_write: 1
     source_is_sext: 0
+
+  - _description: "POP [ebx]"
+
+    # INPUTS
+    unescaped_instr: 0x038f
+    is_2byte: 0
+
+    # OUTPUTS
+    opc: 37 # CMD_POP
+    opnd_form: 3 # OPND_ENC_MODREGRM_RM
+    opnd_count: 1
+    imm_1byte: 0
+    opnd0_is_read: 0
+    opnd0_is_write: 1
+    source_is_sext: 0

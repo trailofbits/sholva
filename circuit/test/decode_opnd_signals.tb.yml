@@ -445,3 +445,19 @@ vector_specs:
     imm: 0x0a
     opnd0_modrm_rm: 1
     opnd0_disp: 1
+
+  - _description: "POP [ebx]"
+
+    # INPUTS
+    unescaped_instr: 0x038f
+    opnd_form: 3
+
+    # OUTPUTS
+    imm_disp_len: 0
+    has_imm: 0
+    has_modrm: 1
+    has_sib: 0
+    has_disp: 0
+    modrm: 0x03 # [EBX]
+    sib: x
+    opnd0_modrm_rm: 1

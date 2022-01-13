@@ -49,7 +49,9 @@ vector_specs:
     ebx: 0xBBBBBBBB
     opnd_form: 10 # OPND_ENC_EAX_REG
     prefix_address_16bit: 0
+    opnd0_is_read: 1
     opnd0_is_write: 1
+    opnd1_is_read: 1
     opnd1_is_write: 1
 
     # OUTPUTS
@@ -68,7 +70,9 @@ vector_specs:
     eax: 0xAAAAAAAA
     opnd_form: 10 # OPND_ENC_EAX_REG
     prefix_address_16bit: 0
+    opnd0_is_read: 1
     opnd0_is_write: 1
+    opnd1_is_read: 1
     opnd1_is_write: 1
 
     # OUTPUTS
@@ -88,7 +92,9 @@ vector_specs:
     edx: 0xDDDDDDDD
     opnd_form: 7 # OPND_ENC_MODREGRM_REG_RM
     prefix_address_16bit: 0
+    opnd0_is_read: 1
     opnd0_is_write: 1
+    opnd1_is_read: 1
     opnd1_is_write: 1
 
     # OUTPUTS
@@ -108,7 +114,9 @@ vector_specs:
     edx: 0xDDDDDDDD
     opnd_form: 7 # OPND_ENC_MODREGRM_REG_RM
     prefix_address_16bit: 0
+    opnd0_is_read: 1
     opnd0_is_write: 1
+    opnd1_is_read: 1
     opnd1_is_write: 1
 
     # OUTPUTS
@@ -128,11 +136,14 @@ vector_specs:
     ebx: 0xBBBBBBBB
     opnd_form: 6 # OPND_ENC_MODREGRM_RM_REG
     prefix_address_16bit: 0
+    opnd0_is_read: 0
     opnd0_is_write: 1
+    opnd1_is_read: 1
+    opnd1_is_write: 0
 
     # OUTPUTS
     instr_body_len: 1 # ModR/M
-    opnd0_r: 0xAAAAAAAA
+    opnd0_r: 0 # no read
     opnd1_r: 0xBBBBBBBB
     dest0_kind: 0b01
     dest1_kind: 0b00 # OPND_DEST_NONE
@@ -146,11 +157,14 @@ vector_specs:
     ebx: 0xBBBBBBBB
     opnd_form: 7 # OPND_ENC_MODREGRM_REG_RM
     prefix_address_16bit: 0
+    opnd0_is_read: 0
     opnd0_is_write: 1
+    opnd1_is_read: 1
+    opnd1_is_write: 0
 
     # OUTPUTS
     instr_body_len: 1 # ModR/M
-    opnd0_r: 0xAAAAAAAA
+    opnd0_r: 0 # no read
     opnd1_r: 0xBBBBBBBB
     dest0_kind: 0b01
     dest1_kind: 0b00 # OPND_DEST_NONE
@@ -163,6 +177,7 @@ vector_specs:
     eax: 0xAAAAAAAA
     opnd_form: 4 # OPND_ENC_REG
     prefix_address_16bit: 0
+    opnd0_is_read: 1
     opnd0_is_write: 1
 
     # OUTPUTS
@@ -180,6 +195,7 @@ vector_specs:
     ebx: 0xBBBBBBBB
     opnd_form: 4 # OPND_ENC_REG
     prefix_address_16bit: 0
+    opnd0_is_read: 1
     opnd0_is_write: 1
 
     # OUTPUTS
@@ -197,6 +213,7 @@ vector_specs:
     ecx: 0xCCCCCCCC
     opnd_form: 4 # OPND_ENC_REG
     prefix_address_16bit: 0
+    opnd0_is_read: 1
     opnd0_is_write: 1
 
     # OUTPUTS
@@ -214,6 +231,7 @@ vector_specs:
     edx: 0xDDDDDDDD
     opnd_form: 4 # OPND_ENC_REG
     prefix_address_16bit: 0
+    opnd0_is_read: 1
     opnd0_is_write: 1
 
     # OUTPUTS
@@ -231,6 +249,7 @@ vector_specs:
     esi: 0x12121212
     opnd_form: 4 # OPND_ENC_REG
     prefix_address_16bit: 0
+    opnd0_is_read: 1
     opnd0_is_write: 1
 
     # OUTPUTS
@@ -248,6 +267,7 @@ vector_specs:
     edi: 0x13131313
     opnd_form: 4 # OPND_ENC_REG
     prefix_address_16bit: 0
+    opnd0_is_read: 1
     opnd0_is_write: 1
 
     # OUTPUTS
@@ -265,6 +285,7 @@ vector_specs:
     esp: 0x14141414
     opnd_form: 4 # OPND_ENC_REG
     prefix_address_16bit: 0
+    opnd0_is_read: 1
     opnd0_is_write: 1
 
     # OUTPUTS
@@ -282,6 +303,7 @@ vector_specs:
     ebp: 0x15151515
     opnd_form: 4 # OPND_ENC_REG
     prefix_address_16bit: 0
+    opnd0_is_read: 1
     opnd0_is_write: 1
 
     # OUTPUTS
@@ -299,7 +321,10 @@ vector_specs:
     eax: 0x99999999
     opnd_form: 9 # OPND_ENC_EAX_IMM
     prefix_address_16bit: 0
+    opnd0_is_read: 1
     opnd0_is_write: 1
+    opnd1_is_read: 1
+    opnd1_is_write: 0
 
     # OUTPUTS
     instr_body_len: 4 # imm
@@ -317,7 +342,10 @@ vector_specs:
     ebx: 0xcdcdcdcd
     opnd_form: 6 # OPND_ENC_MODREGRM_RM_REG
     prefix_address_16bit: 0
+    opnd0_is_read: 1
     opnd0_is_write: 1
+    opnd1_is_read: 1
+    opnd1_is_write: 0
 
     # OUTPUTS
     instr_body_len: 1 # ModR/M
@@ -337,7 +365,10 @@ vector_specs:
     hint1_is_write: 0
     hint1_address: 0xffffdda8
     hint1_data: 0xaaaaaaaa
+    opnd0_is_read: 1
     opnd0_is_write: 1
+    opnd1_is_read: 1
+    opnd1_is_write: 0
 
     # OUTPUTS
     instr_body_len: 2 # ModR/M + SIB
@@ -356,7 +387,10 @@ vector_specs:
     hint1_is_write: 0
     hint1_address: 0xaaaaaa08
     hint1_data: 0xfefefefe
+    opnd0_is_read: 1
     opnd0_is_write: 1
+    opnd1_is_read: 1
+    opnd1_is_write: 0
 
     # OUTPUTS
     instr_body_len: 3 # ModR/M + SIB + imm8
@@ -375,6 +409,7 @@ vector_specs:
     opnd0_is_read: 1
     opnd0_is_write: 1
     opnd1_is_read: 1
+    opnd1_is_write: 0
 
     # OUTPUTS
     instr_body_len: 4 # imm32
@@ -392,6 +427,7 @@ vector_specs:
     opnd0_is_read: 0
     opnd0_is_write: 1
     opnd1_is_read: 1
+    opnd1_is_write: 0
 
     # OUTPUTS
     instr_body_len: 4 # imm32
@@ -495,7 +531,7 @@ vector_specs:
     opnd0_r: 0x0b
     opnd1_r: 0x0a
 
-  - _description: "POP ebx [esp]=1"
+  - _description: "POP ebx ([esp]=1)"
 
     # INPUTS
     unescaped_instr: 0x5b
@@ -516,4 +552,31 @@ vector_specs:
     dest0_kind: 0b01 # OPND_DEST_REG_1HOT
     dest1_kind: 0b01 # OPND_DEST_REG_1HOT
     dest0_sel: 3 # EBX
+    dest1_sel: 4 # ESP
+
+  - _description: "POP [ebx] ([esp]=1)"
+
+    # INPUTS
+    unescaped_instr: 0x038f
+    ebx: 0xffffd9bc
+    esp: 0xffffd9b8
+    hint1_is_write: 1 # write
+    hint1_address: 0xffffd9bc
+    hint1_data: 0x01
+    hint2_is_write: 0 # read
+    hint2_address: 0xffffd9b8
+    hint2_data: 0x01
+    opc: 37 # CMD_POP
+    opnd_form: 3 # OPND_ENC_MODREGRM_RM
+    opnd0_is_read: 0
+    opnd0_is_write: 1
+
+    # OUTPUTS
+    instr_body_len: 1 # ModR/M
+    opnd0_r: 0x01 # [esp]
+    opnd1_r: 0xffffd9b8 # esp
+    opnd2_r: 4 # esp adjust
+    dest0_kind: 0b10 # OPND_DEST_MEM_1HOT
+    dest1_kind: 0b01 # OPND_DEST_REG_1HOT
+    dest0_sel: # TODO 0xffffd9bc # [ebx]
     dest1_sel: 4 # ESP

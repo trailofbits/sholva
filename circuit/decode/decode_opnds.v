@@ -128,23 +128,23 @@ wire sib_no_index = sib_index_regsel == 3'b100;
 // so we have to compute each operand's prospective value as if it was an
 // immediate, displacement, register, and memory operand. Then, we get to
 // select from those unconditional computations based on which one it actually
-// is.
+// is, for both reads and
 
 ///
 /// REGISTER OPERANDS
 ///
 
-
-// Is operand#0 a register?
-// NOTE: This doesn't tell us whether operand#0 is read, written, or both.
-// For example, `POP r32` has a register for `operand#0`, but only writes to it.
-wire opnd0_is_reg = (opnd_form_1hot[`OPND_ENC_REG]) ||
-                    opnd_form_1hot[`OPND_ENC_MODREGRM_RM] ||
-                    opnd_form_1hot[`OPND_ENC_EAX_IMM] ||
-                    opnd_form_1hot[`OPND_ENC_EAX_REG] ||
-                    opnd_form_1hot[`OPND_ENC_REG_IMM] ||
+// Is operand#0 read from a register?
+wire opnd0_is_reg = opnd_form_1hot[`OPND_ENC_REG]              ||
+                    opnd_form_1hot[`OPND_ENC_EAX_IMM]          ||
+                    opnd_form_1hot[`OPND_ENC_EAX_REG]          ||
+                    opnd_form_1hot[`OPND_ENC_REG_IMM]          ||
                     (opnd0_modrm_rm && modrm_rm_is_reg_direct) ||
                     opnd0_modrm_reg;
+
+wire opnd0_r_is_reg = opnd0_is_read && opnd0_is_reg;
+wire opnd0_w_is_reg = opnd0_is_write && opnd0_is_reg;
+
 
 // For operand#0, our register selector can come from four sources:
 // TODO(ww): That's wrong. We also need to handle implicit register selector operands here,
@@ -226,7 +226,8 @@ wire opnd0_r_is_mem_modrm = (opnd0_modrm_rm && ~modrm_rm_is_reg_direct);
 wire opnd0_is_mem = opnd0_r_is_mem_modrm |
                     opc_1hot[`CMD_MOVS]  |
                     opc_1hot[`CMD_CMPS]  |
-                    opc_1hot[`CMD_SCAS]  ;
+                    opc_1hot[`CMD_SCAS]  |
+                    opc_1hot[`CMD_POP]   ;
 
 // Is operand#1 a memory address?
 // TODO(ww): Missing anything?
@@ -244,6 +245,7 @@ wire opnd1_is_mem = opnd1_r_is_mem_modrm |
 // * If we have a SIB byte, it's the SIB base selector.
 // * If we have a bare ModR/M byte with ModR/M.mod != 0b11, it's the ModR/M.rm
 //   selector.
+// * If we're doing a POP, it's ESP.
 // * Otherwise, it's an implicit selector for one of the string/data
 //   instructions, which means that it's EDI or ESI.
 
@@ -269,7 +271,7 @@ wire [2:0] opndX_r_mem_base_regsel =
 wire [2:0] opnd0_r_mem_base_regsel =
   opc_1hot[`CMD_MOVS] | opc_1hot[`CMD_STOS] | opc_1hot[`CMD_SCAS] ? `REG_EDI :
   opc_1hot[`CMD_CMPS]                                             ? `REG_ESI :
-  // opc_1hot[`CMD_POP]                                              ? `REG_ESP :
+  opc_1hot[`CMD_POP]                                              ? `REG_ESP :
   opndX_r_mem_base_regsel                                                    ;
 
 wire [2:0] opnd1_r_mem_base_regsel =
@@ -471,7 +473,7 @@ wire [31:0] opnd2_r_phonyval = stack_adjust_phonies ? 32'd4 : 32'b0;
 
 // Operand multiplexors.
 
-assign opnd0_r = opnd0_is_reg  ? opnd0_r_regval   :
+assign opnd0_r = opnd0_r_is_reg  ? opnd0_r_regval   :
                  opnd0_is_mem  ? opnd0_r_memval   :
                  opnd0_is_imm  ? opnd0_r_immval   :
                  opnd0_is_disp ? opnd0_r_dispval  : 32'b0;
@@ -499,7 +501,7 @@ assign opnd2_r = opnd2_is_phony ? opnd2_r_phonyval : 32'b0;
 wire dest1_is_phony_esp = stack_adjust_phonies;
 
 assign dest0_kind = !opnd0_is_write ? `OPND_DEST_NONE     :
-                    opnd0_is_reg    ? `OPND_DEST_REG_1HOT :
+                    opnd0_w_is_reg    ? `OPND_DEST_REG_1HOT :
                     opnd0_is_mem    ? `OPND_DEST_MEM_1HOT :
                                       `OPND_DEST_NONE     ;
 
