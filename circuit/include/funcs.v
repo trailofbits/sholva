@@ -66,3 +66,10 @@ function [31:0] swap_endian;
     swap_endian = {x[7:0], x[15:8], x[23:16], x[31:24]};
   end
 endfunction
+
+function [31:0] long_regsel;
+  input [2:0] regsel;
+  begin
+    long_regsel = { 29'b0, regsel };
+  end
+endfunction

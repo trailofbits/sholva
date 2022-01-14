@@ -163,7 +163,7 @@ vector_specs:
     # OUTPUTS
     instr_len: 1
     opc: 37 # CMD_POP
-    opnd0_r: x # TODO 1 # [esp]
+    opnd0_r: 1 # [esp]
     opnd1_r: 0xffffd9b8
     opnd2_r: 4
     dest0_kind: 1 # OPND_DEST_REG_1HOT
@@ -192,5 +192,5 @@ vector_specs:
     opnd2_r: 4
     dest0_kind: 0b10 # OPND_DEST_MEM_1HOT
     dest1_kind: 0b01 # OPND_DEST_REG_1HOT
-    dest0_sel: x # TODO 0xffffd9bc # [ebx]
+    dest0_sel: 0xffffd9bc # [ebx]
     dest1_sel: 4 # ESP
