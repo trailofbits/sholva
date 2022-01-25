@@ -173,7 +173,7 @@ vector_specs:
 
     # OUTPUTS
     o_eax: 0x1 # unchanged
-    o_ebx: x  # TODO
+    o_ebx: 1
     o_esp: 0xffffd9bc # i_esp + 4
     o_eip: 0x08049009 # i_eip + 1
     o_eflags: 2 # unchanged

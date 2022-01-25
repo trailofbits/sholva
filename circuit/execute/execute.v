@@ -326,9 +326,15 @@ cfu cfu_x(
 // When that happens, `exe_is_alu` is high and we apply the result correctly.
 // See the HACK note below.
 
-assign opnd0_w = exe_is_alu ? alu_result  :
-                 exe_is_mu  ? mu_opnd0_w  :
-                              opnd0_r     ; // No operation? Use the input.
+// HACK(ww): Another terrible hack -- we've pre-moved POP's write operand
+// (i.e., the value popped from the stack) into opnd0_r during the decoding
+// phase. We special case it here because it doesn't go through any of the
+// execution units, despite conceptually being a move. This is probably
+// worth refactoring.
+assign opnd0_w = opc_1hot[`CMD_POP] ? opnd0_r     :
+                 exe_is_alu         ? alu_result  :
+                 exe_is_mu          ? mu_opnd0_w  :
+                                      opnd0_r     ; // No operation? Use the input.
 
 // HACK(ww): Route alu_result into opnd1_w if and only if we're executing the
 // ALU in the context of a stack adjustment operation. We do this

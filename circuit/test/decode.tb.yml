@@ -163,7 +163,7 @@ vector_specs:
     # OUTPUTS
     instr_len: 1
     opc: 37 # CMD_POP
-    opnd0_r: 1 # [esp]
+    opnd0_r: 1 # read [esp]
     opnd1_r: 0xffffd9b8
     opnd2_r: 4
     dest0_kind: 1 # OPND_DEST_REG_1HOT
