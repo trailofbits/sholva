@@ -45,7 +45,8 @@ wire [127:0] opc_1hot = one_hot128(opc);
 // Core operation signals.
 wire alu_op_add = opc_1hot[`CMD_ADD] |
                   opc_1hot[`CMD_ADC] |
-                  opc_1hot[`CMD_INC];
+                  opc_1hot[`CMD_INC] |
+                  opc_1hot[`CMD_POP] ;
 
 wire alu_op_sub = opc_1hot[`CMD_SUB]   |
                   opc_1hot[`CMD_SBB]   |
@@ -53,7 +54,8 @@ wire alu_op_sub = opc_1hot[`CMD_SUB]   |
                   opc_1hot[`CMD_CMP]   |
                   opc_1hot[`CMD_CMPS]  |
                   opc_1hot[`CMD_CALLr] |
-                  opc_1hot[`CMD_CALLi] ;
+                  opc_1hot[`CMD_CALLi] |
+                  opc_1hot[`CMD_PUSH]  ;
 
 wire alu_op_and = opc_1hot[`CMD_AND] |
                   opc_1hot[`CMD_TEST];
@@ -61,7 +63,7 @@ wire alu_op_and = opc_1hot[`CMD_AND] |
 wire alu_op_or = opc_1hot[`CMD_OR];
 
 wire alu_op_xor = opc_1hot[`CMD_XOR] |
-                  opc_1hot[`CMD_NOT];
+                  opc_1hot[`CMD_NOT] ;
 
 wire alu_op_mul = opc_1hot[`CMD_MUL] |
                   opc_1hot[`CMD_IMUL];
@@ -111,7 +113,9 @@ wire alu_no_wr = opc_1hot[`CMD_CMP] |
 // These commands do not use the ALU to modify the EFLAGS.
 wire alu_no_flags = opc_1hot[`CMD_NOT]   |
                     opc_1hot[`CMD_CALLr] |
-                    opc_1hot[`CMD_CALLi] ;
+                    opc_1hot[`CMD_CALLi] |
+                    opc_1hot[`CMD_PUSH]  |
+                    opc_1hot[`CMD_POP]   ;
 
 // TODO(ww): Flesh these out more:
 // https://sandpile.org/x86/flags.htm
@@ -160,13 +164,16 @@ wire [6:0] status_in = {
 wire [6:0] alu_status_out;
 wire [31:0] alu_result;
 
-wire alu_op_is_call = opc_1hot[`CMD_CALLr] | opc_1hot[`CMD_CALLi];
+wire alu_op_is_stack_adjust = opc_1hot[`CMD_CALLr] |
+                              opc_1hot[`CMD_CALLi] |
+                              opc_1hot[`CMD_PUSH]  |
+                              opc_1hot[`CMD_POP]   ;
 
-// When we're using the ALU as part of a CALL instruction, we need to do some
-// operand re-routing. Specifically, we need to use opnd#1 and opnd#2 as
-// opnd#0 and opnd#1 respectively.
-wire [31:0] alu_opnd0_r = alu_op_is_call ? opnd1_r : opnd0_r;
-wire [31:0] alu_opnd1_r = alu_op_is_call ? opnd2_r : opnd1_r;
+// When we're using the ALU as part of a stack-adjusting instruction, we need
+// to do some operand re-routing. Specifically, we need to use opnd#1 and
+// opnd#2 as opnd#0 and opnd#1 respectively.
+wire [31:0] alu_opnd0_r = alu_op_is_stack_adjust ? opnd1_r : opnd0_r;
+wire [31:0] alu_opnd1_r = alu_op_is_stack_adjust ? opnd2_r : opnd1_r;
 
 alu alu_x(
   .cntl(alu_cntl),
@@ -319,19 +326,26 @@ cfu cfu_x(
 // When that happens, `exe_is_alu` is high and we apply the result correctly.
 // See the HACK note below.
 
-assign opnd0_w = exe_is_alu ? alu_result  :
-                 exe_is_mu  ? mu_opnd0_w  :
-                              opnd0_r     ; // No operation? Use the input.
+// HACK(ww): Another terrible hack -- we've pre-moved POP's write operand
+// (i.e., the value popped from the stack) into opnd0_r during the decoding
+// phase. We special case it here because it doesn't go through any of the
+// execution units, despite conceptually being a move. This is probably
+// worth refactoring.
+assign opnd0_w = opc_1hot[`CMD_POP] ? opnd0_r     :
+                 exe_is_alu         ? alu_result  :
+                 exe_is_mu          ? mu_opnd0_w  :
+                                      opnd0_r     ; // No operation? Use the input.
 
 // HACK(ww): Route alu_result into opnd1_w if and only if we're executing the
-// ALU in the context of a "fused" operation (so far, only CALL). We do this
+// ALU in the context of a stack adjustment operation. We do this
 // because the ALU performs the stack adjustment for us and other parts of the
 // circuit expect to do the ESP writeback via opnd#1 (since opnd0_r is used
-// for the EIP adjustment). See the construction of dest1_kind and dest1_sel
-// during operand decoding for more context.
-assign opnd1_w = exe_is_mu                    ? mu_opnd1_w :
-                 exe_is_alu && alu_op_is_call ? alu_result :
-                                                opnd1_r    ; // TODO(ww): Others.
+// for the EIP adjustment or other "primary" instruction semantic).
+// See the construction of dest1_kind and dest1_sel during operand decoding for
+// more context.
+assign opnd1_w = exe_is_mu                            ? mu_opnd1_w :
+                 exe_is_alu && alu_op_is_stack_adjust ? alu_result :
+                 opnd1_r                                           ; // TODO(ww): Others.
 
 // Update our flag state based on whichever execution unit actually took effect.
 // Only the ALU and meta units can modify flag state, so we don't need to check

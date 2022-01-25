@@ -47,6 +47,7 @@ vector_specs:
 
   - _description: "0x0000000b @ 0xffffd9c8 (read, dword)"
 
+    # INPUTS
     raw_hint: 0x82ffffd9c80000000b
 
     # OUTPUTS
@@ -55,3 +56,27 @@ vector_specs:
     is_write: 0b0 # read
     address: 0xffffd9c8
     data: 0x0b
+
+  - _description: "0x00000002 @ 0xffffd9bc (write, dword)"
+
+    # INPUTS
+    raw_hint: 0x86ffffd9bc00000002
+
+    # OUTPUTS
+    valid_hint: 0b1
+    mask: 0b10
+    is_write: 0b1
+    address: 0xffffd9bc
+    data: 0x00000002
+
+  - _description: "0x00000001 @ 0xffffd9b8 (read, dword)"
+
+    # INPUTS
+    raw_hint: 0x82ffffd9b800000001
+
+    # OUTPUTS
+    valid_hint: 0b1
+    mask: 0b10
+    is_write: 0b0
+    address: 0xffffd9b8
+    data: 0x00000001

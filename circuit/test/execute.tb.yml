@@ -114,3 +114,18 @@ vector_specs:
     o_eflags: 2
     next_eip: 0x08049026
     opnd1_w: x # write operation ignored
+
+  - _description: "CMD_POP"
+
+    # INPUTS
+    opc: 37 # CMD_POP
+    eip: 0x08049008
+    instr_len: 1
+    opnd0_r: 0x01 # popped value
+    opnd1_r: 0xffffd9b8 # ESP
+    opnd2_r: 4 # stack adjust
+
+    # OUTPUTS
+    next_eip: 0x08049009
+    opnd0_w: 0x01 # POP write
+    opnd1_w: 0xffffd9bc # POP stack adjust

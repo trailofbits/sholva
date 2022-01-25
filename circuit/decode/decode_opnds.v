@@ -128,21 +128,29 @@ wire sib_no_index = sib_index_regsel == 3'b100;
 // so we have to compute each operand's prospective value as if it was an
 // immediate, displacement, register, and memory operand. Then, we get to
 // select from those unconditional computations based on which one it actually
-// is.
+// is, for both reads and writes.
+
+// NOTE(ww): From this point on, the "operands" of an instruction become
+// somewhat fuzzy and flexible: they goal from being the "encoded" operands
+// as they more-or-less appear in the instruction text to a collection of
+// "read" operands (whose source can be registers, immediates, etc.) and "write"
+// selectors (whose destinations can be registers or memory addresses).
 
 ///
 /// REGISTER OPERANDS
 ///
 
-
-// Is operand#0 a register?
-wire opnd0_is_reg = opnd_form_1hot[`OPND_ENC_REG] ||
-                    opnd_form_1hot[`OPND_ENC_MODREGRM_RM] ||
-                    opnd_form_1hot[`OPND_ENC_EAX_IMM] ||
-                    opnd_form_1hot[`OPND_ENC_EAX_REG] ||
-                    opnd_form_1hot[`OPND_ENC_REG_IMM] ||
+// Is operand#0 a register, and do we read and/or write to it?
+wire opnd0_is_reg = opnd_form_1hot[`OPND_ENC_REG]              ||
+                    opnd_form_1hot[`OPND_ENC_EAX_IMM]          ||
+                    opnd_form_1hot[`OPND_ENC_EAX_REG]          ||
+                    opnd_form_1hot[`OPND_ENC_REG_IMM]          ||
                     (opnd0_modrm_rm && modrm_rm_is_reg_direct) ||
                     opnd0_modrm_reg;
+
+wire opnd0_r_is_reg = opnd0_is_read && opnd0_is_reg;
+wire opnd0_w_is_reg = opnd0_is_write && opnd0_is_reg;
+
 
 // For operand#0, our register selector can come from four sources:
 // TODO(ww): That's wrong. We also need to handle implicit register selector operands here,
@@ -151,7 +159,7 @@ wire opnd0_is_reg = opnd_form_1hot[`OPND_ENC_REG] ||
 // * The r/m selector of ModR/M (OPND_ENC_MODREGRM_RM_*) when in register direct mode (mod=0b11)
 // * The reg selector of ModR/M (OPND_ENC_MODREGRM_REG_*)
 // * An implicit EAX register (OPND_ENC_EAX_*)
-wire [2:0] opnd0_r_regsel = (opnd_form_1hot[`OPND_ENC_REG] || opnd_form_1hot[`OPND_ENC_REG_IMM]) ?
+wire [2:0] opnd0_rw_regsel = (opnd_form_1hot[`OPND_ENC_REG] || opnd_form_1hot[`OPND_ENC_REG_IMM]) ?
                                 unescaped_instr[2:0] :
                             (opnd0_modrm_rm && modrm_rm_is_reg_direct) ?
                                 modrm[2:0] :
@@ -160,17 +168,21 @@ wire [2:0] opnd0_r_regsel = (opnd_form_1hot[`OPND_ENC_REG] || opnd_form_1hot[`OP
                             (opnd_form_1hot[`OPND_ENC_EAX_IMM] || opnd_form_1hot[`OPND_ENC_EAX_REG]) ?
                                 `REG_EAX : 3'b0;
 
-// Is operand#1 a register?
+// Is operand#1 a register, and do we read and/or write to it?
 wire opnd1_is_reg = opnd_form_1hot[`OPND_ENC_EAX_REG] ||
                     (opnd1_modrm_rm && modrm_rm_is_reg_direct) ||
                     opnd1_modrm_reg;
+
+wire opnd1_r_is_reg = opnd1_is_read && opnd1_is_reg;
+wire opnd1_w_is_reg = opnd1_is_write && opnd1_is_reg;
+
 
 // For operand#1, our register selector can come from N sources:
 // * The r/m selector of ModR/M (OPND_ENC_MODREGRM_REG_RM*) when in register direct mode (mod=0b11)
 // * The reg selector of ModR/M (OPND_ENC_MODREGRM_RM_REG*)
 // * The lower three bits of the opcode itself (OPND_ENC_*_REG)
 // * TODO(ww): Implicit opnd1 register sources? Presumably some of the string operations?
-wire [2:0] opnd1_r_regsel = (opnd1_modrm_rm && modrm_rm_is_reg_direct) ?
+wire [2:0] opnd1_rw_regsel = (opnd1_modrm_rm && modrm_rm_is_reg_direct) ?
                                 modrm[2:0] :
                             (opnd1_modrm_reg) ?
                                 modrm[5:3] :
@@ -182,7 +194,7 @@ wire [2:0] opnd1_r_regsel = (opnd1_modrm_rm && modrm_rm_is_reg_direct) ?
 // Finally, actually grab some values using our operand selectors.
 wire [31:0] opnd0_r_regval;
 mux8_32 mux8_32_opnd0_reg(
-  .sel(opnd0_r_regsel),
+  .sel(opnd0_rw_regsel),
   .in0(eax),
   .in1(ecx),
   .in2(edx),
@@ -197,7 +209,7 @@ mux8_32 mux8_32_opnd0_reg(
 
 wire [31:0] opnd1_r_regval;
 mux8_32 mux8_32_opnd1_reg(
-  .sel(opnd1_r_regsel),
+  .sel(opnd1_rw_regsel),
   .in0(eax),
   .in1(ecx),
   .in2(edx),
@@ -221,19 +233,26 @@ mux8_32 mux8_32_opnd1_reg(
 // Is operand#0 a memory address?
 // TODO(ww): Missing anything?
 wire opnd0_r_is_mem_modrm = (opnd0_modrm_rm && ~modrm_rm_is_reg_direct);
-wire opnd0_is_mem = opnd0_r_is_mem_modrm ||
-                    opc_1hot[`CMD_MOVS] ||
-                    opc_1hot[`CMD_CMPS] ||
-                    opc_1hot[`CMD_SCAS];
+wire opnd0_is_mem = opnd0_r_is_mem_modrm |
+                    opc_1hot[`CMD_MOVS]  |
+                    opc_1hot[`CMD_CMPS]  |
+                    opc_1hot[`CMD_SCAS]  |
+                    opc_1hot[`CMD_POP]   ;
+
+wire opnd0_r_is_mem = opnd0_is_read && opnd0_is_mem;
+wire opnd0_w_is_mem = opnd0_is_write && opnd0_is_mem;
 
 // Is operand#1 a memory address?
 // TODO(ww): Missing anything?
 wire opnd1_r_is_mem_modrm = (opnd1_modrm_rm && ~modrm_rm_is_reg_direct);
-wire opnd1_is_mem = opnd1_r_is_mem_modrm ||
-                    opc_1hot[`CMD_MOVS] ||
-                    opc_1hot[`CMD_CMPS] ||
-                    opc_1hot[`CMD_STOS] ||
-                    opc_1hot[`CMD_LODS];
+wire opnd1_is_mem = opnd1_r_is_mem_modrm |
+                    opc_1hot[`CMD_MOVS]  |
+                    opc_1hot[`CMD_CMPS]  |
+                    opc_1hot[`CMD_STOS]  |
+                    opc_1hot[`CMD_LODS]  ;
+
+wire opnd1_r_is_mem = opnd1_is_read && opnd1_is_mem;
+wire opnd1_w_is_mem = opnd1_is_write && opnd1_is_mem;
 
 // To actually calculate our effective addresses for operand#0 and operand#1,
 // we need to get the (scale, index, base, displacement) for each, or
@@ -242,6 +261,7 @@ wire opnd1_is_mem = opnd1_r_is_mem_modrm ||
 // * If we have a SIB byte, it's the SIB base selector.
 // * If we have a bare ModR/M byte with ModR/M.mod != 0b11, it's the ModR/M.rm
 //   selector.
+// * If we're doing a POP, it's ESP.
 // * Otherwise, it's an implicit selector for one of the string/data
 //   instructions, which means that it's EDI or ESI.
 
@@ -265,16 +285,15 @@ wire [2:0] opndX_r_mem_base_regsel =
     modrm[2:0] : 3'b000;
 
 wire [2:0] opnd0_r_mem_base_regsel =
-  (opc_1hot[`CMD_MOVS] || opc_1hot[`CMD_STOS] || opc_1hot[`CMD_SCAS]) ?
-    `REG_EDI :
-  (opc_1hot[`CMD_CMPS]) ?
-    `REG_ESI : opndX_r_mem_base_regsel;
+  opc_1hot[`CMD_MOVS] | opc_1hot[`CMD_STOS] | opc_1hot[`CMD_SCAS] ? `REG_EDI :
+  opc_1hot[`CMD_CMPS]                                             ? `REG_ESI :
+  opc_1hot[`CMD_POP]                                              ? `REG_ESP :
+  opndX_r_mem_base_regsel                                                    ;
 
 wire [2:0] opnd1_r_mem_base_regsel =
-  (opc_1hot[`CMD_MOVS] || opc_1hot[`CMD_LODS]) ?
-    `REG_ESI :
-  (opc_1hot[`CMD_CMPS]) ?
-    `REG_EDI : opndX_r_mem_base_regsel;
+  opc_1hot[`CMD_MOVS] | opc_1hot[`CMD_LODS] ? `REG_ESI :
+  opc_1hot[`CMD_CMPS]                       ? `REG_EDI :
+  opndX_r_mem_base_regsel                              ;
 
 wire [31:0] opnd0_r_mem_disp = opnd0_disp ? disp : 32'b0;
 wire [31:0] opnd1_r_mem_disp = opnd1_disp ? disp : 32'b0;
@@ -441,16 +460,28 @@ wire [31:0] opnd0_r_dispval = disp;
 // Some are already signaled for us: for example, `opndN_is_one` tells us that
 // an operand has an implicit value of 1. Others need to be checked below.
 
-// For CALL instructions, we introduce two phony operands: opnd1 becomes
-// ESP, and opnd2 becomes the immediate 4. We do this so that we can re-use
-// the ALU for stack adjustment during CALL's execution.
+// For CALL, PUSH, and POP instructions, we introduce two phony operands:
+// opnd1 becomes ESP, and opnd2 becomes the immediate 4.
+// We do this so that we can re-use the ALU for stack adjustment during
+// each execution.
+// POP has a third phony: we reuse opnd0_r to store the popped value even
+// though the "real" operand#0 is a write-only operand (the POP destination).
 // TODO(ww): RET needs two phonies as well.
 
-wire stack_adjust_phonies = opc_1hot[`CMD_CALLr] | opc_1hot[`CMD_CALLi];
+wire stack_adjust_phonies = opc_1hot[`CMD_CALLr] |
+                            opc_1hot[`CMD_CALLi] |
+                            opc_1hot[`CMD_PUSH]  |
+                            opc_1hot[`CMD_POP]   ;
 
-wire opnd1_is_phony = opnd1_is_one | stack_adjust_phonies;
+wire pop_phony = opc_1hot[`CMD_POP];
+
+wire opnd0_r_is_phony = pop_phony;
+
+wire opnd1_r_is_phony = opnd1_is_one | stack_adjust_phonies;
 
 wire opnd2_is_phony = stack_adjust_phonies;
+
+wire [31:0] opnd0_r_phonyval = pop_phony ? opnd0_r_memval : 32'b0;
 
 wire [31:0] opnd1_r_phonyval = opnd1_is_one         ? 32'b1 :
                                stack_adjust_phonies ? esp   : 32'b0;
@@ -467,15 +498,16 @@ wire [31:0] opnd2_r_phonyval = stack_adjust_phonies ? 32'd4 : 32'b0;
 
 // Operand multiplexors.
 
-assign opnd0_r = opnd0_is_reg    ? opnd0_r_regval   :
-                 opnd0_is_mem    ? opnd0_r_memval   :
-                 opnd0_is_imm    ? opnd0_r_immval   :
-                 opnd0_is_disp   ? opnd0_r_dispval  : 32'b0;
+assign opnd0_r = opnd0_r_is_phony ? opnd0_r_phonyval :
+                 opnd0_r_is_reg   ? opnd0_r_regval   :
+                 opnd0_r_is_mem   ? opnd0_r_memval   :
+                 opnd0_is_imm     ? opnd0_r_immval   :
+                 opnd0_is_disp    ? opnd0_r_dispval  : 32'b0;
 
-assign opnd1_r = opnd1_is_phony  ? opnd1_r_phonyval :
-                 opnd1_is_reg    ? opnd1_r_regval   :
-                 opnd1_is_mem    ? opnd1_r_memval   :
-                 opnd1_is_imm    ? opnd1_r_immval   : 32'b0;
+assign opnd1_r = opnd1_r_is_phony ? opnd1_r_phonyval :
+                 opnd1_r_is_reg   ? opnd1_r_regval   :
+                 opnd1_r_is_mem   ? opnd1_r_memval   :
+                 opnd1_is_imm     ? opnd1_r_immval   : 32'b0;
 
 assign opnd2_r = opnd2_is_phony ? opnd2_r_phonyval : 32'b0;
 
@@ -486,32 +518,50 @@ assign opnd2_r = opnd2_is_phony ? opnd2_r_phonyval : 32'b0;
 // In most cases it's the same as the source of the operand.
 // The main edge case is "phony" operands, which are synthesized and don't
 // have explicit read/write semantics. These need to be fixed up manually.
+
 // TODO(ww): Clean this up. In particular, the decision of which
 // destination operand to use for phony operands is subjective and hard to follow:
 // I decided to use `dest1` below since `opnd1` is a phony-sourced `ESP`,
 // but that makes routing the adjusted `ESP` from the ALU more tedious elsewhere
 // (since the ALU otherwise gets its result routed to `opnd0` by default).
 
+// This is particularly confusing: we need to reroute dest0 to a memory selector
+// if and only if we're POPing *and* the encoding form indicates that our POP
+// destination is a memory destination instead of a register destination.
+// We can't put this login in `pop_phony` itself, since `pop_phony` also
+// controls whether we re-reroute the value read from the stack (which is
+// invariant across destination selectors).
+wire dest0_is_phony_mem = pop_phony && (opnd_form_1hot[`OPND_ENC_MODREGRM_RM_IMM] && !modrm_rm_is_reg_direct);
+
 wire dest1_is_phony_esp = stack_adjust_phonies;
 
-assign dest0_kind = !opnd0_is_write ? `OPND_DEST_NONE     :
-                    opnd0_is_reg    ? `OPND_DEST_REG_1HOT :
-                    opnd0_is_mem    ? `OPND_DEST_MEM_1HOT :
-                                      `OPND_DEST_NONE     ;
+// NOTE(ww): Technically dest0_is_phony_mem is redundant here since
+// the POP case is also covered by opnd0_w_is_mem.
+assign dest0_kind = dest0_is_phony_mem ? `OPND_DEST_MEM_1HOT :
+                    !opnd0_is_write    ? `OPND_DEST_NONE     :
+                    opnd0_w_is_reg     ? `OPND_DEST_REG_1HOT :
+                    opnd0_w_is_mem     ? `OPND_DEST_MEM_1HOT :
+                                         `OPND_DEST_NONE     ;
 
 // Special case, per above: dest1 might be ESP if we're doing a CALL.
 assign dest1_kind = dest1_is_phony_esp ? `OPND_DEST_REG_1HOT :
                     !opnd1_is_write    ? `OPND_DEST_NONE     :
-                    opnd1_is_reg       ? `OPND_DEST_REG_1HOT :
-                    opnd1_is_mem       ? `OPND_DEST_MEM_1HOT :
+                    opnd1_w_is_reg     ? `OPND_DEST_REG_1HOT :
+                    opnd1_w_is_mem     ? `OPND_DEST_MEM_1HOT :
                                          `OPND_DEST_NONE     ;
 
-assign dest0_sel = dest0_kind[`OPND_DEST_REG] ?
-                                 { 29'b0, opnd0_r_regsel } : 32'b0;
+// Special case for POP: when dest0 indicates a memory selector, it's normally
+// opnd0_r_mem_addr (a misnomer, since it's actually a write). However, when it's
+// a POP, we used opnd1_r_mem_addr instead, since the first AGU is occupied.
+assign dest0_sel =
+  dest0_kind == `OPND_DEST_REG_1HOT ? long_regsel(opnd0_rw_regsel) :
+  dest0_kind == `OPND_DEST_MEM_1HOT ?
+    (pop_phony ? opnd1_r_mem_addr : opnd0_r_mem_addr)     :
+  32'b0                                                            ;
 
 // Same ESP special case for CALL.
-assign dest1_sel = dest1_kind[`OPND_DEST_REG] ?
-  (dest1_is_phony_esp ? { 29'b0, `REG_ESP } : { 29'b0, opnd1_r_regsel }) :
+assign dest1_sel = dest1_kind == `OPND_DEST_REG_1HOT ?
+  (dest1_is_phony_esp ? long_regsel(`REG_ESP) : long_regsel(opnd1_rw_regsel)) :
   32'b0;
 
 assign instr_body_len = (has_modrm ? 4'd1 : 4'd0) + (has_sib ? 4'd1 : 4'd0) + imm_disp_len;
