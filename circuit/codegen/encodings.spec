@@ -101,7 +101,8 @@ CMD_LEA:8D~RM~wr
 CMD_LODS:AC~ZO~wr,AD~ZO~wr
 
 # TODO(ww): These displacements are relative to the current EIP, not the next.
-CMD_LOOP:E0~D8~rr,E1~D8~rr,E2~D8~rr
+# See below for the other variants.
+CMD_LOOP:E2~D8~rr
 
 # TODO(ww): Support A0, A1, A2, A3?
 CMD_MOV:88~MR~wr,89~MR~wr,8A~RM~wr,8B~RM~wr,8C~MR~wr,8E~RM~wr,B0+rb+ib~OI~wr,B8+r*+i*~OI~wr,C6/0+ib~MI~wr,C7/0+i*~MI~wr
@@ -198,3 +199,6 @@ CMD_JL:7C~D8r~r,x8C~D32r~r
 CMD_JNL:7D~D8r~r,x8D~D32r~r
 CMD_JLE:7E~D8r~r,x8E~D32r~r
 CMD_JG:7F~D8r~r,x8F~D32r~r
+
+CMD_LOOPE:E1~D8~rr
+CMD_LOOPNE:E0~D8~rr
