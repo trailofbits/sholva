@@ -212,3 +212,33 @@ vector_specs:
     opnd2_r: 4 # stack adjust
     dest1_kind: 0b01 # OPND_DEST_REG_1HOT
     dest1_sel: 4 # ESP
+
+  - _description: "LOOP 1"
+
+    # INPUT
+    raw_instr: 0x00e2
+
+    # OUTPUTS
+    instr_len: 2
+    opc: 27 # CMD_LOOP
+    opnd0_r: 0x00
+
+  - _description: "LOOPE 1"
+
+    # INPUT
+    raw_instr: 0x00e1
+
+    # OUTPUTS
+    instr_len: 2
+    opc: 82 # CMD_LOOPE
+    opnd0_r: 0x00
+
+  - _description: "LOOPNE 1"
+
+    # INPUT
+    raw_instr: 0x00e0
+
+    # OUTPUTS
+    instr_len: 2
+    opc: 83 # CMD_LOOPNE
+    opnd0_r: 0x00
