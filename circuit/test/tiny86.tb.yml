@@ -188,5 +188,5 @@ vector_specs:
     o_edx: 0x3 # unchanged
     o_esp: 0xffffd9c4 # i_esp + 4
     o_ebp: 0xffffd9cc # unchanged
-    o_eip: x # TODO 0x08049019
+    o_eip: 0x08049019
     o_eflags: 2 # unchanged

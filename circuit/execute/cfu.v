@@ -64,7 +64,9 @@ wire cf_xfer = jcc_eval             |
                opc_1hot[`CMD_RET]   ;
 
 // TODO: Support other absolute indirect semantics.
-wire cf_xfer_absolute = opc_1hot[`CMD_CALLi] | opc_1hot[`CMD_JMPi];
+wire cf_xfer_absolute = opc_1hot[`CMD_CALLi] |
+                        opc_1hot[`CMD_JMPi]  |
+                        opc_1hot[`CMD_RET]   ;
 
 // The EIP immediately after our current one in decoding order, which may
 // or may not be our actual next EIP depending on control flow.
