@@ -46,7 +46,8 @@ wire [127:0] opc_1hot = one_hot128(opc);
 wire alu_op_add = opc_1hot[`CMD_ADD] |
                   opc_1hot[`CMD_ADC] |
                   opc_1hot[`CMD_INC] |
-                  opc_1hot[`CMD_POP] ;
+                  opc_1hot[`CMD_POP] |
+                  opc_1hot[`CMD_RET] ;
 
 wire alu_op_sub = opc_1hot[`CMD_SUB]   |
                   opc_1hot[`CMD_SBB]   |
@@ -115,7 +116,8 @@ wire alu_no_flags = opc_1hot[`CMD_NOT]   |
                     opc_1hot[`CMD_CALLr] |
                     opc_1hot[`CMD_CALLi] |
                     opc_1hot[`CMD_PUSH]  |
-                    opc_1hot[`CMD_POP]   ;
+                    opc_1hot[`CMD_POP]   |
+                    opc_1hot[`CMD_RET];
 
 // TODO(ww): Flesh these out more:
 // https://sandpile.org/x86/flags.htm
@@ -167,7 +169,8 @@ wire [31:0] alu_result;
 wire alu_op_is_stack_adjust = opc_1hot[`CMD_CALLr] |
                               opc_1hot[`CMD_CALLi] |
                               opc_1hot[`CMD_PUSH]  |
-                              opc_1hot[`CMD_POP]   ;
+                              opc_1hot[`CMD_POP]   |
+                              opc_1hot[`CMD_RET]   ;
 
 // When we're using the ALU as part of a stack-adjusting instruction, we need
 // to do some operand re-routing. Specifically, we need to use opnd#1 and
