@@ -9,6 +9,18 @@ outputs:
   - "32 address"
   - "32 data"
 vector_specs:
+  - _description: "invalid hint"
+
+    # INPUTS
+    raw_hint: 0x00ffffffffaabbccdd
+
+    # OUTPUTS
+    valid_hint: 0b0
+    mask: 0b00
+    is_write: 0b0
+    address: 0xffffffff
+    data: 0xaabbccdd
+
   - _description: "0xaaaaaaaa @ 0xffffddac (read, dword)"
 
     # INPUTS
@@ -80,3 +92,15 @@ vector_specs:
     is_write: 0b0
     address: 0xffffd9b8
     data: 0x00000001
+
+  - _description: "0x08049019 @ 0xffffd9c00 (read, dword)"
+
+    # INPUTS
+    raw_hint: 0x82ffffd9c008049019
+
+    # OUTPUTS
+    valid_hint: 0b1
+    mask: 0b10 # dword
+    is_write: 0b0 # read
+    address: 0xffffd9c0
+    data: 0x08049019

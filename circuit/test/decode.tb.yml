@@ -194,3 +194,21 @@ vector_specs:
     dest1_kind: 0b01 # OPND_DEST_REG_1HOT
     dest0_sel: 0xffffd9bc # [ebx]
     dest1_sel: 4 # ESP
+
+  - _description: "RET ([esp]=0x08049019)"
+
+    # INPUTS
+    raw_instr: 0xc3
+    esp: 0xffffd9c0
+    hint1_is_write: 0 # read
+    hint1_address: 0xffffd9c0 # ESP
+    hint1_data: 0x08049019 # new EIP
+
+    # OUTPUTS
+    instr_len: 1
+    opc: 43 # CMD_RET
+    opnd0_r: 0x08049019 # [ESP]
+    opnd1_r: 0xffffd9c0 # ESP
+    opnd2_r: 4 # stack adjust
+    dest1_kind: 0b01 # OPND_DEST_REG_1HOT
+    dest1_sel: 4 # ESP

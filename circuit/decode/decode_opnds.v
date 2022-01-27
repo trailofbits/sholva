@@ -261,7 +261,7 @@ wire opnd1_w_is_mem = opnd1_is_write && opnd1_is_mem;
 // * If we have a SIB byte, it's the SIB base selector.
 // * If we have a bare ModR/M byte with ModR/M.mod != 0b11, it's the ModR/M.rm
 //   selector.
-// * If we're doing a POP, it's ESP.
+// * If we're doing a POP or a RET, it's ESP.
 // * Otherwise, it's an implicit selector for one of the string/data
 //   instructions, which means that it's EDI or ESI.
 
@@ -287,7 +287,7 @@ wire [2:0] opndX_r_mem_base_regsel =
 wire [2:0] opnd0_r_mem_base_regsel =
   opc_1hot[`CMD_MOVS] | opc_1hot[`CMD_STOS] | opc_1hot[`CMD_SCAS] ? `REG_EDI :
   opc_1hot[`CMD_CMPS]                                             ? `REG_ESI :
-  opc_1hot[`CMD_POP]                                              ? `REG_ESP :
+  opc_1hot[`CMD_POP] | opc_1hot[`CMD_RET]                         ? `REG_ESP :
   opndX_r_mem_base_regsel                                                    ;
 
 wire [2:0] opnd1_r_mem_base_regsel =
@@ -471,9 +471,10 @@ wire [31:0] opnd0_r_dispval = disp;
 wire stack_adjust_phonies = opc_1hot[`CMD_CALLr] |
                             opc_1hot[`CMD_CALLi] |
                             opc_1hot[`CMD_PUSH]  |
-                            opc_1hot[`CMD_POP]   ;
+                            opc_1hot[`CMD_POP]   |
+                            opc_1hot[`CMD_RET];
 
-wire pop_phony = opc_1hot[`CMD_POP];
+wire pop_phony = opc_1hot[`CMD_POP] | opc_1hot[`CMD_RET];
 
 wire opnd0_r_is_phony = pop_phony;
 
