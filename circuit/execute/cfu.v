@@ -35,27 +35,30 @@ wire of = eflags[`EFLAGS_OF];
 
 // Evaluate the appropriate EFLAGS/ecx_is_zero for a Jcc or LOOPcc.
 // TODO(ww): Is there a cleaner way to express this?
-wire cc_eval =  opc_1hot[`CMD_JO]   ? of               :
-                opc_1hot[`CMD_JNO]  ? !of              :
-                opc_1hot[`CMD_JB]   ? cf               :
-                opc_1hot[`CMD_JAE]  ? !cf              :
-                opc_1hot[`CMD_JE]   ? zf               :
-                opc_1hot[`CMD_JNE]  ? !zf              :
-                opc_1hot[`CMD_JBE]  ? cf | zf          :
-                opc_1hot[`CMD_JA]   ? !cf & !zf        :
-                opc_1hot[`CMD_JS]   ? sf               :
-                opc_1hot[`CMD_JNS]  ? !sf              :
-                opc_1hot[`CMD_JP]   ? pf               :
-                opc_1hot[`CMD_JNP]  ? !pf              :
-                opc_1hot[`CMD_JL]   ? sf != of         :
-                opc_1hot[`CMD_JNL]  ? sf == of         :
-                opc_1hot[`CMD_JLE]  ? zf | (sf != of)  :
-                opc_1hot[`CMD_JG]   ? !zf & (sf == of) :
-                opc_1hot[`CMD_JCXZ] ? ecx_is_zero      : 1'b0;
+wire cc_eval =  opc_1hot[`CMD_JO]     ? of                 :
+                opc_1hot[`CMD_JNO]    ? !of                :
+                opc_1hot[`CMD_JB]     ? cf                 :
+                opc_1hot[`CMD_JAE]    ? !cf                :
+                opc_1hot[`CMD_JE]     ? zf                 :
+                opc_1hot[`CMD_JNE]    ? !zf                :
+                opc_1hot[`CMD_JBE]    ? cf | zf            :
+                opc_1hot[`CMD_JA]     ? !cf & !zf          :
+                opc_1hot[`CMD_JS]     ? sf                 :
+                opc_1hot[`CMD_JNS]    ? !sf                :
+                opc_1hot[`CMD_JP]     ? pf                 :
+                opc_1hot[`CMD_JNP]    ? !pf                :
+                opc_1hot[`CMD_JL]     ? sf != of           :
+                opc_1hot[`CMD_JNL]    ? sf == of           :
+                opc_1hot[`CMD_JLE]    ? zf | (sf != of)    :
+                opc_1hot[`CMD_JG]     ? !zf & (sf == of)   :
+                opc_1hot[`CMD_JCXZ]   ? ecx_is_zero        :
+                opc_1hot[`CMD_LOOP]   ? !ecx_is_zero       :
+                opc_1hot[`CMD_LOOPE]  ? !ecx_is_zero & zf  :
+                opc_1hot[`CMD_LOOPNE] ? !ecx_is_zero & !zf :
+                1'b0;
 
 // Are we performing a control flow "transfer," i.e. doing anything other
 // than moving the EIP to the next instruction in the text stream?
-// TODO: Evaluate LOOP conditions here.
 wire cf_xfer = cc_eval              |
                opc_1hot[`CMD_CALLr] |
                opc_1hot[`CMD_CALLi] |

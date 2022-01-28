@@ -22,6 +22,23 @@ module execute(
 
 wire [127:0] opc_1hot = one_hot128(opc);
 
+// Convenience wires, for commands that have shared semantics.
+
+// Is our command a CALL?
+wire opc_is_call = opc_1hot[`CMD_CALLr] | opc_1hot[`CMD_CALLi];
+
+// Is our command a LOOPcc?
+wire opc_is_loop = opc_1hot[`CMD_LOOP]   |
+                   opc_1hot[`CMD_LOOPE]  |
+                   opc_1hot[`CMD_LOOPNE] ;
+
+// Does our command perform some kind of "adjust", e.g. of ECX or ESP?
+wire opc_is_adjust = opc_is_call         |
+                     opc_1hot[`CMD_PUSH] |
+                     opc_1hot[`CMD_POP]  |
+                     opc_1hot[`CMD_RET]  |
+                     opc_is_loop         ;
+
 ///
 /// BEGIN ALU
 ///
@@ -51,15 +68,6 @@ wire [127:0] opc_1hot = one_hot128(opc);
 // BSF, BSR, BT, BTC, BTR, BTS
 // SETcc (?), PUSH(A), POP(A)
 
-wire alu_op_is_adjust = opc_1hot[`CMD_CALLr]    |
-                        opc_1hot[`CMD_CALLi]    |
-                        opc_1hot[`CMD_PUSH]     |
-                        opc_1hot[`CMD_POP]      |
-                        opc_1hot[`CMD_RET]      |
-                        opc_1hot[`CMD_LOOP]     |
-                        opc_1hot[`CMD_LOOPE]    |
-                        opc_1hot[`CMD_LOOPNE]   ;
-
 // ALU control signals.
 
 // Core operation signals.
@@ -69,17 +77,14 @@ wire alu_op_add = opc_1hot[`CMD_ADD] |
                   opc_1hot[`CMD_POP] |
                   opc_1hot[`CMD_RET] ;
 
-wire alu_op_sub = opc_1hot[`CMD_SUB]    |
-                  opc_1hot[`CMD_SBB]    |
-                  opc_1hot[`CMD_DEC]    |
-                  opc_1hot[`CMD_CMP]    |
-                  opc_1hot[`CMD_CMPS]   |
-                  opc_1hot[`CMD_CALLr]  |
-                  opc_1hot[`CMD_CALLi]  |
-                  opc_1hot[`CMD_PUSH]   |
-                  opc_1hot[`CMD_LOOP]   |
-                  opc_1hot[`CMD_LOOPE]  |
-                  opc_1hot[`CMD_LOOPNE] ;
+wire alu_op_sub = opc_1hot[`CMD_SUB]  |
+                  opc_1hot[`CMD_SBB]  |
+                  opc_1hot[`CMD_DEC]  |
+                  opc_1hot[`CMD_CMP]  |
+                  opc_1hot[`CMD_CMPS] |
+                  opc_is_call         |
+                  opc_1hot[`CMD_PUSH] |
+                  opc_is_loop         ;
 
 wire alu_op_and = opc_1hot[`CMD_AND] |
                   opc_1hot[`CMD_TEST];
@@ -135,8 +140,8 @@ wire alu_no_wr = opc_1hot[`CMD_CMP] |
                  opc_1hot[`CMD_TEST];
 
 // These commands do not use the ALU to modify the EFLAGS.
-wire alu_no_flags = opc_1hot[`CMD_NOT]   |
-                    alu_op_is_adjust     ;
+wire alu_no_flags = opc_1hot[`CMD_NOT] |
+                    opc_is_adjust      ;
 
 // TODO(ww): Flesh these out more:
 // https://sandpile.org/x86/flags.htm
@@ -188,8 +193,8 @@ wire [31:0] alu_result;
 // When we're using the ALU as part of a adjusting instruction (stack or ECX),
 // we need to do some operand re-routing. Specifically, we need to use opnd#1
 // and opnd#2 as opnd#0 and opnd#1 respectively.
-wire [31:0] alu_opnd0_r = alu_op_is_adjust ? opnd1_r : opnd0_r;
-wire [31:0] alu_opnd1_r = alu_op_is_adjust ? opnd2_r : opnd1_r;
+wire [31:0] alu_opnd0_r = opc_is_adjust ? opnd1_r : opnd0_r;
+wire [31:0] alu_opnd1_r = opc_is_adjust ? opnd2_r : opnd1_r;
 
 alu alu_x(
   .cntl(alu_cntl),
@@ -322,10 +327,16 @@ wire [31:0] meta_eflags = {
 
 // Every step changes the EIP in *some* way, so the CFU always runs.
 
+// ecx_is_zero normally comes from a test against the input regfile, but with
+// an exception: if we're executing a LOOPcc, it performs the ECX adjust before
+// testing it. In that case, we need to check the ALU's result (i.e., ECX - 1)
+// instead of the input ECX.
+wire cfu_ecx_is_zero = opc_is_loop ? alu_result == 32'b0 : ecx_is_zero;
+
 cfu cfu_x(
   .opc(opc),
   .eflags(eflags),
-  .ecx_is_zero(ecx_is_zero),
+  .ecx_is_zero(cfu_ecx_is_zero),
   .eip(eip),
   .instr_len(instr_len),
   .address(opnd0_r),
@@ -359,9 +370,9 @@ assign opnd0_w = opc_1hot[`CMD_POP] ? opnd0_r     :
 // for the EIP adjustment or other "primary" instruction semantic).
 // See the construction of dest1_kind and dest1_sel during operand decoding for
 // more context.
-assign opnd1_w = exe_is_mu                      ? mu_opnd1_w :
-                 exe_is_alu && alu_op_is_adjust ? alu_result :
-                 opnd1_r                                     ; // TODO(ww): Others.
+assign opnd1_w = exe_is_mu                   ? mu_opnd1_w :
+                 exe_is_alu && opc_is_adjust ? alu_result :
+                 opnd1_r                                  ; // TODO(ww): Others.
 
 // Update our flag state based on whichever execution unit actually took effect.
 // Only the ALU and meta units can modify flag state, so we don't need to check
