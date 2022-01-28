@@ -28,17 +28,37 @@ wire [127:0] opc_1hot = one_hot128(opc);
 
 // The ALU is responsible for the following instructions:
 //
-// ADD, ADC, INC -> ALU_OP_ADD
-// SUB, SBB, DEC -> ALU_OP_SUB
-// AND, TEST     -> ALU_OP_AND
-// OR            -> ALU_OP_OR
-// XOR, NOT      -> ALU_OP_XOR
-// MUL, IMUL     -> ALU_OP_MUL
-// DIV, IDIV     -> ALU_OP_DIV
+// ADD, ADC, INC         -> ALU_OP_ADD
+// SUB, SBB, DEC, CMP(S) -> ALU_OP_SUB
+// AND, TEST             -> ALU_OP_AND
+// OR                    -> ALU_OP_OR
+// XOR, NOT              -> ALU_OP_XOR
+// MUL, IMUL             -> ALU_OP_MUL
+// DIV, IDIV             -> ALU_OP_DIV
+//
+// TODO(ww): Document the shift/rotate mapping here.
+//
+// Additionally, the ALU provides stack adjustments for the following:
+//
+// PUSH, CALL -> ALU_OP_SUB
+// POP, RET   -> ALY_OP_ADD
+//
+// And ECX adjustments for the following:
+//
+// LOOPcc -> ALU_OP_SUB
 
 // TODO(ww): The ALU needs to support each of the following:
 // BSF, BSR, BT, BTC, BTR, BTS
-// Jcc, JCXZ, SETcc (?), LOOPcc, PUSH(A), POP(A)
+// SETcc (?), PUSH(A), POP(A)
+
+wire alu_op_is_adjust = opc_1hot[`CMD_CALLr]    |
+                        opc_1hot[`CMD_CALLi]    |
+                        opc_1hot[`CMD_PUSH]     |
+                        opc_1hot[`CMD_POP]      |
+                        opc_1hot[`CMD_RET]      |
+                        opc_1hot[`CMD_LOOP]     |
+                        opc_1hot[`CMD_LOOPE]    |
+                        opc_1hot[`CMD_LOOPNE]   ;
 
 // ALU control signals.
 
@@ -49,14 +69,17 @@ wire alu_op_add = opc_1hot[`CMD_ADD] |
                   opc_1hot[`CMD_POP] |
                   opc_1hot[`CMD_RET] ;
 
-wire alu_op_sub = opc_1hot[`CMD_SUB]   |
-                  opc_1hot[`CMD_SBB]   |
-                  opc_1hot[`CMD_DEC]   |
-                  opc_1hot[`CMD_CMP]   |
-                  opc_1hot[`CMD_CMPS]  |
-                  opc_1hot[`CMD_CALLr] |
-                  opc_1hot[`CMD_CALLi] |
-                  opc_1hot[`CMD_PUSH]  ;
+wire alu_op_sub = opc_1hot[`CMD_SUB]    |
+                  opc_1hot[`CMD_SBB]    |
+                  opc_1hot[`CMD_DEC]    |
+                  opc_1hot[`CMD_CMP]    |
+                  opc_1hot[`CMD_CMPS]   |
+                  opc_1hot[`CMD_CALLr]  |
+                  opc_1hot[`CMD_CALLi]  |
+                  opc_1hot[`CMD_PUSH]   |
+                  opc_1hot[`CMD_LOOP]   |
+                  opc_1hot[`CMD_LOOPE]  |
+                  opc_1hot[`CMD_LOOPNE] ;
 
 wire alu_op_and = opc_1hot[`CMD_AND] |
                   opc_1hot[`CMD_TEST];
@@ -113,11 +136,7 @@ wire alu_no_wr = opc_1hot[`CMD_CMP] |
 
 // These commands do not use the ALU to modify the EFLAGS.
 wire alu_no_flags = opc_1hot[`CMD_NOT]   |
-                    opc_1hot[`CMD_CALLr] |
-                    opc_1hot[`CMD_CALLi] |
-                    opc_1hot[`CMD_PUSH]  |
-                    opc_1hot[`CMD_POP]   |
-                    opc_1hot[`CMD_RET];
+                    alu_op_is_adjust     ;
 
 // TODO(ww): Flesh these out more:
 // https://sandpile.org/x86/flags.htm
@@ -166,17 +185,11 @@ wire [6:0] status_in = {
 wire [6:0] alu_status_out;
 wire [31:0] alu_result;
 
-wire alu_op_is_stack_adjust = opc_1hot[`CMD_CALLr] |
-                              opc_1hot[`CMD_CALLi] |
-                              opc_1hot[`CMD_PUSH]  |
-                              opc_1hot[`CMD_POP]   |
-                              opc_1hot[`CMD_RET]   ;
-
-// When we're using the ALU as part of a stack-adjusting instruction, we need
-// to do some operand re-routing. Specifically, we need to use opnd#1 and
-// opnd#2 as opnd#0 and opnd#1 respectively.
-wire [31:0] alu_opnd0_r = alu_op_is_stack_adjust ? opnd1_r : opnd0_r;
-wire [31:0] alu_opnd1_r = alu_op_is_stack_adjust ? opnd2_r : opnd1_r;
+// When we're using the ALU as part of a adjusting instruction (stack or ECX),
+// we need to do some operand re-routing. Specifically, we need to use opnd#1
+// and opnd#2 as opnd#0 and opnd#1 respectively.
+wire [31:0] alu_opnd0_r = alu_op_is_adjust ? opnd1_r : opnd0_r;
+wire [31:0] alu_opnd1_r = alu_op_is_adjust ? opnd2_r : opnd1_r;
 
 alu alu_x(
   .cntl(alu_cntl),
@@ -340,15 +353,15 @@ assign opnd0_w = opc_1hot[`CMD_POP] ? opnd0_r     :
                                       opnd0_r     ; // No operation? Use the input.
 
 // HACK(ww): Route alu_result into opnd1_w if and only if we're executing the
-// ALU in the context of a stack adjustment operation. We do this
-// because the ALU performs the stack adjustment for us and other parts of the
+// ALU in the context of an adjustment operation. We do this
+// because the ALU performs the adjustment for us and other parts of the
 // circuit expect to do the ESP writeback via opnd#1 (since opnd0_r is used
 // for the EIP adjustment or other "primary" instruction semantic).
 // See the construction of dest1_kind and dest1_sel during operand decoding for
 // more context.
-assign opnd1_w = exe_is_mu                            ? mu_opnd1_w :
-                 exe_is_alu && alu_op_is_stack_adjust ? alu_result :
-                 opnd1_r                                           ; // TODO(ww): Others.
+assign opnd1_w = exe_is_mu                      ? mu_opnd1_w :
+                 exe_is_alu && alu_op_is_adjust ? alu_result :
+                 opnd1_r                                     ; // TODO(ww): Others.
 
 // Update our flag state based on whichever execution unit actually took effect.
 // Only the ALU and meta units can modify flag state, so we don't need to check

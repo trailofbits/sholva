@@ -225,6 +225,8 @@ vector_specs:
     opnd0_r: 0x00
     opnd1_r: 100
     opnd2_r: 1
+    dest1_kind: 0b01 # OPND_DEST_REG_1HOT
+    dest1_sel: 1 # ECX
 
   - _description: "LOOPE 1"
 
@@ -238,6 +240,8 @@ vector_specs:
     opnd0_r: 0x00
     opnd1_r: 50
     opnd2_r: 1
+    dest1_kind: 0b01 # OPND_DEST_REG_1HOT
+    dest1_sel: 1 # ECX
 
   - _description: "LOOPNE 1"
 
@@ -251,6 +255,8 @@ vector_specs:
     opnd0_r: 0x00
     opnd1_r: 1
     opnd2_r: 1
+    dest1_kind: 0b01 # OPND_DEST_REG_1HOT
+    dest1_sel: 1 # ECX
 
   - _description: "LOOP -3"
 
@@ -264,3 +270,5 @@ vector_specs:
     opnd0_r: -5 # -3 - instr_len
     opnd1_r: 2 # ECX
     opnd2_r: 1 # ECX adjust
+    dest1_kind: 0b01 # OPND_DEST_REG_1HOT
+    dest1_sel: 1 # ECX
