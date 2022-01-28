@@ -168,26 +168,31 @@ wire [2:0] opnd0_rw_regsel = (opnd_form_1hot[`OPND_ENC_REG] || opnd_form_1hot[`O
                             (opnd_form_1hot[`OPND_ENC_EAX_IMM] || opnd_form_1hot[`OPND_ENC_EAX_REG]) ?
                                 `REG_EAX : 3'b0;
 
-// Is operand#1 a register, and do we read and/or write to it?
-wire opnd1_is_reg = opnd_form_1hot[`OPND_ENC_EAX_REG] ||
-                    (opnd1_modrm_rm && modrm_rm_is_reg_direct) ||
-                    opnd1_modrm_reg;
+wire cmd_is_loop = opc_1hot[`CMD_LOOP] | opc_1hot[`CMD_LOOPE] | opc_1hot[`CMD_LOOPNE];
 
-wire opnd1_r_is_reg = opnd1_is_read && opnd1_is_reg;
-wire opnd1_w_is_reg = opnd1_is_write && opnd1_is_reg;
+// Is operand#1 a register, and do we read and/or write to it?
+// LOOPcc is a special case here: it's disp8-only as an encoding, but
+// we need to synthesize an operand for ECX (the counter we'll read and decrement).
+wire opnd1_is_reg = opnd_form_1hot[`OPND_ENC_EAX_REG]          |
+                    (opnd1_modrm_rm && modrm_rm_is_reg_direct) |
+                    opnd1_modrm_reg                            |
+                    cmd_is_loop                                ;
+
+wire opnd1_r_is_reg = (opnd1_is_read && opnd1_is_reg) | cmd_is_loop;
+wire opnd1_w_is_reg = (opnd1_is_write && opnd1_is_reg) | cmd_is_loop;
 
 
 // For operand#1, our register selector can come from N sources:
 // * The r/m selector of ModR/M (OPND_ENC_MODREGRM_REG_RM*) when in register direct mode (mod=0b11)
 // * The reg selector of ModR/M (OPND_ENC_MODREGRM_RM_REG*)
 // * The lower three bits of the opcode itself (OPND_ENC_*_REG)
+// * Implicit ECX, if we're performing a LOOPcc.
 // * TODO(ww): Implicit opnd1 register sources? Presumably some of the string operations?
-wire [2:0] opnd1_rw_regsel = (opnd1_modrm_rm && modrm_rm_is_reg_direct) ?
-                                modrm[2:0] :
-                            (opnd1_modrm_reg) ?
-                                modrm[5:3] :
-                            (opnd_form_1hot[`OPND_ENC_EAX_REG]) ?
-                                unescaped_instr[2:0] : 3'b0;
+wire [2:0] opnd1_rw_regsel = opnd1_modrm_rm && modrm_rm_is_reg_direct ? modrm[2:0]           :
+                             opnd1_modrm_reg                          ? modrm[5:3]           :
+                             opnd_form_1hot[`OPND_ENC_EAX_REG]        ? unescaped_instr[2:0] :
+                             cmd_is_loop                              ? `REG_ECX             :
+                                                                        3'b0                 ;
 
 // TODO(ww): operand#2 regsel. This can only ever be CL.
 
@@ -261,7 +266,7 @@ wire opnd1_w_is_mem = opnd1_is_write && opnd1_is_mem;
 // * If we have a SIB byte, it's the SIB base selector.
 // * If we have a bare ModR/M byte with ModR/M.mod != 0b11, it's the ModR/M.rm
 //   selector.
-// * If we're doing a POP or a RET, it's ESP.
+// * If we're doing a POP or a RET, then operand#0 is ESP.
 // * Otherwise, it's an implicit selector for one of the string/data
 //   instructions, which means that it's EDI or ESI.
 
@@ -464,9 +469,14 @@ wire [31:0] opnd0_r_dispval = disp;
 // opnd1 becomes ESP, and opnd2 becomes the immediate 4.
 // We do this so that we can re-use the ALU for stack adjustment during
 // each execution.
-// POP has a third phony: we reuse opnd0_r to store the popped value even
-// though the "real" operand#0 is a write-only operand (the POP destination).
-// TODO(ww): RET needs two phonies as well.
+// POP and RET have a third phony: we reuse opnd0_r to store the popped value
+// even though the "real" operand#0 is a write-only operand (the stack pop
+// destination).
+//
+// Similarly, we create a single phony operand for the LOOPcc family:
+// operand#2 becomes 1, i.e. the decrement for the counter (ECX).
+// This assumes that operand#1 is ECX, which special-case in register operand
+// handling above.
 
 wire stack_adjust_phonies = opc_1hot[`CMD_CALLr] |
                             opc_1hot[`CMD_CALLi] |
@@ -474,20 +484,23 @@ wire stack_adjust_phonies = opc_1hot[`CMD_CALLr] |
                             opc_1hot[`CMD_POP]   |
                             opc_1hot[`CMD_RET];
 
+wire ecx_adjust_phones = cmd_is_loop;
+
 wire pop_phony = opc_1hot[`CMD_POP] | opc_1hot[`CMD_RET];
 
 wire opnd0_r_is_phony = pop_phony;
 
 wire opnd1_r_is_phony = opnd1_is_one | stack_adjust_phonies;
 
-wire opnd2_is_phony = stack_adjust_phonies;
+wire opnd2_is_phony = stack_adjust_phonies | cmd_is_loop;
 
 wire [31:0] opnd0_r_phonyval = pop_phony ? opnd0_r_memval : 32'b0;
 
 wire [31:0] opnd1_r_phonyval = opnd1_is_one         ? 32'b1 :
                                stack_adjust_phonies ? esp   : 32'b0;
 
-wire [31:0] opnd2_r_phonyval = stack_adjust_phonies ? 32'd4 : 32'b0;
+wire [31:0] opnd2_r_phonyval = stack_adjust_phonies ? 32'd4 :
+                               ecx_adjust_phones    ? 32'd1 : 32'b0;
 
 ///
 /// END PHONY OPERANDS
@@ -535,6 +548,7 @@ assign opnd2_r = opnd2_is_phony ? opnd2_r_phonyval : 32'b0;
 wire dest0_is_phony_mem = pop_phony && (opnd_form_1hot[`OPND_ENC_MODREGRM_RM_IMM] && !modrm_rm_is_reg_direct);
 
 wire dest1_is_phony_esp = stack_adjust_phonies;
+wire dest1_is_phony_ecx = ecx_adjust_phones;
 
 // NOTE(ww): Technically dest0_is_phony_mem is redundant here since
 // the POP case is also covered by opnd0_w_is_mem.
@@ -544,8 +558,11 @@ assign dest0_kind = dest0_is_phony_mem ? `OPND_DEST_MEM_1HOT :
                     opnd0_w_is_mem     ? `OPND_DEST_MEM_1HOT :
                                          `OPND_DEST_NONE     ;
 
-// Special case, per above: dest1 might be ESP if we're doing a CALL.
+// Special cases, per above:
+// * ESP if we're doing a CALL or other stack-adjusting instruction
+// * ECX if we're doing a LOOPcc
 assign dest1_kind = dest1_is_phony_esp ? `OPND_DEST_REG_1HOT :
+                    dest1_is_phony_ecx ? `OPND_DEST_REG_1HOT :
                     !opnd1_is_write    ? `OPND_DEST_NONE     :
                     opnd1_w_is_reg     ? `OPND_DEST_REG_1HOT :
                     opnd1_w_is_mem     ? `OPND_DEST_MEM_1HOT :

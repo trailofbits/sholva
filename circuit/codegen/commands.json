@@ -1709,40 +1709,6 @@
                 "iw_or_id": false,
                 "num_opnds": 1,
                 "op_enc": "D8",
-                "opc": 224,
-                "opc_reg_bits": false,
-                "opnd0_mode": "r",
-                "opnd1_mode": "r",
-                "opnd2_mode": "x",
-                "rb": false,
-                "rw_or_rd": false,
-                "source_sign_ext": "Z"
-            },
-            {
-                "disp_is_rel": false,
-                "esc": false,
-                "ext": null,
-                "ib": false,
-                "iw_or_id": false,
-                "num_opnds": 1,
-                "op_enc": "D8",
-                "opc": 225,
-                "opc_reg_bits": false,
-                "opnd0_mode": "r",
-                "opnd1_mode": "r",
-                "opnd2_mode": "x",
-                "rb": false,
-                "rw_or_rd": false,
-                "source_sign_ext": "Z"
-            },
-            {
-                "disp_is_rel": false,
-                "esc": false,
-                "ext": null,
-                "ib": false,
-                "iw_or_id": false,
-                "num_opnds": 1,
-                "op_enc": "D8",
                 "opc": 226,
                 "opc_reg_bits": false,
                 "opnd0_mode": "r",
@@ -1750,7 +1716,7 @@
                 "opnd2_mode": "x",
                 "rb": false,
                 "rw_or_rd": false,
-                "source_sign_ext": "Z"
+                "source_sign_ext": "S"
             }
         ]
     },
@@ -4877,6 +4843,50 @@
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
+            }
+        ]
+    },
+    {
+        "cmd": "CMD_LOOPE",
+        "encs": [
+            {
+                "disp_is_rel": false,
+                "esc": false,
+                "ext": null,
+                "ib": false,
+                "iw_or_id": false,
+                "num_opnds": 1,
+                "op_enc": "D8",
+                "opc": 225,
+                "opc_reg_bits": false,
+                "opnd0_mode": "r",
+                "opnd1_mode": "r",
+                "opnd2_mode": "x",
+                "rb": false,
+                "rw_or_rd": false,
+                "source_sign_ext": "S"
+            }
+        ]
+    },
+    {
+        "cmd": "CMD_LOOPNE",
+        "encs": [
+            {
+                "disp_is_rel": false,
+                "esc": false,
+                "ext": null,
+                "ib": false,
+                "iw_or_id": false,
+                "num_opnds": 1,
+                "op_enc": "D8",
+                "opc": 224,
+                "opc_reg_bits": false,
+                "opnd0_mode": "r",
+                "opnd1_mode": "r",
+                "opnd2_mode": "x",
+                "rb": false,
+                "rw_or_rd": false,
+                "source_sign_ext": "S"
             }
         ]
     }
