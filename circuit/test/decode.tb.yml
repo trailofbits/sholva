@@ -217,28 +217,50 @@ vector_specs:
 
     # INPUT
     raw_instr: 0x00e2
+    ecx: 100
 
     # OUTPUTS
     instr_len: 2
     opc: 27 # CMD_LOOP
     opnd0_r: 0x00
+    opnd1_r: 100
+    opnd2_r: 1
 
   - _description: "LOOPE 1"
 
     # INPUT
     raw_instr: 0x00e1
+    ecx: 50
 
     # OUTPUTS
     instr_len: 2
     opc: 82 # CMD_LOOPE
     opnd0_r: 0x00
+    opnd1_r: 50
+    opnd2_r: 1
 
   - _description: "LOOPNE 1"
 
     # INPUT
     raw_instr: 0x00e0
+    ecx: 1
 
     # OUTPUTS
     instr_len: 2
     opc: 83 # CMD_LOOPNE
     opnd0_r: 0x00
+    opnd1_r: 1
+    opnd2_r: 1
+
+  - _description: "LOOP -3"
+
+    # INPUT
+    raw_instr: 0xfbe2
+    ecx: 2
+
+    # OUTPUTS
+    instr_len: 2
+    opc: 27 # CMD_LOOP
+    opnd0_r: -5 # -3 - instr_len
+    opnd1_r: 2 # ECX
+    opnd2_r: 1 # ECX adjust
