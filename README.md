@@ -23,6 +23,13 @@ To run the build:
 $ make
 ```
 
+If you have `sv-netlist` on your PATH, you can build a BLIF-formatted netlist:
+
+```bash
+# creates tiny86.blif
+$ make netlistify
+```
+
 Independently, you can run *shol'va*'s self tests:
 
 ```bash
