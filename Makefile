@@ -15,7 +15,7 @@ all: codegen $(ALL_V)
 		-ycircuit \
 		-ycircuit/decode \
 		-ycircuit/execute \
-		-t null tiny86.v
+		-t null check.v
 
 .PHONY: netlistify
 netlistify: tiny86.blif
@@ -24,7 +24,7 @@ tiny86.blif: codegen
 	sv-netlist $(IFLAGS) --top $(TOP_MODULE) $@ $(ALL_V_WITHOUT_TESTS_OR_CODEGEN)
 
 .PHONY: stat
-stat: codegen
+stat: codegen/
 	sv-stat $(IFLAGS) --top $(TOP_MODULE) $(ALL_V_WITHOUT_TESTS_OR_CODEGEN)
 
 .PHONY: codegen
