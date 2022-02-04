@@ -1,0 +1,8 @@
+module: check
+file: ../../check.v
+inputs:
+  - "560 step0"
+  - "560 step1"
+outputs:
+  - "1 ok"
+vector_specs: []

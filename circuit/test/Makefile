@@ -17,7 +17,8 @@ MODULES := fetch \
 	meta \
 	move \
 	cfu \
-	tiny86
+	tiny86 \
+	check
 
 TESTBENCHES := $(addsuffix .tb.gen.v,$(MODULES))
 TESTVECTORS := $(addsuffix .tv,$(MODULES))
