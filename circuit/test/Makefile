@@ -1,5 +1,6 @@
 TBGEN := ./codegen/tbgen
 TVGEN := ./codegen/tvgen
+E2EGEN := ./codegen/e2egen
 
 MODULES := fetch \
 	decode_hint \
@@ -33,12 +34,19 @@ check: all
 
 .PHONY: clean
 clean:
-	rm -rf $(TESTBENCHES) $(TESTVECTORS) $(TESTBENCH_EXES) *.vcd
+	rm -rf $(TESTBENCHES) $(TESTVECTORS) $(TESTBENCH_EXES) *.vcd *.e2e.tv
 
-%.tb.yml: $(TBGEN) $(TVGEN)
+check.tb.yml: check.e2e.tv
+
+check.e2e.tv: $(E2EGEN)
+	$(E2EGEN) > $@
+
+%.tb.yml: $(TBGEN) $(TVGEN) $(E2EGEN)
 
 %.tb.gen.v: %.tb.yml
 	$(TBGEN) $<
+
+check.tv: check.e2e.tv
 
 %.tv: %.tb.yml
 	$(TVGEN) $<
