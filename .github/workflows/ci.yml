@@ -20,6 +20,8 @@ jobs:
     - name: deps
       run: |
         sudo apt install -y iverilog verilator
+        iverilog -V
+        verilator --version
     - name: lint
       run: make lint
     - name: build
