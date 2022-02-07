@@ -46,7 +46,11 @@ vvps.each_with_index do |vvp, i|
     end
 
     failures.each do |f|
-      verbose "failed ##{f[0]}: #{spec["vector_specs"][f[0]]["_description"]}: #{f[1]}"
+      if spec["vector_specs"][f[0]].nil?
+        verbose "failed ##{f[0]}: (extra_vectors) #{f[1]}"
+      else
+        verbose "failed ##{f[0]}: #{spec["vector_specs"][f[0]]["_description"]}: #{f[1]}"
+      end
     end
 
     exit 1
