@@ -117,6 +117,11 @@ assign is_disp32 = has_disp
                            && ((modrm[2:0] == 3'b101 && modrm[7:6] == 2'b00)
                                || (modrm[7:6] == 2'b10))));
 
+// Should the displacement be sign-extended?
+// TODO(ww): This is almost certainly wrong.
+wire disp_is_sext = source_is_sext ||
+                    (has_disp && ~modrm_rm_is_reg_direct && opnd0_modrm_rm || opnd1_modrm_rm);
+
 // Actually grab our displacement bytes, with the region depending
 // on whether we have a ModR/M and/or SIB byte preceeding.
 // Sign-extend as necessary.
@@ -124,9 +129,9 @@ assign is_disp32 = has_disp
 assign disp = has_disp ?
               (has_modrm ?
                 (has_sib ?
-                  (is_disp8 ? (source_is_sext ? sext8_32(unescaped_instr[31:24]) : zext8_32(unescaped_instr[31:24])) : (unescaped_instr[55:24]))    // ModR/M and SIB
-                  : (is_disp8 ? (source_is_sext ? sext8_32(unescaped_instr[23:16]) : zext8_32(unescaped_instr[23:16])) : (unescaped_instr[47:16]))) // ModR/M only, no SIB
-                : (is_disp8 ? (source_is_sext ? sext8_32(unescaped_instr[15:8]) : zext8_32(unescaped_instr[15:8])) : (unescaped_instr[39:8])))     // No ModR/M or SIB
+                  (is_disp8 ? (disp_is_sext ? sext8_32(unescaped_instr[31:24]) : zext8_32(unescaped_instr[31:24])) : (unescaped_instr[55:24]))    // ModR/M and SIB
+                  : (is_disp8 ? (disp_is_sext ? sext8_32(unescaped_instr[23:16]) : zext8_32(unescaped_instr[23:16])) : (unescaped_instr[47:16]))) // ModR/M only, no SIB
+                : (is_disp8 ? (disp_is_sext ? sext8_32(unescaped_instr[15:8]) : zext8_32(unescaped_instr[15:8])) : (unescaped_instr[39:8])))     // No ModR/M or SIB
               : 32'd0;                                                                          // No disp whatsoever
 
 // Determine which of our operands actually uses the disp bytes.

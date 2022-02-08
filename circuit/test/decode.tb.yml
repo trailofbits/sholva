@@ -215,7 +215,7 @@ vector_specs:
 
   - _description: "LOOP 1"
 
-    # INPUT
+    # INPUTS
     raw_instr: 0x00e2
     ecx: 100
 
@@ -230,7 +230,7 @@ vector_specs:
 
   - _description: "LOOPE 1"
 
-    # INPUT
+    # INPUTS
     raw_instr: 0x00e1
     ecx: 50
 
@@ -245,7 +245,7 @@ vector_specs:
 
   - _description: "LOOPNE 1"
 
-    # INPUT
+    # INPUTS
     raw_instr: 0x00e0
     ecx: 1
 
@@ -260,7 +260,7 @@ vector_specs:
 
   - _description: "LOOP -3"
 
-    # INPUT
+    # INPUTS
     raw_instr: 0xfbe2
     ecx: 2
 
@@ -272,3 +272,34 @@ vector_specs:
     opnd2_r: 1 # ECX adjust
     dest1_kind: 0b01 # OPND_DEST_REG_1HOT
     dest1_sel: 1 # ECX
+
+  - _description: "SUB ESP, 16"
+
+    # INPUTS
+    raw_instr: 0x10ec83
+    esp: 0xffffd9cc
+
+    # OUTPUTS
+    instr_len: 3
+    opc: 53 # CMD_SUB
+    opnd0_r: 0xffffd9cc # ESP
+    opnd1_r: 16
+    dest0_kind: 0b01 # OPND_DEST_REG_1HOT
+    dest0_sel: 4 # ESP
+
+  - _description: "MOV EAX, DWORD [EBP - 8]"
+
+    # INPUTS
+    raw_instr: 0xf8458b
+    ebp: 0xffffd9cc
+    hint1_is_write: 0
+    hint1_address: 0xffffd9c4
+    hint1_data: 0x10
+
+    # OUTPUTS
+    instr_len: 3
+    opc: 28 # CMD_MOV
+    opnd0_r: 0 # NOTE(ww): Not read.
+    opnd1_r: 0x10 # [EBP - 8]
+    dest0_kind: 0b01 # OPND_DEST_REG_1HOT
+    dest0_sel: 0 # EAX
