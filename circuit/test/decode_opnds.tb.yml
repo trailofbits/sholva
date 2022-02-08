@@ -580,3 +580,23 @@ vector_specs:
     dest1_kind: 0b01 # OPND_DEST_REG_1HOT
     dest0_sel: 0xffffd9bc # [ebx]
     dest1_sel: 4 # ESP
+
+  - _description: "MOV EAX, DWORD [EBP - 8]"
+
+    # INPUTS
+    unescaped_instr: 0xf8458b
+    ebp: 0xffffd9cc
+    hint1_is_write: 0
+    hint1_address: 0xffffd9c4
+    hint1_data: 0x10
+    opc: 28 # CMD_MOV
+    opnd_form: 7 # OPND_ENC_MODREGRM_REG_RM
+    opnd0_is_write: 1
+    opnd1_is_read: 1
+
+    # OUTPUTS
+    instr_body_len: 2 # ModR/M + disp8
+    opnd0_r: 0 # NOTE(ww): Not read
+    opnd1_r: 0x10
+    dest0_kind: 0b01 # OPND_DEST_REG_1HOT
+    dest0_sel: 0 # EAX

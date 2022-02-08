@@ -209,3 +209,16 @@ vector_specs:
     opnd0_is_read: 0
     opnd0_is_write: 1
     source_is_sext: 0
+
+  - _description: "MOV EAX, DWORD [EBP - 8]"
+
+    # INPUTS
+    unescaped_instr: 0xf8458b
+    is_2byte: 0
+
+    # OUTPUTS
+    opc: 28 # CMD_MOV
+    opnd_form: 7 # OPND_ENC_MODREGRM_REG_RM
+    opnd_count: 2
+    opnd0_is_write: 1
+    opnd1_is_read: 1

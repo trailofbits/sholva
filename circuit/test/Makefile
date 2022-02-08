@@ -26,6 +26,7 @@ TESTVECTORS := $(addsuffix .tv,$(MODULES))
 TESTBENCH_EXES := $(addsuffix .tb.vvp,$(MODULES))
 
 TRACES := $(wildcard *.trace.txt)
+TRACE_BASES := $(basename $(basename $(TRACES)))
 
 .PHONY: all
 all: $(TESTBENCH_EXES) $(TESTVECTORS)
@@ -41,7 +42,7 @@ clean:
 check.tb.yml: check.e2e.tv
 
 check.e2e.tv: $(E2EGEN) $(TRACES)
-	$(E2EGEN) > $@
+	$(E2EGEN) $(TRACE_BASES) > $@
 
 %.tb.yml: $(TBGEN) $(TVGEN) $(E2EGEN)
 

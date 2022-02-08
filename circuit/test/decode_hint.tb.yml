@@ -104,3 +104,15 @@ vector_specs:
     is_write: 0b0 # read
     address: 0xffffd9c0
     data: 0x08049019
+
+  - _description: "0x00000010 @ 0xffffd9c4 (read, dword)"
+
+    # INPUTS
+    raw_hint: 0x82ffffd9c400000010
+
+    # OUTPUTS
+    valid_hint: 0b1
+    mask: 0b10 # dword
+    is_write: 0 # read
+    address: 0xffffd9c4
+    data: 0x10
