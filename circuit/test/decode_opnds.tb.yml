@@ -600,3 +600,25 @@ vector_specs:
     opnd1_r: 0x10
     dest0_kind: 0b01 # OPND_DEST_REG_1HOT
     dest0_sel: 0 # EAX
+
+  - _description: "LEAVE"
+
+    # INPUTS
+    unescaped_instr: 0xc9
+    esp: 0xffffd9a8
+    ebp: 0xffffd9ff
+    hint1_is_write: 0
+    hint1_address: 0xffffd9a8
+    hint1_data: 0xffffd9bc
+    opc: 84 # CMD_LEAVE
+    opnd_form: 0 # OPND_ENC_NONE
+
+    # OUTPUTS
+    instr_body_len: 0
+    opnd0_r: 0xffffd9bc # [ESP]
+    opnd1_r: 0xffffd9ff # EBP (ESP := EBP)
+    opnd2_r: 4 # ESP adjust (for POP)
+    dest0_kind: 0b01 # OPND_DEST_REG_1HOT
+    dest0_sel: 5 # EBP
+    dest1_kind: 0b01 # OPND_DEST_REG_1HOT
+    dest1_sel: 4 # ESP

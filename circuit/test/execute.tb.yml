@@ -129,3 +129,18 @@ vector_specs:
     next_eip: 0x08049009
     opnd0_w: 0x01 # POP write
     opnd1_w: 0xffffd9bc # POP stack adjust
+
+  - _description: "CMD_LEAVE"
+
+    # INPUTS
+    opc: 84 # CMD_LEAVE
+    eip: 0x08049048
+    instr_len: 1
+    opnd0_r: 0xffffd9bc # [ESP]
+    opnd1_r: 0xffffd9ff # EBP (ESP := EBP)
+    opnd2_r: 4 # ESP adjust (for POP)
+
+    # OUTPUTS
+    next_eip: 0x08049049
+    opnd0_w: 0xffffd9bc
+    opnd1_w: 0xffffda03

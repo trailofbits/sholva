@@ -479,3 +479,14 @@ vector_specs:
     opnd0_modrm_reg: 1
     opnd1_modrm_rm: 1
     opnd1_disp: 1
+
+  - _description: "LEAVE"
+
+    # INPUTS
+    unescaped_instr: 0xc9
+    opnd_form: 0 # OPND_ENC_NONE
+
+    # OUTPUTS
+    imm_disp_len: 0
+    has_modrm: 0
+    has_disp: 0

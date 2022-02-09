@@ -161,11 +161,11 @@ wire opnd0_w_is_reg = opnd0_is_write && opnd0_is_reg;
 // * An implicit EAX register (OPND_ENC_EAX_*)
 wire [2:0] opnd0_rw_regsel = (opnd_form_1hot[`OPND_ENC_REG] || opnd_form_1hot[`OPND_ENC_REG_IMM]) ?
                                 unescaped_instr[2:0] :
-                            (opnd0_modrm_rm && modrm_rm_is_reg_direct) ?
+                             (opnd0_modrm_rm && modrm_rm_is_reg_direct) ?
                                 modrm[2:0] :
-                            (opnd0_modrm_reg) ?
+                             (opnd0_modrm_reg) ?
                                 modrm[5:3] :
-                            (opnd_form_1hot[`OPND_ENC_EAX_IMM] || opnd_form_1hot[`OPND_ENC_EAX_REG]) ?
+                             (opnd_form_1hot[`OPND_ENC_EAX_IMM] || opnd_form_1hot[`OPND_ENC_EAX_REG]) ?
                                 `REG_EAX : 3'b0;
 
 wire cmd_is_loop = opc_1hot[`CMD_LOOP] | opc_1hot[`CMD_LOOPE] | opc_1hot[`CMD_LOOPNE];
@@ -242,7 +242,8 @@ wire opnd0_is_mem = opnd0_r_is_mem_modrm |
                     opc_1hot[`CMD_MOVS]  |
                     opc_1hot[`CMD_CMPS]  |
                     opc_1hot[`CMD_SCAS]  |
-                    opc_1hot[`CMD_POP]   ;
+                    opc_1hot[`CMD_POP]   |
+                    opc_1hot[`CMD_LEAVE] ;
 
 wire opnd0_r_is_mem = opnd0_is_read && opnd0_is_mem;
 wire opnd0_w_is_mem = opnd0_is_write && opnd0_is_mem;
@@ -292,7 +293,7 @@ wire [2:0] opndX_r_mem_base_regsel =
 wire [2:0] opnd0_r_mem_base_regsel =
   opc_1hot[`CMD_MOVS] | opc_1hot[`CMD_STOS] | opc_1hot[`CMD_SCAS] ? `REG_EDI :
   opc_1hot[`CMD_CMPS]                                             ? `REG_ESI :
-  opc_1hot[`CMD_POP] | opc_1hot[`CMD_RET]                         ? `REG_ESP :
+  opc_1hot[`CMD_POP] | opc_1hot[`CMD_RET] | opc_1hot[`CMD_LEAVE]  ? `REG_ESP :
   opndX_r_mem_base_regsel                                                    ;
 
 wire [2:0] opnd1_r_mem_base_regsel =
@@ -473,20 +474,25 @@ wire [31:0] opnd0_r_dispval = disp;
 // even though the "real" operand#0 is a write-only operand (the stack pop
 // destination).
 //
+// LEAVE is nearly identical to POP, but opnd1 is EBP instead (since LEAVE
+// is defined as `ESP := EBP; POP EBP`). `opnd2` is still the stack adjustment
+// immediate, and `opnd0_r` is still the popped value.
+//
 // Similarly, we create a single phony operand for the LOOPcc family:
 // operand#2 becomes 1, i.e. the decrement for the counter (ECX).
-// This assumes that operand#1 is ECX, which special-case in register operand
+// This assumes that operand#1 is ECX, which is special-case in register operand
 // handling above.
 
 wire stack_adjust_phonies = opc_1hot[`CMD_CALLr] |
                             opc_1hot[`CMD_CALLi] |
                             opc_1hot[`CMD_PUSH]  |
                             opc_1hot[`CMD_POP]   |
-                            opc_1hot[`CMD_RET];
+                            opc_1hot[`CMD_RET]   |
+                            opc_1hot[`CMD_LEAVE];
 
 wire ecx_adjust_phones = cmd_is_loop;
 
-wire pop_phony = opc_1hot[`CMD_POP] | opc_1hot[`CMD_RET];
+wire pop_phony = opc_1hot[`CMD_POP] | opc_1hot[`CMD_RET] | opc_1hot[`CMD_LEAVE];
 
 wire opnd0_r_is_phony = pop_phony;
 
@@ -497,6 +503,7 @@ wire opnd2_is_phony = stack_adjust_phonies | cmd_is_loop;
 wire [31:0] opnd0_r_phonyval = pop_phony ? opnd0_r_memval : 32'b0;
 
 wire [31:0] opnd1_r_phonyval = opnd1_is_one         ? 32'b1 :
+                               opc_1hot[`CMD_LEAVE] ? ebp   :
                                stack_adjust_phonies ? esp   : 32'b0;
 
 wire [31:0] opnd2_r_phonyval = stack_adjust_phonies ? 32'd4 :
@@ -542,10 +549,13 @@ assign opnd2_r = opnd2_is_phony ? opnd2_r_phonyval : 32'b0;
 // This is particularly confusing: we need to reroute dest0 to a memory selector
 // if and only if we're POPing *and* the encoding form indicates that our POP
 // destination is a memory destination instead of a register destination.
-// We can't put this login in `pop_phony` itself, since `pop_phony` also
+// We can't put this logic in `pop_phony` itself, since `pop_phony` also
 // controls whether we re-reroute the value read from the stack (which is
 // invariant across destination selectors).
 wire dest0_is_phony_mem = pop_phony && (opnd_form_1hot[`OPND_ENC_MODREGRM_RM_IMM] && !modrm_rm_is_reg_direct);
+
+// For LEAVE, we use the dest0 kind and selector for POPing into EBP.
+wire dest0_is_phony_ebp = opc_1hot[`CMD_LEAVE];
 
 wire dest1_is_phony_esp = stack_adjust_phonies;
 wire dest1_is_phony_ecx = ecx_adjust_phones;
@@ -553,6 +563,7 @@ wire dest1_is_phony_ecx = ecx_adjust_phones;
 // NOTE(ww): Technically dest0_is_phony_mem is redundant here since
 // the POP case is also covered by opnd0_w_is_mem.
 assign dest0_kind = dest0_is_phony_mem ? `OPND_DEST_MEM_1HOT :
+                    dest0_is_phony_ebp ? `OPND_DEST_REG_1HOT :
                     !opnd0_is_write    ? `OPND_DEST_NONE     :
                     opnd0_w_is_reg     ? `OPND_DEST_REG_1HOT :
                     opnd0_w_is_mem     ? `OPND_DEST_MEM_1HOT :
@@ -571,11 +582,11 @@ assign dest1_kind = dest1_is_phony_esp ? `OPND_DEST_REG_1HOT :
 // Special case for POP: when dest0 indicates a memory selector, it's normally
 // opnd0_r_mem_addr (a misnomer, since it's actually a write). However, when it's
 // a POP, we used opnd1_r_mem_addr instead, since the first AGU is occupied.
-assign dest0_sel =
-  dest0_kind == `OPND_DEST_REG_1HOT ? long_regsel(opnd0_rw_regsel) :
-  dest0_kind == `OPND_DEST_MEM_1HOT ?
-    (pop_phony ? opnd1_r_mem_addr : opnd0_r_mem_addr)     :
-  32'b0                                                            ;
+assign dest0_sel = dest0_kind == `OPND_DEST_REG_1HOT                                              ?
+                      (dest0_is_phony_ebp ? long_regsel(`REG_EBP) : long_regsel(opnd0_rw_regsel)) :
+                   dest0_kind == `OPND_DEST_MEM_1HOT                                              ?
+                      (pop_phony ? opnd1_r_mem_addr : opnd0_r_mem_addr)                           :
+                   32'b0;
 
 // Same ESP special case for CALL.
 assign dest1_sel = dest1_kind == `OPND_DEST_REG_1HOT ?

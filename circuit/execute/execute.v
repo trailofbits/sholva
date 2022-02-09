@@ -33,11 +33,12 @@ wire opc_is_loop = opc_1hot[`CMD_LOOP]   |
                    opc_1hot[`CMD_LOOPNE] ;
 
 // Does our command perform some kind of "adjust", e.g. of ECX or ESP?
-wire opc_is_adjust = opc_is_call         |
-                     opc_1hot[`CMD_PUSH] |
-                     opc_1hot[`CMD_POP]  |
-                     opc_1hot[`CMD_RET]  |
-                     opc_is_loop         ;
+wire opc_is_adjust = opc_is_call          |
+                     opc_1hot[`CMD_PUSH]  |
+                     opc_1hot[`CMD_POP]   |
+                     opc_1hot[`CMD_RET]   |
+                     opc_1hot[`CMD_LEAVE] |
+                     opc_is_loop          ;
 
 ///
 /// BEGIN ALU
@@ -71,11 +72,12 @@ wire opc_is_adjust = opc_is_call         |
 // ALU control signals.
 
 // Core operation signals.
-wire alu_op_add = opc_1hot[`CMD_ADD] |
-                  opc_1hot[`CMD_ADC] |
-                  opc_1hot[`CMD_INC] |
-                  opc_1hot[`CMD_POP] |
-                  opc_1hot[`CMD_RET] ;
+wire alu_op_add = opc_1hot[`CMD_ADD]   |
+                  opc_1hot[`CMD_ADC]   |
+                  opc_1hot[`CMD_INC]   |
+                  opc_1hot[`CMD_POP]   |
+                  opc_1hot[`CMD_RET]   |
+                  opc_1hot[`CMD_LEAVE] ;
 
 wire alu_op_sub = opc_1hot[`CMD_SUB]  |
                   opc_1hot[`CMD_SBB]  |
@@ -353,15 +355,15 @@ cfu cfu_x(
 // When that happens, `exe_is_alu` is high and we apply the result correctly.
 // See the HACK note below.
 
-// HACK(ww): Another terrible hack -- we've pre-moved POP's write operand
-// (i.e., the value popped from the stack) into opnd0_r during the decoding
-// phase. We special case it here because it doesn't go through any of the
-// execution units, despite conceptually being a move. This is probably
+// HACK(ww): Another terrible hack -- we've pre-moved POP and LEAVE's write
+// operand (i.e., the value popped from the stack) into opnd0_r during the
+// decoding phase. We special case it here because it doesn't go through any of
+// the execution units, despite conceptually being a move. This is probably
 // worth refactoring.
-assign opnd0_w = opc_1hot[`CMD_POP] ? opnd0_r     :
-                 exe_is_alu         ? alu_result  :
-                 exe_is_mu          ? mu_opnd0_w  :
-                                      opnd0_r     ; // No operation? Use the input.
+assign opnd0_w = opc_1hot[`CMD_POP] | opc_1hot[`CMD_LEAVE] ? opnd0_r     :
+                 exe_is_alu                                ? alu_result  :
+                 exe_is_mu                                 ? mu_opnd0_w  :
+                                                             opnd0_r     ; // No operation? Use the input.
 
 // HACK(ww): Route alu_result into opnd1_w if and only if we're executing the
 // ALU in the context of an adjustment operation. We do this
