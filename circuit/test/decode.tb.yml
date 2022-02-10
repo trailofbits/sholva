@@ -312,3 +312,5 @@ vector_specs:
     # OUTPUTS
     instr_len: 7
     opc: 28 # CMD_MOV
+    dest0_kind: 0b01 # OPND_DEST_REG_1HOT
+    dest0_sel: 0 # EAX
