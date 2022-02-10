@@ -3,7 +3,7 @@
 HELP = !!ARGV.delete("-h") || !!ARGV.delete("--help")
 VERBOSE = !!ARGV.delete("--verbose") || ENV.key?("VERBOSE") || ENV.key?("V")
 
-MAX_TEST_VECTORS = 128
+MAX_TEST_VECTORS = 1024
 
 Wire = Struct.new(:name, :size) do
   def width_spec
