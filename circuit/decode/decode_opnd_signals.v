@@ -129,12 +129,6 @@ assign is_disp32 = opnd_form_1hot[`OPND_ENC_DISP32] |
                    (has_modrm_disp && ((modrm_rm == 3'b101 && modrm_mod == 2'b00) || modrm_mod == 2'b10)) |
                    (has_sib_disp && (modrm_mod == 2'b00 || modrm_mod == 2'b10));
 
-// assign is_disp32 = has_disp
-//                    && (opnd_form_1hot[`OPND_ENC_DISP32]
-//                        || (has_modrm
-//                            && ((modrm_rm == 3'b101 && modrm_mod == 2'b00)
-//                                || (modrm_mod == 2'b10))));
-
 // Should the displacement be sign-extended?
 // TODO(ww): This is almost certainly wrong.
 wire disp_is_sext = source_is_sext ||
