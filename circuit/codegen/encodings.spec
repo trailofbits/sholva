@@ -202,4 +202,8 @@ CMD_JG:7F~D8r~r,x8F~D32r~r
 
 CMD_LOOPE:E1~D8~rr~S
 CMD_LOOPNE:E0~D8~rr~S
+
 CMD_LEAVE:C9~ZO~x
+
+# NOTE(ww): This is a terrible mnemonic, since it's actually CWD and CDQ.
+CMD_CDQ:99~ZO~x
