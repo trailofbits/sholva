@@ -10,8 +10,10 @@ module alu(
   output [31:0] result
 );
 
+// TODO(ww): Remove these? They're unused below and basically useless.
 wire alu_src_inv = cntl[`ALU_SRC_INV];
 wire alu_src_inc = cntl[`ALU_SRC_INC];
+
 wire alu_use_carry = cntl[`ALU_USE_CARRY];
 wire alu_no_wr = cntl[`ALU_NO_WR];
 wire alu_no_flags = cntl[`ALU_NO_FLAGS];
@@ -70,9 +72,13 @@ assign status_out[`STAT_ZF] = zf_no_wr ? status_in[`STAT_ZF] : stat_result[31:0]
 
 assign status_out[`STAT_SF] = sf_no_wr ? status_in[`STAT_SF] : stat_result[31];
 
-assign status_out[`STAT_OF] = of_no_wr     ? status_in[`STAT_OF] :
-                              alu_clear_of ? 1'b0 :
-                              (opnd0_r_tmp[31] & opnd1_r_tmp[31] & ~stat_result[31]) | (~opnd0_r_tmp[31] & ~opnd1_r_tmp[31] & stat_result[31]);
+// TODO(ww): I find this incredibly hard to think about, but it works.
+assign status_out[`STAT_OF] = of_no_wr          ? status_in[`STAT_OF]                                      :
+                              alu_clear_of      ? 1'b0                                                     :
+                              cntl[`ALU_OP_SUB] ? (~opnd0_r_tmp[31] & opnd1_r_tmp[31] & stat_result[31]) |
+                                                  (opnd0_r_tmp[31] & ~opnd1_r_tmp[31] & ~stat_result[31])  :
+                              (opnd0_r_tmp[31] & opnd1_r_tmp[31] & ~stat_result[31]) |
+                              (~opnd0_r_tmp[31] & ~opnd1_r_tmp[31] & stat_result[31])                      ;
 
 assign status_out[`STAT_AF] = af_no_wr ? status_in[`STAT_AF] :
                                          opnd0_r_tmp[4] ^ opnd1_r_tmp[4] ^ stat_result[4];

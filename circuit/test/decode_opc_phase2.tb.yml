@@ -222,3 +222,17 @@ vector_specs:
     opnd_count: 2
     opnd0_is_write: 1
     opnd1_is_read: 1
+
+  - _description: "sub eax, DWORD PTR [ebp+0xc] (2 - 3 = 4294967295)"
+
+    # INPUTS
+    unescaped_instr: 0x0c452b
+    is_2byte: 0
+
+    # OUTPUTS
+    opc: 53 # CMD_SUB
+    opnd_form: 7 # OPND_ENC_MODREGRM_REG_RM
+    opnd_count: 2
+    opnd0_is_read: 1
+    opnd0_is_write: 1
+    opnd1_is_read: 1

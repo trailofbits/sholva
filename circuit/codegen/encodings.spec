@@ -145,7 +145,7 @@ CMD_STD:FD~ZO~x
 # NOTE(ww): SDM lists these as encoding "NA". Why?
 CMD_STOS:AA~ZO~wr,AB~ZO~wr
 
-CMD_SUB:28~MR~W,29~MR~W,2A~RM~W,2B~RM~W,2C+ib~I~W,2D+i*~I~W,80/5+ib~MI~W,81/5+i*~MI~W,83/5+ib~MI~W~S
+CMD_SUB:28~MR~Wr,29~MR~Wr,2A~RM~Wr,2B~RM~Wr,2C+ib~I~Wr,2D+i*~I~Wr,80/5+ib~MI~Wr,81/5+i*~MI~Wr,83/5+ib~MI~Wr~S
 CMD_TEST:84~MR~rr,85~MR~rr,A8+ib~I~rr,A9+i*~I~rr,F6/0+ib~MI~rr,F7/0+i*~MI~rr
 
 # NOTE(ww): SDM lists XCHG 86 and 87 as both RM and MR, which doesn't make a lot of sense.

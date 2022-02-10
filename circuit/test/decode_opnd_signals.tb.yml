@@ -509,3 +509,21 @@ vector_specs:
     opnd0_modrm_reg: 1
     opnd1_modrm_rm: 1
     opnd1_disp: 1
+
+  - _description: "sub eax, DWORD PTR [ebp+0xc] (2 - 3 = 4294967295)"
+
+    # INPUTS
+    unescaped_instr: 0x0c452b
+    opnd_form: 7 # OPND_ENC_MODREGRM_REG_RM
+
+    # OUTPUTS
+    imm_disp_len: 1 # disp8
+    has_modrm: 1
+    has_disp: 1
+    is_disp8: 1
+    modrm: 0x45
+    sib: x
+    disp: 0x0c
+    opnd0_modrm_reg: 1
+    opnd1_modrm_rm: 1
+    opnd1_disp: 1
