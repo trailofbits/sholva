@@ -72,8 +72,13 @@ assign has_modrm = opnd0_modrm_rm || opnd0_modrm_reg;
 // The actual ModR/M byte, if `has_modrm`.
 assign modrm = unescaped_instr[15:8];
 
+// Individual ModR/M fields, for readability.
+wire [1:0] modrm_mod = modrm[7:6];
+wire [2:0] modrm_reg = modrm[5:3];
+wire [2:0] modrm_rm = modrm[2:0];
+
 // Whether ModR/M.rm indicates a register, i.e. "register direct".
-assign modrm_rm_is_reg_direct = has_modrm && modrm[7:6] == 2'b11;
+assign modrm_rm_is_reg_direct = has_modrm && modrm_mod == 2'b11;
 
 // Intel SDM Vol. 2A Table 2-1/2-2/2-3: the SIB byte is only present when all
 // of the following conditions hold:
@@ -83,39 +88,52 @@ assign modrm_rm_is_reg_direct = has_modrm && modrm[7:6] == 2'b11;
 assign has_sib = has_modrm
                && ~prefix_address_16bit
                && ~modrm_rm_is_reg_direct
-               && modrm[2:0] == 3'b100;
+               && modrm_rm == 3'b100;
 
 // The actual SIB byte, if `has_sib`.
 assign sib = unescaped_instr[23:16];
 
 // Whether we have displacement byte(s).
-// Displacement byte(s) are present in two cases:
+// Displacement byte(s) are present in three cases:
+//
 // First, when all of the following conditions hold:
 // * The ModR/M byte is present;
 // * We are not in register direct mode;
 // * One of:
 //   * We are in a displacement-only mode (ModR/M.rm == 0b101 and ModR/M.mod == 0b00)
 //   * We are in an indirect + displacement addressing mode (ModR/M.mod == 0b01 or 0b10)
-// Second, when we are in a displacement-only encoding (i.e., no ModR/M whatsoever).
-// TODO(ww): Handle that second case.
-assign has_disp = (has_modrm
-                   && ~modrm_rm_is_reg_direct
-                   && ((modrm[2:0] == 3'b101 && modrm[7:6] == 2'b00)
-                       || (modrm[7:6] == 2'b01 || modrm[7:6] == 2'b10)))
-                || opnd_form_1hot[`OPND_ENC_DISP8]
-                || opnd_form_1hot[`OPND_ENC_DISP32];
+//
+// Second, when all of the following conditions hold:
+// * The SIB byte (and therefore the ModR/M byte) is present;
+// * SIB.base = 0b101
+//
+// Third, when we are in a displacement-only encoding (i.e., no ModR/M whatsoever).
+wire has_modrm_disp = has_modrm &&
+                      ~modrm_rm_is_reg_direct &&
+                      ((modrm_rm == 3'b101 && modrm_mod == 2'b00) ||
+                        modrm_mod == 2'b01 || modrm_mod == 2'b10);
+
+wire has_sib_disp = has_sib && sib[2:0] == 3'b101;
+
+wire has_opnd_disp = opnd_form_1hot[`OPND_ENC_DISP8] | opnd_form_1hot[`OPND_ENC_DISP32];
+
+assign has_disp = has_modrm_disp | has_sib_disp | has_opnd_disp;
 
 // Whether our displacement is a single byte.
-assign is_disp8 = has_disp
-                  && (opnd_form_1hot[`OPND_ENC_DISP8]
-                      || (has_modrm && modrm[7:6] == 2'b01));
+assign is_disp8 = opnd_form_1hot[`OPND_ENC_DISP8] |
+                  (has_modrm_disp & modrm_mod == 2'b01) |
+                  (has_sib_disp & modrm_mod == 2'b01);
 
 // Whether our displacement is 32 bits.
-assign is_disp32 = has_disp
-                   && (opnd_form_1hot[`OPND_ENC_DISP32]
-                       || (has_modrm
-                           && ((modrm[2:0] == 3'b101 && modrm[7:6] == 2'b00)
-                               || (modrm[7:6] == 2'b10))));
+assign is_disp32 = opnd_form_1hot[`OPND_ENC_DISP32] |
+                   (has_modrm_disp && ((modrm_rm == 3'b101 && modrm_mod == 2'b00) || modrm_mod == 2'b10)) |
+                   (has_sib_disp && (modrm_mod == 2'b00 || modrm_mod == 2'b10));
+
+// assign is_disp32 = has_disp
+//                    && (opnd_form_1hot[`OPND_ENC_DISP32]
+//                        || (has_modrm
+//                            && ((modrm_rm == 3'b101 && modrm_mod == 2'b00)
+//                                || (modrm_mod == 2'b10))));
 
 // Should the displacement be sign-extended?
 // TODO(ww): This is almost certainly wrong.

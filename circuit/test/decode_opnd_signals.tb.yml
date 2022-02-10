@@ -490,3 +490,22 @@ vector_specs:
     imm_disp_len: 0
     has_modrm: 0
     has_disp: 0
+
+  - _description: "mov eax, DWORD PTR [eax*4+0x804c000]"
+
+    # INPUTS
+    unescaped_instr: 0x0804c00085048b
+    opnd_form: 7 # OPND_ENC_MODREGRM_REG_RM
+
+    # OUTPUTS
+    imm_disp_len: 4
+    has_modrm: 1
+    has_sib: 1
+    has_disp: 1
+    is_disp32: 1
+    modrm: 0x04
+    sib: 0x85
+    disp: 0x804c000
+    opnd0_modrm_reg: 1
+    opnd1_modrm_rm: 1
+    opnd1_disp: 1
