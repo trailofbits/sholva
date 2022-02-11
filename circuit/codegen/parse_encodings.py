@@ -3,6 +3,7 @@
 # parse_encodings.py: convert "encodings.spec" into "commands.json"
 
 import json
+import sys
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Optional
@@ -96,6 +97,13 @@ class Encoding:
     Is the register operand (if present) a word/dword?
     """
 
+    opnd_count: int
+    """
+    The (rough) number of effective operands for this encoding.
+
+    This number has very limited value.
+    """
+
     opnd0_mode: str
     """
     The mode that the first operand is in. See `_OPERAND_MODES`.
@@ -133,9 +141,10 @@ class Encoding:
 
         enc_body, op_enc = raw_enc.split("~", 1)
 
-        assert "~" in op_enc, f"missing operand modes for {raw_enc}"
-
-        op_enc, rest = op_enc.split("~", 1)
+        if "~" not in op_enc:
+            rest = ""
+        else:
+            op_enc, rest = op_enc.split("~", 1)
 
         if "~" in rest:
             opnd_modes, sign_spec = rest.split("~", 1)
@@ -152,7 +161,19 @@ class Encoding:
         assert all(
             m in _OPERAND_MODES for m in opnd_modes
         ), f"unknown opnd mode(s): {opnd_modes}"
+
+        # Don't let users explicitly specify these operands, so that they
+        # can't accidentally declare "gaps" in the operand list.
+        assert (
+            "x" not in opnd_modes
+        ), "no explicit 'x' mode allowed; let the script do it"
+
         opnd_modes += ["x"] * (3 - len(opnd_modes))
+        opnd_count = len([m for m in opnd_modes if m != "x"])
+
+        # TODO(ww): This should become an error soon.
+        if opnd_count == 0:
+            print(f"Warn: {raw_enc} has no explicit operand modes?", file=sys.stderr)
 
         # Handle "pseudo" operand encodings by transforming them
         # into their real encodings and extracting the special semantics.
@@ -205,6 +226,7 @@ class Encoding:
             iw_or_id,
             rb,
             rw_or_rd,
+            opnd_count,
             opnd_modes[0],
             opnd_modes[1],
             opnd_modes[2],
@@ -239,7 +261,9 @@ def main():
         for raw_enc in raw_encs:
             enc = Encoding.parse(raw_enc)
             assert enc not in seen_encs, f"barf: duped encoding: {enc} ({raw_enc})"
-            assert enc.unique_encoding not in seen_opcs, f"barf: dumped encoding: {enc} ({raw_enc})"
+            assert (
+                enc.unique_encoding not in seen_opcs
+            ), f"barf: dumped encoding: {enc} ({raw_enc})"
             seen_encs.add(enc)
             seen_opcs.add(enc.unique_encoding)
             encs.append(enc)

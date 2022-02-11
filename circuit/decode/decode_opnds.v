@@ -14,6 +14,7 @@ module decode_opnds(
 
   input [6:0] opc,
   input [3:0] opnd_form,
+  input [1:0] opnd_count,
   input imm_1byte,
   input reg_1byte,
   input prefix_operand_16bit,
@@ -140,6 +141,18 @@ wire sib_no_index = sib_index_regsel == 3'b100;
 /// REGISTER OPERANDS
 ///
 
+// Convenience signal for some special cases below: a few instructions
+// take EDX:EAX as an implicit pseudo-64-bit register.
+// TODO(ww): This is slightly wrong: *MUL/*DIV need to be checked only
+// if the operand encoding is trinary.
+wire cmd_has_fused_edx_eax = opc_1hot[`CMD_CDQ]  |
+                             opc_1hot[`CMD_MUL]  |
+                             opc_1hot[`CMD_DIV]  |
+                             opc_1hot[`CMD_IMUL] |
+                             opc_1hot[`CMD_IDIV] ;
+
+wire cmd_is_loop = opc_1hot[`CMD_LOOP] | opc_1hot[`CMD_LOOPE] | opc_1hot[`CMD_LOOPNE];
+
 // Is operand#0 a register, and do we read and/or write to it?
 wire opnd0_is_reg = opnd_form_1hot[`OPND_ENC_REG]              |
                     opnd_form_1hot[`OPND_ENC_EAX_IMM]          |
@@ -147,7 +160,7 @@ wire opnd0_is_reg = opnd_form_1hot[`OPND_ENC_REG]              |
                     opnd_form_1hot[`OPND_ENC_REG_IMM]          |
                     (opnd0_modrm_rm && modrm_rm_is_reg_direct) |
                     opnd0_modrm_reg                            |
-                    opc_1hot[`CMD_CDQ]                         ;
+                    cmd_has_fused_edx_eax                      ;
 
 wire opnd0_r_is_reg = opnd0_is_read && opnd0_is_reg;
 wire opnd0_w_is_reg = opnd0_is_write && opnd0_is_reg;
@@ -158,7 +171,7 @@ wire opnd0_w_is_reg = opnd0_is_write && opnd0_is_reg;
 // * The r/m selector of ModR/M (OPND_ENC_MODREGRM_RM_*) when in register direct mode (mod=0b11)
 // * The reg selector of ModR/M (OPND_ENC_MODREGRM_REG_*)
 // * An implicit EAX register (OPND_ENC_EAX_*)
-// * An implicit register in a "zero-operand" encoding, like CDQ (EDX)
+// * An implicit register, e.g. from CDQ or another EDX:EAX fused encoding.
 wire [2:0] opnd0_rw_regsel = (opnd_form_1hot[`OPND_ENC_REG] | opnd_form_1hot[`OPND_ENC_REG_IMM]) ?
                                 unescaped_instr[2:0] :
                              (opnd0_modrm_rm & modrm_rm_is_reg_direct) ?
@@ -167,19 +180,17 @@ wire [2:0] opnd0_rw_regsel = (opnd_form_1hot[`OPND_ENC_REG] | opnd_form_1hot[`OP
                                 modrm[5:3] :
                              (opnd_form_1hot[`OPND_ENC_EAX_IMM] | opnd_form_1hot[`OPND_ENC_EAX_REG]) ?
                                 `REG_EAX :
-                             opc_1hot[`CMD_CDQ] ? `REG_EDX : 3'b0;
-
-wire cmd_is_loop = opc_1hot[`CMD_LOOP] | opc_1hot[`CMD_LOOPE] | opc_1hot[`CMD_LOOPNE];
+                             cmd_has_fused_edx_eax ? `REG_EDX : 3'b0;
 
 // Is operand#1 a register, and do we read and/or write to it?
 // LOOPcc is a special case here: it's disp8-only as an encoding, but
 // we need to synthesize an operand for ECX (the counter we'll read and decrement).
-// Similarly for CDQ.
+// Similarly for CDQ and other EDX:EAX encodings.
 wire opnd1_is_reg = opnd_form_1hot[`OPND_ENC_EAX_REG]          |
                     (opnd1_modrm_rm && modrm_rm_is_reg_direct) |
                     opnd1_modrm_reg                            |
                     cmd_is_loop                                |
-                    opc_1hot[`CMD_CDQ]                         ;
+                    cmd_has_fused_edx_eax                      ;
 
 wire opnd1_r_is_reg = (opnd1_is_read && opnd1_is_reg) | cmd_is_loop;
 wire opnd1_w_is_reg = (opnd1_is_write && opnd1_is_reg) | cmd_is_loop;
@@ -190,13 +201,13 @@ wire opnd1_w_is_reg = (opnd1_is_write && opnd1_is_reg) | cmd_is_loop;
 // * The reg selector of ModR/M (OPND_ENC_MODREGRM_RM_REG*)
 // * The lower three bits of the opcode itself (OPND_ENC_*_REG)
 // * Implicit ECX, if we're performing a LOOPcc.
-// * Implicit EAX, if we're performing a CDQ.
+// * Implicit EAX, if we're performing a CDQ/another fused EDX:EAX encoding.
 // * TODO(ww): Implicit opnd1 register sources? Presumably some of the string operations?
 wire [2:0] opnd1_rw_regsel = opnd1_modrm_rm && modrm_rm_is_reg_direct ? modrm[2:0]           :
                              opnd1_modrm_reg                          ? modrm[5:3]           :
                              opnd_form_1hot[`OPND_ENC_EAX_REG]        ? unescaped_instr[2:0] :
                              cmd_is_loop                              ? `REG_ECX             :
-                             opc_1hot[`CMD_CDQ]                       ? `REG_EAX             :
+                             cmd_has_fused_edx_eax                    ? `REG_EAX             :
                                                                         3'b0                 ;
 
 // TODO(ww): operand#2 regsel. This can only ever be CL.
@@ -557,7 +568,9 @@ assign opnd2_r = opnd2_is_phony ? opnd2_r_phonyval : 32'b0;
 // We can't put this logic in `pop_phony` itself, since `pop_phony` also
 // controls whether we re-reroute the value read from the stack (which is
 // invariant across destination selectors).
-wire dest0_is_phony_mem = pop_phony && (opnd_form_1hot[`OPND_ENC_MODREGRM_RM_IMM] && !modrm_rm_is_reg_direct);
+wire dest0_is_phony_mem = pop_phony                                 &
+                          opnd_form_1hot[`OPND_ENC_MODREGRM_RM_IMM] &
+                          ~modrm_rm_is_reg_direct                   ;
 
 // For LEAVE, we use the dest0 kind and selector for POPing into EBP.
 wire dest0_is_phony_ebp = opc_1hot[`CMD_LEAVE];
@@ -569,7 +582,7 @@ wire dest1_is_phony_ecx = ecx_adjust_phones;
 // the POP case is also covered by opnd0_w_is_mem.
 assign dest0_kind = dest0_is_phony_mem ? `OPND_DEST_MEM_1HOT :
                     dest0_is_phony_ebp ? `OPND_DEST_REG_1HOT :
-                    !opnd0_is_write    ? `OPND_DEST_NONE     :
+                    ~opnd0_is_write    ? `OPND_DEST_NONE     :
                     opnd0_w_is_reg     ? `OPND_DEST_REG_1HOT :
                     opnd0_w_is_mem     ? `OPND_DEST_MEM_1HOT :
                                          `OPND_DEST_NONE     ;
@@ -579,7 +592,7 @@ assign dest0_kind = dest0_is_phony_mem ? `OPND_DEST_MEM_1HOT :
 // * ECX if we're doing a LOOPcc
 assign dest1_kind = dest1_is_phony_esp ? `OPND_DEST_REG_1HOT :
                     dest1_is_phony_ecx ? `OPND_DEST_REG_1HOT :
-                    !opnd1_is_write    ? `OPND_DEST_NONE     :
+                    ~opnd1_is_write    ? `OPND_DEST_NONE     :
                     opnd1_w_is_reg     ? `OPND_DEST_REG_1HOT :
                     opnd1_w_is_mem     ? `OPND_DEST_MEM_1HOT :
                                          `OPND_DEST_NONE     ;

@@ -76,9 +76,9 @@ CMD_BTR:xB3~MR~Wr,xBA/6+ib~MI~Wr
 CMD_BTS:xAB~MR~Wr,xBA/5+ib~MI~Wr
 
 CMD_CBW:98~A~W~S
-CMD_CLC:F8~ZO~x
-CMD_CLD:FC~ZO~x
-CMD_CMC:F5~ZO~x
+CMD_CLC:F8~ZO
+CMD_CLD:FC~ZO
+CMD_CMC:F5~ZO
 
 CMD_CMP:38~MR~rr~S,39~MR~rr~S,3A~RM~rr~S,3B~RM~rr~S,3C+ib~I~rr~S,3D+i*~I~rr~S,80/7+ib~MI~rr~S,81/7+i*~MI~rr~S,83/7+ib~MI~rr~S
 CMD_CMPS:A6~ZO~rr~Z,A7~ZO~rr~Z
@@ -87,8 +87,8 @@ CMD_CMPS:A6~ZO~rr~Z,A7~ZO~rr~Z
 CMD_CDQ:99~ZO~wr~S
 
 CMD_DEC:48+r*~O~W,FE/1~M~W,FF/1~M~W
-CMD_DIV:F6/6~M~Wr,F7/6~M~Wr
-CMD_IDIV:F6/7~M~Wr,F7/7~M~Wr~S
+CMD_DIV:F6/6~M~Wr,F7/6~M~WWr
+CMD_IDIV:F6/7~M~Wr,F7/7~M~WWr~S
 
 CMD_IMUL:69+i*~RMI~wrr~S,6B+ib~RMI~wrr~S,F6/5~M~Wr~S,F7/5~M~wWr~S,xAF~RM~Wr~S
 
@@ -123,17 +123,17 @@ CMD_OR:08~MR~Wr,09~MR~Wr,0A~RM~Wr,0B~RM~Wr,0C+ib~I~Wr,0D+i*~I~Wr,80/1+ib~MI~Wr,8
 CMD_POP:58+r*~O~w,8F/0~M~w
 
 # TODO(ww): r/w semantics for POPA?
-CMD_POPA:61~ZO~x
+CMD_POPA:61~ZO
 
-CMD_POPF:9D~ZO~x
+CMD_POPF:9D~ZO
 CMD_PUSH:50+r*~O~r,6A+ib~I~r,68+i*~I~r,FF/6~M~r
 
 # TODO(ww): r/w semantics for PUSHA?
-CMD_PUSHA:60~ZO~x
+CMD_PUSHA:60~ZO
 
-CMD_PUSHF:9C~ZO~x
+CMD_PUSHF:9C~ZO
 
-CMD_RET:C3~ZO~x,CB~ZO~x
+CMD_RET:C3~ZO,CB~ZO
 CMD_SAHF:9E~ZO~r
 CMD_LAHF:9F~ZO~r
 CMD_SBB:18~MR~Wr,19~MR~Wr,1A~RM~Wr,1B~RM~Wr,1C+ib~I~Wr,1D+i*~MI~Wr,80/3+ib~MI~Wr,81/3+i*~MI~Wr,83/3+ib~MI~Wr~S
@@ -142,8 +142,8 @@ CMD_SCAS:AE~ZO~rr,AF~ZO~rr
 CMD_SHLD:xA4+ib~MRI~Wrr,xA5~MRC~Wrr
 CMD_SHRD:xAC+ib~MRI~Wrr,xAD~MRC~Wrr
 
-CMD_STC:F9~ZO~x
-CMD_STD:FD~ZO~x
+CMD_STC:F9~ZO
+CMD_STD:FD~ZO
 
 # NOTE(ww): SDM lists these as encoding "NA". Why?
 CMD_STOS:AA~ZO~wr,AB~ZO~wr
@@ -206,4 +206,4 @@ CMD_JG:7F~D8r~r,x8F~D32r~r
 CMD_LOOPE:E1~D8~rr~S
 CMD_LOOPNE:E0~D8~rr~S
 
-CMD_LEAVE:C9~ZO~x
+CMD_LEAVE:C9~ZO

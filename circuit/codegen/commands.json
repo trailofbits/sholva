@@ -15,6 +15,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -32,6 +33,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -49,6 +51,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -66,6 +69,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -83,6 +87,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -100,6 +105,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -117,6 +123,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -134,6 +141,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -151,6 +159,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "S"
@@ -173,6 +182,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -190,6 +200,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -207,6 +218,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -224,6 +236,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -241,6 +254,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -258,6 +272,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -275,6 +290,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -292,6 +308,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -309,6 +326,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "S"
@@ -331,6 +349,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -348,6 +367,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -365,6 +385,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -382,6 +403,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -399,6 +421,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -416,6 +439,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -433,6 +457,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -450,6 +475,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -467,6 +493,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "S"
@@ -489,6 +516,7 @@
                 "opnd0_mode": "w",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -511,6 +539,7 @@
                 "opnd0_mode": "w",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -533,6 +562,7 @@
                 "opnd0_mode": "r",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -550,6 +580,7 @@
                 "opnd0_mode": "r",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -572,6 +603,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -589,6 +621,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -611,6 +644,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -628,6 +662,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -650,6 +685,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -667,6 +703,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -689,6 +726,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 1,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "S"
@@ -711,6 +749,7 @@
                 "opnd0_mode": "x",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 0,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -733,6 +772,7 @@
                 "opnd0_mode": "x",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 0,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -755,6 +795,7 @@
                 "opnd0_mode": "x",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 0,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -777,6 +818,7 @@
                 "opnd0_mode": "r",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "S"
@@ -794,6 +836,7 @@
                 "opnd0_mode": "r",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "S"
@@ -811,6 +854,7 @@
                 "opnd0_mode": "r",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "S"
@@ -828,6 +872,7 @@
                 "opnd0_mode": "r",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "S"
@@ -845,6 +890,7 @@
                 "opnd0_mode": "r",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "S"
@@ -862,6 +908,7 @@
                 "opnd0_mode": "r",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "S"
@@ -879,6 +926,7 @@
                 "opnd0_mode": "r",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "S"
@@ -896,6 +944,7 @@
                 "opnd0_mode": "r",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "S"
@@ -913,6 +962,7 @@
                 "opnd0_mode": "r",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "S"
@@ -935,6 +985,7 @@
                 "opnd0_mode": "r",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -952,6 +1003,7 @@
                 "opnd0_mode": "r",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -974,6 +1026,7 @@
                 "opnd0_mode": "w",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "S"
@@ -996,6 +1049,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 1,
                 "rb": false,
                 "rw_or_rd": true,
                 "source_sign_ext": "Z"
@@ -1013,6 +1067,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 1,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -1030,6 +1085,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 1,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -1052,6 +1108,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -1067,8 +1124,9 @@
                 "opc": 247,
                 "opc_reg_bits": false,
                 "opnd0_mode": "W",
-                "opnd1_mode": "r",
-                "opnd2_mode": "x",
+                "opnd1_mode": "W",
+                "opnd2_mode": "r",
+                "opnd_count": 3,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -1091,6 +1149,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -1106,8 +1165,9 @@
                 "opc": 247,
                 "opc_reg_bits": false,
                 "opnd0_mode": "W",
-                "opnd1_mode": "r",
-                "opnd2_mode": "x",
+                "opnd1_mode": "W",
+                "opnd2_mode": "r",
+                "opnd_count": 3,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "S"
@@ -1130,6 +1190,7 @@
                 "opnd0_mode": "w",
                 "opnd1_mode": "r",
                 "opnd2_mode": "r",
+                "opnd_count": 3,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "S"
@@ -1147,6 +1208,7 @@
                 "opnd0_mode": "w",
                 "opnd1_mode": "r",
                 "opnd2_mode": "r",
+                "opnd_count": 3,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "S"
@@ -1164,6 +1226,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "S"
@@ -1181,6 +1244,7 @@
                 "opnd0_mode": "w",
                 "opnd1_mode": "W",
                 "opnd2_mode": "r",
+                "opnd_count": 3,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "S"
@@ -1198,6 +1262,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "S"
@@ -1220,6 +1285,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "1",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": true,
                 "source_sign_ext": "Z"
@@ -1237,6 +1303,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "1",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -1254,6 +1321,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "1",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -1276,6 +1344,7 @@
                 "opnd0_mode": "r",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 1,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -1293,6 +1362,7 @@
                 "opnd0_mode": "r",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 1,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -1315,6 +1385,7 @@
                 "opnd0_mode": "w",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 1,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -1332,6 +1403,7 @@
                 "opnd0_mode": "w",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 1,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -1349,6 +1421,7 @@
                 "opnd0_mode": "w",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 1,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -1366,6 +1439,7 @@
                 "opnd0_mode": "w",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 1,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -1383,6 +1457,7 @@
                 "opnd0_mode": "w",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 1,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -1400,6 +1475,7 @@
                 "opnd0_mode": "w",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 1,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -1417,6 +1493,7 @@
                 "opnd0_mode": "w",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 1,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -1434,6 +1511,7 @@
                 "opnd0_mode": "w",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 1,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -1451,6 +1529,7 @@
                 "opnd0_mode": "w",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 1,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -1468,6 +1547,7 @@
                 "opnd0_mode": "w",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 1,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -1485,6 +1565,7 @@
                 "opnd0_mode": "w",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 1,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -1502,6 +1583,7 @@
                 "opnd0_mode": "w",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 1,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -1519,6 +1601,7 @@
                 "opnd0_mode": "w",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 1,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -1536,6 +1619,7 @@
                 "opnd0_mode": "w",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 1,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -1553,6 +1637,7 @@
                 "opnd0_mode": "w",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 1,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -1570,6 +1655,7 @@
                 "opnd0_mode": "w",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 1,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -1592,6 +1678,7 @@
                 "opnd0_mode": "r",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 1,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -1614,6 +1701,7 @@
                 "opnd0_mode": "r",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 1,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "S"
@@ -1631,6 +1719,7 @@
                 "opnd0_mode": "r",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 1,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -1653,6 +1742,7 @@
                 "opnd0_mode": "w",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -1675,6 +1765,7 @@
                 "opnd0_mode": "w",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -1692,6 +1783,7 @@
                 "opnd0_mode": "w",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -1714,6 +1806,7 @@
                 "opnd0_mode": "r",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "S"
@@ -1736,6 +1829,7 @@
                 "opnd0_mode": "w",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -1753,6 +1847,7 @@
                 "opnd0_mode": "w",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -1770,6 +1865,7 @@
                 "opnd0_mode": "w",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -1787,6 +1883,7 @@
                 "opnd0_mode": "w",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -1804,6 +1901,7 @@
                 "opnd0_mode": "w",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -1821,6 +1919,7 @@
                 "opnd0_mode": "w",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -1838,6 +1937,7 @@
                 "opnd0_mode": "w",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": true,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -1855,6 +1955,7 @@
                 "opnd0_mode": "w",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": true,
                 "source_sign_ext": "Z"
@@ -1872,6 +1973,7 @@
                 "opnd0_mode": "w",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -1889,6 +1991,7 @@
                 "opnd0_mode": "w",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -1911,6 +2014,7 @@
                 "opnd0_mode": "w",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -1928,6 +2032,7 @@
                 "opnd0_mode": "w",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -1950,6 +2055,7 @@
                 "opnd0_mode": "w",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "S"
@@ -1967,6 +2073,7 @@
                 "opnd0_mode": "w",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "S"
@@ -1984,6 +2091,7 @@
                 "opnd0_mode": "w",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "S"
@@ -2006,6 +2114,7 @@
                 "opnd0_mode": "w",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -2023,6 +2132,7 @@
                 "opnd0_mode": "w",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -2045,6 +2155,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -2062,6 +2173,7 @@
                 "opnd0_mode": "w",
                 "opnd1_mode": "W",
                 "opnd2_mode": "r",
+                "opnd_count": 3,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -2084,6 +2196,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 1,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -2101,6 +2214,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 1,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -2123,6 +2237,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 1,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -2145,6 +2260,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "1",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -2162,6 +2278,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "1",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -2184,6 +2301,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -2201,6 +2319,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -2218,6 +2337,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -2235,6 +2355,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -2252,6 +2373,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -2269,6 +2391,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -2286,6 +2409,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -2303,6 +2427,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -2320,6 +2445,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "S"
@@ -2342,6 +2468,7 @@
                 "opnd0_mode": "w",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 1,
                 "rb": false,
                 "rw_or_rd": true,
                 "source_sign_ext": "Z"
@@ -2359,6 +2486,7 @@
                 "opnd0_mode": "w",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 1,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -2381,6 +2509,7 @@
                 "opnd0_mode": "x",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 0,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -2403,6 +2532,7 @@
                 "opnd0_mode": "x",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 0,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -2425,6 +2555,7 @@
                 "opnd0_mode": "r",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 1,
                 "rb": false,
                 "rw_or_rd": true,
                 "source_sign_ext": "Z"
@@ -2442,6 +2573,7 @@
                 "opnd0_mode": "r",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 1,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -2459,6 +2591,7 @@
                 "opnd0_mode": "r",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 1,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -2476,6 +2609,7 @@
                 "opnd0_mode": "r",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 1,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -2498,6 +2632,7 @@
                 "opnd0_mode": "x",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 0,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -2520,6 +2655,7 @@
                 "opnd0_mode": "x",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 0,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -2542,6 +2678,7 @@
                 "opnd0_mode": "x",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 0,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -2559,6 +2696,7 @@
                 "opnd0_mode": "x",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 0,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -2581,6 +2719,7 @@
                 "opnd0_mode": "r",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 1,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -2603,6 +2742,7 @@
                 "opnd0_mode": "r",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 1,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -2625,6 +2765,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -2642,6 +2783,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -2659,6 +2801,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -2676,6 +2819,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -2693,6 +2837,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -2710,6 +2855,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -2727,6 +2873,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -2744,6 +2891,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -2761,6 +2909,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "S"
@@ -2783,6 +2932,7 @@
                 "opnd0_mode": "r",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -2800,6 +2950,7 @@
                 "opnd0_mode": "r",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -2822,6 +2973,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "r",
+                "opnd_count": 3,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -2839,6 +2991,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "r",
+                "opnd_count": 3,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -2861,6 +3014,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "r",
+                "opnd_count": 3,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -2878,6 +3032,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "r",
+                "opnd_count": 3,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -2900,6 +3055,7 @@
                 "opnd0_mode": "x",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 0,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -2922,6 +3078,7 @@
                 "opnd0_mode": "x",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 0,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -2944,6 +3101,7 @@
                 "opnd0_mode": "w",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -2961,6 +3119,7 @@
                 "opnd0_mode": "w",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -2983,6 +3142,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -3000,6 +3160,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -3017,6 +3178,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -3034,6 +3196,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -3051,6 +3214,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -3068,6 +3232,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -3085,6 +3250,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -3102,6 +3268,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -3119,6 +3286,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "S"
@@ -3141,6 +3309,7 @@
                 "opnd0_mode": "r",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -3158,6 +3327,7 @@
                 "opnd0_mode": "r",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -3175,6 +3345,7 @@
                 "opnd0_mode": "r",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -3192,6 +3363,7 @@
                 "opnd0_mode": "r",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -3209,6 +3381,7 @@
                 "opnd0_mode": "r",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -3226,6 +3399,7 @@
                 "opnd0_mode": "r",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -3248,6 +3422,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "W",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -3265,6 +3440,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "W",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -3282,6 +3458,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "W",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": true,
                 "source_sign_ext": "Z"
@@ -3304,6 +3481,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -3321,6 +3499,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -3338,6 +3517,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -3355,6 +3535,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -3372,6 +3553,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -3389,6 +3571,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -3406,6 +3589,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -3423,6 +3607,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -3440,6 +3625,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "S"
@@ -3462,6 +3648,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "1",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": true,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -3479,6 +3666,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": true,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -3496,6 +3684,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": true,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -3513,6 +3702,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "1",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -3530,6 +3720,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -3547,6 +3738,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -3569,6 +3761,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "1",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": true,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -3586,6 +3779,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": true,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -3603,6 +3797,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": true,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -3620,6 +3815,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "1",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -3637,6 +3833,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -3654,6 +3851,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -3676,6 +3874,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "1",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": true,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -3693,6 +3892,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": true,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -3710,6 +3910,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": true,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -3727,6 +3928,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "1",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -3744,6 +3946,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -3761,6 +3964,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -3783,6 +3987,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "1",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": true,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -3800,6 +4005,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": true,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -3817,6 +4023,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": true,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -3834,6 +4041,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "1",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -3851,6 +4059,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -3868,6 +4077,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -3890,6 +4100,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "1",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": true,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -3907,6 +4118,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": true,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -3924,6 +4136,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": true,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -3941,6 +4154,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "1",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -3958,6 +4172,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -3975,6 +4190,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -3997,6 +4213,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "1",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": true,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -4014,6 +4231,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": true,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -4031,6 +4249,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": true,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -4048,6 +4267,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "1",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -4065,6 +4285,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -4082,6 +4303,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -4104,6 +4326,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "1",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": true,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -4121,6 +4344,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": true,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -4138,6 +4362,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": true,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -4155,6 +4380,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "1",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -4172,6 +4398,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -4189,6 +4416,7 @@
                 "opnd0_mode": "W",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -4211,6 +4439,7 @@
                 "opnd0_mode": "r",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 1,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -4233,6 +4462,7 @@
                 "opnd0_mode": "r",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 1,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -4255,6 +4485,7 @@
                 "opnd0_mode": "r",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 1,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -4277,6 +4508,7 @@
                 "opnd0_mode": "r",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 1,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -4294,6 +4526,7 @@
                 "opnd0_mode": "r",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 1,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -4316,6 +4549,7 @@
                 "opnd0_mode": "r",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 1,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -4333,6 +4567,7 @@
                 "opnd0_mode": "r",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 1,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -4355,6 +4590,7 @@
                 "opnd0_mode": "r",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 1,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -4372,6 +4608,7 @@
                 "opnd0_mode": "r",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 1,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -4394,6 +4631,7 @@
                 "opnd0_mode": "r",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 1,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -4411,6 +4649,7 @@
                 "opnd0_mode": "r",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 1,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -4433,6 +4672,7 @@
                 "opnd0_mode": "r",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 1,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -4450,6 +4690,7 @@
                 "opnd0_mode": "r",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 1,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -4472,6 +4713,7 @@
                 "opnd0_mode": "r",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 1,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -4489,6 +4731,7 @@
                 "opnd0_mode": "r",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 1,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -4511,6 +4754,7 @@
                 "opnd0_mode": "r",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 1,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -4528,6 +4772,7 @@
                 "opnd0_mode": "r",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 1,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -4550,6 +4795,7 @@
                 "opnd0_mode": "r",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 1,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -4567,6 +4813,7 @@
                 "opnd0_mode": "r",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 1,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -4589,6 +4836,7 @@
                 "opnd0_mode": "r",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 1,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -4606,6 +4854,7 @@
                 "opnd0_mode": "r",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 1,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -4628,6 +4877,7 @@
                 "opnd0_mode": "r",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 1,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -4645,6 +4895,7 @@
                 "opnd0_mode": "r",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 1,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -4667,6 +4918,7 @@
                 "opnd0_mode": "r",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 1,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -4684,6 +4936,7 @@
                 "opnd0_mode": "r",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 1,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -4706,6 +4959,7 @@
                 "opnd0_mode": "r",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 1,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -4723,6 +4977,7 @@
                 "opnd0_mode": "r",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 1,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -4745,6 +5000,7 @@
                 "opnd0_mode": "r",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 1,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -4762,6 +5018,7 @@
                 "opnd0_mode": "r",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 1,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -4784,6 +5041,7 @@
                 "opnd0_mode": "r",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 1,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -4801,6 +5059,7 @@
                 "opnd0_mode": "r",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 1,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -4823,6 +5082,7 @@
                 "opnd0_mode": "r",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 1,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -4840,6 +5100,7 @@
                 "opnd0_mode": "r",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 1,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
@@ -4862,6 +5123,7 @@
                 "opnd0_mode": "r",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "S"
@@ -4884,6 +5146,7 @@
                 "opnd0_mode": "r",
                 "opnd1_mode": "r",
                 "opnd2_mode": "x",
+                "opnd_count": 2,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "S"
@@ -4906,6 +5169,7 @@
                 "opnd0_mode": "x",
                 "opnd1_mode": "x",
                 "opnd2_mode": "x",
+                "opnd_count": 0,
                 "rb": false,
                 "rw_or_rd": false,
                 "source_sign_ext": "Z"
