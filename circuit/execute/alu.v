@@ -28,7 +28,7 @@ wire [32:0] opnd1_r_tmp = { 1'b0, opnd1_r };
 
 wire [32:0] result_add = opnd0_r_tmp + opnd1_r_tmp + carry_in;
 wire [32:0] result_sub = opnd0_r_tmp - opnd1_r_tmp + carry_in;
-// NOTE(ww): This *should* be a 32-bit wire like the others,
+// NOTE(ww): This *should* be a 33-bit wire like the others,
 // but Yosys optimizes out the AND on the first bit (since it's always `0 & 0`)
 // and thinks that `result_and[0]` is subsequently undriven.
 wire [31:0] result_and = opnd0_r & opnd1_r;
