@@ -240,6 +240,7 @@ wire [31:0] alu_eflags = {
 
 // Move unit control signals.
 
+// TODO(ww): Needed? We'll probably perform these extensions during opnd handling.
 wire mu_sext = opc_1hot[`CMD_MOVSX];
 wire mu_zext = opc_1hot[`CMD_MOVZX];
 
@@ -251,10 +252,14 @@ wire exe_is_mu = opc_1hot[`CMD_MOV]   |
                  opc_1hot[`CMD_MOVS]  |
                  opc_1hot[`CMD_MOVSX] |
                  opc_1hot[`CMD_MOVZX] |
-                 opc_1hot[`CMD_XCHG];
+                 opc_1hot[`CMD_XCHG]  |
+                 opc_1hot[`CMD_CDQ]   ;
 
 // XCHG is the only swap operation, so far.
-wire mu_cntl = exe_is_mu && !opc_1hot[`CMD_XCHG];
+wire [1:0] mu_cntl = {
+                        opc_1hot[`CMD_CDQ],  // 1: MU_SEXT
+                        ~opc_1hot[`CMD_XCHG] // 0: MU_MOVE
+                     };
 
 wire [31:0] mu_opnd0_w;
 wire [31:0] mu_opnd1_w;
