@@ -143,13 +143,14 @@ wire sib_no_index = sib_index_regsel == 3'b100;
 
 // Convenience signal for some special cases below: a few instructions
 // take EDX:EAX as an implicit pseudo-64-bit register.
-// TODO(ww): This is slightly wrong: *MUL/*DIV need to be checked only
-// if the operand encoding is trinary.
-wire cmd_has_fused_edx_eax = opc_1hot[`CMD_CDQ]  |
-                             opc_1hot[`CMD_MUL]  |
-                             opc_1hot[`CMD_DIV]  |
-                             opc_1hot[`CMD_IMUL] |
-                             opc_1hot[`CMD_IDIV] ;
+wire cmd_is_mul_div = opc_1hot[`CMD_MUL]  |
+                      opc_1hot[`CMD_DIV]  |
+                      opc_1hot[`CMD_IMUL] |
+                      opc_1hot[`CMD_IDIV] ;
+
+// Not all MUL/DIV ops use the fused EDX:EAX form; only the trinary ones.
+wire cmd_has_fused_edx_eax = opc_1hot[`CMD_CDQ]                    |
+                             (cmd_is_mul_div & opnd_count == 2'b11);
 
 wire cmd_is_loop = opc_1hot[`CMD_LOOP] | opc_1hot[`CMD_LOOPE] | opc_1hot[`CMD_LOOPNE];
 
