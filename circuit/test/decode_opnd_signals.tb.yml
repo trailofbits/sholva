@@ -532,3 +532,20 @@ vector_specs:
     opnd_form: 0 # OPND_ENC_NONE
 
     # OUTPUTS: all zero
+
+  - _description: "idiv DWORD PTR [ebp+0xc]"
+
+    # INPUTS
+    unescaped_instr: 0x0c7df7
+    opnd_form: 3 # OPND_ENC_MODREGRM_RM
+
+    # OUTPUTS
+    imm_disp_len: 1 # disp8
+    has_modrm: 1
+    has_disp: 1
+    is_disp8: 1
+    modrm: 0x7d
+    sib: x
+    disp: 0x0c
+    opnd0_modrm_rm: 1 # TODO: should be opnd2, but we don't have that.
+    opnd0_disp: 1

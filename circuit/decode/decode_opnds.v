@@ -211,7 +211,15 @@ wire [2:0] opnd1_rw_regsel = opnd1_modrm_rm && modrm_rm_is_reg_direct ? modrm[2:
                              cmd_has_fused_edx_eax                    ? `REG_EAX             :
                                                                         3'b0                 ;
 
-// TODO(ww): operand#2 regsel. This can only ever be CL.
+// HACK(ww): IMUL, etc. use ModR/M to provide their third operand.
+// Our naive decoding sees ModR/M as the first physical (not logical) operand, so we re-route
+// it here when it describes a register.
+// We do something similar when the ModR/M of a trinary instruction provides a memory operand,
+// although not quite as convoluted (since we have a free AGU).
+// TODO(ww): This can also be CL for some instructions. We need to support that.
+wire opnd2_r_is_reg = cmd_has_fused_edx_eax & opnd0_modrm_rm & modrm_rm_is_reg_direct;
+
+wire [2:0] opnd2_rw_regsel = opnd1_modrm_rm & modrm_rm_is_reg_direct ? modrm[2:0] : 3'b0;
 
 // Finally, actually grab some values using our operand selectors.
 wire [31:0] opnd0_r_regval;
@@ -244,6 +252,21 @@ mux8_32 mux8_32_opnd1_reg(
   .out(opnd1_r_regval)
 );
 
+wire [31:0] opnd2_r_regval;
+mux8_32 mux8_32_opnd2_reg(
+  .sel(opnd2_rw_regsel),
+  .in0(eax),
+  .in1(ecx),
+  .in2(edx),
+  .in3(ebx),
+  .in4(esp),
+  .in5(ebp),
+  .in6(esi),
+  .in7(edi),
+
+  .out(opnd2_r_regval)
+);
+
 ///
 /// END REGISTER OPERANDS
 ///
@@ -254,7 +277,7 @@ mux8_32 mux8_32_opnd1_reg(
 
 // Is operand#0 a memory address?
 // TODO(ww): Missing anything?
-wire opnd0_r_is_mem_modrm = (opnd0_modrm_rm && ~modrm_rm_is_reg_direct);
+wire opnd0_r_is_mem_modrm = (opnd0_modrm_rm & ~modrm_rm_is_reg_direct);
 wire opnd0_is_mem = opnd0_r_is_mem_modrm |
                     opc_1hot[`CMD_MOVS]  |
                     opc_1hot[`CMD_CMPS]  |
@@ -262,20 +285,24 @@ wire opnd0_is_mem = opnd0_r_is_mem_modrm |
                     opc_1hot[`CMD_POP]   |
                     opc_1hot[`CMD_LEAVE] ;
 
-wire opnd0_r_is_mem = opnd0_is_read && opnd0_is_mem;
-wire opnd0_w_is_mem = opnd0_is_write && opnd0_is_mem;
+wire opnd0_r_is_mem = opnd0_is_read & opnd0_is_mem;
+wire opnd0_w_is_mem = opnd0_is_write & opnd0_is_mem;
 
 // Is operand#1 a memory address?
 // TODO(ww): Missing anything?
-wire opnd1_r_is_mem_modrm = (opnd1_modrm_rm && ~modrm_rm_is_reg_direct);
+wire opnd1_r_is_mem_modrm = (opnd1_modrm_rm & ~modrm_rm_is_reg_direct);
 wire opnd1_is_mem = opnd1_r_is_mem_modrm |
                     opc_1hot[`CMD_MOVS]  |
                     opc_1hot[`CMD_CMPS]  |
                     opc_1hot[`CMD_STOS]  |
                     opc_1hot[`CMD_LODS]  ;
 
-wire opnd1_r_is_mem = opnd1_is_read && opnd1_is_mem;
-wire opnd1_w_is_mem = opnd1_is_write && opnd1_is_mem;
+wire opnd1_r_is_mem = opnd1_is_read & opnd1_is_mem;
+wire opnd1_w_is_mem = opnd1_is_write & opnd1_is_mem;
+
+// HACK(ww): See above about opnd#2 for registers: we re-route opnd#0 here
+// to save ourselves an AGU when doing trinary instructions.
+wire opnd2_r_is_mem = cmd_has_fused_edx_eax & opnd0_r_is_mem_modrm;
 
 // To actually calculate our effective addresses for operand#0 and operand#1,
 // we need to get the (scale, index, base, displacement) for each, or
@@ -547,7 +574,9 @@ assign opnd1_r = opnd1_r_is_phony ? opnd1_r_phonyval :
                  opnd1_r_is_mem   ? opnd1_r_memval   :
                  opnd1_is_imm     ? opnd1_r_immval   : 32'b0;
 
-assign opnd2_r = opnd2_is_phony ? opnd2_r_phonyval : 32'b0;
+assign opnd2_r = opnd2_is_phony ? opnd2_r_phonyval :
+                 opnd2_r_is_reg ? opnd2_r_regval   :
+                 opnd2_r_is_mem ? opnd0_r_memval   : 32'b0;
 
 // TODO(ww): Is this the right place for this? Maybe we should do it
 // further on in instruction decoding, when looking at `opc` more closely.
