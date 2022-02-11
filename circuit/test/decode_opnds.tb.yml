@@ -646,6 +646,7 @@ vector_specs:
 
     # INPUTS
     unescaped_instr: 0x0c7df7
+    edx: 0
     eax: 2
     ebp: 0xffffd998
     hint1_is_write: 0
@@ -663,8 +664,8 @@ vector_specs:
 
     # OUTPUTS
     instr_body_len: 2 # ModR/M + disp8
-    opnd0_r: 0x00000000 # sext of EAX (computed by earlier CDQ)
-    opnd1_r: 0x00000002
+    opnd0_r: 0x00000000 # EDX
+    opnd1_r: 0x00000002 # EAX
     opnd2_r: 0x00000003 # [ebp + 0xc]
     dest0_kind: 0b01
     dest0_sel: 2 # EDX
