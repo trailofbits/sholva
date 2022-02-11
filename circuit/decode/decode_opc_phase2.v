@@ -7,6 +7,7 @@ module decode_opc_phase2(
 
   output [6:0] opc,
   output [3:0] opnd_form,
+  // TODO(ww): Unused; remove.
   output [1:0] opnd_count,
   output imm_1byte,
   output reg_1byte,

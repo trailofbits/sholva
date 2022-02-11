@@ -82,7 +82,10 @@ CMD_CMC:F5~ZO~x
 
 CMD_CMP:38~MR~rr~S,39~MR~rr~S,3A~RM~rr~S,3B~RM~rr~S,3C+ib~I~rr~S,3D+i*~I~rr~S,80/7+ib~MI~rr~S,81/7+i*~MI~rr~S,83/7+ib~MI~rr~S
 CMD_CMPS:A6~ZO~rr~Z,A7~ZO~rr~Z
-CMD_CWD:99~ZO~Wr~S
+
+# NOTE(ww): This is a terrible mnemonic, since it's actually CWD and CDQ.
+CMD_CDQ:99~ZO~wr~S
+
 CMD_DEC:48+r*~O~W,FE/1~M~W,FF/1~M~W
 CMD_DIV:F6/6~M~Wr,F7/6~M~Wr
 CMD_IDIV:F6/7~M~Wr,F7/7~M~Wr~S
@@ -204,6 +207,3 @@ CMD_LOOPE:E1~D8~rr~S
 CMD_LOOPNE:E0~D8~rr~S
 
 CMD_LEAVE:C9~ZO~x
-
-# NOTE(ww): This is a terrible mnemonic, since it's actually CWD and CDQ.
-CMD_CDQ:99~ZO~x

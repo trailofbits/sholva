@@ -236,3 +236,17 @@ vector_specs:
     opnd0_is_read: 1
     opnd0_is_write: 1
     opnd1_is_read: 1
+
+  - _description: "CDQ"
+
+    # INPUTS
+    unescaped_instr: 0x99
+    is_2byte: 0
+
+    # OUTPUTS
+    opc: 15 # CMD_CDQ
+    opnd_form: 0 # OPND_ENC_NONE
+    opnd_count: 0
+    opnd0_is_write: 1
+    opnd1_is_read: 1
+    source_is_sext: 1

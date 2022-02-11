@@ -121,6 +121,10 @@ class Encoding:
     Is the displacement operand (if present) a relative displacement?
     """
 
+    @property
+    def unique_encoding(self):
+        return (self.esc, self.opc, self.ext)
+
     @classmethod
     def parse(cls, raw_enc):
         esc = raw_enc.startswith("x")
@@ -220,6 +224,7 @@ def main():
 
     seen_cmds = set()
     seen_encs = set()
+    seen_opcs = set()
     specs = []
     for line in _ENCODINGS_SPEC.read_text().split("\n"):
         if not line or line.startswith("#"):
@@ -234,7 +239,9 @@ def main():
         for raw_enc in raw_encs:
             enc = Encoding.parse(raw_enc)
             assert enc not in seen_encs, f"barf: duped encoding: {enc} ({raw_enc})"
+            assert enc.unique_encoding not in seen_opcs, f"barf: dumped encoding: {enc} ({raw_enc})"
             seen_encs.add(enc)
+            seen_opcs.add(enc.unique_encoding)
             encs.append(enc)
 
         specs.append(asdict(Spec(cmd, encs)))

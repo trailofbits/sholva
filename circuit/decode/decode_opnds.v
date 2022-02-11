@@ -141,42 +141,45 @@ wire sib_no_index = sib_index_regsel == 3'b100;
 ///
 
 // Is operand#0 a register, and do we read and/or write to it?
-wire opnd0_is_reg = opnd_form_1hot[`OPND_ENC_REG]              ||
-                    opnd_form_1hot[`OPND_ENC_EAX_IMM]          ||
-                    opnd_form_1hot[`OPND_ENC_EAX_REG]          ||
-                    opnd_form_1hot[`OPND_ENC_REG_IMM]          ||
-                    (opnd0_modrm_rm && modrm_rm_is_reg_direct) ||
-                    opnd0_modrm_reg;
+wire opnd0_is_reg = opnd_form_1hot[`OPND_ENC_REG]              |
+                    opnd_form_1hot[`OPND_ENC_EAX_IMM]          |
+                    opnd_form_1hot[`OPND_ENC_EAX_REG]          |
+                    opnd_form_1hot[`OPND_ENC_REG_IMM]          |
+                    (opnd0_modrm_rm && modrm_rm_is_reg_direct) |
+                    opnd0_modrm_reg                            |
+                    opc_1hot[`CMD_CDQ]                         ;
 
 wire opnd0_r_is_reg = opnd0_is_read && opnd0_is_reg;
 wire opnd0_w_is_reg = opnd0_is_write && opnd0_is_reg;
 
 
 // For operand#0, our register selector can come from four sources:
-// TODO(ww): That's wrong. We also need to handle implicit register selector operands here,
-// like some of the "zero-operand" encodings. Needs thought.
 // * The lower three bits of the opcode itself (OPND_ENC_REG, OPND_ENC_REG_IMM)
 // * The r/m selector of ModR/M (OPND_ENC_MODREGRM_RM_*) when in register direct mode (mod=0b11)
 // * The reg selector of ModR/M (OPND_ENC_MODREGRM_REG_*)
 // * An implicit EAX register (OPND_ENC_EAX_*)
-wire [2:0] opnd0_rw_regsel = (opnd_form_1hot[`OPND_ENC_REG] || opnd_form_1hot[`OPND_ENC_REG_IMM]) ?
+// * An implicit register in a "zero-operand" encoding, like CDQ (EDX)
+wire [2:0] opnd0_rw_regsel = (opnd_form_1hot[`OPND_ENC_REG] | opnd_form_1hot[`OPND_ENC_REG_IMM]) ?
                                 unescaped_instr[2:0] :
-                             (opnd0_modrm_rm && modrm_rm_is_reg_direct) ?
+                             (opnd0_modrm_rm & modrm_rm_is_reg_direct) ?
                                 modrm[2:0] :
                              (opnd0_modrm_reg) ?
                                 modrm[5:3] :
-                             (opnd_form_1hot[`OPND_ENC_EAX_IMM] || opnd_form_1hot[`OPND_ENC_EAX_REG]) ?
-                                `REG_EAX : 3'b0;
+                             (opnd_form_1hot[`OPND_ENC_EAX_IMM] | opnd_form_1hot[`OPND_ENC_EAX_REG]) ?
+                                `REG_EAX :
+                             opc_1hot[`CMD_CDQ] ? `REG_EDX : 3'b0;
 
 wire cmd_is_loop = opc_1hot[`CMD_LOOP] | opc_1hot[`CMD_LOOPE] | opc_1hot[`CMD_LOOPNE];
 
 // Is operand#1 a register, and do we read and/or write to it?
 // LOOPcc is a special case here: it's disp8-only as an encoding, but
 // we need to synthesize an operand for ECX (the counter we'll read and decrement).
+// Similarly for CDQ.
 wire opnd1_is_reg = opnd_form_1hot[`OPND_ENC_EAX_REG]          |
                     (opnd1_modrm_rm && modrm_rm_is_reg_direct) |
                     opnd1_modrm_reg                            |
-                    cmd_is_loop                                ;
+                    cmd_is_loop                                |
+                    opc_1hot[`CMD_CDQ]                         ;
 
 wire opnd1_r_is_reg = (opnd1_is_read && opnd1_is_reg) | cmd_is_loop;
 wire opnd1_w_is_reg = (opnd1_is_write && opnd1_is_reg) | cmd_is_loop;
@@ -187,11 +190,13 @@ wire opnd1_w_is_reg = (opnd1_is_write && opnd1_is_reg) | cmd_is_loop;
 // * The reg selector of ModR/M (OPND_ENC_MODREGRM_RM_REG*)
 // * The lower three bits of the opcode itself (OPND_ENC_*_REG)
 // * Implicit ECX, if we're performing a LOOPcc.
+// * Implicit EAX, if we're performing a CDQ.
 // * TODO(ww): Implicit opnd1 register sources? Presumably some of the string operations?
 wire [2:0] opnd1_rw_regsel = opnd1_modrm_rm && modrm_rm_is_reg_direct ? modrm[2:0]           :
                              opnd1_modrm_reg                          ? modrm[5:3]           :
                              opnd_form_1hot[`OPND_ENC_EAX_REG]        ? unescaped_instr[2:0] :
                              cmd_is_loop                              ? `REG_ECX             :
+                             opc_1hot[`CMD_CDQ]                       ? `REG_EAX             :
                                                                         3'b0                 ;
 
 // TODO(ww): operand#2 regsel. This can only ever be CL.

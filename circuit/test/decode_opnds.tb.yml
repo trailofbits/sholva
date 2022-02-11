@@ -622,3 +622,21 @@ vector_specs:
     dest0_sel: 5 # EBP
     dest1_kind: 0b01 # OPND_DEST_REG_1HOT
     dest1_sel: 4 # ESP
+
+  - _description: "CDQ (EAX=-100)"
+
+    # INPUTS
+    unescaped_instr: 0x99
+    eax: -100
+    opc: 15 # CMD_CDQ
+    opnd_form: 0 # OPND_ENC_NONE
+    opnd0_is_write: 1
+    opnd1_is_read: 1
+    source_is_sext: 1
+
+    # OUTPUTS
+    instr_body_len: 0
+    opnd0_r: 0 # NOTE(ww): Not read
+    opnd1_r: -100 # EAX
+    dest0_kind: 0b01 # OPND_DEST_REG_1HOT
+    dest0_sel: 2 # EDX
