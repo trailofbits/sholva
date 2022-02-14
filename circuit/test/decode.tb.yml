@@ -319,10 +319,12 @@ vector_specs:
 
     # INPUTS
     raw_instr: 0x0c7df7
+    eax: 2
 
     # OUTPUTS
     instr_len: 3
     opc: 18 # CMD_IDIV
+    opnd1_r: 2 # EAX
     dest0_kind: 0b01
     dest1_kind: 0b01
     dest0_sel: 2 # EDX
