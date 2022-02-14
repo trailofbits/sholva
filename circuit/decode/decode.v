@@ -130,6 +130,7 @@ decode_opnds decode_opnds_x(
 
   .opc(opc),
   .opnd_form(opnd_form),
+  .opnd_count(opnd_count),
   .imm_1byte(imm_1byte),
   .reg_1byte(reg_1byte),
   .prefix_operand_16bit(prefix_operand_16bit),

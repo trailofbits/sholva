@@ -3,7 +3,8 @@
 HELP = !!ARGV.delete("-h") || !!ARGV.delete("--help")
 VERBOSE = !!ARGV.delete("--verbose") || ENV.key?("VERBOSE") || ENV.key?("V")
 
-MAX_TEST_VECTORS = 128
+# TODO(ww): Remove this. We shouldn't limit the number of test vectors artificially here.
+MAX_TEST_VECTORS = 1024
 
 Wire = Struct.new(:name, :size) do
   def width_spec

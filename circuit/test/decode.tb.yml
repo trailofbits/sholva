@@ -303,3 +303,29 @@ vector_specs:
     opnd1_r: 0x10 # [EBP - 8]
     dest0_kind: 0b01 # OPND_DEST_REG_1HOT
     dest0_sel: 0 # EAX
+
+  - _description: "mov eax, DWORD PTR [eax*4+0x804c000]"
+
+    # INPUTS
+    raw_instr: 0x0804c00085048b
+
+    # OUTPUTS
+    instr_len: 7
+    opc: 28 # CMD_MOV
+    dest0_kind: 0b01 # OPND_DEST_REG_1HOT
+    dest0_sel: 0 # EAX
+
+  - _description: "idiv DWORD PTR [ebp+0xc]"
+
+    # INPUTS
+    raw_instr: 0x0c7df7
+    eax: 2
+
+    # OUTPUTS
+    instr_len: 3
+    opc: 18 # CMD_IDIV
+    opnd1_r: 2 # EAX
+    dest0_kind: 0b01
+    dest1_kind: 0b01
+    dest0_sel: 2 # EDX
+    dest1_sel: 0 # EAX

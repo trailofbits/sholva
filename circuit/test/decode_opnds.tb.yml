@@ -18,6 +18,7 @@ inputs:
   - "32 hint2_data"
   - "7 opc"
   - "4 opnd_form"
+  - "2 opnd_count"
   - "1 imm_1byte"
   - "1 reg_1byte"
   - "1 prefix_operand_16bit"
@@ -600,3 +601,73 @@ vector_specs:
     opnd1_r: 0x10
     dest0_kind: 0b01 # OPND_DEST_REG_1HOT
     dest0_sel: 0 # EAX
+
+  - _description: "LEAVE"
+
+    # INPUTS
+    unescaped_instr: 0xc9
+    esp: 0xffffd9a8
+    ebp: 0xffffd9ff
+    hint1_is_write: 0
+    hint1_address: 0xffffd9a8
+    hint1_data: 0xffffd9bc
+    opc: 84 # CMD_LEAVE
+    opnd_form: 0 # OPND_ENC_NONE
+
+    # OUTPUTS
+    instr_body_len: 0
+    opnd0_r: 0xffffd9bc # [ESP]
+    opnd1_r: 0xffffd9ff # EBP (ESP := EBP)
+    opnd2_r: 4 # ESP adjust (for POP)
+    dest0_kind: 0b01 # OPND_DEST_REG_1HOT
+    dest0_sel: 5 # EBP
+    dest1_kind: 0b01 # OPND_DEST_REG_1HOT
+    dest1_sel: 4 # ESP
+
+  - _description: "CDQ (EAX=-100)"
+
+    # INPUTS
+    unescaped_instr: 0x99
+    eax: -100
+    opc: 15 # CMD_CDQ
+    opnd_form: 0 # OPND_ENC_NONE
+    opnd0_is_write: 1
+    opnd1_is_read: 1
+    source_is_sext: 1
+
+    # OUTPUTS
+    instr_body_len: 0
+    opnd0_r: 0 # NOTE(ww): Not read
+    opnd1_r: -100 # EAX
+    dest0_kind: 0b01 # OPND_DEST_REG_1HOT
+    dest0_sel: 2 # EDX
+
+  - _description: "idiv DWORD PTR [ebp+0xc]"
+
+    # INPUTS
+    unescaped_instr: 0x0c7df7
+    edx: 0
+    eax: 2
+    ebp: 0xffffd998
+    hint1_is_write: 0
+    hint1_address: 0xffffd9a4
+    hint1_data: 0x03
+    opc: 18 # CMD_IDIV
+    opnd_form: 3 # OPND_ENC_MODREGRM_RM
+    opnd_count: 3
+    opnd0_is_read: 1
+    opnd0_is_write: 1
+    opnd1_is_read: 1
+    opnd1_is_write: 1
+    opnd2_is_read: 1
+    source_is_sext: 1
+
+    # OUTPUTS
+    instr_body_len: 2 # ModR/M + disp8
+    opnd0_r: 0x00000000 # EDX
+    opnd1_r: 0x00000002 # EAX
+    opnd2_r: 0x00000003 # [ebp + 0xc]
+    dest0_kind: 0b01
+    dest0_sel: 2 # EDX
+    dest1_kind: 0b01
+    dest1_sel: 0 # EAX

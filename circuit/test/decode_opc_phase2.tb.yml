@@ -112,7 +112,7 @@ vector_specs:
     # OUTPUTS
     opc: 20 # CMD_INC
     opnd_form: 4 # OPND_ENC_REG
-    opnd_count: 1 # TODO(ww): Count implicit one as an operand?
+    opnd_count: 2
     imm_1byte: 0
     reg_1byte: 0
     opnd0_is_read: 1
@@ -130,7 +130,7 @@ vector_specs:
     # OUTPUTS
     opc: 61 # CMD_RCL
     opnd_form: 3 # OPND_ENC_MODREGRM_RM
-    opnd_count: 1
+    opnd_count: 2
     imm_1byte: 0 # TODO(ww)
     reg_1byte: 1
     opnd0_is_read: 1
@@ -222,3 +222,48 @@ vector_specs:
     opnd_count: 2
     opnd0_is_write: 1
     opnd1_is_read: 1
+
+  - _description: "sub eax, DWORD PTR [ebp+0xc] (2 - 3 = 4294967295)"
+
+    # INPUTS
+    unescaped_instr: 0x0c452b
+    is_2byte: 0
+
+    # OUTPUTS
+    opc: 53 # CMD_SUB
+    opnd_form: 7 # OPND_ENC_MODREGRM_REG_RM
+    opnd_count: 2
+    opnd0_is_read: 1
+    opnd0_is_write: 1
+    opnd1_is_read: 1
+
+  - _description: "CDQ"
+
+    # INPUTS
+    unescaped_instr: 0x99
+    is_2byte: 0
+
+    # OUTPUTS
+    opc: 15 # CMD_CDQ
+    opnd_form: 0 # OPND_ENC_NONE
+    opnd_count: 2
+    opnd0_is_write: 1
+    opnd1_is_read: 1
+    source_is_sext: 1
+
+  - _description: "idiv DWORD PTR [ebp+0xc]"
+
+    # INPUTS
+    unescaped_instr: 0x0c7df7
+    is_2byte: 0
+
+    # OUTPUTS
+    opc: 18 # CMD_IDIV
+    opnd_form: 3 # OPND_ENC_MODREGRM_RM
+    opnd_count: 3
+    opnd0_is_read: 1
+    opnd0_is_write: 1
+    opnd1_is_read: 1
+    opnd1_is_write: 1
+    opnd2_is_read: 1
+    source_is_sext: 1

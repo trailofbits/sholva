@@ -18,6 +18,8 @@ _COMMANDS_GEN_V = _HERE / "commands.gen.v"
 _OPC_MAP_GEN_V = _HERE / "opc_map.gen.v"
 _IMM_GEN_V = _HERE / "imm.gen.v"
 
+# TODO(ww): The associated arities here are misleading, since they don't
+# necessarily include implicit operands. Remove them.
 _OPND_ENC_MAP = {
     "I": ("OPND_ENC_IMM", 1),
     "D8": ("OPND_ENC_DISP8", 1),
@@ -266,6 +268,12 @@ def _gen_opc_map_v(commands):
     """
     Generate `opc_map.gen.v`.
     """
+
+    def enc_iter():
+        for cmd in commands:
+            for enc in cmd["encs"]:
+                yield enc
+
     with _OPC_MAP_GEN_V.open(mode="w+") as io:
         print(_header(), file=io)
 
@@ -331,11 +339,12 @@ def _gen_opc_map_v(commands):
 
         # Generate the opnd_count assignment.
         arity_map = defaultdict(list)
-        for form, arity in _OPND_ENC_MAP.values():
-            arity_map[arity].append(form)
+        for enc in enc_iter():
+            arity_map[enc["opnd_count"]].append(enc)
+
         arity_exprs = []
-        for arity, forms in arity_map.items():
-            arity_expr = reduce(_or, [_eq("opnd_form", _asdef(form)) for form in forms])
+        for arity, encs in arity_map.items():
+            arity_expr = reduce(_or, [_basic_enc_expr(enc) for enc in encs])
             arity_exprs.append((_lit(2, arity), arity_expr))
         print(_assign("opnd_count", _ternary_chain(arity_exprs)), file=io)
 

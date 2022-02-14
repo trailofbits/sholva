@@ -1,6 +1,7 @@
 TBGEN := ./codegen/tbgen
 TVGEN := ./codegen/tvgen
 E2EGEN := ./codegen/e2egen
+COMMON := ./codegen/common.rb
 
 MODULES := fetch \
 	decode_hint \
@@ -38,6 +39,8 @@ check: all
 .PHONY: clean
 clean:
 	rm -rf $(TESTBENCHES) $(TESTVECTORS) $(TESTBENCH_EXES) *.vcd *.e2e.tv
+
+$(TBGEN) $(TVGEN) $(E2EGEN): $(COMMON)
 
 check.tb.yml: check.e2e.tv
 
