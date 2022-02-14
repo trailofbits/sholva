@@ -10,7 +10,8 @@ module execute(
   input [31:0] opnd0_r,
   input [31:0] opnd1_r,
   input [31:0] opnd2_r,
-  // TODO(ww): Input signal for 8/16/32 bit opnds
+
+  // TODO(ww): Input signal for 8/16/32 bit opnds? Maybe?
 
   output [31:0] o_eflags,
   output [31:0] next_eip,
