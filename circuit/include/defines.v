@@ -120,5 +120,5 @@
 // Move unit control signals.
 // The first bit controls whether we're doing a "move" (SRC -> DST)
 // or a "swap" (OP1 -> x, OP2 -> OP1, x -> OP2) operation.
-`define MU_MOVE 2'd0
-`define MU_SEXT 2'd1
+`define MU_MOVE 1'd0
+`define MU_SEXT 1'd1
