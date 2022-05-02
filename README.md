@@ -51,4 +51,4 @@ should not be interpreted as representing the official views or policies of the
 Department of Defense or the U.S. Government.
 
 *shol'va* is licensed under the GNU AGPLv3 License. A copy of the terms can
-be found in the [./LICENSE](LICENSE) file.
+be found in the [LICENSE](./LICENSE) file.
