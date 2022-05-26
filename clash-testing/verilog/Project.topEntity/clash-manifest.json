@@ -1,0 +1,94 @@
+{
+    "components": [
+        "alu"
+    ],
+    "dependencies": {
+        "transitive": []
+    },
+    "version": "unstable",
+    "top_component": {
+        "name": "alu",
+        "ports_flat": [
+            {
+                "direction": "in",
+                "name": "cntl",
+                "width": 18,
+                "is_clock": false,
+                "type_name": "[17:0]"
+            },
+            {
+                "direction": "in",
+                "name": "status_in",
+                "width": 7,
+                "is_clock": false,
+                "type_name": "[6:0]"
+            },
+            {
+                "direction": "in",
+                "name": "opnd0_r",
+                "width": 32,
+                "is_clock": false,
+                "type_name": "[31:0]"
+            },
+            {
+                "direction": "in",
+                "name": "opnd1_r",
+                "width": 32,
+                "is_clock": false,
+                "type_name": "[31:0]"
+            },
+            {
+                "direction": "out",
+                "name": "status_out",
+                "width": 7,
+                "is_clock": false,
+                "type_name": "[6:0]"
+            },
+            {
+                "direction": "out",
+                "name": "result",
+                "width": 32,
+                "is_clock": false,
+                "type_name": "[31:0]"
+            }
+        ]
+    },
+    "domains": {
+        "IntelSystem": {
+            "reset_kind": "Asynchronous",
+            "active_edge": "Rising",
+            "period": 10000,
+            "init_behavior": "Defined",
+            "reset_polarity": "ActiveHigh"
+        },
+        "XilinxSystem": {
+            "reset_kind": "Synchronous",
+            "active_edge": "Rising",
+            "period": 10000,
+            "init_behavior": "Defined",
+            "reset_polarity": "ActiveHigh"
+        },
+        "System": {
+            "reset_kind": "Asynchronous",
+            "active_edge": "Rising",
+            "period": 10000,
+            "init_behavior": "Defined",
+            "reset_polarity": "ActiveHigh"
+        }
+    },
+    "flags": [
+        20,
+        20
+    ],
+    "hash": "a7fd6a60ab47dc0720180f108360c3c966b03a2b1e20c10e15e2b2f0476d4302",
+    "files": [
+        {
+            "name": "alu_shim.cpp",
+            "sha256": "d3b6b27a87744c69487983a3b07616645cb9f1c7bb173a8d8a78ebdb0e93227c"
+        },
+        {
+            "name": "alu.v",
+            "sha256": "a1cb9cb1969fddde2fea54c29118a9a2a63eeaee455280d43496c6a4d0083d16"
+        }
+    ]
+}
