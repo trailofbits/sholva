@@ -17,14 +17,28 @@ jobs:
     - uses: actions/setup-python@v2
       with:
         python-version: "^3.7"
+    - uses: haskell/actions/setup@v1
+      id: setup-haskell
+      with:
+        ghc-version: '8.10.7'
+        enable-stack: true
     - name: deps
       run: |
-        sudo apt install -y iverilog verilator
+        sudo apt update
+        sudo apt install -y iverilog verilator hlint
         iverilog -V
         verilator --version
     - name: lint
       run: make lint
     - name: build
       run: make
+    - name: cache
+      uses: actions/cache@v3
+      with:
+        path: |
+          ${{ steps.setup-haskell.outputs.stack-root }}/snapshots
+        key: clash
     - name: test
       run: make check
+    - name: stat
+      run: make stat

@@ -8,9 +8,11 @@ ALL_V_WITHOUT_TESTS_OR_CODEGEN := $(shell \
 		! -path '*/test/*' \
 		! -name '*.gen.v' \
 )
+CLASH_VERILOG = circuit/execute/alu.v
+
 
 .PHONY: all
-all: codegen $(ALL_V)
+all: codegen $(ALL_V) $(CLASH_VERILOG)
 	iverilog $(IVERILOG_FLAGS) $(IFLAGS) \
 		-ycircuit \
 		-ycircuit/decode \
@@ -24,7 +26,7 @@ tiny86.blif: codegen
 	sv-netlist $(IFLAGS) --top tiny86 $@ $(ALL_V_WITHOUT_TESTS_OR_CODEGEN)
 
 .PHONY: stat
-stat: codegen/
+stat: codegen
 	sv-stat $(IFLAGS) --top tiny86 $(ALL_V_WITHOUT_TESTS_OR_CODEGEN)
 
 .PHONY: codegen
@@ -35,11 +37,30 @@ codegen:
 lint:
 	# TODO(ww): Add -Wall here once we're actually using more of our wires.
 	verilator --top-module $(TOP_MODULE) --lint-only $(IFLAGS) $(ALL_V_WITHOUT_TESTS_OR_CODEGEN)
+	hlint -g
 
 .PHONY: check
 check:
-	@$(MAKE) -C circuit/test check
+	@$(MAKE) V=1 -C circuit/test check
 
 .PHONY: clean
 clean:
 	$(MAKE) -C circuit/test clean
+	stack clean
+	rm -rf verilog/
+
+verilog/%.v: src/%.hs
+	stack exec --package clash-ghc -- clash $^ --verilog
+
+circuit/execute/alu.v: verilog/Alu.v
+	@echo "overwriting with compiled clash"
+	# move to prevent duplicates with `find . -name "*.v"` (hack)
+	mv verilog/Alu.alu/alu.v $@
+
+.PHONY: test
+test:
+	stack test
+
+.PHONY: clashi
+clashi:
+	stack run -- clashi
