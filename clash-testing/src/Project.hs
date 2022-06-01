@@ -45,11 +45,11 @@ type ControlWord = Vec 18 Bit
 
 alu :: Operand -> Operand -> Bit -> ControlWord -> BitVector 33
 alu x y carry cntl
-  -- FIXME how does verilog behave with truncations?
+  -- FIXME(jl) how does verilog behave with truncations?
   -- ex for multiply, clash provides
   --    times :: Vec n -> Vec m -> Vec (n + m)
   --    (*)   :: Vec n -> Vec n -> Vec n
-  | op ALU_OP_ADD = x `add` (y + acarry)
+  | op ALU_OP_ADD = x `add` y
   | op ALU_OP_SUB = x `sub` (y + acarry)
   | op ALU_OP_AND = zeroExtend $ x .&. y
   | op ALU_OP_OR = zeroExtend $ x .|. y
@@ -63,6 +63,32 @@ alu x y carry cntl
   where
     acarry = (zeroExtend . pack) carry
     op n = cntl !! n == 1
+
+status :: Vec 7 Bit -> Vec 33 Bit -> ControlWord -> Vec 7 Bit
+status status_in stat_result cntl =
+  stat_of :> stat_sf :> stat_zf :> stat_pf :> stat_cf :> stat_af :> stat_df :>
+  Nil
+  where
+    stat_of = low
+    stat_sf = low
+    stat_zf = low
+    stat_pf = low
+    stat_cf =
+      if cf_no_wr
+        then status_in !! STAT_CF
+        else if bitToBool (cntl !! ALU_CLEAR_CF)
+               then low
+               else stat_result !! 32
+    stat_af = low
+    stat_df = low
+    -- flags
+    alu_no_flags = cntl !! ALU_NO_FLAGS
+    cf_no_wr = bitToBool alu_no_flags
+    pf_no_wr = alu_no_flags
+    zf_no_wr = alu_no_flags
+    sf_no_wr = alu_no_flags
+    of_no_wr = alu_no_flags
+    af_no_wr = alu_no_flags
 
 topEntity ::
      ( "cntl" ::: Signal System ControlWord
@@ -85,17 +111,6 @@ topEntity (cntl, status_in, opnd0_r, opnd1_r) = (status_out, result)
       where
         alu_no_wr = bitToBool <$> (!! ALU_NO_WR) <$> cntl
     status_out :: Signal System (Vec 7 Bit)
-    status_out =
-      pure $
-      stat_of :> stat_sf :> stat_zf :> stat_pf :> stat_cf :> stat_af :> stat_df :>
-      Nil
-      where
-        stat_of = low
-        stat_sf = low
-        stat_zf = low
-        stat_pf = low
-        stat_cf = low
-        stat_af = low
-        stat_df = low
+    status_out = status <$> status_in <*> stat_result <*> cntl
 
 makeTopEntityWithName 'topEntity "alu"
