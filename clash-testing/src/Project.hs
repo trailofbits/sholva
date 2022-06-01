@@ -57,20 +57,21 @@ alu x y carry cntl
   -- ex for multiply, clash provides
   --    times :: Vec n -> Vec m -> Vec (n + m)
   --    (*)   :: Vec n -> Vec n -> Vec n
-  -- FIXME(jl) carry bit
+  -- FIXME(jl) shifting
   | op ALU_OP_ADD = (x `add` y) + acarry
   | op ALU_OP_SUB = (x `sub` y) + acarry
   | op ALU_OP_AND = zeroExtend $ x .&. y
   | op ALU_OP_OR = zeroExtend $ x .|. y
   | op ALU_OP_XOR = zeroExtend $ x `xor` y
   | op ALU_OP_MUL = zeroExtend $ x * y
-  | op ALU_OP_SHL = zeroExtend $ x `shiftL` 2
-  | op ALU_OP_SHR = zeroExtend $ x `shiftR` 2
-  | op ALU_OP_ROL = zeroExtend $ x `rotateL` 2
-  | op ALU_OP_ROR = zeroExtend $ x `rotateR` 2
+  | op ALU_OP_SHL = zeroExtend $ x `shiftL` shift
+  | op ALU_OP_SHR = zeroExtend $ x `shiftR` shift
+  | op ALU_OP_ROL = zeroExtend $ x `rotateL` shift
+  | op ALU_OP_ROR = zeroExtend $ x `rotateR` shift
   | op ALU_OP_DIV = zeroExtend $ x `div` y
   where
     acarry = (zeroExtend . pack) carry
+    shift = unpack $ resize y
     op n = cntl !!> n == 1
 
 status :: Vec 7 Bit -> Vec 33 Bit -> ControlWord -> Vec 7 Bit
