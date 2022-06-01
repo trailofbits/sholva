@@ -29,6 +29,14 @@ data AluControl
   | ALU_OP_ROR
   deriving (Bounded, Enum, Show)
 
+-- NOTE: vector indexing is MSB -> LSB.
+-- accessor for normal LSB -> MSB bit ordering.
+(!!>) ::
+     Enum e
+  => KnownNat n =>
+       Vec n Bit -> e -> Bit
+(!!>) cntl op = reverse cntl !! fromEnum op
+
 data StatFlags
   = STAT_OF
   | STAT_SF
@@ -49,8 +57,9 @@ alu x y carry cntl
   -- ex for multiply, clash provides
   --    times :: Vec n -> Vec m -> Vec (n + m)
   --    (*)   :: Vec n -> Vec n -> Vec n
+  -- FIXME(jl) carry bit
   | op ALU_OP_ADD = x `add` y
-  | op ALU_OP_SUB = x `sub` (y + acarry)
+  | op ALU_OP_SUB = x `sub` y
   | op ALU_OP_AND = zeroExtend $ x .&. y
   | op ALU_OP_OR = zeroExtend $ x .|. y
   | op ALU_OP_XOR = zeroExtend $ x `xor` y
@@ -61,29 +70,34 @@ alu x y carry cntl
   | op ALU_OP_ROR = zeroExtend $ x `rotateR` 2
   | op ALU_OP_DIV = zeroExtend $ x `div` y
   where
-    acarry = (zeroExtend . pack) carry
-    op n = cntl !! n == 1
+    op n = cntl !!> n == 1
 
 status :: Vec 7 Bit -> Vec 33 Bit -> ControlWord -> Vec 7 Bit
 status status_in stat_result cntl =
-  stat_of :> stat_sf :> stat_zf :> stat_pf :> stat_cf :> stat_af :> stat_df :>
+  map boolToBit $
+  stat_df :> stat_af :> stat_cf :> stat_pf :> stat_zf :> stat_sf :> stat_of :>
   Nil
   where
-    stat_of = low
-    stat_sf = low
-    stat_zf = low
-    stat_pf = low
-    stat_cf =
-      if cf_no_wr
-        then status_in !! STAT_CF
-        else if bitToBool (cntl !! ALU_CLEAR_CF)
-               then low
-               else stat_result !! 32
-    stat_af = low
-    stat_df = low
+    result = pack stat_result
+    stat_of = False
+    stat_sf =
+      if sf_no_wr
+        then False
+        else bitToBool $ head stat_result
+    stat_zf =
+      if zf_no_wr
+        then False
+        else result == 0
+    stat_pf =
+      if pf_no_wr
+        then False
+        else popCount result `mod` 2 == 0
+    stat_cf = False
+    stat_af = False
+    stat_df = False
     -- flags
-    alu_no_flags = cntl !! ALU_NO_FLAGS
-    cf_no_wr = bitToBool alu_no_flags
+    alu_no_flags = bitToBool $ cntl !!> ALU_NO_FLAGS
+    cf_no_wr = alu_no_flags
     pf_no_wr = alu_no_flags
     zf_no_wr = alu_no_flags
     sf_no_wr = alu_no_flags
@@ -103,13 +117,13 @@ topEntity (cntl, status_in, opnd0_r, opnd1_r) = (status_out, result)
     op0 = bitCoerce <$> opnd0_r
     op1 = bitCoerce <$> opnd1_r
     carry_in :: Signal System Bit
-    carry_in = ((!! ALU_USE_CARRY) <$> cntl) * ((!! STAT_CF) <$> status_in)
+    carry_in = ((!!> ALU_USE_CARRY) <$> cntl) * ((!!> STAT_CF) <$> status_in)
     stat_result :: Signal System (Vec 33 Bit)
     stat_result = unpack <$> (alu <$> op0 <*> op1 <*> carry_in <*> cntl)
     result :: Signal System (Vec 32 Bit)
-    result = mux alu_no_wr (pure $ unpack 0) (take d32 <$> stat_result)
+    result = mux alu_no_wr (pure $ unpack 0) (tail <$> stat_result)
       where
-        alu_no_wr = bitToBool <$> (!! ALU_NO_WR) <$> cntl
+        alu_no_wr = bitToBool <$> (!!> ALU_NO_WR) <$> cntl
     status_out :: Signal System (Vec 7 Bit)
     status_out = status <$> status_in <*> stat_result <*> cntl
 
