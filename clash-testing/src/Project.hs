@@ -58,8 +58,8 @@ alu x y carry cntl
   --    times :: Vec n -> Vec m -> Vec (n + m)
   --    (*)   :: Vec n -> Vec n -> Vec n
   -- FIXME(jl) carry bit
-  | op ALU_OP_ADD = x `add` y
-  | op ALU_OP_SUB = x `sub` y
+  | op ALU_OP_ADD = (x `add` y) + acarry
+  | op ALU_OP_SUB = (x `sub` y) + acarry
   | op ALU_OP_AND = zeroExtend $ x .&. y
   | op ALU_OP_OR = zeroExtend $ x .|. y
   | op ALU_OP_XOR = zeroExtend $ x `xor` y
@@ -70,6 +70,7 @@ alu x y carry cntl
   | op ALU_OP_ROR = zeroExtend $ x `rotateR` 2
   | op ALU_OP_DIV = zeroExtend $ x `div` y
   where
+    acarry = (zeroExtend . pack) carry
     op n = cntl !!> n == 1
 
 status :: Vec 7 Bit -> Vec 33 Bit -> ControlWord -> Vec 7 Bit
