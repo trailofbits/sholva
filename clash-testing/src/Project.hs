@@ -59,8 +59,8 @@ alu x y carry cntl
   --    times :: Vec n -> Vec m -> Vec (n + m)
   --    (*)   :: Vec n -> Vec n -> Vec n
   -- so, should this `zeroExend *`, or `truncate times`?
-  | op ALU_OP_ADD = (x `add` y) + (carryVal carry)
-  | op ALU_OP_SUB = (x `sub` y) + (carryVal carry)
+  | op ALU_OP_ADD = x `add` (y + carryVal carry)
+  | op ALU_OP_SUB = x `sub` (y + carryVal carry)
   | op ALU_OP_AND = zeroExtend $ x .&. y
   | op ALU_OP_OR = zeroExtend $ x .|. y
   | op ALU_OP_XOR = zeroExtend $ x `xor` y
@@ -101,7 +101,7 @@ status status_in op0 op1 stat_result cntl =
       if pf_no_wr
         then status_in !!> STAT_PF
         -- FIXME(jl) only popcount low byte
-        else boolToBit (popCount (slice d7 d0 result) `mod` 2 == 0)
+        else (complement . reduceXor) (slice d7 d0 result)
     stat_cf =
       if cf_no_wr
         then status_in !!> STAT_CF
