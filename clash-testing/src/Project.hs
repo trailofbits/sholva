@@ -76,6 +76,7 @@ alu no_wr x y carry cntl
       | op ALU_OP_ROL = zeroExtend $ x `rotateL` shiftVal y
       | op ALU_OP_ROR = zeroExtend $ x `rotateR` shiftVal y
       | op ALU_OP_DIV = zeroExtend $ x `div` y
+      | otherwise = undefined -- all invocations of ALU must set _at least one_ of the operation bits.
       where
         carryVal = zeroExtend . pack
         shiftVal = unpack . resize
