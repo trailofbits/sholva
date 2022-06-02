@@ -52,28 +52,34 @@ type ControlWord = Vec 18 Bit
 
 type StatusWord = Vec 7 Bit
 
-alu :: Register -> Register -> Bit -> ControlWord -> AluResult
-alu x y carry cntl
+alu :: Bit -> Register -> Register -> Bit -> ControlWord -> AluResult
+alu no_wr x y carry cntl
   -- FIXME(jl) how does verilog behave with truncations?
   -- ex for multiply, clash provides
   --    times :: Vec n -> Vec m -> Vec (n + m)
   --    (*)   :: Vec n -> Vec n -> Vec n
   -- FIXME(jl) shifting
-  | op ALU_OP_ADD = (x `add` y) + (carryVal carry)
-  | op ALU_OP_SUB = (x `sub` y) + (carryVal carry)
-  | op ALU_OP_AND = zeroExtend $ x .&. y
-  | op ALU_OP_OR = zeroExtend $ x .|. y
-  | op ALU_OP_XOR = zeroExtend $ x `xor` y
-  | op ALU_OP_MUL = zeroExtend $ x * y
-  | op ALU_OP_SHL = zeroExtend $ x `shiftL` shiftVal y
-  | op ALU_OP_SHR = zeroExtend $ x `shiftR` shiftVal y
-  | op ALU_OP_ROL = zeroExtend $ x `rotateL` shiftVal y
-  | op ALU_OP_ROR = zeroExtend $ x `rotateR` shiftVal y
-  | op ALU_OP_DIV = zeroExtend $ x `div` y
+ =
+  if bitToBool no_wr
+    then 0
+    else go
   where
-    carryVal = zeroExtend . pack
-    shiftVal = unpack . resize
-    op = (1 ==) . (cntl !!>)
+    go
+      | op ALU_OP_ADD = (x `add` y) + (carryVal carry)
+      | op ALU_OP_SUB = (x `sub` y) + (carryVal carry)
+      | op ALU_OP_AND = zeroExtend $ x .&. y
+      | op ALU_OP_OR = zeroExtend $ x .|. y
+      | op ALU_OP_XOR = zeroExtend $ x `xor` y
+      | op ALU_OP_MUL = zeroExtend $ x * y
+      | op ALU_OP_SHL = zeroExtend $ x `shiftL` shiftVal y
+      | op ALU_OP_SHR = zeroExtend $ x `shiftR` shiftVal y
+      | op ALU_OP_ROL = zeroExtend $ x `rotateL` shiftVal y
+      | op ALU_OP_ROR = zeroExtend $ x `rotateR` shiftVal y
+      | op ALU_OP_DIV = zeroExtend $ x `div` y
+      where
+        carryVal = zeroExtend . pack
+        shiftVal = unpack . resize
+        op = (1 ==) . (cntl !!>)
 
 status ::
      StatusWord
@@ -138,11 +144,12 @@ topEntity (cntl, status_in, opnd0_r, opnd1_r) = (status_out, result)
     carry_in :: Signal System Bit
     carry_in = ((!!> ALU_USE_CARRY) <$> cntl) * ((!!> STAT_CF) <$> status_in)
     stat_result :: Signal System (Vec 33 Bit)
-    stat_result = unpack <$> (alu <$> op0 <*> op1 <*> carry_in <*> cntl)
-    result :: Signal System (Vec 32 Bit)
-    result = mux alu_no_wr (pure $ unpack 0) (tail <$> stat_result)
+    stat_result =
+      unpack <$> (alu <$> alu_no_wr <*> op0 <*> op1 <*> carry_in <*> cntl)
       where
-        alu_no_wr = bitToBool <$> (!!> ALU_NO_WR) <$> cntl
+        alu_no_wr = (!!> ALU_NO_WR) <$> cntl
+    result :: Signal System (Vec 32 Bit)
+    result = tail <$> stat_result
     status_out :: Signal System (Vec 7 Bit)
     status_out =
       status <$> status_in <*> opnd0_r <*> opnd1_r <*> stat_result <*> cntl
