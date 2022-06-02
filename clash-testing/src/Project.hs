@@ -29,8 +29,9 @@ data AluControl
   | ALU_OP_ROR
   deriving (Bounded, Enum, Show)
 
--- vector indexing is MSB -> LSB, accessor for 'conventional' LSB -> MSB bit ordering.
--- FIXME: need to annotate `:: Int` on constant args, -Wtype-defaults: too constrained?
+-- clash vector indexing is MSB -> LSB, provide accessor for 'conventional' LSB -> MSB bit ordering.
+-- FIXME(jl): need to annotate `:: Int` on constant args, -Wtype-defaults?
+-- FIXME(jl): `reverse` induces lots of (probably unnecessary) overhead in compiled verilog.
 (!!>) :: (KnownNat n, Enum i) => Vec n Bit -> i -> Bit
 (!!>) cntl op = reverse cntl !! fromEnum op
 
@@ -88,6 +89,7 @@ status status_in op0 op1 stat_result cntl =
   Nil
   where
     result = pack stat_result
+    -- FIXME(jl) this one... seems rough lol
     stat_of = low
     stat_sf =
       if sf_no_wr
