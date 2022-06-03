@@ -8,9 +8,11 @@ ALL_V_WITHOUT_TESTS_OR_CODEGEN := $(shell \
 		! -path '*/test/*' \
 		! -name '*.gen.v' \
 )
+CLASH_VERILOG = circuit/execute/alu.v
+
 
 .PHONY: all
-all: codegen $(ALL_V)
+all: codegen $(ALL_V) $(CLASH_VERILOG)
 	iverilog $(IVERILOG_FLAGS) $(IFLAGS) \
 		-ycircuit \
 		-ycircuit/decode \
@@ -24,7 +26,7 @@ tiny86.blif: codegen
 	sv-netlist $(IFLAGS) --top tiny86 $@ $(ALL_V_WITHOUT_TESTS_OR_CODEGEN)
 
 .PHONY: stat
-stat: codegen/
+stat: codegen
 	sv-stat $(IFLAGS) --top tiny86 $(ALL_V_WITHOUT_TESTS_OR_CODEGEN)
 
 .PHONY: codegen
@@ -46,15 +48,13 @@ clean:
 	stack clean
 	rm -rf verilog/
 
-PROJ = Project
-MAIN = topEntity
-TOP = $(PROJ).$(MAIN)
+verilog/%.v: src/%.hs
+	stack run -- clash $^ --verilog
 
-.PHONY: clash
-clash: src/$(PROJ).hs
-	stack run -- clash src/$(PROJ).hs --verilog
-	# FIXME(jl) just a hack at the moment for a single compiled verilog output.
-	cp verilog/
+circuit/execute/alu.v: verilog/Alu.v
+	@echo "overwriting with compiled clash"
+	# move to prevent duplicates with `find . -name "*.v"` (hack)
+	mv verilog/Alu.alu/alu.v $@
 
 .PHONY: test
 test:
