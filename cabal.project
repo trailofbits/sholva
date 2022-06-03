@@ -1,0 +1,4 @@
+packages:
+  clash-test.cabal
+
+write-ghc-environment-files: always

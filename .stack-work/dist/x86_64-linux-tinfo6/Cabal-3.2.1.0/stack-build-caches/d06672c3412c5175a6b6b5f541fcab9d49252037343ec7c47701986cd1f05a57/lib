@@ -1,0 +1,14 @@
+/home/jleightcap/r/sholva/Setup.hs:
+  hash: bb9a7fed0162c06147b6d4f81c1de5e48de81c07ba6578f3f8a95efe011a6856
+/home/jleightcap/r/sholva/src/Project.hs:
+  hash: c5bb3886637edbab5bad0fa74882bb13bbdeef22c617c21f5d0c196c9a590fa5
+? /home/jleightcap/.stack/snapshots/x86_64-linux-tinfo6/d06672c3412c5175a6b6b5f541fcab9d49252037343ec7c47701986cd1f05a57/8.10.7/lib/x86_64-linux-ghc-8.10.7/ghc-typelits-natnormalise-0.7.6-C6cnOHz6nIF1vDKuUEg7Tn/libHSghc-typelits-natnormalise-0.7.6-C6cnOHz6nIF1vDKuUEg7Tn.a
+: hash: 1751b90d1ff840d22e87e6ec25f467f4c10999418f48f1ecf276dd3106c9d16a
+? /home/jleightcap/.stack/snapshots/x86_64-linux-tinfo6/d06672c3412c5175a6b6b5f541fcab9d49252037343ec7c47701986cd1f05a57/8.10.7/lib/x86_64-linux-ghc-8.10.7/ghc-typelits-extra-0.4.3-INNVkGJFNwU7zqSgApzguJ/libHSghc-typelits-extra-0.4.3-INNVkGJFNwU7zqSgApzguJ.a
+: hash: a7bd3708f27d31450673753ee84841f04a0d84f64214ac0668131ac89e59f22a
+? /home/jleightcap/.stack/snapshots/x86_64-linux-tinfo6/d06672c3412c5175a6b6b5f541fcab9d49252037343ec7c47701986cd1f05a57/8.10.7/lib/x86_64-linux-ghc-8.10.7/ghc-typelits-knownnat-0.7.6-9RouvPNfTIzIjVNn5K66Bm/libHSghc-typelits-knownnat-0.7.6-9RouvPNfTIzIjVNn5K66Bm.a
+: hash: d9c56bfeb147e58ce4717f78f748955bc2830b0836feb0562673085170fb2884
+/home/jleightcap/r/sholva/clash-test.cabal:
+  hash: 8975ab1ad9bc0257b72c05a64e6415459ec85ba4dac345df97ad1f98af00b541
+/home/jleightcap/r/sholva/src/Alu.hs:
+  hash: bcdcf22d22586d9a7cae87d768d62051cb1b810c8a3e9ff303fde8d5c39381da

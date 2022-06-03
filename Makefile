@@ -43,3 +43,23 @@ check:
 .PHONY: clean
 clean:
 	$(MAKE) -C circuit/test clean
+	stack clean
+	rm -rf verilog/
+
+PROJ = Project
+MAIN = topEntity
+TOP = $(PROJ).$(MAIN)
+
+.PHONY: clash
+clash: src/$(PROJ).hs
+	stack run -- clash src/$(PROJ).hs --verilog
+	# FIXME(jl) just a hack at the moment for a single compiled verilog output.
+	cp verilog/
+
+.PHONY: test
+test:
+	stack test
+
+.PHONY: clashi
+clashi:
+	stack run -- clashi
