@@ -87,7 +87,19 @@ status status_in op0 op1 stat_result cntl =
   where
     result = pack stat_result
     -- FIXME(jl) this one... seems rough lol
-    stat_of = low
+    stat_of =
+      case (of_no_wr, alu_clear_of, alu_op_sub) of
+        (True, _, _) -> status_in !!> STAT_CF
+        (_, True, _) -> low
+        (_, _, True) ->
+          (complement (head op0) .&. head op1 .&. head stat_result) .|.
+          (head op0 .&. complement (head op1) .&. complement (head stat_result))
+        _ ->
+          (head op0 .&. head op1 .&. complement (head stat_result)) .|.
+          (complement (head op0) .&. complement (head op1) .&. head stat_result)
+      where
+        alu_clear_of = bitToBool $ cntl !!> ALU_CLEAR_OF
+        alu_op_sub = bitToBool $ cntl !!> ALU_OP_SUB
     stat_sf =
       if sf_no_wr
         then status_in !!> STAT_SF
@@ -106,7 +118,7 @@ status status_in op0 op1 stat_result cntl =
         then status_in !!> STAT_CF
         else if bitToBool (cntl !!> ALU_CLEAR_CF)
                then low
-               else stat_result !! (0 :: Int)
+               else head stat_result
     stat_af =
       if af_no_wr
         then status_in !!> STAT_AF
@@ -114,8 +126,8 @@ status status_in op0 op1 stat_result cntl =
              (stat_result !!> (4 :: Int))
     stat_df = status_in !!> STAT_DF
     -- flags
+    -- FIXME(jl): learn where to use `where ...` vs `let ... in ...` for these misc bindings
     alu_no_flags = bitToBool $ cntl !!> ALU_NO_FLAGS
-    status = map bitToBool status_in
     cf_no_wr = alu_no_flags
     pf_no_wr = alu_no_flags
     zf_no_wr = alu_no_flags
