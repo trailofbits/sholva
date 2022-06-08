@@ -11,8 +11,8 @@ shol'va <img src="https://user-images.githubusercontent.com/3059210/147595717-ec
 
 ### Dependencies
 
-*shol'va* currently depends on iVerilog, Verilator, Python 3, and Ruby (for code generation).
-These must be available as `iverilog`, `verilator`, `python3`, and `ruby` respectively.
+*shol'va* currently depends on iVerilog, Verilator, Python 3; and Ruby and [Stack](https://docs.haskellstack.org/en/stable/README/) for code generation.
+These must be available as `iverilog`, `verilator`, `python3`, `ruby`, and `stack` respectively.
 
 ### Building
 
