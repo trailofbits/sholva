@@ -86,7 +86,6 @@ status status_in op0 op1 stat_result cntl =
   Nil
   where
     result = pack stat_result
-    -- FIXME(jl) this one... seems rough lol
     stat_of =
       case (of_no_wr, alu_clear_of, alu_op_sub) of
         (True, _, _) -> status_in !!> STAT_CF
@@ -114,11 +113,12 @@ status status_in op0 op1 stat_result cntl =
         -- FIXME(jl) only popcount low byte
         else (complement . reduceXor) (slice d7 d0 result)
     stat_cf =
-      if cf_no_wr
-        then status_in !!> STAT_CF
-        else if bitToBool (cntl !!> ALU_CLEAR_CF)
-               then low
-               else head stat_result
+      case (cf_no_wr, alu_clear_cf) of
+        (True, _) -> status_in !!> STAT_CF
+        (_, True) -> low
+        _ -> head stat_result
+      where
+        alu_clear_cf = bitToBool $ cntl !!> ALU_CLEAR_CF
     stat_af =
       if af_no_wr
         then status_in !!> STAT_AF
