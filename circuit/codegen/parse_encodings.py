@@ -6,7 +6,7 @@ import json
 import sys
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Optional
+from typing import Optional, List
 
 _HERE = Path(__file__).parent
 _ENCODINGS_SPEC = _HERE / "encodings.spec"
@@ -238,7 +238,7 @@ class Encoding:
 @dataclass(frozen=True)
 class Spec:
     cmd: str
-    encs: list[Encoding]
+    encs: List[Encoding]
 
 
 def main():

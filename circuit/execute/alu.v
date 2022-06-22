@@ -98,21 +98,21 @@ module alu
   wire  c$app_arg_36;
   wire [17:0] c$app_arg_37;
   wire  result_19;
-  // src/Alu.hs:133:1-3
+  // src/Alu.hs:148:1-3
   wire  c$eta_app_arg;
-  // src/Alu.hs:133:1-3
+  // src/Alu.hs:148:1-3
   wire [6:0] c$eta_app_arg_0;
-  // src/Alu.hs:133:1-3
+  // src/Alu.hs:148:1-3
   wire [6:0] status_in_0;
-  // src/Alu.hs:133:1-3
+  // src/Alu.hs:148:1-3
   wire  c$eta_app_arg_1;
-  // src/Alu.hs:133:1-3
+  // src/Alu.hs:148:1-3
   wire [17:0] c$eta_app_arg_2;
-  // src/Alu.hs:133:1-3
+  // src/Alu.hs:148:1-3
   wire [17:0] cntl_0;
-  // src/Alu.hs:133:1-3
+  // src/Alu.hs:148:1-3
   wire [31:0] opnd1_r_0;
-  // src/Alu.hs:133:1-3
+  // src/Alu.hs:148:1-3
   wire [31:0] opnd0_r_0;
   wire [88:0] ds;
   wire [31:0] result_sel_alt_t_res;
