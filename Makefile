@@ -8,7 +8,7 @@ ALL_V_WITHOUT_TESTS_OR_CODEGEN := $(shell \
 		! -path '*/test/*' \
 		! -name '*.gen.v' \
 )
-ALL_V := $(ALL_V) circuit/execute/alu.v
+CLASH_VERILOG = circuit/execute/alu.v
 
 
 .PHONY: all
