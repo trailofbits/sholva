@@ -19,6 +19,7 @@ jobs:
         python-version: "^3.7"
     - name: deps
       run: |
+        sudo apt update
         sudo apt install -y iverilog verilator
         iverilog -V
         verilator --version

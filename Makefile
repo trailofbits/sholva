@@ -40,7 +40,7 @@ lint:
 
 .PHONY: check
 check:
-	@$(MAKE) -C circuit/test check
+	@$(MAKE) V=1 -C circuit/test check
 
 .PHONY: clean
 clean:
@@ -49,7 +49,7 @@ clean:
 	rm -rf verilog/
 
 verilog/%.v: src/%.hs
-	stack run -- clash $^ --verilog
+	stack exec --package clash-ghc -- clash $^ --verilog
 
 circuit/execute/alu.v: verilog/Alu.v
 	@echo "overwriting with compiled clash"
