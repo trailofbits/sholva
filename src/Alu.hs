@@ -50,8 +50,8 @@ type ControlWord = Vec 18 Bit
 
 type StatusWord = Vec 7 Bit
 
-alu_op :: Register -> Register -> Bit -> ControlWord -> AluResult
-alu_op x y carry cntl
+aluOp :: Register -> Register -> Bit -> ControlWord -> AluResult
+aluOp x y carry cntl
   -- FIXME(jl) reference 80386 semantics for arithmetic ops' truncation behavior.
   -- ex for multiply, clash provides
   --    times :: Vec n -> Vec m -> Vec (n + m)
@@ -87,7 +87,7 @@ status status_in op0 op1 stat_result cntl =
   where
     result = pack stat_result
     stat_of =
-      case (of_no_wr, alu_clear_of, alu_op_sub) of
+      case (of_no_wr, alu_clear_of, aluOp_sub) of
         (True, _, _) -> status_in !!> STAT_CF
         (_, True, _) -> low
         (_, _, True) ->
@@ -98,7 +98,7 @@ status status_in op0 op1 stat_result cntl =
           (complement (head op0) .&. complement (head op1) .&. head stat_result)
       where
         alu_clear_of = bitToBool $ cntl !!> ALU_CLEAR_OF
-        alu_op_sub = bitToBool $ cntl !!> ALU_OP_SUB
+        aluOp_sub = bitToBool $ cntl !!> ALU_OP_SUB
     stat_sf =
       if sf_no_wr
         then status_in !!> STAT_SF
@@ -110,7 +110,6 @@ status status_in op0 op1 stat_result cntl =
     stat_pf =
       if pf_no_wr
         then status_in !!> STAT_PF
-        -- FIXME(jl) only popcount low byte
         else (complement . reduceXor) (slice d7 d0 result)
     stat_cf =
       case (cf_no_wr, alu_clear_cf) of
@@ -150,11 +149,11 @@ alu (cntl, status_in, opnd0_r, opnd1_r) = (status_out, result)
     carry_in :: Signal System Bit
     carry_in = ((!!> ALU_USE_CARRY) <$> cntl) * ((!!> STAT_CF) <$> status_in)
     stat_result :: Signal System (Vec 33 Bit)
-    stat_result = unpack <$> (alu_op <$> op0 <*> op1 <*> carry_in <*> cntl)
+    stat_result = unpack <$> (aluOp <$> op0 <*> op1 <*> carry_in <*> cntl)
     result :: Signal System (Vec 32 Bit)
     result = mux alu_no_wr (pure $ unpack 0) (tail <$> stat_result)
       where
-        alu_no_wr = bitToBool <$> (!!> ALU_NO_WR) <$> cntl
+        alu_no_wr = bitToBool . (!!> ALU_NO_WR) <$> cntl
     status_out :: Signal System (Vec 7 Bit)
     status_out =
       status <$> status_in <*> opnd0_r <*> opnd1_r <*> stat_result <*> cntl
