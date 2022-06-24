@@ -50,7 +50,7 @@ clean:
 	rm -rf verilog/
 
 verilog/%.v: src/%.hs
-	stack exec --package clash-ghc -- clash $^ --verilog
+	clash $^ --verilog
 
 circuit/execute/alu.v: verilog/Alu.v
 	@echo "overwriting with compiled clash"
