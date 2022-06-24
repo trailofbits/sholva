@@ -39,28 +39,25 @@ lint:
 	verilator --top-module $(TOP_MODULE) --lint-only $(IFLAGS) $(ALL_V_WITHOUT_TESTS_OR_CODEGEN)
 	hlint -g
 
-.PHONY: check
-check:
+check: _check-verilog _check-haskell
+
+.PHONY: _check-verilog
+_check-verilog:
 	@$(MAKE) V=1 -C circuit/test check
+
+.PHONY: _check-haskell
+_check-haskell:
+	runghc -isrc -itest test/Main.hs
 
 .PHONY: clean
 clean:
 	$(MAKE) -C circuit/test clean
-	stack clean
 	rm -rf verilog/
 
-verilog/%.v: src/%.hs
-	stack exec --package clash-ghc -- clash $^ --verilog
+verilog/Alu.alu/alu.v: src/Alu.hs
+	clash -isrc -fclash-clear $^ --verilog
+	sed -i '/timescale/d' $@
 
-circuit/execute/alu.v: verilog/Alu.v
+circuit/execute/alu.v: verilog/Alu.alu/alu.v
 	@echo "overwriting with compiled clash"
-	# move to prevent duplicates with `find . -name "*.v"` (hack)
 	mv verilog/Alu.alu/alu.v $@
-
-.PHONY: test
-test:
-	stack test
-
-.PHONY: clashi
-clashi:
-	stack run -- clashi
