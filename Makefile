@@ -47,7 +47,7 @@ _check-verilog:
 
 .PHONY: check-haskell
 _check-haskell:
-	runghc -isrc -v test/Main.hs
+	runghc -isrc -itest test/Main.hs
 
 .PHONY: test
 test:
@@ -58,7 +58,7 @@ clean:
 	rm -rf verilog/
 
 verilog/%.v: src/%.hs
-	clash -isrc -package tasty $^ --verilog
+	clash -isrc $^ --verilog
 
 circuit/execute/alu.v: verilog/Alu.v
 	@echo "overwriting with compiled clash"

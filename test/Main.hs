@@ -1,11 +1,9 @@
-{-# LANGUAGE BinaryLiterals #-}
-import Alu.Internal
-import Clash.Prelude
+{-# LANGUAGE BinaryLiterals, TemplateHaskell #-}
+
+import PropAlu
 import Test.QuickCheck
 
--- forall r : r - r == 0
-alu_test :: Register -> Bool
-alu_test r = aluOp r r low (unpack 0b000000010000000000) == 0
+return []
 
 main :: IO ()
-main = quickCheck alu_test
+main = check >> return ()
