@@ -46,7 +46,6 @@ check:
 .PHONY: clean
 clean:
 	$(MAKE) -C circuit/test clean
-	stack clean
 	rm -rf verilog/
 
 verilog/%.v: src/%.hs
@@ -56,11 +55,3 @@ circuit/execute/alu.v: verilog/Alu.v
 	@echo "overwriting with compiled clash"
 	# move to prevent duplicates with `find . -name "*.v"` (hack)
 	mv verilog/Alu.alu/alu.v $@
-
-.PHONY: test
-test:
-	stack test
-
-.PHONY: clashi
-clashi:
-	stack run -- clashi
