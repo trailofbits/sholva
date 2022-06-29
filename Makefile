@@ -39,9 +39,18 @@ lint:
 	verilator --top-module $(TOP_MODULE) --lint-only $(IFLAGS) $(ALL_V_WITHOUT_TESTS_OR_CODEGEN)
 	hlint -g
 
-.PHONY: check
-check:
+check: _check-verilog _check-haskell
+
+.PHONY: check-verilog
+_check-verilog:
 	@$(MAKE) V=1 -C circuit/test check
+
+.PHONY: check-haskell
+_check-haskell:
+	runghc -isrc -v test/Main.hs
+
+.PHONY: test
+test:
 
 .PHONY: clean
 clean:
@@ -49,7 +58,7 @@ clean:
 	rm -rf verilog/
 
 verilog/%.v: src/%.hs
-	clash $^ --verilog
+	clash -isrc -package tasty $^ --verilog
 
 circuit/execute/alu.v: verilog/Alu.v
 	@echo "overwriting with compiled clash"

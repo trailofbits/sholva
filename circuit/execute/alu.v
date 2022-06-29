@@ -14,112 +14,104 @@ module alu
     , output wire [31:0] result
     );
   wire [31:0] result_2;
-  wire  x;
+  wire [0:0] bv;
+  wire  c$bv_app_arg;
   wire [6:0] result_3;
   wire  c$app_arg;
+  reg  result_4;
+  wire [0:0] bv_0;
+  reg  result_5;
+  wire [0:0] bv_1;
+  wire  c$app_arg_0;
+  wire  c$app_arg_1;
+  wire  c$app_arg_2;
+  wire  c$app_arg_3;
+  wire  c$app_arg_4;
+  wire  c$bv_app_arg_0;
+  wire  c$bv_app_arg_1;
+  wire  c$app_arg_5;
   wire  c$case_alt;
   wire  c$case_alt_0;
-  wire  c$app_arg_0;
+  wire  c$app_arg_6;
   wire  c$case_alt_1;
-  reg [0:0] c$app_arg_1;
-  wire  c$app_arg_2;
+  reg [0:0] c$app_arg_7;
+  wire  c$app_arg_8;
   wire  c$case_alt_2;
-  // src/Alu.hs:84:1-6
-  wire [32:0] result_4;
-  wire  c$app_arg_3;
-  wire  c$case_alt_3;
-  reg  result_5;
-  wire  c$case_alt_4;
-  wire  x_0;
-  wire  c$app_arg_4;
-  wire  c$case_alt_5;
-  wire  c$app_arg_5;
-  wire [32:0] c$app_arg_6;
-  wire  c$app_arg_7;
-  wire [31:0] c$app_arg_8;
+  wire [32:0] result_6;
   wire  c$app_arg_9;
-  wire [31:0] c$app_arg_10;
+  wire  c$case_alt_3;
+  reg  result_7;
+  wire [0:0] bv_2;
+  wire  c$case_alt_4;
+  wire  c$bv_app_arg_2;
+  wire  c$app_arg_10;
+  wire  c$case_alt_5;
   wire  c$app_arg_11;
-  wire [6:0] c$app_arg_12;
-  wire  result_6;
-  wire  x_1;
-  wire [17:0] c$x_app_arg;
-  wire [32:0] result_7;
-  // src/Alu.hs:54:1-6
+  wire [32:0] c$app_arg_12;
+  wire  c$app_arg_13;
+  wire [31:0] c$app_arg_14;
+  wire  c$app_arg_15;
+  wire [31:0] c$app_arg_16;
+  wire  result_8;
+  wire [0:0] bv_3;
+  wire  c$bv_app_arg_3;
+  wire [17:0] c$bv_app_arg_4;
+  wire  c$app_arg_17;
+  wire [6:0] c$app_arg_18;
+  wire [32:0] result_9;
+  // src/Alu/Internal.hs:59:1-5
   wire  carry;
-  wire [32:0] result_8;
+  wire [32:0] result_10;
   wire [32:0] c$case_alt_6;
   wire [32:0] c$case_alt_7;
-  wire  c$app_arg_13;
-  wire [17:0] c$app_arg_14;
-  wire  result_9;
   wire [32:0] c$case_alt_8;
   wire [32:0] c$case_alt_9;
-  wire  c$app_arg_15;
-  wire [17:0] c$app_arg_16;
-  wire  result_10;
-  wire [31:0] c$app_arg_17;
+  wire [31:0] c$app_arg_19;
   wire [32:0] c$case_alt_10;
-  wire  c$app_arg_18;
-  wire [17:0] c$app_arg_19;
-  wire  result_11;
   wire [32:0] c$case_alt_11;
-  wire  c$app_arg_20;
-  wire [17:0] c$app_arg_21;
-  wire  result_12;
   wire [32:0] c$case_alt_12;
-  wire  c$app_arg_22;
-  wire [17:0] c$app_arg_23;
-  wire  result_13;
   wire [32:0] c$case_alt_13;
-  wire  c$app_arg_24;
-  wire [17:0] c$app_arg_25;
-  wire  result_14;
   wire [32:0] c$case_alt_14;
-  wire  c$app_arg_26;
-  wire [17:0] c$app_arg_27;
-  wire  result_15;
   wire [32:0] c$case_alt_15;
-  wire  c$app_arg_28;
-  wire [17:0] c$app_arg_29;
-  wire  result_16;
   wire [32:0] c$case_alt_16;
-  wire  c$app_arg_30;
-  wire [17:0] c$app_arg_31;
-  wire  result_17;
-  wire [31:0] c$app_arg_32;
+  wire [31:0] c$app_arg_20;
   wire [32:0] c$case_alt_17;
-  wire  c$app_arg_33;
-  wire [17:0] c$app_arg_34;
-  wire  result_18;
-  wire [31:0] c$app_arg_35;
+  wire [31:0] c$app_arg_21;
   wire signed [63:0] wild;
   wire signed [63:0] c$wild_app_arg;
-  wire  c$app_arg_36;
-  wire [17:0] c$app_arg_37;
-  wire  result_19;
-  // src/Alu.hs:148:1-3
+  wire [63:0] w2;
+  wire  c$app_arg_22;
+  wire  c$app_arg_23;
+  wire  c$app_arg_24;
+  wire  c$app_arg_25;
+  wire  c$app_arg_26;
+  wire  c$app_arg_27;
+  wire  c$app_arg_28;
+  wire  c$app_arg_29;
+  wire  c$app_arg_30;
+  wire  c$app_arg_31;
+  wire  c$app_arg_32;
+  wire [17:0] c$app_arg_33;
+  // src/Alu.hs:14:1-3
   wire  c$eta_app_arg;
-  // src/Alu.hs:148:1-3
+  // src/Alu.hs:14:1-3
   wire [6:0] c$eta_app_arg_0;
-  // src/Alu.hs:148:1-3
+  // src/Alu.hs:14:1-3
   wire [6:0] status_in_0;
-  // src/Alu.hs:148:1-3
+  // src/Alu.hs:14:1-3
   wire  c$eta_app_arg_1;
-  // src/Alu.hs:148:1-3
+  // src/Alu.hs:14:1-3
   wire [17:0] c$eta_app_arg_2;
-  // src/Alu.hs:148:1-3
+  // src/Alu.hs:14:1-3
   wire [17:0] cntl_0;
-  // src/Alu.hs:148:1-3
+  // src/Alu.hs:14:1-3
   wire [31:0] opnd1_r_0;
-  // src/Alu.hs:148:1-3
+  // src/Alu.hs:14:1-3
   wire [31:0] opnd0_r_0;
   wire [88:0] ds;
   wire [31:0] result_sel_alt_t_res;
   wire [31:0] c$vec;
   wire [32:0] c$bv;
-  wire [0:0] result_selection_res;
-  wire [63:0] c$bv_0;
   wire [38:0] result_0;
 
   assign ds = {cntl,   status_in,   opnd0_r,
@@ -144,317 +136,243 @@ module alu
   endgenerate
   // map end
 
-  assign result_2 = (((x)) == 1'b1) ? result_sel_alt_t_res : (result_7[32-1 : 0]);
+  assign result_2 = (bv == 1'b1) ? result_sel_alt_t_res : (result_9[32-1 : 0]);
 
-  assign x = c$eta_app_arg_2[8:8];
+  assign bv = (c$bv_app_arg);
 
-  assign result_3 = {c$app_arg_11,   c$app_arg_4,
-                     c$app_arg_3,   c$app_arg_2,   c$app_arg_0,
-                     c$app_arg,   1'b0};
+  assign c$bv_app_arg = c$eta_app_arg_2[8:8];
 
-  assign c$app_arg = result_6 ? c$case_alt : c$case_alt_0;
+  assign result_3 = {c$app_arg_17,
+                     c$app_arg_10,   c$app_arg_9,   c$app_arg_8,
+                     c$app_arg_6,   c$app_arg_5,   c$app_arg};
 
-  assign c$case_alt = c$app_arg_12[5:5];
-
-  assign c$case_alt_0 = result_7[31:31];
-
-  assign c$app_arg_0 = result_6 ? c$case_alt_1 : ((c$app_arg_1));
-
-  assign c$case_alt_1 = c$app_arg_12[4:4];
+  assign c$app_arg = result_8 ? c$case_alt_3 : result_4;
 
   always @(*) begin
-    case(result_4)
-      33'b000000000000000000000000000000000 : c$app_arg_1 = 1'b1;
-      default : c$app_arg_1 = 1'b0;
+    case(bv_0)
+      1'b1 : result_4 = 1'b0;
+      default : result_4 = result_5;
     endcase
   end
 
-  assign c$bv = (result_4);
-
-  assign c$app_arg_2 = result_6 ? c$case_alt_2 : (~ (^ (((c$bv[7 : 0])))));
-
-  assign c$case_alt_2 = c$app_arg_12[3:3];
-
-  assign result_4 = ((result_7));
-
-  assign c$app_arg_3 = result_6 ? c$case_alt_3 : result_5;
-
-  assign c$case_alt_3 = c$app_arg_12[2:2];
-
-  assign result_selection_res = (x_0);
+  assign bv_0 = (c$bv_app_arg_1);
 
   always @(*) begin
-    case(result_selection_res)
-      1'b1 : result_5 = 1'b0;
-      default : result_5 = c$case_alt_4;
+    case(bv_1)
+      1'b1 : result_5 = ((c$app_arg_1 & c$app_arg_3) & c$case_alt_4) | ((c$app_arg_4 & c$app_arg_0) & c$app_arg_2);
+      default : result_5 = ((c$app_arg_4 & c$app_arg_3) & c$app_arg_2) | ((c$app_arg_1 & c$app_arg_0) & c$case_alt_4);
     endcase
   end
 
-  assign c$case_alt_4 = result_7[32:32];
+  assign bv_1 = (c$bv_app_arg_0);
 
-  assign x_0 = c$x_app_arg[5:5];
+  assign c$app_arg_0 = ~ c$app_arg_3;
 
-  assign c$app_arg_4 = result_6 ? c$case_alt_5 : ((c$app_arg_9 ^ c$app_arg_7) ^ c$app_arg_5);
+  assign c$app_arg_1 = ~ c$app_arg_4;
 
-  assign c$case_alt_5 = c$app_arg_12[1:1];
+  assign c$app_arg_2 = ~ c$case_alt_4;
 
-  assign c$app_arg_5 = c$app_arg_6[28:28];
+  assign c$app_arg_3 = opnd1_r_0[32-1 -: 1];
+
+  assign c$app_arg_4 = opnd0_r_0[32-1 -: 1];
+
+  assign c$bv_app_arg_0 = c$bv_app_arg_4[7:7];
+
+  assign c$bv_app_arg_1 = c$bv_app_arg_4[4:4];
+
+  assign c$app_arg_5 = result_8 ? c$case_alt : c$case_alt_0;
+
+  assign c$case_alt = c$app_arg_18[5:5];
+
+  assign c$case_alt_0 = result_9[31:31];
+
+  assign c$app_arg_6 = result_8 ? c$case_alt_1 : ((c$app_arg_7));
+
+  assign c$case_alt_1 = c$app_arg_18[4:4];
+
+  always @(*) begin
+    case(result_6)
+      33'b000000000000000000000000000000000 : c$app_arg_7 = 1'b1;
+      default : c$app_arg_7 = 1'b0;
+    endcase
+  end
+
+  assign c$bv = (result_6);
+
+  assign c$app_arg_8 = result_8 ? c$case_alt_2 : (~ (^ (((c$bv[7 : 0])))));
+
+  assign c$case_alt_2 = c$app_arg_18[3:3];
+
+  assign result_6 = ((result_9));
+
+  assign c$app_arg_9 = result_8 ? c$case_alt_3 : result_7;
+
+  assign c$case_alt_3 = c$app_arg_18[2:2];
+
+  always @(*) begin
+    case(bv_2)
+      1'b1 : result_7 = 1'b0;
+      default : result_7 = c$case_alt_4;
+    endcase
+  end
+
+  assign bv_2 = (c$bv_app_arg_2);
+
+  assign c$case_alt_4 = result_9[33-1 -: 1];
+
+  assign c$bv_app_arg_2 = c$bv_app_arg_4[5:5];
+
+  assign c$app_arg_10 = result_8 ? c$case_alt_5 : ((c$app_arg_15 ^ c$app_arg_13) ^ c$app_arg_11);
+
+  assign c$case_alt_5 = c$app_arg_18[1:1];
+
+  assign c$app_arg_11 = c$app_arg_12[28:28];
 
   // reverse begin
   genvar i_0;
   generate
   for (i_0 = 0; i_0 < 33; i_0 = i_0 + 1) begin : reverse
-    assign c$app_arg_6[(33 - 1 - i_0)*1+:1] = result_7[i_0*1+:1];
+    assign c$app_arg_12[(33 - 1 - i_0)*1+:1] = result_9[i_0*1+:1];
   end
   endgenerate
   // reverse end
 
-  assign c$app_arg_7 = c$app_arg_8[27:27];
+  assign c$app_arg_13 = c$app_arg_14[27:27];
 
   // reverse begin
   genvar i_1;
   generate
   for (i_1 = 0; i_1 < 32; i_1 = i_1 + 1) begin : reverse_0
-    assign c$app_arg_8[(32 - 1 - i_1)*1+:1] = opnd1_r_0[i_1*1+:1];
+    assign c$app_arg_14[(32 - 1 - i_1)*1+:1] = opnd1_r_0[i_1*1+:1];
   end
   endgenerate
   // reverse end
 
-  assign c$app_arg_9 = c$app_arg_10[27:27];
+  assign c$app_arg_15 = c$app_arg_16[27:27];
 
   // reverse begin
   genvar i_2;
   generate
   for (i_2 = 0; i_2 < 32; i_2 = i_2 + 1) begin : reverse_1
-    assign c$app_arg_10[(32 - 1 - i_2)*1+:1] = opnd0_r_0[i_2*1+:1];
+    assign c$app_arg_16[(32 - 1 - i_2)*1+:1] = opnd0_r_0[i_2*1+:1];
   end
   endgenerate
   // reverse end
 
-  assign c$app_arg_11 = c$app_arg_12[0:0];
+  assign result_8 = bv_3 == 1'b1;
+
+  assign bv_3 = (c$bv_app_arg_3);
+
+  assign c$bv_app_arg_3 = c$bv_app_arg_4[6:6];
 
   // reverse begin
   genvar i_3;
   generate
-  for (i_3 = 0; i_3 < 7; i_3 = i_3 + 1) begin : reverse_2
-    assign c$app_arg_12[(7 - 1 - i_3)*1+:1] = status_in_0[i_3*1+:1];
+  for (i_3 = 0; i_3 < 18; i_3 = i_3 + 1) begin : reverse_2
+    assign c$bv_app_arg_4[(18 - 1 - i_3)*1+:1] = cntl_0[i_3*1+:1];
   end
   endgenerate
   // reverse end
 
-  assign result_6 = ((x_1)) == 1'b1;
-
-  assign x_1 = c$x_app_arg[6:6];
+  assign c$app_arg_17 = c$app_arg_18[0:0];
 
   // reverse begin
   genvar i_4;
   generate
-  for (i_4 = 0; i_4 < 18; i_4 = i_4 + 1) begin : reverse_3
-    assign c$x_app_arg[(18 - 1 - i_4)*1+:1] = cntl_0[i_4*1+:1];
+  for (i_4 = 0; i_4 < 7; i_4 = i_4 + 1) begin : reverse_3
+    assign c$app_arg_18[(7 - 1 - i_4)*1+:1] = status_in_0[i_4*1+:1];
   end
   endgenerate
   // reverse end
 
-  assign result_7 = (result_8);
+  assign result_9 = (result_10);
 
   assign carry = c$eta_app_arg_1 & c$eta_app_arg;
 
-  assign result_8 = result_9 ? c$case_alt_6 : c$case_alt_7;
+  assign result_10 = (1'b1 == c$app_arg_32) ? c$case_alt_6 : c$case_alt_7;
 
-  assign c$case_alt_6 = (((opnd0_r_0))) + c$app_arg_17;
+  assign c$case_alt_6 = (((opnd0_r_0))) + c$app_arg_19;
 
-  assign c$case_alt_7 = result_10 ? c$case_alt_8 : c$case_alt_9;
+  assign c$case_alt_7 = (1'b1 == c$app_arg_31) ? c$case_alt_8 : c$case_alt_9;
 
-  assign c$app_arg_13 = c$app_arg_14[16:16];
+  assign c$case_alt_8 = (((opnd0_r_0))) - c$app_arg_19;
+
+  assign c$case_alt_9 = (1'b1 == c$app_arg_30) ? ({1'b0,((((opnd0_r_0))) & (((opnd1_r_0))))}) : c$case_alt_10;
+
+  assign c$app_arg_19 = (((opnd1_r_0))) + ({31'b0000000000000000000000000000000,((carry))});
+
+  assign c$case_alt_10 = (1'b1 == c$app_arg_29) ? ({1'b0,((((opnd0_r_0))) | (((opnd1_r_0))))}) : c$case_alt_11;
+
+  assign c$case_alt_11 = (1'b1 == c$app_arg_28) ? ({1'b0,((((opnd0_r_0))) ^ (((opnd1_r_0))))}) : c$case_alt_12;
+
+  assign c$case_alt_12 = (1'b1 == c$app_arg_27) ? ({1'b0,((((opnd0_r_0))) * (((opnd1_r_0))))}) : c$case_alt_13;
+
+  assign c$case_alt_13 = (1'b1 == c$app_arg_26) ? ({1'b0,((((opnd0_r_0))) << wild)}) : c$case_alt_14;
+
+  assign c$case_alt_14 = (1'b1 == c$app_arg_25) ? ({1'b0,((((opnd0_r_0))) >> wild)}) : c$case_alt_15;
+
+  assign c$case_alt_15 = (1'b1 == c$app_arg_24) ? ({1'b0,c$app_arg_20}) : c$case_alt_16;
+
+  assign c$case_alt_16 = (1'b1 == c$app_arg_23) ? ({1'b0,c$app_arg_21}) : c$case_alt_17;
+
+  // rotateL begin
+  wire [2*32-1:0] bv_4;
+  assign bv_4 = {(((opnd0_r_0))),(((opnd0_r_0)))} << (wild % 32);
+  assign c$app_arg_20 = bv_4[2*32-1 : 32];
+  // rotateL end
+
+  assign c$case_alt_17 = (1'b1 == c$app_arg_22) ? ({1'b0,((((opnd0_r_0))) / (((opnd1_r_0))))}) : ({33 {1'bx}});
+
+  // rotateR begin
+  wire [2*32-1:0] bv_5;
+  assign bv_5 = {(((opnd0_r_0))),(((opnd0_r_0)))} >> (wild % 32);
+  assign c$app_arg_21 = bv_5[32-1 : 0];
+  // rotateR end
+
+  assign wild = $signed(c$wild_app_arg);
+
+  assign c$wild_app_arg = $unsigned(w2[0+:64]);
+
+  assign w2 = {32'b00000000000000000000000000000000,(((opnd1_r_0)))};
+
+  assign c$app_arg_22 = c$app_arg_33[11:11];
+
+  assign c$app_arg_23 = c$app_arg_33[0:0];
+
+  assign c$app_arg_24 = c$app_arg_33[1:1];
+
+  assign c$app_arg_25 = c$app_arg_33[2:2];
+
+  assign c$app_arg_26 = c$app_arg_33[3:3];
+
+  assign c$app_arg_27 = c$app_arg_33[12:12];
+
+  assign c$app_arg_28 = c$app_arg_33[13:13];
+
+  assign c$app_arg_29 = c$app_arg_33[14:14];
+
+  assign c$app_arg_30 = c$app_arg_33[15:15];
+
+  assign c$app_arg_31 = c$app_arg_33[7:7];
+
+  assign c$app_arg_32 = c$app_arg_33[16:16];
 
   // reverse begin
   genvar i_5;
   generate
   for (i_5 = 0; i_5 < 18; i_5 = i_5 + 1) begin : reverse_4
-    assign c$app_arg_14[(18 - 1 - i_5)*1+:1] = cntl_0[i_5*1+:1];
+    assign c$app_arg_33[(18 - 1 - i_5)*1+:1] = cntl_0[i_5*1+:1];
   end
   endgenerate
   // reverse end
-
-  assign result_9 = 1'b1 == c$app_arg_13;
-
-  assign c$case_alt_8 = (((opnd0_r_0))) - c$app_arg_17;
-
-  assign c$case_alt_9 = result_11 ? ({1'b0,((((opnd0_r_0))) & (((opnd1_r_0))))}) : c$case_alt_10;
-
-  assign c$app_arg_15 = c$app_arg_16[7:7];
-
-  // reverse begin
-  genvar i_6;
-  generate
-  for (i_6 = 0; i_6 < 18; i_6 = i_6 + 1) begin : reverse_5
-    assign c$app_arg_16[(18 - 1 - i_6)*1+:1] = cntl_0[i_6*1+:1];
-  end
-  endgenerate
-  // reverse end
-
-  assign result_10 = 1'b1 == c$app_arg_15;
-
-  assign c$app_arg_17 = (((opnd1_r_0))) + ({31'b0000000000000000000000000000000,((carry))});
-
-  assign c$case_alt_10 = result_12 ? ({1'b0,((((opnd0_r_0))) | (((opnd1_r_0))))}) : c$case_alt_11;
-
-  assign c$app_arg_18 = c$app_arg_19[15:15];
-
-  // reverse begin
-  genvar i_7;
-  generate
-  for (i_7 = 0; i_7 < 18; i_7 = i_7 + 1) begin : reverse_6
-    assign c$app_arg_19[(18 - 1 - i_7)*1+:1] = cntl_0[i_7*1+:1];
-  end
-  endgenerate
-  // reverse end
-
-  assign result_11 = 1'b1 == c$app_arg_18;
-
-  assign c$case_alt_11 = result_13 ? ({1'b0,((((opnd0_r_0))) ^ (((opnd1_r_0))))}) : c$case_alt_12;
-
-  assign c$app_arg_20 = c$app_arg_21[14:14];
-
-  // reverse begin
-  genvar i_8;
-  generate
-  for (i_8 = 0; i_8 < 18; i_8 = i_8 + 1) begin : reverse_7
-    assign c$app_arg_21[(18 - 1 - i_8)*1+:1] = cntl_0[i_8*1+:1];
-  end
-  endgenerate
-  // reverse end
-
-  assign result_12 = 1'b1 == c$app_arg_20;
-
-  assign c$case_alt_12 = result_14 ? ({1'b0,((((opnd0_r_0))) * (((opnd1_r_0))))}) : c$case_alt_13;
-
-  assign c$app_arg_22 = c$app_arg_23[13:13];
-
-  // reverse begin
-  genvar i_9;
-  generate
-  for (i_9 = 0; i_9 < 18; i_9 = i_9 + 1) begin : reverse_8
-    assign c$app_arg_23[(18 - 1 - i_9)*1+:1] = cntl_0[i_9*1+:1];
-  end
-  endgenerate
-  // reverse end
-
-  assign result_13 = 1'b1 == c$app_arg_22;
-
-  assign c$case_alt_13 = result_15 ? ({1'b0,((((opnd0_r_0))) << wild)}) : c$case_alt_14;
-
-  assign c$app_arg_24 = c$app_arg_25[12:12];
-
-  // reverse begin
-  genvar i_10;
-  generate
-  for (i_10 = 0; i_10 < 18; i_10 = i_10 + 1) begin : reverse_9
-    assign c$app_arg_25[(18 - 1 - i_10)*1+:1] = cntl_0[i_10*1+:1];
-  end
-  endgenerate
-  // reverse end
-
-  assign result_14 = 1'b1 == c$app_arg_24;
-
-  assign c$case_alt_14 = result_16 ? ({1'b0,((((opnd0_r_0))) >> wild)}) : c$case_alt_15;
-
-  assign c$app_arg_26 = c$app_arg_27[3:3];
-
-  // reverse begin
-  genvar i_11;
-  generate
-  for (i_11 = 0; i_11 < 18; i_11 = i_11 + 1) begin : reverse_10
-    assign c$app_arg_27[(18 - 1 - i_11)*1+:1] = cntl_0[i_11*1+:1];
-  end
-  endgenerate
-  // reverse end
-
-  assign result_15 = 1'b1 == c$app_arg_26;
-
-  assign c$case_alt_15 = result_17 ? ({1'b0,c$app_arg_32}) : c$case_alt_16;
-
-  assign c$app_arg_28 = c$app_arg_29[2:2];
-
-  // reverse begin
-  genvar i_12;
-  generate
-  for (i_12 = 0; i_12 < 18; i_12 = i_12 + 1) begin : reverse_11
-    assign c$app_arg_29[(18 - 1 - i_12)*1+:1] = cntl_0[i_12*1+:1];
-  end
-  endgenerate
-  // reverse end
-
-  assign result_16 = 1'b1 == c$app_arg_28;
-
-  assign c$case_alt_16 = result_18 ? ({1'b0,c$app_arg_35}) : c$case_alt_17;
-
-  assign c$app_arg_30 = c$app_arg_31[1:1];
-
-  // reverse begin
-  genvar i_13;
-  generate
-  for (i_13 = 0; i_13 < 18; i_13 = i_13 + 1) begin : reverse_12
-    assign c$app_arg_31[(18 - 1 - i_13)*1+:1] = cntl_0[i_13*1+:1];
-  end
-  endgenerate
-  // reverse end
-
-  assign result_17 = 1'b1 == c$app_arg_30;
-
-  // rotateL begin
-  wire [2*32-1:0] bv;
-  assign bv = {(((opnd0_r_0))),(((opnd0_r_0)))} << (wild % 32);
-  assign c$app_arg_32 = bv[2*32-1 : 32];
-  // rotateL end
-
-  assign c$case_alt_17 = result_19 ? ({1'b0,((((opnd0_r_0))) / (((opnd1_r_0))))}) : ({33 {1'bx}});
-
-  assign c$app_arg_33 = c$app_arg_34[0:0];
-
-  // reverse begin
-  genvar i_14;
-  generate
-  for (i_14 = 0; i_14 < 18; i_14 = i_14 + 1) begin : reverse_13
-    assign c$app_arg_34[(18 - 1 - i_14)*1+:1] = cntl_0[i_14*1+:1];
-  end
-  endgenerate
-  // reverse end
-
-  assign result_18 = 1'b1 == c$app_arg_33;
-
-  // rotateR begin
-  wire [2*32-1:0] bv_0;
-  assign bv_0 = {(((opnd0_r_0))),(((opnd0_r_0)))} >> (wild % 32);
-  assign c$app_arg_35 = bv_0[32-1 : 0];
-  // rotateR end
-
-  assign wild = $signed(c$wild_app_arg);
-
-  assign c$bv_0 = ({32'b00000000000000000000000000000000,(((opnd1_r_0)))});
-
-  assign c$wild_app_arg = $unsigned(c$bv_0[0+:64]);
-
-  assign c$app_arg_36 = c$app_arg_37[11:11];
-
-  // reverse begin
-  genvar i_15;
-  generate
-  for (i_15 = 0; i_15 < 18; i_15 = i_15 + 1) begin : reverse_14
-    assign c$app_arg_37[(18 - 1 - i_15)*1+:1] = cntl_0[i_15*1+:1];
-  end
-  endgenerate
-  // reverse end
-
-  assign result_19 = 1'b1 == c$app_arg_36;
 
   assign c$eta_app_arg = c$eta_app_arg_0[2:2];
 
   // reverse begin
-  genvar i_16;
+  genvar i_6;
   generate
-  for (i_16 = 0; i_16 < 7; i_16 = i_16 + 1) begin : reverse_15
-    assign c$eta_app_arg_0[(7 - 1 - i_16)*1+:1] = status_in_0[i_16*1+:1];
+  for (i_6 = 0; i_6 < 7; i_6 = i_6 + 1) begin : reverse_5
+    assign c$eta_app_arg_0[(7 - 1 - i_6)*1+:1] = status_in_0[i_6*1+:1];
   end
   endgenerate
   // reverse end
@@ -464,10 +382,10 @@ module alu
   assign c$eta_app_arg_1 = c$eta_app_arg_2[10:10];
 
   // reverse begin
-  genvar i_17;
+  genvar i_7;
   generate
-  for (i_17 = 0; i_17 < 18; i_17 = i_17 + 1) begin : reverse_16
-    assign c$eta_app_arg_2[(18 - 1 - i_17)*1+:1] = cntl_0[i_17*1+:1];
+  for (i_7 = 0; i_7 < 18; i_7 = i_7 + 1) begin : reverse_6
+    assign c$eta_app_arg_2[(18 - 1 - i_7)*1+:1] = cntl_0[i_7*1+:1];
   end
   endgenerate
   // reverse end
