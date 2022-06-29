@@ -14,7 +14,7 @@ let
 in with pkgs; stdenv.mkDerivation {
   name = "sholva-dev";
 
-  nativeBuildInputs = [ clash verilog ruby ];
+  nativeBuildInputs = [ clash verilog verilator ruby ];
 
   src = ./.;
 }
