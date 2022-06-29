@@ -86,43 +86,38 @@ status status_in op0 op1 stat_result cntl =
   Nil
   where
     result = pack stat_result
-    stat_of =
-      case (of_no_wr, alu_clear_of, aluOp_sub) of
-        (True, _, _) -> status_in !!> STAT_CF
-        (_, True, _) -> low
-        (_, _, True) ->
-          (complement (head op0) .&. head op1 .&. head stat_result) .|.
-          (head op0 .&. complement (head op1) .&. complement (head stat_result))
-        _ ->
-          (head op0 .&. head op1 .&. complement (head stat_result)) .|.
-          (complement (head op0) .&. complement (head op1) .&. head stat_result)
+    stat_of
+      | of_no_wr = status_in !!> STAT_CF
+      | alu_clear_of = low
+      | alu_op_sub =
+        (complement (head op0) .&. head op1 .&. head stat_result) .|.
+        (head op0 .&. complement (head op1) .&. complement (head stat_result))
+      | otherwise =
+        (head op0 .&. head op1 .&. complement (head stat_result)) .|.
+        (complement (head op0) .&. complement (head op1) .&. head stat_result)
       where
         alu_clear_of = bitToBool $ cntl !!> ALU_CLEAR_OF
-        aluOp_sub = bitToBool $ cntl !!> ALU_OP_SUB
-    stat_sf =
-      if sf_no_wr
-        then status_in !!> STAT_SF
-        else stat_result !! (1 :: Int)
-    stat_zf =
-      if zf_no_wr
-        then status_in !!> STAT_ZF
-        else boolToBit (result == 0)
-    stat_pf =
-      if pf_no_wr
-        then status_in !!> STAT_PF
-        else (complement . reduceXor) (slice d7 d0 result)
-    stat_cf =
-      case (cf_no_wr, alu_clear_cf) of
-        (True, _) -> status_in !!> STAT_CF
-        (_, True) -> low
-        _ -> head stat_result
+        alu_op_sub = bitToBool $ cntl !!> ALU_OP_SUB
+    stat_sf
+      | sf_no_wr = status_in !!> STAT_SF
+      | otherwise = stat_result !! (1 :: Int)
+    stat_zf
+      | zf_no_wr = status_in !!> STAT_ZF
+      | otherwise = boolToBit (result == 0)
+    stat_pf
+      | pf_no_wr = status_in !!> STAT_PF
+      | otherwise = (complement . reduceXor) (slice d7 d0 result)
+    stat_cf
+      | cf_no_wr = status_in !!> STAT_CF
+      | alu_clear_cf = low
+      | otherwise = head stat_result
       where
         alu_clear_cf = bitToBool $ cntl !!> ALU_CLEAR_CF
-    stat_af =
-      if af_no_wr
-        then status_in !!> STAT_AF
-        else (op0 !!> (4 :: Int)) `xor` (op1 !!> (4 :: Int)) `xor`
-             (stat_result !!> (4 :: Int))
+    stat_af
+      | af_no_wr = status_in !!> STAT_AF
+      | otherwise =
+        (op0 !!> (4 :: Int)) `xor` (op1 !!> (4 :: Int)) `xor`
+        (stat_result !!> (4 :: Int))
     stat_df = status_in !!> STAT_DF
     -- flags
     -- FIXME(jl): learn where to use `where ...` vs `let ... in ...` for these misc bindings
