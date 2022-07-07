@@ -16,6 +16,7 @@ alu (cntl, status_in, opnd0_r, opnd1_r) = (status_out, result)
     op0, op1 :: Signal System Register
     op0 = bitCoerce <$> opnd0_r
     op1 = bitCoerce <$> opnd1_r
+    -- (stat_df :> stat_af :> stat_cf :> stat_pf :> stat_zf :> stat_sf :> stat_of :> Nil) = status_in
     carry_in :: Signal System Bit
     carry_in = ((!!> ALU_USE_CARRY) <$> cntl) * ((!!> STAT_CF) <$> status_in)
     stat_result :: Signal System (Vec 33 Bit)
