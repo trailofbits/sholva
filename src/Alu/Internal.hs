@@ -1,4 +1,4 @@
-{-# LANGUAGE DataKinds #-}
+{-# LANGUAGE DataKinds, TypeFamilies #-}
 
 module Alu.Internal
   ( aluOp
@@ -94,15 +94,7 @@ status status_in@(stat_df :> stat_af :> stat_cf :> stat_pf :> stat_zf :> stat_sf
   Nil
   where
     result = pack stat_result
-    flag_of
-      | bitToBool of_no_wr = stat_cf
-      | bitToBool alu_clear_of = low
-      | bitToBool alu_op_sub =
-        (complement (head op0) .&. head op1 .&. head stat_result) .|.
-        (head op0 .&. complement (head op1) .&. complement (head stat_result))
-      | otherwise =
-        (head op0 .&. head op1 .&. complement (head stat_result)) .|.
-        (complement (head op0) .&. complement (head op1) .&. head stat_result)
+    flag_of = low
     flag_sf
       | bitToBool sf_no_wr = stat_sf
       | otherwise = stat_result !! (1 :: Int)

@@ -58,7 +58,7 @@ clean:
 	rm -rf verilog/
 
 verilog/%.v: src/%.hs
-	clash -isrc $^ --verilog
+	clash -isrc -fclash-clear $^ --verilog
 
 circuit/execute/alu.v: verilog/Alu.v
 	@echo "overwriting with compiled clash"
