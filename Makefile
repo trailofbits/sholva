@@ -54,9 +54,10 @@ clean:
 	$(MAKE) -C circuit/test clean
 	rm -rf verilog/
 
-verilog/Alu.alu/%.v: src/%.hs
+verilog/Alu.alu/alu.v: src/Alu.hs
 	clash -isrc -fclash-clear $^ --verilog
+	sed -i '/timescale/d' $@
 
-circuit/execute/alu.v: verilog/Alu.alu/Alu.v
+circuit/execute/alu.v: verilog/Alu.alu/alu.v
 	@echo "overwriting with compiled clash"
-	cp verilog/Alu.alu/alu.v $@
+	mv verilog/Alu.alu/alu.v $@
