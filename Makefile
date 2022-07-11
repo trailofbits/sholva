@@ -41,26 +41,22 @@ lint:
 
 check: _check-verilog _check-haskell
 
-.PHONY: check-verilog
+.PHONY: _check-verilog
 _check-verilog:
 	@$(MAKE) V=1 -C circuit/test check
 
-.PHONY: check-haskell
+.PHONY: _check-haskell
 _check-haskell:
 	runghc -isrc -itest test/Main.hs
-
-.PHONY: test
-test:
 
 .PHONY: clean
 clean:
 	$(MAKE) -C circuit/test clean
 	rm -rf verilog/
 
-verilog/%.v: src/%.hs
+verilog/Alu.alu/%.v: src/%.hs
 	clash -isrc -fclash-clear $^ --verilog
 
-circuit/execute/alu.v: verilog/Alu.v
+circuit/execute/alu.v: verilog/Alu.alu/Alu.v
 	@echo "overwriting with compiled clash"
-	# move to prevent duplicates with `find . -name "*.v"` (hack)
-	mv verilog/Alu.alu/alu.v $@
+	cp verilog/Alu.alu/alu.v $@

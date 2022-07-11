@@ -35,7 +35,5 @@ jobs:
       run: nix-shell --run "make"
     - name: test
       run: nix-shell --run "make check"
-    - name: stat
-      run: nix-shell --run "make stat"
     - name: lint
       run: nix-shell --run "make lint"
