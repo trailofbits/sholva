@@ -1,14 +1,12 @@
 let
-  # change to nixos/nixpkgs after the following is merged
-  # https://github.com/NixOS/nixpkgs/pull/178868
   pkgs = import (builtins.fetchTarball {
-    name = "nixpkgs-unstable-arcz-fix-clash";
-    url = "https://github.com/arcz/nixpkgs/archive/cad3ae120f5c9e4fd9c6cc2236f82c64b6f8fda8.tar.gz";
-    sha256 = "sha256:0wmjqx0yjp96fcdz9fjjfllb93kaxb9hzi9ikrzaapn2zdwrbl7a";
+    name = "nixpkgs-unstable-2022-07-19";
+    url = "https://github.com/nixos/nixpkgs/archive/2df37941652c28e0858b9a9520ce5763c43c2ec1.tar.gz";
+    sha256 = "sha256:12d5w1bvhjlxrvdhsc44gq1lv5s3z1lv18s39q1702hwmp2bz071";
   }) {};
 
   clash = pkgs.haskellPackages.ghcWithPackages (p: with p; [
-    clash-lib clash-ghc clash-prelude hindent hlint tasty
+    clash-lib clash-ghc clash-prelude hindent hlint
   ]);
 
 in with pkgs; stdenv.mkDerivation {
