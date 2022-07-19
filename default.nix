@@ -6,7 +6,7 @@ let
   }) {};
 
   clash = pkgs.haskellPackages.ghcWithPackages (p: with p; [
-    clash-lib clash-ghc clash-prelude hindent hlint tasty
+    clash-lib clash-ghc clash-prelude hindent hlint
   ]);
 
 in with pkgs; stdenv.mkDerivation {
