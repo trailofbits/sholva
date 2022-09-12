@@ -22,11 +22,14 @@ all: codegen $(ALL_V) $(CLASH_VERILOG)
 .PHONY: netlistify
 netlistify: tiny86.blif
 
-tiny86.blif: codegen
+tiny86.blif:
 	sv-netlist $(IFLAGS) --top tiny86 $@ $(ALL_V_WITHOUT_TESTS_OR_CODEGEN)
 
+tiny86.bristol: tiny86.blif
+	sv-compositor -b $^ -o $@
+
 .PHONY: stat
-stat: codegen
+stat:
 	sv-stat $(IFLAGS) --top tiny86 $(ALL_V_WITHOUT_TESTS_OR_CODEGEN)
 
 .PHONY: codegen
