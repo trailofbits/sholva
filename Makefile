@@ -26,7 +26,8 @@ tiny86.blif:
 	sv-netlist $(IFLAGS) --top tiny86 $@ $(ALL_V_WITHOUT_TESTS_OR_CODEGEN)
 
 tiny86.bristol: tiny86.blif
-	sv-compositor -b $^ -o $@
+	# use a test trace as witness.
+	cat circuit/test/alu_add.trace.txt | head -n1 | sv-compositor -b $^ -o $@ -w /dev/stdin
 
 .PHONY: stat
 stat:
