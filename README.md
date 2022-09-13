@@ -27,7 +27,14 @@ If you have `sv-netlist` on your PATH, you can build a BLIF-formatted netlist:
 
 ```bash
 # creates tiny86.blif
-$ nix-shell --run "make netlistify"
+$ nix-shell --run "make tiny86.blif"
+```
+
+or with `sv-compositor` a Bristol-formatted netlist:
+
+```bash
+# creates tiny86.bristol
+$ nix-shell --run "make tiny86.bristol"
 ```
 
 Independently, you can run *shol'va*'s self tests:
