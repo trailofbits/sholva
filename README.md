@@ -5,21 +5,14 @@ shol'va <img src="https://user-images.githubusercontent.com/3059210/147595717-ec
 
 [![Build Status](https://github.com/trailofbits/sholva/actions/workflows/ci.yml/badge.svg)](https://github.com/trailofbits/sholva/actions?query=workflow%3ACI)
 
-*shol'va* is a Verilog implementation of a Tiny86 trace verifier.
+*shol'va* is a Verilog and [Clash](https://clash-lang.org/) implementation of a Tiny86 trace verifier.
 
 ## Usage
 
 ### Dependencies
 
-*shol'va* currently depends on iVerilog, Verilator, Python 3; and Ruby and [Stack](https://docs.haskellstack.org/en/stable/README/) for code generation.
-
-```sh
-$ apt install iverilog veriloator python3 ruby
-# consult stack documentation for most recent installation instructions, as of now:
-$ curl -sSL https://get.haskellstack.org/ | sh
-```
-
-These must be available as `iverilog`, `verilator`, `python3`, `ruby`, and `stack` respectively.
+Built using [nix](https://nixos.wiki/wiki/Nix_package_manager).
+Follow the upstream [nix installation instructions](https://nixos.org/download.html).
 
 ### Building
 
@@ -27,14 +20,21 @@ These must be available as `iverilog`, `verilator`, `python3`, `ruby`, and `stac
 To run the build:
 
 ```bash
-$ make
+$ nix-shell --run "make"
 ```
 
 If you have `sv-netlist` on your PATH, you can build a BLIF-formatted netlist:
 
 ```bash
 # creates tiny86.blif
-$ make netlistify
+$ nix-shell --run "make tiny86.blif"
+```
+
+or with `sv-compositor` a Bristol-formatted netlist:
+
+```bash
+# creates tiny86.bristol
+$ nix-shell --run "make tiny86.bristol"
 ```
 
 Independently, you can run *shol'va*'s self tests:
@@ -42,13 +42,13 @@ Independently, you can run *shol'va*'s self tests:
 ```bash
 $ make check
 # or limit the checks to a subset
-$ make check CHECKS="alu fetch execute"
+$ CHECKS="alu fetch execute" nix-shell --run "make check"
 ```
 
 You can also run *shol'va*'s modules through Verilator's linter.
 
 ```bash
-$ make lint
+$ nix-shell --run "make lint"
 ```
 
 ## Distribution and Licensing

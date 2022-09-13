@@ -19,9 +19,6 @@ all: codegen $(ALL_V) $(CLASH_VERILOG)
 		-ycircuit/execute \
 		-t null check.v
 
-.PHONY: netlistify
-netlistify: tiny86.blif
-
 tiny86.blif:
 	sv-netlist $(IFLAGS) --top tiny86 $@ $(ALL_V_WITHOUT_TESTS_OR_CODEGEN)
 
