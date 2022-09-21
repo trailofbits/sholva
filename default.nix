@@ -6,13 +6,23 @@ let
   }) {};
 
   clash = pkgs.haskellPackages.ghcWithPackages (p: with p; [
-    clash-lib clash-ghc clash-prelude hindent hlint
+    clash-lib clash-ghc clash-prelude
+    haskell-language-server
+    hindent
+    hlint
   ]);
 
 in with pkgs; stdenv.mkDerivation {
   name = "sholva-dev";
 
-  nativeBuildInputs = [ clash verilog verilator ruby ];
+  nativeBuildInputs = [
+    clash
+    git # `hlint -g` lints from what's checked-in to git.
+    python3
+    ruby
+    verilator
+    verilog
+  ];
 
   src = ./.;
 }

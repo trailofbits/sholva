@@ -5,10 +5,11 @@ IFLAGS := -Icircuit -Icircuit/include
 ALL_V := $(shell find . -name "*.v")
 ALL_V_WITHOUT_TESTS_OR_CODEGEN := $(shell \
 	find . -type f -name '*.v' \
+		! -path '*verilog/*' \
 		! -path '*/test/*' \
 		! -name '*.gen.v' \
 )
-CLASH_VERILOG = circuit/execute/alu.v
+CLASH_VERILOG = circuit/execute/alu.v circuit/execute/syscall.v
 
 
 .PHONY: all
@@ -43,6 +44,7 @@ lint:
 	verilator --top-module $(TOP_MODULE) --lint-only $(IFLAGS) $(ALL_V_WITHOUT_TESTS_OR_CODEGEN)
 	hlint -g
 
+.PHONY: check
 check: _check-verilog _check-haskell
 
 .PHONY: _check-verilog
@@ -57,11 +59,12 @@ _check-haskell:
 clean:
 	$(MAKE) -C circuit/test clean
 	rm -rf verilog/
+	rm -f $(CLASH_VERILOG)
 
-verilog/Alu.alu/alu.v: src/Alu.hs
+circuit/execute/alu.v: src/Alu.hs
 	clash -isrc -fclash-clear $^ --verilog
-	sed -i '/timescale/d' $@
+	sed '/timescale/d' verilog/Alu.alu/alu.v > circuit/execute/alu.v
 
-circuit/execute/alu.v: verilog/Alu.alu/alu.v
-	@echo "overwriting with compiled clash"
-	mv verilog/Alu.alu/alu.v $@
+circuit/execute/syscall.v: src/Syscall.hs
+	clash -isrc -fclash-clear $^ --verilog
+	sed '/timescale/d' verilog/Syscall.syscall/syscall.v > circuit/execute/syscall.v
