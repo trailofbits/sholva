@@ -128,6 +128,7 @@ wire [31:0] opnd1_w;
 
 execute execute_x(
   .opc(opc),
+  .eax(eax),
   .eflags(eflags),
   .ecx_is_zero(ecx_is_zero),
   .eip(eip),
