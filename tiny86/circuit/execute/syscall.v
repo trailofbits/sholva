@@ -3,15 +3,32 @@
 */
 module syscall
     ( // Inputs
-      input [31:0] eax
-
+      input [31:0] i_eax
+    , input [31:0] i_ebx
+    , input [31:0] i_ecx
+    , input [3:0] i_syscall_state
 
       // Outputs
-    , output wire  out
+    , output wire [31:0] o_eax
+    , output wire [31:0] o_ebx
+    , output wire [31:0] o_ecx
+    , output wire [3:0] o_syscall_state
     );
+  wire [99:0] ds;
+  wire [99:0] result;
 
+  assign ds = {i_eax,   i_ebx,   i_ecx,
+               i_syscall_state};
 
-  assign out = {1 {1'bx}};
+  assign result = {100 {1'bx}};
+
+  assign o_eax = result[99:68];
+
+  assign o_ebx = result[67:36];
+
+  assign o_ecx = result[35:4];
+
+  assign o_syscall_state = result[3:0];
 
 
 endmodule

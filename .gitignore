@@ -16,3 +16,4 @@ verilog/
 *.hi
 *.o
 dist-newstyle/
+.ghc.*
