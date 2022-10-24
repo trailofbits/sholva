@@ -4,11 +4,6 @@
 module execute(
   input [6:0] opc,
 
-  // NOTE(jl): registers threaded for syscall arguments.
-  input [31:0] eax,
-  input [31:0] ebx,
-  input [31:0] ecx,
-
   input [31:0] eflags,
   input ecx_is_zero,
   input [31:0] eip,
