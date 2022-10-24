@@ -60,8 +60,8 @@ clean:
 
 circuit/execute/alu.v: src/Alu.hs
 	clash -isrc -fclash-clear $^ --verilog
-	sed '/timescale/d' verilog/Alu.alu/alu.v > circuit/execute/alu.v
+	sed '/timescale/d' verilog/Alu.top/alu.v > circuit/execute/alu.v
 
 circuit/execute/syscall.v: src/Syscall.hs
 	clash -isrc -fclash-clear $^ --verilog
-	sed '/timescale/d' verilog/Syscall.syscall/syscall.v > circuit/execute/syscall.v
+	sed '/timescale/d' verilog/Syscall.top/syscall.v > circuit/execute/syscall.v

@@ -4,14 +4,14 @@ import Alu.Internal
 import Clash.Annotations.TH
 import Clash.Prelude
 
-alu ::
+top ::
      ( "cntl" ::: Signal System ControlWord
      , "status_in" ::: Signal System (Vec 7 Bit)
      , "opnd0_r" ::: Signal System (Vec 32 Bit)
      , "opnd1_r" ::: Signal System (Vec 32 Bit))
   -> ( "status_out" ::: Signal System (Vec 7 Bit)
      , "result" ::: Signal System (Vec 32 Bit))
-alu (cntl, status_in, opnd0_r, opnd1_r) = (status_out, result)
+top (cntl, status_in, opnd0_r, opnd1_r) = (status_out, result)
   where
     op0, op1 :: Signal System Register
     op0 = bitCoerce <$> opnd0_r
@@ -29,4 +29,4 @@ alu (cntl, status_in, opnd0_r, opnd1_r) = (status_out, result)
     status_out =
       status <$> status_in <*> opnd0_r <*> opnd1_r <*> stat_result <*> cntl
 
-makeTopEntityWithName 'alu "alu"
+makeTopEntityWithName 'top "alu"
