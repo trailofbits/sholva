@@ -4470,6 +4470,29 @@
         ]
     },
     {
+        "cmd": "CMD_INT",
+        "encs": [
+            {
+                "disp_is_rel": false,
+                "esc": false,
+                "ext": null,
+                "ib": true,
+                "iw_or_id": false,
+                "num_opnds": 1,
+                "op_enc": "I",
+                "opc": 205,
+                "opc_reg_bits": false,
+                "opnd0_mode": "r",
+                "opnd1_mode": "x",
+                "opnd2_mode": "x",
+                "opnd_count": 1,
+                "rb": false,
+                "rw_or_rd": false,
+                "source_sign_ext": "Z"
+            }
+        ]
+    },
+    {
         "cmd": "CMD_JMPi",
         "encs": [
             {

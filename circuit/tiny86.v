@@ -42,6 +42,7 @@ fetch fetch_x(
 
 // Decode hints.
 wire hint1_valid;
+wire [3:0] hint1_syscall_state;
 wire [1:0] hint1_mask;
 wire hint1_is_write;
 wire [31:0] hint1_address;
@@ -51,6 +52,7 @@ decode_hint decode_hint1(
   .raw_hint(raw_hint1),
 
   .valid_hint(hint1_valid),
+  .syscall_state(hint1_syscall_state),
   .mask(hint1_mask),
   .is_write(hint1_is_write),
   .address(hint1_address),
@@ -58,6 +60,7 @@ decode_hint decode_hint1(
 );
 
 wire hint2_valid;
+wire [3:0] hint2_syscall_state;
 wire [1:0] hint2_mask;
 wire hint2_is_write;
 wire [31:0] hint2_address;
@@ -67,6 +70,7 @@ decode_hint decode_hint2(
   .raw_hint(raw_hint2),
 
   .valid_hint(hint2_valid),
+  .syscall_state(hint2_syscall_state),
   .mask(hint2_mask),
   .is_write(hint2_is_write),
   .address(hint2_address),
@@ -143,8 +147,26 @@ execute execute_x(
   .opnd1_w(opnd1_w)
 );
 
+// Syscall.
+
+// FIXME(jl): how to integrate these with state in hints.
+wire [3:0] i_syscall_state;
+wire [3:0] o_syscall_state;
+
+syscall syscall_x(
+    .i_eax(eax),
+    .i_ebx(ebx),
+    .i_ecx(ecx),
+    .i_syscall_state(i_syscall_state),
+    .o_eax(o_eax),
+    .o_ebx(o_ebx),
+    .o_ecx(o_ecx),
+    .o_syscall_state(o_syscall_state)
+);
+
 // Register writeback + updates.
 
+// TODO(jl): the register file needs to swap 'ignore' the execute unit in the case of a syscall.
 regfile regfile_x(
   .i_eax(eax),
   .i_ebx(ebx),

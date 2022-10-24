@@ -181,6 +181,9 @@ CMD_RCR:D0/3+rb~M~W1,D2/3+rb~MC~Wr,C0/3+rb+ib~MI~Wr,D1/3~M~W1,D3/3~MC~Wr,C1/3+ib
 CMD_CALLr:E8~D32r~r
 CMD_CALLi:FF/2~M~r
 
+# NOTE(jl): interrupt opcodes: `INT3`, `INT imm8`, `INTO`, `INT1`. only supporting the general software interrupt `INT imm8`.
+CMD_INT:CD+ib~I~r
+
 # NOTE(ww): This is down here so as not to muck up the implicit numbering.
 CMD_JMPi:FF/4~M~r
 

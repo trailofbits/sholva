@@ -3,7 +3,12 @@
 
 module execute(
   input [6:0] opc,
-  input [31:0] eax, // FIXME(jl): temporary for syscall dev
+
+  // NOTE(jl): registers threaded for syscall arguments.
+  input [31:0] eax,
+  input [31:0] ebx,
+  input [31:0] ecx,
+
   input [31:0] eflags,
   input ecx_is_zero,
   input [31:0] eip,
@@ -230,24 +235,6 @@ wire [31:0] alu_eflags = {
 ///
 /// END ALU
 ///
-
-///
-/// BEGIN SYSCALL
-///
-
-// wire exe_is_syscall = opc_1hot[`CMD_INT];
-
-wire _dummy; // FIXME(jl): unsure of syscall module signature.
-
-syscall syscall_x(
-    .eax(eax),
-    .out(_dummy)
-);
-
-///
-/// END SYSCALL
-///
-
 
 ///
 /// BEGIN MOVE UNIT

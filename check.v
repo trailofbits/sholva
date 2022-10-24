@@ -1,3 +1,4 @@
+`default_nettype none
 module check(
   input [559:0] step0,
   input [559:0] step1,
