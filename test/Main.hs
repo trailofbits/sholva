@@ -1,10 +1,14 @@
 {-# LANGUAGE BinaryLiterals, TemplateHaskell #-}
 
-import PropAlu
-import Test.QuickCheck
 import Control.Monad (void)
+
+import PropAlu
+import PropSyscall
 
 return []
 
 main :: IO ()
-main = void check 
+main = do
+    void PropAlu.check
+    void PropSyscall.check
+    return ()

@@ -50,7 +50,7 @@ _check-verilog:
 
 .PHONY: _check-haskell
 _check-haskell:
-	runghc -isrc -itest test/Main.hs
+	runghc -isrc -itest -Wall test/Main.hs
 
 .PHONY: clean
 clean:
@@ -58,10 +58,10 @@ clean:
 	rm -rf verilog/
 	rm -f $(CLASH_VERILOG)
 
-circuit/execute/alu.v: src/Alu.hs
-	clash -isrc -fclash-clear $^ --verilog
+circuit/execute/alu.v: src/Alu.hs src/Alu/*.hs
+	clash -isrc -fclash-clear $< --verilog
 	sed '/timescale/d' verilog/Alu.top/alu.v > circuit/execute/alu.v
 
-circuit/execute/syscall.v: src/Syscall.hs
-	clash -isrc -fclash-clear $^ --verilog
+circuit/execute/syscall.v: src/Syscall.hs src/Syscall/*.hs
+	clash -isrc -fclash-clear $< --verilog
 	sed '/timescale/d' verilog/Syscall.top/syscall.v > circuit/execute/syscall.v

@@ -1,5 +1,6 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE DataKinds #-}
+{-# LANGUAGE TypeFamilies #-}
 
 module Syscall.Internal
     ( SyscallState(..)
@@ -17,7 +18,7 @@ module Syscall.Internal
 
 import Clash.Prelude
 
--- FIXME(jl) gross.
+-- FIXME(jl) gross hack.
 incr :: Vec 32 Bit -> Vec 32 Bit
 incr = bv2v . (+ 1) . bitCoerce
 

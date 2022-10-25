@@ -1,8 +1,9 @@
-{-# LANGUAGE NamedFieldPuns #-}
+{-# LANGUAGE DataKinds #-}
 
 module Syscall.Recieve
     ( syscallRecieveDFA
     ) where
+
 
 import Clash.Prelude
 import Syscall.Internal
