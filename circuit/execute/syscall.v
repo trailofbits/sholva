@@ -15,9 +15,7 @@ module syscall
     , output wire [3:0] o_syscall_state
     );
   wire [96:0] c$case_alt;
-  wire [96:0] c$case_alt_0;
-  wire  c$case_scrut;
-  wire [31:0] c$app_arg;
+  reg [96:0] c$case_alt_0;
   reg [96:0] result_0;
   wire [3:0] c$case_alt_1;
   // src/Syscall.hs:23:1-3
@@ -28,15 +26,15 @@ module syscall
   wire [31:0] i_ecx_0;
   // src/Syscall.hs:23:1-3
   wire [3:0] i_state;
-  // src/Syscall/Internal.hs:66:1-15
+  // src/Syscall/Internal.hs:80:1-15
   wire [2:0] scrut;
   wire [0:0] result_1;
-  // src/Syscall/Internal.hs:66:1-15
+  // src/Syscall/Internal.hs:80:1-15
   wire [1:0] scrut1;
   wire [0:0] result_2;
-  // src/Syscall/Internal.hs:66:1-15
+  // src/Syscall/Internal.hs:80:1-15
   wire [0:0] scrut2;
-  // src/Syscall/Internal.hs:66:1-15
+  // src/Syscall/Internal.hs:80:1-15
   wire  ds1;
   wire [0:0] result_3;
   wire [0:0] c$case_alt_2;
@@ -44,9 +42,6 @@ module syscall
   // src/Syscall.hs:23:1-3
   reg [2:0] ds1_0;
   wire [99:0] ds;
-  wire [31:0] c$app_arg_res;
-  wire [31:0] c$vec;
-  wire [31:0] ds1_selection_res;
   wire [99:0] result;
 
   assign ds = {i_eax,   i_ebx,   i_ecx,
@@ -55,303 +50,16 @@ module syscall
   assign c$case_alt = result_4 ? c$case_alt_0 : {i_eax_0,
                                                  i_ebx_0,   i_ecx_0,   result_4};
 
-  assign c$case_alt_0 = c$case_scrut ? {i_eax_0,
-                                        i_ebx_0,   i_ecx_0,   1'd0} : {i_eax_0,
-                                                                       (((((i_ebx_0))) + 32'b00000000000000000000000000000001)),
-                                                                       (((((i_ecx_0))) + 32'b11111111111111111111111111111111)),
-                                                                       1'd1};
-
-  wire [31:0] vec;
-  wire  acc_5_0;
-  wire  acc_1;
-  wire  acc_2;
-  wire  acc_3;
-  wire  acc_4;
-  wire  acc_5;
-  wire  acc_6;
-  wire  acc_7;
-  wire  acc_8;
-  wire  acc_9;
-  wire  acc_10;
-  wire  acc_11;
-  wire  acc_12;
-  wire  acc_13;
-  wire  acc_14;
-  wire  acc_15;
-  wire  acc_16;
-  wire  acc_17;
-  wire  acc_18;
-  wire  acc_19;
-  wire  acc_20;
-  wire  acc_21;
-  wire  acc_22;
-  wire  acc_23;
-  wire  acc_24;
-  wire  acc_25;
-  wire  acc_26;
-  wire  acc_27;
-  wire  acc_28;
-  wire  acc_29;
-  wire  acc_30;
-  wire  acc_31;
-  wire  acc_32;
-  wire  acc_1_0;
-  wire  acc_1_1;
-  wire  acc_1_2;
-  wire  acc_1_3;
-  wire  acc_1_4;
-  wire  acc_1_5;
-  wire  acc_1_6;
-  wire  acc_1_7;
-  wire  acc_1_8;
-  wire  acc_1_9;
-  wire  acc_1_10;
-  wire  acc_1_11;
-  wire  acc_1_12;
-  wire  acc_1_13;
-  wire  acc_1_14;
-  wire  acc_1_15;
-  wire  acc_2_0;
-  wire  acc_2_1;
-  wire  acc_2_2;
-  wire  acc_2_3;
-  wire  acc_2_4;
-  wire  acc_2_5;
-  wire  acc_2_6;
-  wire  acc_2_7;
-  wire  acc_3_0;
-  wire  acc_3_1;
-  wire  acc_3_2;
-  wire  acc_3_3;
-  wire  acc_4_0;
-  wire  acc_4_1;
-  assign c$case_scrut = acc_5_0;
-
-  assign vec = c$app_arg;
-
-  assign acc_1 = vec[31:31];
-
-  assign acc_2 = vec[30:30];
-
-  assign acc_3 = vec[29:29];
-
-  assign acc_4 = vec[28:28];
-
-  assign acc_5 = vec[27:27];
-
-  assign acc_6 = vec[26:26];
-
-  assign acc_7 = vec[25:25];
-
-  assign acc_8 = vec[24:24];
-
-  assign acc_9 = vec[23:23];
-
-  assign acc_10 = vec[22:22];
-
-  assign acc_11 = vec[21:21];
-
-  assign acc_12 = vec[20:20];
-
-  assign acc_13 = vec[19:19];
-
-  assign acc_14 = vec[18:18];
-
-  assign acc_15 = vec[17:17];
-
-  assign acc_16 = vec[16:16];
-
-  assign acc_17 = vec[15:15];
-
-  assign acc_18 = vec[14:14];
-
-  assign acc_19 = vec[13:13];
-
-  assign acc_20 = vec[12:12];
-
-  assign acc_21 = vec[11:11];
-
-  assign acc_22 = vec[10:10];
-
-  assign acc_23 = vec[9:9];
-
-  assign acc_24 = vec[8:8];
-
-  assign acc_25 = vec[7:7];
-
-  assign acc_26 = vec[6:6];
-
-  assign acc_27 = vec[5:5];
-
-  assign acc_28 = vec[4:4];
-
-  assign acc_29 = vec[3:3];
-
-  assign acc_30 = vec[2:2];
-
-  assign acc_31 = vec[1:1];
-
-  assign acc_32 = vec[0:0];
-
-  assign acc_1_0 = acc_1 & acc_2;
-
-
-
-  assign acc_1_1 = acc_3 & acc_4;
-
-
-
-  assign acc_1_2 = acc_5 & acc_6;
-
-
-
-  assign acc_1_3 = acc_7 & acc_8;
-
-
-
-  assign acc_1_4 = acc_9 & acc_10;
-
-
-
-  assign acc_1_5 = acc_11 & acc_12;
-
-
-
-  assign acc_1_6 = acc_13 & acc_14;
-
-
-
-  assign acc_1_7 = acc_15 & acc_16;
-
-
-
-  assign acc_1_8 = acc_17 & acc_18;
-
-
-
-  assign acc_1_9 = acc_19 & acc_20;
-
-
-
-  assign acc_1_10 = acc_21 & acc_22;
-
-
-
-  assign acc_1_11 = acc_23 & acc_24;
-
-
-
-  assign acc_1_12 = acc_25 & acc_26;
-
-
-
-  assign acc_1_13 = acc_27 & acc_28;
-
-
-
-  assign acc_1_14 = acc_29 & acc_30;
-
-
-
-  assign acc_1_15 = acc_31 & acc_32;
-
-
-
-  assign acc_2_0 = acc_1_0 & acc_1_1;
-
-
-
-  assign acc_2_1 = acc_1_2 & acc_1_3;
-
-
-
-  assign acc_2_2 = acc_1_4 & acc_1_5;
-
-
-
-  assign acc_2_3 = acc_1_6 & acc_1_7;
-
-
-
-  assign acc_2_4 = acc_1_8 & acc_1_9;
-
-
-
-  assign acc_2_5 = acc_1_10 & acc_1_11;
-
-
-
-  assign acc_2_6 = acc_1_12 & acc_1_13;
-
-
-
-  assign acc_2_7 = acc_1_14 & acc_1_15;
-
-
-
-  assign acc_3_0 = acc_2_0 & acc_2_1;
-
-
-
-  assign acc_3_1 = acc_2_2 & acc_2_3;
-
-
-
-  assign acc_3_2 = acc_2_4 & acc_2_5;
-
-
-
-  assign acc_3_3 = acc_2_6 & acc_2_7;
-
-
-
-  assign acc_4_0 = acc_3_0 & acc_3_1;
-
-
-
-  assign acc_4_1 = acc_3_2 & acc_3_3;
-
-
-
-  assign acc_5_0 = acc_4_0 & acc_4_1;
-
-
-
-
-
-  assign c$vec = (32'b00000000000000000000000000000000);
-
-  // map begin
-  genvar i;
-  generate
-  for (i=0; i < 32; i = i + 1) begin : map
-    wire [0:0] map_in;
-    assign map_in = c$vec[i*1+:1];
-    wire  map_out;
-    assign map_out = map_in;
-
-
-    assign c$app_arg_res[i*1+:1] = map_out;
+  always @(*) begin
+    case(i_ecx_0)
+      32'b00000000000000000000000000000000 : c$case_alt_0 = {i_eax_0,
+                                                             i_ebx_0,   i_ecx_0,   1'd0};
+      default : c$case_alt_0 = {i_eax_0,
+                                i_ebx_0 + 32'b00000000000000000000000000000001,
+                                i_ecx_0 + 32'b00000000000000000000000000000001,
+                                1'd1};
+    endcase
   end
-  endgenerate
-  // map end
-
-  // zipWith start
-  genvar i_0;
-  generate
-  for (i_0 = 0; i_0 < 32; i_0 = i_0 + 1) begin : zipWith
-    wire  zipWith_in1;
-    assign zipWith_in1 = i_ecx_0[i_0*1+:1];
-    wire  zipWith_in2;
-    assign zipWith_in2 = c$app_arg_res[i_0*1+:1];
-    wire  c$n;
-    assign c$n = zipWith_in1 == zipWith_in2;
-
-
-    assign c$app_arg[i_0*1+:1] = c$n;
-  end
-  endgenerate
-  // zipWith end
 
   always @(*) begin
     case(ds1_0)
@@ -394,10 +102,8 @@ module syscall
 
   assign result_4 = ((i_state[4-1 -: 1]) == 1'b0) ? result_1 : ({1 {1'bx}});
 
-  assign ds1_selection_res = ((i_eax_0));
-
   always @(*) begin
-    case(ds1_selection_res)
+    case(i_eax_0)
       32'b00000000000000000000000000000001 : ds1_0 = 3'd0;
       32'b00000000000000000000000000000010 : ds1_0 = 3'd1;
       32'b00000000000000000000000000000011 : ds1_0 = 3'd2;

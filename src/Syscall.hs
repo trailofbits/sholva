@@ -3,7 +3,6 @@
 
 module Syscall where
 
-
 import Syscall.Internal
 import Syscall.Recieve (syscallRecieveDFA)
 
@@ -12,21 +11,34 @@ import Clash.Prelude
 
 todo = undefined
 
+syscall' :: SyscallDFAState -> Syscall -> SyscallDFAState
+syscall' dfaState =
+    \case
+        SYSCALL_TERMINATE -> todo
+        SYSCALL_TRANSMIT -> todo
+        SYSCALL_RECIEVE -> syscallRecieveDFA dfaState
+        SYSCALL_FDWAIT -> todo
+        SYSCALL_ALLOCATE -> todo
+        SYSCALL_DEALLOCATE -> todo
+        SYSCALL_RANDOM -> todo
+
 top :: ( "i_eax" ::: Signal System SyscallReg
        , "i_ebx" ::: Signal System SyscallReg
        , "i_ecx" ::: Signal System SyscallReg
-       , "i_syscall_state" ::: Signal System (Vec 4 Bit))
+       , "i_syscall_state" ::: Signal System SyscallStateReg)
     -> ( "o_eax" ::: Signal System SyscallReg
        , "o_ebx" ::: Signal System SyscallReg
        , "o_ecx" ::: Signal System SyscallReg
-       , "o_syscall_state" ::: Signal System (Vec 4 Bit))
+       , "o_syscall_state" ::: Signal System SyscallStateReg)
 top (i_eax, i_ebx, i_ecx, i_state) = (o_eax, o_ebx, o_ecx, o_state)
+    -- coerce input into a Syscall.
   where
     syscall :: Signal System Syscall
-    syscall = numSyscall . v2bv <$> i_eax
+    syscall = toEnum . fromEnum <$> i_eax
+    -- coerce input into a SyscallState.
     syscallState :: Signal System SyscallState
-    syscallState = numSyscallState <$> i_state
-    -- the extant state of the DFA.
+    syscallState = toEnum . fromEnum <$> i_state
+    -- restructure the inputs into a SyscallDFAState.
     syscallDFAState :: Signal System SyscallDFAState
     syscallDFAState =
         (\i_eax' i_ebx' i_ecx' state' ->
@@ -37,26 +49,15 @@ top (i_eax, i_ebx, i_ecx, i_state) = (o_eax, o_ebx, o_ecx, o_state)
         i_ecx <*>
         syscallState
     -- compute DFA transition.
-    syscall' :: Signal System SyscallDFAState
-    syscall' =
-        (\dfaState ->
-             \case
-                 SYSCALL_TERMINATE -> todo
-                 SYSCALL_TRANSMIT -> todo
-                 SYSCALL_RECIEVE -> syscallRecieveDFA dfaState
-                 SYSCALL_FDWAIT -> todo
-                 SYSCALL_ALLOCATE -> todo
-                 SYSCALL_DEALLOCATE -> todo
-                 SYSCALL_RANDOM -> todo) <$>
-        syscallDFAState <*>
-        syscall
-    -- pull out fields from DFA transition.
+    syscallDFAState' :: Signal System SyscallDFAState
+    syscallDFAState' = syscall' <$> syscallDFAState <*> syscall
+    -- destructure fields from computed DFA transition.
     o_eax, o_ebx, o_ecx :: Signal System SyscallReg
-    o_eax = eax <$> syscall'
-    o_ebx = ebx <$> syscall'
-    o_ecx = ecx <$> syscall'
-    o_state :: Signal System (Vec 4 Bit)
-    o_state = syscallStateNum . state <$> syscall'
+    o_eax = eax <$> syscallDFAState'
+    o_ebx = ebx <$> syscallDFAState'
+    o_ecx = ecx <$> syscallDFAState'
+    o_state :: Signal System SyscallStateReg
+    o_state = toEnum . fromEnum . state <$> syscallDFAState'
 
 -- https://github.com/commercialhaskell/stackage/issues/5926#issuecomment-804695718
 makeTopEntityWithName 'top "syscall"
