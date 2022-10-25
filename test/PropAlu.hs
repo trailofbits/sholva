@@ -25,9 +25,7 @@ prop_alu_add_idempotent r =
 prop_alu_and_idempotent :: Register -> Bool
 prop_alu_and_idempotent r = aluOp r 0 low (unpack 0b000000000000000100) == 0
 
-{-
-    STATUS TESTS
--}
+-- QUICKCHECK
 return []
-
+check :: IO Bool
 check = $quickCheckAll
