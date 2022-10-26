@@ -157,8 +157,8 @@ execute execute_x(
 
 wire [7:0] syscall_state_o;
 wire [7:0] syscall_state = {hint1_syscall_state, hint2_syscall_state}; // FIXME(jl): using the hints like this means the tracer will have to insert 'dummy' hints for odd numbers.
-wire [64:0] hint_data = {hint1_data, hint2_data};
-wire [64:0] hint_address = {hint1_address, hint2_address}; // FIXME(jl): endianness can only be divined not derived
+wire [63:0] hint_data = {hint1_data, hint2_data};
+wire [63:0] hint_address = {hint1_address, hint2_address}; // FIXME(jl): endianness can only be divined not derived
 
 wire is_syscall = syscall_state != 8'b0;
 
@@ -182,7 +182,7 @@ syscall syscall_x(
     .o_syscall_state(o_syscall_state)
 );
 
-wire syscall_finished = o_syscall_state == 4'b0;
+wire syscall_finished = o_syscall_state == 8'b0;
 
 
 // Register writeback + updates.

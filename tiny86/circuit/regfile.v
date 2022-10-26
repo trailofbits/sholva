@@ -5,7 +5,6 @@ module regfile(
   input en,
 
   // Initial GPR/flag states.
-  // We unconditionally modify the EIP and EFLAGS, so no need for them as inputs.
   input [31:0] i_eax, i_ebx, i_ecx, i_edx, i_esi, i_edi, i_esp, i_ebp, i_eip, i_eflags,
 
   // TODO(ww): Maybe special wires to signal stack inc/dec,
@@ -55,7 +54,7 @@ assign o_esp = (en && dest0_kind[`OPND_DEST_REG] && dest0_sel_1hot[`REG_ESP]) ? 
 assign o_ebp = (en && dest0_kind[`OPND_DEST_REG] && dest0_sel_1hot[`REG_EBP]) ? opnd0_w :
                (en && dest1_kind[`OPND_DEST_REG] && dest1_sel_1hot[`REG_EBP]) ? opnd1_w : i_ebp;
 
-assign o_eip = next_eip;
-assign o_eflags = next_eflags;
+assign o_eip = en ? next_eip : i_eip;
+assign o_eflags = en ? next_eflags : i_eflags;
 
 endmodule
