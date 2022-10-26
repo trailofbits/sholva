@@ -6,19 +6,27 @@ module syscall
       input [31:0] i_eax
     , input [31:0] i_ebx
     , input [31:0] i_ecx
-    , input [3:0] i_syscall_state
+    , input [7:0] i_syscall_state
 
       // Outputs
     , output wire [31:0] o_eax
     , output wire [31:0] o_ebx
     , output wire [31:0] o_ecx
-    , output wire [3:0] o_syscall_state
+    , output wire [7:0] o_syscall_state
     );
   // src/Syscall.hs:34:1-3
   reg [2:0] \c$syscallDFAState'_case_alt ;
   reg [97:0] result_0;
+  // src/Syscall/Recieve.hs:12:1-17
+  reg [97:0] \$j ;
+  // src/Syscall/Recieve.hs:12:1-17
+  wire [97:0] c$$j_case_alt;
+  // src/Syscall/Recieve.hs:12:1-17
+  wire [97:0] c$$j_case_alt_0;
+  // src/Syscall/Recieve.hs:12:1-17
+  reg  c$$j_app_arg;
   reg [97:0] result_1;
-  reg [3:0] c$case_alt;
+  reg [7:0] c$case_alt;
   // src/Syscall.hs:34:1-3
   wire [31:0] i_eax_0;
   // src/Syscall.hs:34:1-3
@@ -26,7 +34,7 @@ module syscall
   // src/Syscall.hs:34:1-3
   wire [31:0] i_ecx_0;
   // src/Syscall.hs:34:1-3
-  wire [3:0] i_state;
+  wire [7:0] i_state;
   // src/Syscall/Internal.hs:63:24-27
   wire signed [63:0] x;
   wire [1:0] c$case_alt_0;
@@ -34,16 +42,14 @@ module syscall
   wire [1:0] c$case_alt_1;
   wire  c$case_scrut_0;
   wire [1:0] c$case_alt_2;
-  // src/Syscall/Recieve.hs:12:1-17
-  reg [97:0] \$j ;
-  wire [99:0] ds;
+  wire [103:0] ds;
   wire signed [63:0] \c$syscallDFAState'_case_alt_selection_1 ;
   wire signed [63:0] \c$syscallDFAState'_case_alt_selection_0 ;
   wire [1:0] c$case_alt_selection_1;
   wire signed [63:0] x_projection;
   wire signed [63:0] c$tte_rhs;
   wire signed [63:0] c$tte_rhs_0;
-  wire [99:0] result;
+  wire [103:0] result;
 
   assign ds = {i_eax,   i_ebx,   i_ecx,
                i_syscall_state};
@@ -75,6 +81,31 @@ module syscall
   end
 
   always @(*) begin
+    case(c$case_alt_0)
+      2'b01 : \$j  = {i_eax_0,   i_ebx_0,
+                      i_ecx_0,   c$case_alt_0};
+      default : \$j  = c$$j_case_alt;
+    endcase
+  end
+
+  assign c$$j_case_alt = (c$$j_app_arg & (i_ecx_0 <= 32'b00000000000000000000000000001000)) ? {32'b00000000000000000000000000000000,
+                                                                                               i_ebx_0 + i_ecx_0,
+                                                                                               i_ecx_0 - i_ecx_0,
+                                                                                               2'd0} : c$$j_case_alt_0;
+
+  assign c$$j_case_alt_0 = (c$$j_app_arg & (i_ecx_0 > 32'b00000000000000000000000000001000)) ? {i_eax_0,
+                                                                                                i_ebx_0 + 32'b00000000000000000000000000001000,
+                                                                                                i_ecx_0 - 32'b00000000000000000000000000001000,
+                                                                                                2'd2} : ({98 {1'bx}});
+
+  always @(*) begin
+    case(c$case_alt_0)
+      2'b00 : c$$j_app_arg = 1'b0;
+      default : c$$j_app_arg = 1'b1;
+    endcase
+  end
+
+  always @(*) begin
     case(\c$syscallDFAState'_case_alt )
       3'b010 : result_1 = result_0;
       default : result_1 = {98 {1'bx}};
@@ -85,9 +116,9 @@ module syscall
 
   always @(*) begin
     case(c$case_alt_selection_1)
-      2'b00 : c$case_alt = 4'b0000;
-      2'b01 : c$case_alt = 4'b0001;
-      default : c$case_alt = 4'b0010;
+      2'b00 : c$case_alt = 8'b00000000;
+      2'b01 : c$case_alt = 8'b00000001;
+      default : c$case_alt = 8'b00000010;
     endcase
   end
 
@@ -95,15 +126,15 @@ module syscall
                    result_1[65:34],   result_1[33:2],
                    c$case_alt};
 
-  assign i_eax_0 = ds[99:68];
+  assign i_eax_0 = ds[103:72];
 
-  assign i_ebx_0 = ds[67:36];
+  assign i_ebx_0 = ds[71:40];
 
-  assign i_ecx_0 = ds[35:4];
+  assign i_ecx_0 = ds[39:8];
 
-  assign i_state = ds[3:0];
+  assign i_state = ds[7:0];
 
-  assign x_projection = $unsigned({{(64-4) {1'b0}},i_state});
+  assign x_projection = $unsigned({{(64-8) {1'b0}},i_state});
 
   assign x = x_projection;
 
@@ -121,22 +152,13 @@ module syscall
 
   assign c$case_alt_2 = $unsigned(x);
 
-  always @(*) begin
-    case(c$case_alt_0)
-      2'b00 : \$j  = {98 {1'bx}};
-      2'b01 : \$j  = {i_eax_0,   i_ebx_0,   i_ecx_0,
-                      c$case_alt_0};
-      default : \$j  = {98 {1'bx}};
-    endcase
-  end
+  assign o_eax = result[103:72];
 
-  assign o_eax = result[99:68];
+  assign o_ebx = result[71:40];
 
-  assign o_ebx = result[67:36];
+  assign o_ecx = result[39:8];
 
-  assign o_ecx = result[35:4];
-
-  assign o_syscall_state = result[3:0];
+  assign o_syscall_state = result[7:0];
 
 
 endmodule

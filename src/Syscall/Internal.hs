@@ -62,7 +62,7 @@ data SyscallState
     | SYSCALL_STATE_WRITE -- 2
     deriving (Bounded, Enum, Eq, Show)
 
-type SyscallStateReg = BitVector 4
+type SyscallStateReg = BitVector 8
 
 data SyscallDFAState =
     MkDFAState
