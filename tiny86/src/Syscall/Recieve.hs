@@ -16,8 +16,7 @@ syscallRecieveDFA (MkDFAState { eax = eax'
                               })
     -- recieve length zero; done.
     | ecx' == 0 =
-        MkDFAState
-            {eax = eax', ebx = ebx', ecx = ecx', state = SYSCALL_STATE_DONE}
+        MkDFAState {eax = eax', ebx = ebx', ecx = 0, state = SYSCALL_STATE_DONE}
     -- recieve length nonzero, incrememnt buffer pointer, decrement count.
     | otherwise =
         MkDFAState

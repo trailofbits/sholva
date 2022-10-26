@@ -22,7 +22,7 @@ data Syscall
     | SYSCALL_ALLOCATE
     | SYSCALL_DEALLOCATE
     | SYSCALL_RANDOM
-    deriving (Bounded)
+    deriving (Bounded, Show)
 
 type SyscallReg = BitVector 32
 
@@ -46,9 +46,9 @@ instance Enum Syscall where
     toEnum _ = undefined
 
 data SyscallState
-    = SYSCALL_STATE_DONE
-    | SYSCALL_STATE_READ
-    deriving (Enum)
+    = SYSCALL_STATE_DONE -- 0
+    | SYSCALL_STATE_READ -- 1
+    deriving (Bounded, Enum, Eq, Show)
 
 type SyscallStateReg = BitVector 4
 
@@ -59,6 +59,7 @@ data SyscallDFAState =
         , ecx :: SyscallReg
         , state :: SyscallState
         }
+    deriving (Eq, Show)
 
 -- for the two current register states, apply DFA transition from syscall state to new state.
 type SyscallDFA = SyscallDFAState -> SyscallDFAState
