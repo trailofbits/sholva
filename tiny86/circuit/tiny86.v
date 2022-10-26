@@ -150,21 +150,27 @@ execute execute_x(
 // Syscall.
 
 // NOTE(jl): these must be in sync with definition of SyscallState in src/Syscall/Internal.hs.
-`define SYSCALL_STATE_DONE 0
-`define SYSCALL_STATE_READ 1
+`define SYSCALL_STATE_DONE    0
+`define SYSCALL_STATE_READ    1
+`define SYSCALL_STATE_WRITE   2
 
 // FIXME(jl): how to integrate these with state in hints.
 wire [3:0] i_syscall_state;
 wire [3:0] o_syscall_state;
 
-wire is_syscall       = i_syscall_state == 4'b0;
-wire syscall_finished = o_syscall_state == 4'b0;
+wire is_syscall       = i_syscall_state != 4'b0;
 
-wire is_syscall_state_none = i_syscall_state == `SYSCALL_STATE_DONE;
-wire is_syscall_state_read = i_syscall_state == `SYSCALL_STATE_READ;
+wire is_syscall_state_none  = i_syscall_state == `SYSCALL_STATE_DONE;
+wire is_syscall_state_read  = i_syscall_state == `SYSCALL_STATE_READ;
+wire is_syscall_state_write = i_syscall_state == `SYSCALL_STATE_WRITE;
 
-wire [31:0] data1 = hint1_data;
-wire [31:0] data2 = hint2_data;
+wire [64:0] data = {hint1_data, hint2_data};
+wire [64:0] ptr = {hint1_address, hint2_address}; 
+
+// TODO(jl): RAM integration?
+wire [63:0] _out; // transmit; word read from RAM.
+
+assign _out = is_syscall_state_write ? data : 0;
 
 syscall syscall_x(
     .i_eax(eax),
@@ -177,12 +183,15 @@ syscall syscall_x(
     .o_syscall_state(o_syscall_state)
 );
 
-// FIXME(jl): disable register file writeback.
+wire syscall_finished = o_syscall_state == 4'b0;
+
 
 // Register writeback + updates.
 
+// TODO(jl): disable register file writeback on syscall.
 // TODO(jl): the register file needs to swap 'ignore' the execute unit in the case of a syscall.
 regfile regfile_x(
+  .en(1'b1), // TODO(jl): afaik syscalls can actually leave the register file to its own devices.
   .i_eax(eax),
   .i_ebx(ebx),
   .i_ecx(ecx),
@@ -191,6 +200,8 @@ regfile regfile_x(
   .i_edi(edi),
   .i_esp(esp),
   .i_ebp(ebp),
+  .i_eip(eip),
+  .i_eflags(eflags),
 
   .dest0_kind(dest0_kind),
   .dest1_kind(dest1_kind),

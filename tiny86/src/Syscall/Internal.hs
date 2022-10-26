@@ -53,9 +53,13 @@ instance Enum Syscall where
     toEnum 7 = SYSCALL_RANDOM
     toEnum _ = undefined
 
+-- NOTE(jl): as a convention, assume sholva's perspective.
+-- e.g., the `transmit` syscall, from sholva's view, is _reading_ bytes from memory.
+--       the `recieve`  syscall, from sholva's view, is _writing_ bytes to memory.
 data SyscallState
     = SYSCALL_STATE_DONE -- 0
     | SYSCALL_STATE_READ -- 1
+    | SYSCALL_STATE_WRITE -- 2
     deriving (Bounded, Enum, Eq, Show)
 
 type SyscallStateReg = BitVector 4
