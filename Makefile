@@ -63,5 +63,5 @@ circuit/execute/alu.v: src/Alu.hs src/Alu/*.hs
 	sed '/timescale/d' verilog/Alu.top/alu.v > circuit/execute/alu.v
 
 circuit/execute/syscall.v: src/Syscall.hs src/Syscall/*.hs
-	clash -isrc -fclash-clear $< --verilog
+	clash -isrc -fclash-clear -Wall $< --verilog
 	sed '/timescale/d' verilog/Syscall.top/syscall.v > circuit/execute/syscall.v
