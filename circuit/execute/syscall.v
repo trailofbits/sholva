@@ -14,67 +14,86 @@ module syscall
     , output wire [31:0] o_ecx
     , output wire [3:0] o_syscall_state
     );
-  wire [96:0] c$case_alt;
-  reg [96:0] c$case_alt_0;
-  reg [96:0] result_0;
-  wire [3:0] c$case_alt_1;
-  // src/Syscall.hs:23:1-3
+  // src/Syscall.hs:34:1-3
+  reg [2:0] \c$syscallDFAState'_case_alt ;
+  reg [97:0] result_0;
+  reg [97:0] result_1;
+  reg [3:0] c$case_alt;
+  // src/Syscall.hs:34:1-3
   wire [31:0] i_eax_0;
-  // src/Syscall.hs:23:1-3
+  // src/Syscall.hs:34:1-3
   wire [31:0] i_ebx_0;
-  // src/Syscall.hs:23:1-3
+  // src/Syscall.hs:34:1-3
   wire [31:0] i_ecx_0;
-  // src/Syscall.hs:23:1-3
+  // src/Syscall.hs:34:1-3
   wire [3:0] i_state;
-  // src/Syscall/Internal.hs:80:1-15
-  wire [2:0] scrut;
-  wire [0:0] result_1;
-  // src/Syscall/Internal.hs:80:1-15
-  wire [1:0] scrut1;
-  wire [0:0] result_2;
-  // src/Syscall/Internal.hs:80:1-15
-  wire [0:0] scrut2;
-  // src/Syscall/Internal.hs:80:1-15
-  wire  ds1;
-  wire [0:0] result_3;
-  wire [0:0] c$case_alt_2;
-  wire [0:0] result_4;
-  // src/Syscall.hs:23:1-3
-  reg [2:0] ds1_0;
+  // src/Syscall/Internal.hs:63:24-27
+  wire signed [63:0] x;
+  wire [1:0] c$case_alt_0;
+  wire  c$case_scrut;
+  wire [1:0] c$case_alt_1;
+  wire  c$case_scrut_0;
+  wire [1:0] c$case_alt_2;
+  // src/Syscall/Recieve.hs:12:1-17
+  reg [97:0] \$j ;
   wire [99:0] ds;
+  wire signed [63:0] \c$syscallDFAState'_case_alt_selection_1 ;
+  wire signed [63:0] \c$syscallDFAState'_case_alt_selection_0 ;
+  wire [1:0] c$case_alt_selection_1;
+  wire signed [63:0] x_projection;
+  wire signed [63:0] c$tte_rhs;
+  wire signed [63:0] c$tte_rhs_0;
   wire [99:0] result;
 
   assign ds = {i_eax,   i_ebx,   i_ecx,
                i_syscall_state};
 
-  assign c$case_alt = result_4 ? c$case_alt_0 : {i_eax_0,
-                                                 i_ebx_0,   i_ecx_0,   result_4};
+  assign \c$syscallDFAState'_case_alt_selection_1  = \c$syscallDFAState'_case_alt_selection_0 ;
+
+  assign \c$syscallDFAState'_case_alt_selection_0  = $unsigned({{(64-32) {1'b0}},i_eax_0});
 
   always @(*) begin
-    case(i_ecx_0)
-      32'b00000000000000000000000000000000 : c$case_alt_0 = {i_eax_0,
-                                                             i_ebx_0,   i_ecx_0,   1'd0};
-      default : c$case_alt_0 = {i_eax_0,
-                                i_ebx_0 + 32'b00000000000000000000000000000001,
-                                i_ecx_0 + 32'b00000000000000000000000000000001,
-                                1'd1};
+    case(\c$syscallDFAState'_case_alt_selection_1 )
+      64'sd1 : \c$syscallDFAState'_case_alt  = 3'd0;
+      64'sd2 : \c$syscallDFAState'_case_alt  = 3'd1;
+      64'sd3 : \c$syscallDFAState'_case_alt  = 3'd2;
+      64'sd4 : \c$syscallDFAState'_case_alt  = 3'd3;
+      64'sd5 : \c$syscallDFAState'_case_alt  = 3'd4;
+      64'sd6 : \c$syscallDFAState'_case_alt  = 3'd5;
+      64'sd7 : \c$syscallDFAState'_case_alt  = 3'd6;
+      default : \c$syscallDFAState'_case_alt  = {3 {1'bx}};
     endcase
   end
 
   always @(*) begin
-    case(ds1_0)
-      3'b010 : result_0 = c$case_alt;
-      default : result_0 = {97 {1'bx}};
+    case(c$case_alt_0)
+      2'b00 : result_0 = {i_eax_0,   i_ebx_0,
+                          i_ecx_0,   c$case_alt_0};
+      2'b01 : result_0 = \$j ;
+      default : result_0 = \$j ;
     endcase
   end
 
-  assign c$case_alt_1 = result_0[0:0] ? {1'b0,
-                                         1'b0,   1'b0,   1'b1} : {1'b0,   1'b0,   1'b0,
-                                                                  1'b0};
+  always @(*) begin
+    case(\c$syscallDFAState'_case_alt )
+      3'b010 : result_1 = result_0;
+      default : result_1 = {98 {1'bx}};
+    endcase
+  end
 
-  assign result = {result_0[96:65],
-                   result_0[64:33],   result_0[32:1],
-                   c$case_alt_1};
+  assign c$case_alt_selection_1 = result_1[1:0];
+
+  always @(*) begin
+    case(c$case_alt_selection_1)
+      2'b00 : c$case_alt = 4'b0000;
+      2'b01 : c$case_alt = 4'b0001;
+      default : c$case_alt = 4'b0010;
+    endcase
+  end
+
+  assign result = {result_1[97:66],
+                   result_1[65:34],   result_1[33:2],
+                   c$case_alt};
 
   assign i_eax_0 = ds[99:68];
 
@@ -84,34 +103,30 @@ module syscall
 
   assign i_state = ds[3:0];
 
-  assign scrut = i_state[3-1 : 0];
+  assign x_projection = $unsigned({{(64-4) {1'b0}},i_state});
 
-  assign result_1 = ((scrut[3-1 -: 1]) == 1'b0) ? result_2 : ({1 {1'bx}});
+  assign x = x_projection;
 
-  assign scrut1 = scrut[2-1 : 0];
+  assign c$case_alt_0 = c$case_scrut ? c$case_alt_1 : ({2 {1'bx}});
 
-  assign result_2 = ((scrut1[2-1 -: 1]) == 1'b0) ? result_3 : ({1 {1'bx}});
+  assign c$tte_rhs = (x >= 64'sd0) ? 64'sd1 : 64'sd0;
 
-  assign scrut2 = scrut1[1-1 : 0];
+  assign c$case_scrut = c$tte_rhs[0];
 
-  assign ds1 = scrut2[1-1 -: 1];
+  assign c$case_alt_1 = c$case_scrut_0 ? c$case_alt_2 : ({2 {1'bx}});
 
-  assign result_3 = (ds1 == 1'b0) ? 1'd0 : c$case_alt_2;
+  assign c$tte_rhs_0 = (x <= 64'sd2) ? 64'sd1 : 64'sd0;
 
-  assign c$case_alt_2 = (ds1 == 1'b1) ? 1'd1 : ({1 {1'bx}});
+  assign c$case_scrut_0 = c$tte_rhs_0[0];
 
-  assign result_4 = ((i_state[4-1 -: 1]) == 1'b0) ? result_1 : ({1 {1'bx}});
+  assign c$case_alt_2 = $unsigned(x);
 
   always @(*) begin
-    case(i_eax_0)
-      32'b00000000000000000000000000000001 : ds1_0 = 3'd0;
-      32'b00000000000000000000000000000010 : ds1_0 = 3'd1;
-      32'b00000000000000000000000000000011 : ds1_0 = 3'd2;
-      32'b00000000000000000000000000000100 : ds1_0 = 3'd3;
-      32'b00000000000000000000000000000101 : ds1_0 = 3'd4;
-      32'b00000000000000000000000000000110 : ds1_0 = 3'd5;
-      32'b00000000000000000000000000000111 : ds1_0 = 3'd6;
-      default : ds1_0 = {3 {1'bx}};
+    case(c$case_alt_0)
+      2'b00 : \$j  = {98 {1'bx}};
+      2'b01 : \$j  = {i_eax_0,   i_ebx_0,   i_ecx_0,
+                      c$case_alt_0};
+      default : \$j  = {98 {1'bx}};
     endcase
   end
 
