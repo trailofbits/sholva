@@ -4,6 +4,7 @@
 module tiny86(
   input [559:0] step,
 
+  output [7:0]  o_syscall_state,
   output [31:0] o_eax,
   output [31:0] o_ebx,
   output [31:0] o_ecx,
@@ -154,29 +155,27 @@ execute execute_x(
 `define SYSCALL_STATE_READ    1
 `define SYSCALL_STATE_WRITE   2
 
-// FIXME(jl): how to integrate these with state in hints.
-wire [3:0] i_syscall_state;
-wire [3:0] o_syscall_state;
+wire [7:0] syscall_state_o;
+wire [7:0] syscall_state = {hint1_syscall_state, hint2_syscall_state}; // FIXME(jl): using the hints like this means the tracer will have to insert 'dummy' hints for odd numbers.
+wire [64:0] hint_data = {hint1_data, hint2_data};
+wire [64:0] hint_address = {hint1_address, hint2_address}; // FIXME(jl): endianness can only be divined not derived
 
-wire is_syscall       = i_syscall_state != 4'b0;
+wire is_syscall = syscall_state != 8'b0;
 
-wire is_syscall_state_none  = i_syscall_state == `SYSCALL_STATE_DONE;
-wire is_syscall_state_read  = i_syscall_state == `SYSCALL_STATE_READ;
-wire is_syscall_state_write = i_syscall_state == `SYSCALL_STATE_WRITE;
+wire is_syscall_state_none  = syscall_state == `SYSCALL_STATE_DONE;
+wire is_syscall_state_read  = syscall_state == `SYSCALL_STATE_READ;
+wire is_syscall_state_write = syscall_state == `SYSCALL_STATE_WRITE;
 
-wire [64:0] data = {hint1_data, hint2_data};
-wire [64:0] ptr = {hint1_address, hint2_address}; 
-
-// TODO(jl): RAM integration?
+// TODO(jl): RAM integration
 wire [63:0] _out; // transmit; word read from RAM.
 
-assign _out = is_syscall_state_write ? data : 0;
+assign _out = is_syscall_state_write ? hint_data : 0;
 
 syscall syscall_x(
     .i_eax(eax),
     .i_ebx(ebx),
     .i_ecx(ecx),
-    .i_syscall_state(i_syscall_state),
+    .i_syscall_state(syscall_state),
     .o_eax(o_eax),
     .o_ebx(o_ebx),
     .o_ecx(o_ecx),

@@ -9,6 +9,7 @@ import Syscall.Recieve (syscallRecieveDFA)
 import Clash.Annotations.TH
 import Clash.Prelude
 
+todo :: a
 todo = undefined
 
 syscall' :: SyscallDFAState -> Syscall -> SyscallDFAState
@@ -31,15 +32,15 @@ top :: ( "i_eax" ::: Signal System SyscallReg
        , "o_ecx" ::: Signal System SyscallReg
        , "o_syscall_state" ::: Signal System SyscallStateReg)
 top (i_eax, i_ebx, i_ecx, i_state) = (o_eax, o_ebx, o_ecx, o_state)
-    -- coerce input into a Syscall.
   where
     syscall :: Signal System Syscall
+    -- coerce input into a Syscall.
     syscall = toEnum . fromEnum <$> i_eax
-    -- coerce input into a SyscallState.
     syscallState :: Signal System SyscallState
+    -- coerce input into a SyscallState.
     syscallState = toEnum . fromEnum <$> i_state
-    -- restructure the inputs into a SyscallDFAState.
     syscallDFAState :: Signal System SyscallDFAState
+    -- restructure the inputs into a SyscallDFAState.
     syscallDFAState =
         (\i_eax' i_ebx' i_ecx' state' ->
              MkDFAState
@@ -48,16 +49,17 @@ top (i_eax, i_ebx, i_ecx, i_state) = (o_eax, o_ebx, o_ecx, o_state)
         i_ebx <*>
         i_ecx <*>
         syscallState
-    -- compute DFA transition.
     syscallDFAState' :: Signal System SyscallDFAState
+    -- compute DFA transition.
     syscallDFAState' = syscall' <$> syscallDFAState <*> syscall
-    -- destructure fields from computed DFA transition.
     o_eax, o_ebx, o_ecx :: Signal System SyscallReg
+    -- destructure fields from computed DFA transition.
     o_eax = eax <$> syscallDFAState'
     o_ebx = ebx <$> syscallDFAState'
     o_ecx = ecx <$> syscallDFAState'
     o_state :: Signal System SyscallStateReg
     o_state = toEnum . fromEnum . state <$> syscallDFAState'
 
+-- NOTE(jl): unavoidable warning.
 -- https://github.com/commercialhaskell/stackage/issues/5926#issuecomment-804695718
 makeTopEntityWithName 'top "syscall"
