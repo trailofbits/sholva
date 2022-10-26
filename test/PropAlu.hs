@@ -27,5 +27,6 @@ prop_alu_and_idempotent r = aluOp r 0 low (unpack 0b000000000000000100) == 0
 
 -- QUICKCHECK
 return []
+
 check :: IO Bool
 check = $quickCheckAll

@@ -1,3 +1,4 @@
+`default_nettype none
 `include "defines.v"
 
 module tiny86(
@@ -148,9 +149,22 @@ execute execute_x(
 
 // Syscall.
 
+// NOTE(jl): these must be in sync with definition of SyscallState in src/Syscall/Internal.hs.
+`define SYSCALL_STATE_DONE 0
+`define SYSCALL_STATE_READ 1
+
 // FIXME(jl): how to integrate these with state in hints.
 wire [3:0] i_syscall_state;
 wire [3:0] o_syscall_state;
+
+wire is_syscall       = i_syscall_state == 4'b0;
+wire syscall_finished = o_syscall_state == 4'b0;
+
+wire is_syscall_state_none = i_syscall_state == `SYSCALL_STATE_DONE;
+wire is_syscall_state_read = i_syscall_state == `SYSCALL_STATE_READ;
+
+wire [31:0] data1 = hint1_data;
+wire [31:0] data2 = hint2_data;
 
 syscall syscall_x(
     .i_eax(eax),
@@ -162,6 +176,8 @@ syscall syscall_x(
     .o_ecx(o_ecx),
     .o_syscall_state(o_syscall_state)
 );
+
+// FIXME(jl): disable register file writeback.
 
 // Register writeback + updates.
 
