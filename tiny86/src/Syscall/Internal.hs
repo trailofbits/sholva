@@ -9,9 +9,17 @@ module Syscall.Internal
     , SyscallReg
     , SyscallDFA
     , SyscallDFAState(..)
+    , stepDataBytes
+    , stepPtrBytes
     ) where
 
 import Clash.Prelude
+
+stepDataBytes :: Int
+stepDataBytes = 2 * 4 -- the number of data bytes present per step.
+
+stepPtrBytes :: Int
+stepPtrBytes = 2 * 4 -- the number of address bytes present per step.
 
 -- see: https://cgc-docs.legitbs.net/libcgc/cgcabi/
 data Syscall
