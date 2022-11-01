@@ -1,0 +1,269 @@
+module: decode_opc_phase2
+file: ../decode/decode_opc_phase2.v
+inputs:
+  - "88 unescaped_instr"
+  - "1 is_2byte"
+outputs:
+  - "7 opc"
+  - "4 opnd_form"
+  - "2 opnd_count"
+  - "1 imm_1byte"
+  - "1 reg_1byte"
+  - "1 opnd0_is_read"
+  - "1 opnd0_is_write"
+  - "1 opnd1_is_one"
+  - "1 opnd1_is_read"
+  - "1 opnd1_is_write"
+  - "1 opnd2_is_read"
+  - "1 opnd2_is_write"
+  - "1 source_is_sext"
+  - "1 disp_is_rel"
+vector_specs:
+  - _description: "ADD eax, byte 0xff (source_is_sext)"
+
+    # INPUTS
+    unescaped_instr: 0xffc083
+    is_2byte: 0
+
+    # OUTPUTS
+    opc: 0 # CMD_ADD
+    opnd_form: 5 # OPND_ENC_MODREGRM_RM_IMM
+    opnd_count: 2
+    imm_1byte: 1
+    reg_1byte: 0
+    opnd0_is_read: 1
+    opnd0_is_write: 1
+    opnd1_is_read: 1
+    opnd1_is_write: 0
+    source_is_sext: 1
+
+  - _description: "ADD eax, ebx"
+
+    # INPUTS
+    unescaped_instr: 0x90909090909090d801
+    is_2byte: 0
+
+    # OUTPUTS
+    opc: 0 # CMD_ADD
+    opnd_form: 6 # OPND_ENC_MODREGRM_RM_REG
+    opnd_count: 2
+    imm_1byte: 0
+    reg_1byte: 0
+    opnd0_is_read: 1
+    opnd0_is_write: 1
+    opnd1_is_read: 1
+
+  - _description: "ADD eax, [ebx]"
+
+    # INPUTS
+    unescaped_instr: 0x0303
+    is_2byte: 0
+
+    # OUTPUTS
+    opc: 0 # CMD_ADD
+    opnd_form: 7 # OPND_ENC_MODREGRM_REG_RM
+    opnd_count: 2
+    imm_1byte: 0
+    reg_1byte: 0
+    opnd0_is_read: 1
+    opnd0_is_write: 1
+    opnd1_is_read: 1
+
+  - _description: "XCHG eax, ebx"
+
+    # INPUTS
+    unescaped_instr: 0x93
+    is_2byte: 0
+
+    # OUTPUTS
+    opc: 55 # CMD_XCHG
+    opnd_form: 10 # OPND_ENC_EAX_REG
+    opnd_count: 2
+    imm_1byte: x
+    reg_1byte: 0
+    opnd0_is_read: 1
+    opnd0_is_write: 1
+    opnd1_is_read: 1
+    opnd1_is_write: 1
+
+  - _description: "lea ecx, [(eax * 2) + ebx + 2]"
+
+    # INPUTS
+    unescaped_instr: 0x02434c8d
+    is_2byte: 0
+
+    # OUTPUTS
+    opc: 25 # CMD_LEA
+    opnd_form: 7 # OPND_ENC_MODREGRM_REG_RM
+    opnd_count: 2
+    imm_1byte: 0
+    reg_1byte: 0
+    opnd0_is_read: 0
+    opnd0_is_write: 1
+    opnd1_is_read: 1
+    opnd1_is_write: 0
+
+  - _description: "INC eax"
+
+    # INPUTS
+    unescaped_instr: 0x40
+    is_2byte: 0
+
+    # OUTPUTS
+    opc: 20 # CMD_INC
+    opnd_form: 4 # OPND_ENC_REG
+    opnd_count: 2
+    imm_1byte: 0
+    reg_1byte: 0
+    opnd0_is_read: 1
+    opnd0_is_write: 1
+    opnd1_is_one: 1
+    opnd1_is_read: 0
+    opnd1_is_write: 0
+
+  - _description: "RCL al, 1"
+
+    # INPUTS
+    unescaped_instr: 0xd0d0
+    is_2byte: 0
+
+    # OUTPUTS
+    opc: 61 # CMD_RCL
+    opnd_form: 3 # OPND_ENC_MODREGRM_RM
+    opnd_count: 2
+    imm_1byte: 0 # TODO(ww)
+    reg_1byte: 1
+    opnd0_is_read: 1
+    opnd0_is_write: 1
+    opnd1_is_one: 1
+
+  - _description: "CALL 0xffffffff (disp_is_rel)"
+
+    # INPUTS
+    unescaped_instr: 0xfffffffbe8
+    is_2byte: 0
+
+    # OUTPUTS
+    opc: 64 # CMD_CALLr
+    opnd_form: 14 # OPND_ENC_DISP32
+    opnd_count: 1
+    opnd0_is_read: 1
+    opnd0_is_write: 0
+    disp_is_rel: 1
+
+  - _description: "JMP pcrel+4 (disp_is_rel)"
+
+    # INPUTS
+    unescaped_instr: 0x04eb
+    is_2byte: 0
+
+    # OUTPUTS
+    opc: 24 # CMD_JMPr
+    opnd_form: 2 # OPND_ENC_DISP8
+    opnd_count: 1
+    opnd0_is_read: 1
+    opnd0_is_write: 0
+    source_is_sext: 1
+    disp_is_rel: 1
+
+  - _description: "cmp DWORD PTR [ebp-0x4],0xa"
+
+    # INPUTS
+    unescaped_instr: 0x0afc7d83
+    is_2byte: 0
+
+    # OUTPUTS
+    opc: 13 # CMD_CMP
+    opnd_form: 5 # OPND_ENC_MODREGRM_IMM
+    opnd_count: 2
+    imm_1byte: 1
+    opnd0_is_read: 1
+    opnd1_is_read: 1
+    source_is_sext: 1
+
+  - _description: "POP ebx"
+
+    # INPUTS
+    unescaped_instr: 0x5b
+    is_2byte: 0
+
+    # OUTPUTS
+    opc: 37 # CMD_POP
+    opnd_form: 4 # OPND_ENC_REG
+    opnd_count: 1
+    opnd0_is_read: 0
+    opnd0_is_write: 1
+    source_is_sext: 0
+
+  - _description: "POP [ebx]"
+
+    # INPUTS
+    unescaped_instr: 0x038f
+    is_2byte: 0
+
+    # OUTPUTS
+    opc: 37 # CMD_POP
+    opnd_form: 3 # OPND_ENC_MODREGRM_RM
+    opnd_count: 1
+    imm_1byte: 0
+    opnd0_is_read: 0
+    opnd0_is_write: 1
+    source_is_sext: 0
+
+  - _description: "MOV EAX, DWORD [EBP - 8]"
+
+    # INPUTS
+    unescaped_instr: 0xf8458b
+    is_2byte: 0
+
+    # OUTPUTS
+    opc: 28 # CMD_MOV
+    opnd_form: 7 # OPND_ENC_MODREGRM_REG_RM
+    opnd_count: 2
+    opnd0_is_write: 1
+    opnd1_is_read: 1
+
+  - _description: "sub eax, DWORD PTR [ebp+0xc] (2 - 3 = 4294967295)"
+
+    # INPUTS
+    unescaped_instr: 0x0c452b
+    is_2byte: 0
+
+    # OUTPUTS
+    opc: 53 # CMD_SUB
+    opnd_form: 7 # OPND_ENC_MODREGRM_REG_RM
+    opnd_count: 2
+    opnd0_is_read: 1
+    opnd0_is_write: 1
+    opnd1_is_read: 1
+
+  - _description: "CDQ"
+
+    # INPUTS
+    unescaped_instr: 0x99
+    is_2byte: 0
+
+    # OUTPUTS
+    opc: 15 # CMD_CDQ
+    opnd_form: 0 # OPND_ENC_NONE
+    opnd_count: 2
+    opnd0_is_write: 1
+    opnd1_is_read: 1
+    source_is_sext: 1
+
+  - _description: "idiv DWORD PTR [ebp+0xc]"
+
+    # INPUTS
+    unescaped_instr: 0x0c7df7
+    is_2byte: 0
+
+    # OUTPUTS
+    opc: 18 # CMD_IDIV
+    opnd_form: 3 # OPND_ENC_MODREGRM_RM
+    opnd_count: 3
+    opnd0_is_read: 1
+    opnd0_is_write: 1
+    opnd1_is_read: 1
+    opnd1_is_write: 1
+    opnd2_is_read: 1
+    source_is_sext: 1

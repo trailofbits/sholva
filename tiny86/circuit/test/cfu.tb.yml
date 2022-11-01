@@ -1,0 +1,69 @@
+module: cfu
+file: ../execute/cfu.v
+inputs:
+  - "7 opc"
+  - "32 eflags"
+  - "1 ecx_is_zero"
+  - "32 eip"
+  - "4 instr_len"
+  - "32 address"
+outputs:
+  - "32 next_eip"
+vector_specs:
+  - _description: "CMD_ADD (no xfer)"
+
+    # INPUTS
+    opc: 0 # CMD_ADD
+    eip: 0x1000
+    instr_len: 5 # fabricated
+    address: 0xaabb
+
+    # OUTPUTS
+    next_eip: 0x1005
+
+  - _description: "CMD_CALLr (unconditional, rel xfer)"
+
+    # INPUTS
+    opc: 64 # CMD_CALLr
+    eip: 0x8049014
+    instr_len: 5
+    address: 0xffffffe7
+
+    # OUTPUTS
+    next_eip: 0x8049000
+
+  - _description: "CMD_CALLi (unconditional, abs xfer)"
+
+    # INPUTS
+    opc: 65 # CMD_CALLi
+    eip: 0x12345678
+    instr_len: 2
+    address: 0xaabbccdd
+
+    # OUTPUTS
+    next_eip: 0xaabbccdd
+
+  - _description: "CMD_JLE (conditional, rel xfer (disp8), not taken)"
+
+    # INPUTS
+    opc: 80 # CMD_JLE
+    eflags: 0x02 # not taken: ZF=0 and SF=OF=0
+    eip: 0x08049026
+    instr_len: 2
+    address: 0x11
+
+    # OUTPUTS
+    next_eip: 0x08049028
+
+  - _description: "CMD_JLE (conditional, rel xfer (disp8), taken)"
+
+    # INPUTS
+    opc: 80 # CMD_JLE
+    eflags: 0b0000000001000010 # taken: ZF=1
+    eip: 0x08049026
+    instr_len: 2
+    address: 0x11
+
+    # OUTPUTS
+    next_eip: 0x08049039
+

@@ -1,0 +1,331 @@
+module: decode
+file: ../decode/decode.v
+inputs:
+  - "96 raw_instr"
+  - "32 eax"
+  - "32 ebx"
+  - "32 ecx"
+  - "32 edx"
+  - "32 esi"
+  - "32 edi"
+  - "32 esp"
+  - "32 ebp"
+  - "1 hint1_is_write"
+  - "32 hint1_address"
+  - "32 hint1_data"
+  - "1 hint2_is_write"
+  - "32 hint2_address"
+  - "32 hint2_data"
+outputs:
+  - "4 instr_len"
+  - "7 opc"
+  - "32 opnd0_r"
+  - "32 opnd1_r"
+  - "32 opnd2_r"
+  - "2 dest0_kind"
+  - "2 dest1_kind"
+  - "32 dest0_sel"
+  - "32 dest1_sel"
+vector_specs:
+  - _description: "ADD eax, ebx (eax=0x12345678, ebx=0x90abcdef)"
+
+    # INPUTS
+    raw_instr: 0xd801
+    eax: 0x12345678
+    ebx: 0x90abcdef
+    esp: 0xffffddb0
+
+    # OUTPUTS
+    instr_len: 2
+    opc: 0 # CMD_ADD
+    opnd0_r: 0x12345678
+    opnd1_r: 0x90abcdef
+    dest0_kind: 1 # OPND_DEST_REG_1HOT
+    dest1_kind: 0 # OPND_DEST_NONE
+    dest0_sel: 0 # EAX
+
+  - _description: "lea ecx, [(eax * 2) + ebx + 2] (eax=0xaaaaaaaa, ebx=0xbbbbbbbb)"
+
+    # INPUTS
+    raw_instr: 0x02434c8d
+    eax: 0xaaaaaaaa
+    ebx: 0xbbbbbbbb
+
+    # OUTPUTS
+    instr_len: 4
+    opc: 25 # CMD_LEA
+    opnd0_r: 0 # NOTE(ww): We never read operand#0.
+    opnd1_r: 0x11111111
+    dest0_kind: 1 # OPND_DEST_REG_1HOT
+    dest1_kind: 0 # OPND_DEST_NONE
+    dest0_sel: 1 # ECX
+    dest1_sel: 0
+
+  - _description: "inc EAX"
+
+    # INPUTS
+    raw_instr: 0x40
+    eax: 0xaaaaaa00
+
+    # OUTPUTS
+    instr_len: 1
+    opc: 20 # CMD_INC
+    opnd0_r: 0xaaaaaa00
+    opnd1_r: 1 # implicit 1
+    dest0_kind: 1 # OPND_DEST_REG_1HOT
+    dest1_kind: 0 # OPND_DEST_NONE
+    dest0_sel: 0 # EAX
+    dest1_sel: 0
+
+  - _description: "rcl al, 1"
+
+    # INPUTS
+    raw_instr: 0xd0d0
+    eax: 0xaabbccdd
+
+    # OUTPUTS
+    instr_len: 2
+    opc: 61 # CMD_RCL
+    opnd0_r: 0xaabbccdd
+    opnd1_r: 1 # implicit 1
+    dest0_kind: 1 # OPND_DEST_REG_1HOT
+    dest0_sel: 0 # EAX
+
+  - _description: "call 0x1234 (relative displacement)"
+
+    # INPUTS
+    raw_instr: 0x00001230e8
+    esp: 0xaabbccdd
+
+    # OUTPUTS
+    instr_len: 5
+    opc: 64 # CMD_CALLr
+    opnd0_r: 0x1230 # pre-adjust
+    opnd1_r: 0xaabbccdd
+    opnd2_r: 4
+    dest1_kind: 1 # OPND_DEST_REG_1HOT
+    dest1_sel: 4 # ESP
+
+  - _description: "call eax (absolute indirect)"
+
+    # INPUTS
+    raw_instr: 0xd0ff
+    eax: 0xaabbccdd
+    esp: 0x11223344
+
+    # OUTPUTS
+    instr_len: 2
+    opc: 65 # CMD_CALLi
+    opnd0_r: 0xaabbccdd
+    opnd1_r: 0x11223344
+    opnd2_r: 4
+    dest1_kind: 1 # OPND_DEST_REG_1HOT
+    dest1_sel: 4 # ESP
+
+  - _description: "jle 0x8049039 <main+0x2c> (rel8)"
+
+    # INPUTS
+    raw_instr: 0x117e
+
+    # OUTPUTS
+    instr_len: 2
+    opc: 80 # CMD_JLE
+    opnd0_r: 0x11 # pre-adjust
+
+  - _description: "cmp DWORD PTR [ebp-0x4],0xa (ebp=0xffc51afc)"
+
+    # INPUTS
+    raw_instr: 0x0afc7d83
+    ebp: 0xffc51afc
+    hint1_is_write: 0 # read
+    hint1_address: 0xffc51af8 # ebp - 4
+    hint1_data: 0xb
+
+    # OUTPUTS
+    instr_len: 4
+    opc: 13 # CMD_CMP
+    opnd0_r: 0x0b
+    opnd1_r: 0x0a
+    dest0_kind: 0 # OPND_DEST_NONE
+    dest1_kind: 0 # OPND_DEST_NONE
+    dest0_sel: 0
+    dest1_sel: 0
+
+  - _description: "POP ebx ([esp]=1)"
+
+    # INPUTS
+    raw_instr: 0x5b
+    esp: 0xffffd9b8
+    hint1_is_write: 0 # read
+    hint1_address: 0xffffd9b8
+    hint1_data: 0x01
+
+    # OUTPUTS
+    instr_len: 1
+    opc: 37 # CMD_POP
+    opnd0_r: 1 # read [esp]
+    opnd1_r: 0xffffd9b8
+    opnd2_r: 4
+    dest0_kind: 1 # OPND_DEST_REG_1HOT
+    dest1_kind: 1 # OPND_DEST_REG_1HOT
+    dest0_sel: 3 # EBX
+    dest1_sel: 4 # ESP
+
+  - _description: "POP DWORD PTR [ebx] ([esp]=1)"
+
+    # INPUTS
+    raw_instr: 0x038f
+    ebx: 0xffffd9bc
+    esp: 0xffffd9b8
+    hint1_is_write: 1 # write
+    hint1_address: 0xffffd9bc
+    hint1_data: 0x01
+    hint2_is_write: 0 # read
+    hint2_address: 0xffffd9b8
+    hint2_data: 0x01
+
+    # OUTPUTS
+    instr_len: 2
+    opc: 37 # CMD_POP
+    opnd0_r: 0x01 # popped value
+    opnd1_r: 0xffffd9b8 # ESP
+    opnd2_r: 4
+    dest0_kind: 0b10 # OPND_DEST_MEM_1HOT
+    dest1_kind: 0b01 # OPND_DEST_REG_1HOT
+    dest0_sel: 0xffffd9bc # [ebx]
+    dest1_sel: 4 # ESP
+
+  - _description: "RET ([esp]=0x08049019)"
+
+    # INPUTS
+    raw_instr: 0xc3
+    esp: 0xffffd9c0
+    hint1_is_write: 0 # read
+    hint1_address: 0xffffd9c0 # ESP
+    hint1_data: 0x08049019 # new EIP
+
+    # OUTPUTS
+    instr_len: 1
+    opc: 43 # CMD_RET
+    opnd0_r: 0x08049019 # [ESP]
+    opnd1_r: 0xffffd9c0 # ESP
+    opnd2_r: 4 # stack adjust
+    dest1_kind: 0b01 # OPND_DEST_REG_1HOT
+    dest1_sel: 4 # ESP
+
+  - _description: "LOOP 1"
+
+    # INPUTS
+    raw_instr: 0x00e2
+    ecx: 100
+
+    # OUTPUTS
+    instr_len: 2
+    opc: 27 # CMD_LOOP
+    opnd0_r: 0x00
+    opnd1_r: 100
+    opnd2_r: 1
+    dest1_kind: 0b01 # OPND_DEST_REG_1HOT
+    dest1_sel: 1 # ECX
+
+  - _description: "LOOPE 1"
+
+    # INPUTS
+    raw_instr: 0x00e1
+    ecx: 50
+
+    # OUTPUTS
+    instr_len: 2
+    opc: 82 # CMD_LOOPE
+    opnd0_r: 0x00
+    opnd1_r: 50
+    opnd2_r: 1
+    dest1_kind: 0b01 # OPND_DEST_REG_1HOT
+    dest1_sel: 1 # ECX
+
+  - _description: "LOOPNE 1"
+
+    # INPUTS
+    raw_instr: 0x00e0
+    ecx: 1
+
+    # OUTPUTS
+    instr_len: 2
+    opc: 83 # CMD_LOOPNE
+    opnd0_r: 0x00
+    opnd1_r: 1
+    opnd2_r: 1
+    dest1_kind: 0b01 # OPND_DEST_REG_1HOT
+    dest1_sel: 1 # ECX
+
+  - _description: "LOOP -3"
+
+    # INPUTS
+    raw_instr: 0xfbe2
+    ecx: 2
+
+    # OUTPUTS
+    instr_len: 2
+    opc: 27 # CMD_LOOP
+    opnd0_r: -5 # -3 - instr_len
+    opnd1_r: 2 # ECX
+    opnd2_r: 1 # ECX adjust
+    dest1_kind: 0b01 # OPND_DEST_REG_1HOT
+    dest1_sel: 1 # ECX
+
+  - _description: "SUB ESP, 16"
+
+    # INPUTS
+    raw_instr: 0x10ec83
+    esp: 0xffffd9cc
+
+    # OUTPUTS
+    instr_len: 3
+    opc: 53 # CMD_SUB
+    opnd0_r: 0xffffd9cc # ESP
+    opnd1_r: 16
+    dest0_kind: 0b01 # OPND_DEST_REG_1HOT
+    dest0_sel: 4 # ESP
+
+  - _description: "MOV EAX, DWORD [EBP - 8]"
+
+    # INPUTS
+    raw_instr: 0xf8458b
+    ebp: 0xffffd9cc
+    hint1_is_write: 0
+    hint1_address: 0xffffd9c4
+    hint1_data: 0x10
+
+    # OUTPUTS
+    instr_len: 3
+    opc: 28 # CMD_MOV
+    opnd0_r: 0 # NOTE(ww): Not read.
+    opnd1_r: 0x10 # [EBP - 8]
+    dest0_kind: 0b01 # OPND_DEST_REG_1HOT
+    dest0_sel: 0 # EAX
+
+  - _description: "mov eax, DWORD PTR [eax*4+0x804c000]"
+
+    # INPUTS
+    raw_instr: 0x0804c00085048b
+
+    # OUTPUTS
+    instr_len: 7
+    opc: 28 # CMD_MOV
+    dest0_kind: 0b01 # OPND_DEST_REG_1HOT
+    dest0_sel: 0 # EAX
+
+  - _description: "idiv DWORD PTR [ebp+0xc]"
+
+    # INPUTS
+    raw_instr: 0x0c7df7
+    eax: 2
+
+    # OUTPUTS
+    instr_len: 3
+    opc: 18 # CMD_IDIV
+    opnd1_r: 2 # EAX
+    dest0_kind: 0b01
+    dest1_kind: 0b01
+    dest0_sel: 2 # EDX
+    dest1_sel: 0 # EAX
