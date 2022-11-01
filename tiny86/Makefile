@@ -44,7 +44,7 @@ check: _check-verilog _check-haskell
 
 .PHONY: _check-verilog
 _check-verilog:
-	@$(MAKE) V=1 -C circuit/test check
+	@$(MAKE) -C circuit/test check
 
 .PHONY: _check-haskell
 _check-haskell:
