@@ -5,7 +5,6 @@ IFLAGS := -Icircuit -Icircuit/include
 ALL_V := $(shell find . -name "*.v")
 ALL_V_WITHOUT_TESTS_OR_CODEGEN := $(shell \
 	find . -type f -name '*.v' \
-		! -path '*/test/*' \
 		! -name '*.gen.v' \
 )
 CLASH_VERILOG = circuit/execute/alu.v
@@ -40,19 +39,8 @@ lint:
 	verilator --top-module $(TOP_MODULE) --lint-only $(IFLAGS) $(ALL_V_WITHOUT_TESTS_OR_CODEGEN)
 	hlint -g
 
-check: _check-verilog _check-haskell
-
-.PHONY: _check-verilog
-_check-verilog:
-	@$(MAKE) -C circuit/test check
-
-.PHONY: _check-haskell
-_check-haskell:
-	runghc -isrc -itest test/Main.hs
-
 .PHONY: clean
 clean:
-	$(MAKE) -C circuit/test clean
 	rm -rf verilog/
 
 verilog/Alu.alu/alu.v: src/Alu.hs

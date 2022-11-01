@@ -1,5 +1,0 @@
-# "executable" testbench programs
-*.vvp
-
-# debugging outputs
-*.vcd
