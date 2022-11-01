@@ -33,7 +33,8 @@ TRACE_BASES := $(basename $(basename $(TRACES)))
 all: $(TESTBENCH_EXES) $(TESTVECTORS)
 
 .PHONY: check
-check: all
+test: all
+	runghc -i../tiny86/src Main.hs
 	@./run-tests $(CHECKS)
 
 .PHONY: clean
@@ -59,9 +60,9 @@ check.tv: check.e2e.tv
 
 %.tb.vvp: %.tb.gen.v
 	iverilog -o $@ \
-		-I.. -I../include \
-		-y.. \
-		-y../.. \
-		-y../decode \
-		-y../execute \
+		-I../tiny86/circuit/ -I../tiny86/circuit/include \
+		-y../tiny86/circuit \
+		-y../tiny86/ \
+		-y../tiny86/circuit/decode \
+		-y../tiny86/circuit/execute \
 		$<

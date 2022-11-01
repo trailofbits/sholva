@@ -1,5 +1,5 @@
 module: move
-file: ../execute/move.v
+file: ../tiny86/circuit/execute/move.v
 inputs:
   - "2 cntl"
   - "32 opnd0_r"

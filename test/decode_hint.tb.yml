@@ -1,5 +1,5 @@
 module: decode_hint
-file: ../decode/decode_hint.v
+file: ../tiny86/circuit/decode/decode_hint.v
 inputs:
   - "72 raw_hint"
 outputs:

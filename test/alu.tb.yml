@@ -1,5 +1,5 @@
 module: alu
-file: ../execute/alu.v
+file: ../tiny86/circuit/execute/alu.v
 inputs:
   - "18 cntl"
   - "7 status_in"

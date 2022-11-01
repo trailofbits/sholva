@@ -1,5 +1,5 @@
 module: check
-file: ../../check.v
+file: ../tiny86/circuit/../check.v
 inputs:
   - "560 step0"
   - "560 step1"

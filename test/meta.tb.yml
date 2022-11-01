@@ -1,5 +1,5 @@
 module: meta
-file: ../execute/meta.v
+file: ../tiny86/circuit/execute/meta.v
 inputs:
   - "7 opc"
   - "32 opnd_in"

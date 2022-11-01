@@ -1,5 +1,5 @@
 module: tiny86
-file: ../tiny86.v
+file: ../tiny86/circuit/tiny86.v
 inputs:
   - "560 step"
 outputs:
