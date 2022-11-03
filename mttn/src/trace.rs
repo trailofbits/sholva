@@ -964,7 +964,7 @@ mod tests {
             $(
                 #[test]
                 fn $name() {
-                    let program = build_test_program(concat!(stringify!($name), ".elf"));
+                    let program = concat!(env!("CARGO_MANIFEST_DIR"), "/../test/", stringify!($name), ".elf");
                     let tracer = test_program_tracer(&program);
 
                     // TODO(ww): Don't collect these.
