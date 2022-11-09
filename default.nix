@@ -12,7 +12,20 @@ let
 in with pkgs; stdenv.mkDerivation {
   name = "sholva-dev";
 
-  nativeBuildInputs = [ clash verilog verilator ruby ];
+  nativeBuildInputs = [
+    cargo
+    clash
+    verilog verilator
+  ];
+  buildInputs = [
+    clippy
+    gdb
+    git
+    nasm
+    python3
+    ruby
+    rustfmt
+  ];
 
   src = ./.;
 }

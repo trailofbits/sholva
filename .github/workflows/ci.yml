@@ -5,8 +5,29 @@ on:
     branches:
       - main
   pull_request:
+  schedule:
+    # run CI every day even if no PRs/merges occur
+    - cron: '0 12 * * *'
 
 jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: cachix/install-nix-action@v17
+        with:
+          nix_path: nixpkgs=channel:nixos-unstable
+      - name: Format
+        run: nix-shell --pure --run "make format"
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: cachix/install-nix-action@v17
+        with:
+          nix_path: nixpkgs=channel:nixos-unstable
+      - name: Lint
+        run: nix-shell --pure --run "make lint"
   build:
     runs-on: ubuntu-latest
     steps:
@@ -15,8 +36,13 @@ jobs:
       with:
         nix_path: nixpkgs=channel:nixos-unstable
     - name: build
-      run: nix-shell --run "make"
-    - name: test
-      run: nix-shell --run "make check"
-    - name: lint
-      run: nix-shell --run "make lint"
+      run: nix-shell --pure --run "make"
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: cachix/install-nix-action@v17
+        with:
+          nix_path: nixpkgs=channel:nixos-unstable
+      - name: Test
+        run: nix-shell --pure --run "make test"
