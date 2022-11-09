@@ -881,8 +881,6 @@ impl Tracer {
 
 #[cfg(test)]
 mod tests {
-    use std::path::PathBuf;
-
     use super::*;
 
     fn dummy_regs() -> RegisterFile {
@@ -891,29 +889,6 @@ mod tests {
             rdi: 0x00000000feedface,
             ..Default::default()
         }
-    }
-
-    fn build_test_program(program: &str) -> String {
-        let mut buf = {
-            let mut buf = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
-            buf.push("test");
-
-            buf
-        };
-
-        let status = Command::new("make")
-            .arg("-C")
-            .arg(&buf)
-            .arg(program)
-            .status()
-            .expect(&format!("build failed: {}", program));
-
-        if !status.success() {
-            panic!("build failed: {}", program);
-        }
-
-        buf.push(program);
-        buf.into_os_string().into_string().unwrap()
     }
 
     fn test_program_tracer(program: &str) -> Tracer {

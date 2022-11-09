@@ -14,9 +14,6 @@ format:
 
 .PHONY: test
 test:
-	# mttn self tests
-	$(MAKE) -C mttn test
-	# integration tests
 	$(MAKE) -C test test
 
 clean:
