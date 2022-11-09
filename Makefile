@@ -1,67 +1,19 @@
-TOP_MODULE := check
-IVERILOG_FLAGS := -gstrict-expr-width
-IFLAGS := -Icircuit -Icircuit/include
-
-ALL_V := $(shell find . -name "*.v")
-ALL_V_WITHOUT_TESTS_OR_CODEGEN := $(shell \
-	find . -type f -name '*.v' \
-		! -path '*verilog/*' \
-		! -path '*/test/*' \
-		! -name '*.gen.v' \
-)
-CLASH_VERILOG = circuit/execute/alu.v circuit/execute/syscall.v
-
-
 .PHONY: all
-all: codegen $(ALL_V) $(CLASH_VERILOG)
-	iverilog $(IVERILOG_FLAGS) $(IFLAGS) \
-		-ycircuit \
-		-ycircuit/decode \
-		-ycircuit/execute \
-		-t null check.v
+all:
+	$(MAKE) -C tiny86 all
+	$(MAKE) -C mttn all
 
-tiny86.blif:
-	sv-netlist $(IFLAGS) --top tiny86 $@ $(ALL_V_WITHOUT_TESTS_OR_CODEGEN)
-
-tiny86.bristol: tiny86.blif
-	# use a test trace as witness.
-	cat circuit/test/alu_add.trace.txt | head -n1 | sv-compositor -b $^ -o $@ -w /dev/stdin
-
-.PHONY: stat
-stat:
-	sv-stat $(IFLAGS) --top tiny86 $(ALL_V_WITHOUT_TESTS_OR_CODEGEN)
-
-.PHONY: codegen
-codegen:
-	$(MAKE) -C circuit/codegen
-
-.PHONY: lint
 lint:
-	# TODO(ww): Add -Wall here once we're actually using more of our wires.
-	verilator --top-module $(TOP_MODULE) --lint-only $(IFLAGS) $(ALL_V_WITHOUT_TESTS_OR_CODEGEN)
-	hlint -g
+	$(MAKE) -C tiny86 lint
+	$(MAKE) -C mttn lint
 
-.PHONY: check
-check: _check-verilog _check-haskell
+format:
+	$(MAKE) -C mttn format
 
-.PHONY: _check-verilog
-_check-verilog:
-	@$(MAKE) V=1 -C circuit/test check
+test:
+	$(MAKE) -C tiny86 check
+	$(MAKE) -C mttn test
 
-.PHONY: _check-haskell
-_check-haskell:
-	runghc -isrc -itest -Wall test/Main.hs
-
-.PHONY: clean
 clean:
-	$(MAKE) -C circuit/test clean
-	rm -rf verilog/
-	rm -f $(CLASH_VERILOG)
-
-circuit/execute/alu.v: src/Alu.hs src/Alu/*.hs
-	clash -isrc -fclash-clear $< --verilog
-	sed '/timescale/d' verilog/Alu.top/alu.v > circuit/execute/alu.v
-
-circuit/execute/syscall.v: src/Syscall.hs src/Syscall/*.hs
-	clash -isrc -fclash-clear -Wall $< --verilog
-	sed '/timescale/d' verilog/Syscall.top/syscall.v > circuit/execute/syscall.v
+	$(MAKE) -C tiny86 clean
+	$(MAKE) -C mttn clean

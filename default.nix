@@ -16,12 +16,17 @@ in with pkgs; stdenv.mkDerivation {
   name = "sholva-dev";
 
   nativeBuildInputs = [
+    cargo
     clash
-    git # `hlint -g` lints from what's checked-in to git.
-    python3
+    verilog verilator
+  ];
+  buildInputs = [
+    clippy
+    gdb
+    git
+    nasm
     ruby
-    verilator
-    verilog
+    rustfmt
   ];
 
   src = ./.;
