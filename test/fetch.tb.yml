@@ -1,5 +1,5 @@
 module: fetch
-file: ../fetch.v
+file: ../tiny86/circuit/fetch.v
 inputs:
   - "560 step"
 outputs:

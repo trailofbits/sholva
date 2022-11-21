@@ -25,6 +25,7 @@ in with pkgs; stdenv.mkDerivation {
     gdb
     git
     nasm
+    python3
     ruby
     rustfmt
   ];

@@ -1,5 +1,5 @@
 module: decode_opnd_signals
-file: ../decode/decode_opnd_signals.v
+file: ../tiny86/circuit/decode/decode_opnd_signals.v
 inputs:
   - "88 unescaped_instr"
   - "4 opnd_form"

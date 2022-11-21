@@ -1,5 +1,5 @@
 module: regfile
-file: ../regfile.v
+file: ../tiny86/circuit/regfile.v
 inputs:
   - "32 i_eax"
   - "32 i_ebx"
