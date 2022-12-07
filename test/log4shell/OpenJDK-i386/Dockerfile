@@ -29,8 +29,8 @@ RUN mkdir /x11 && \
     http://ftp.us.debian.org/debian/pool/main/libx/libx11/libx11-dev_1.7.2-1_i386.deb \
     http://ftp.us.debian.org/debian/pool/main/libx/libxtst/libxtst-dev_1.2.3-1_i386.deb \
     http://ftp.us.debian.org/debian/pool/main/libx/libxext/libxext-dev_1.3.3-1.1_i386.deb \
-    http://ftp.us.debian.org/debian/pool/main/f/freetype/libfreetype6-dev_2.10.4+dfsg-1_i386.deb \
-    http://ftp.us.debian.org/debian/pool/main/f/freetype/libfreetype6_2.10.4+dfsg-1_i386.deb
+    http://ftp.us.debian.org/debian/pool/main/f/freetype/libfreetype6-dev_2.10.4+dfsg-1+deb11u1_i386.deb \
+    http://ftp.us.debian.org/debian/pool/main/f/freetype/libfreetype6_2.10.4+dfsg-1+deb11u1_i386.deb
 WORKDIR /x11
 RUN for deb in /tmp/*.deb ; do dpkg-deb -x $deb . ; done && rm /tmp/*.deb
 RUN ln -s /x11/usr/lib/i386-linux-gnu/libfreetype.so.6 /x11/usr/lib/i386-linux-gnu/libfreetype.so
@@ -59,8 +59,11 @@ FROM ubuntu:20.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get update && apt-get install -y build-essential git make autoconf zip \
-    unzip openjdk-17-jdk libcups2-dev libfontconfig1-dev file gcc-multilib g++-multilib
+RUN apt-get update && apt-get install -y software-properties-common build-essential git make autoconf zip \
+    unzip libcups2-dev libfontconfig1-dev file gcc-multilib g++-multilib && \
+    apt policy openjdk-19-jdk && add-apt-repository ppa:openjdk/ppa && \
+    apt policy openjdk-19-jdk && apt-get update && apt-get install openjdk-19-jdk
+    
 
 # Copy over the 32-bit libraries from the first stage of the build:
 COPY --from=libs /x11 /x11
