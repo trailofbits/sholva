@@ -21,6 +21,7 @@ RUN mkdir /x11 && \
     http://ftp.us.debian.org/debian/pool/main/x/xorgproto/x11proto-kb-dev_2020.1-1_all.deb \
     http://ftp.us.debian.org/debian/pool/main/x/xorgproto/x11proto-render-dev_2020.1-1_all.deb \
     http://ftp.us.debian.org/debian/pool/main/x/xorgproto/x11proto-xext-dev_2020.1-1_all.deb \
+    http://ftp.us.debian.org/debian/pool/main/x/xorgproto/x11proto-dev_2020.1-1_all.deb \
     http://ftp.us.debian.org/debian/pool/main/libi/libice/libice-dev_1.0.10-1_i386.deb \
     http://ftp.us.debian.org/debian/pool/main/libx/libxrender/libxrender-dev_0.9.10-1_i386.deb \
     http://ftp.us.debian.org/debian/pool/main/libx/libxrandr/libxrandr-dev_1.5.1-1_i386.deb \
@@ -44,7 +45,6 @@ RUN mkdir /alsa && \
     for deb in /tmp/*.deb ; do dpkg-deb -x $deb . ; done && \
     rm /tmp/*.deb
 
-
 # We could have done this all using the 32-bit Ubuntu Docker container `i686/ubuntu`,
 # but it uses a very old version of Ubuntu that only has OpenJDK 6 available.
 # The latest version of OpenJDK (19) is self-hosting, meaning that it requires at least
@@ -60,14 +60,15 @@ FROM ubuntu:20.04
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get install -y software-properties-common build-essential git make autoconf zip \
-    unzip libcups2-dev libfontconfig1-dev file gcc-multilib g++-multilib && \
-    apt policy openjdk-19-jdk && add-apt-repository ppa:openjdk/ppa && \
-    apt policy openjdk-19-jdk && apt-get update && apt-get install openjdk-19-jdk
-    
+    unzip libcups2-dev libfontconfig1-dev file gcc-multilib g++-multilib wget
 
 # Copy over the 32-bit libraries from the first stage of the build:
 COPY --from=libs /x11 /x11
 COPY --from=libs /alsa /alsa
+
+# Obtain JDK-19 for bootstrapping 
+RUN wget https://download.java.net/java/GA/jdk19.0.1/afdd2e245b014143b62ccb916125e3ce/10/GPL/openjdk-19.0.1_linux-x64_bin.tar.gz && \
+    tar xvzf openjdk-19.0.1_linux-x64_bin.tar.gz
 
 # Use the latest version of OpenJDK master
 RUN git clone --depth 1 https://git.openjdk.java.net/jdk/
@@ -82,7 +83,8 @@ RUN bash configure \
     --with-freetype-include=/usr/include/freetype2/ \
     --with-freetype-lib=/x11/usr/lib/i386-linux-gnu/ \
     --with-alsa=/alsa/usr \
-    --with-target-bits=32
+    --with-target-bits=32 \
+    --with-boot-jdk=/jdk-19.0.1
 
 RUN make images
 
