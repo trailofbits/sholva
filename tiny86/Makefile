@@ -8,8 +8,7 @@ ALL_V_WITHOUT_TESTS_OR_CODEGEN := $(shell \
 		! -path '*/test/*' \
 		! -name '*.gen.v' \
 )
-CLASH_VERILOG = circuit/execute/alu.v
-
+CLASH_VERILOG = circuit/execute/alu.v circuit/syscall.v
 
 .PHONY: all
 all: codegen $(ALL_V) $(CLASH_VERILOG)
@@ -19,12 +18,16 @@ all: codegen $(ALL_V) $(CLASH_VERILOG)
 		-ycircuit/execute \
 		-t null check.v
 
+circuit/execute/alu.v: src/Alu.hs src/Alu/*.hs
+	clash -isrc -fclash-clear $< --verilog
+	sed '/timescale/d' verilog/Alu.top/alu.v > $@
+
+circuit/syscall.v: src/Syscall.hs src/Syscall/*.hs
+	clash -isrc -fclash-clear $< --verilog
+	sed '/timescale/d' verilog/Syscall.top/syscall.v > $@
+
 tiny86.blif:
 	sv-netlist $(IFLAGS) --top tiny86 $@ $(ALL_V_WITHOUT_TESTS_OR_CODEGEN)
-
-tiny86.bristol: tiny86.blif
-	# use a test trace as witness.
-	cat circuit/test/alu_add.trace.txt | head -n1 | sv-compositor -b $^ -o $@ -w /dev/stdin
 
 .PHONY: stat
 stat:
@@ -43,11 +46,3 @@ lint:
 .PHONY: clean
 clean:
 	rm -rf verilog/
-
-verilog/Alu.alu/alu.v: src/Alu.hs
-	clash -isrc -fclash-clear $^ --verilog
-	sed -i '/timescale/d' $@
-
-circuit/execute/alu.v: verilog/Alu.alu/alu.v
-	@echo "overwriting with compiled clash"
-	mv verilog/Alu.alu/alu.v $@

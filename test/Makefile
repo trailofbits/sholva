@@ -6,7 +6,6 @@ SHOLVA_MODULES := \
 	agu \
 	alu \
 	cfu \
-	check \
 	decode \
 	decode_hint \
 	decode_opc_phase1 \
@@ -22,6 +21,7 @@ SHOLVA_MODULES := \
 	regfile \
 	tiny86
 TESTBENCH_EXES := $(addsuffix .tb.vvp,$(SHOLVA_MODULES))
+TESTBENCH_CHECK := check.tb.vvp
 
 %.tb.yml: $(TBGEN) $(TVGEN) $(E2EGEN)
 
@@ -129,7 +129,7 @@ check.tv: check.e2e.tv
 # TOP-LEVEL
 #
 .PHONY: all
-all: $(TESTBENCH_EXES) $(ALL_ELF)
+all: $(TESTBENCH_EXES) $(TESTBENCH_CHECK) $(ALL_ELF)
 
 .PHONY: test
 test: _test-mttn _test-sholva
@@ -139,7 +139,7 @@ _test-mttn: $(ALL_ELFS)
 	cargo test --manifest-path=$(MTTN_PREFIX)/Cargo.toml
 
 .PHONY: _test-sholva
-_test-sholva: _test-clash _test-verilog
+_test-sholva: _test-clash _test-verilog _test-check
 
 .PHONY: _test-clash
 _test-clash:
@@ -149,7 +149,11 @@ _test-clash:
 _test-verilog: $(TESTBENCH_EXES)
 	@./run-tests $(CHECKS)
 
+.PHONY: _test-check
+_test-check: $(TESTBENCH_CHECK)
+	@./run-tests
+
 .PHONY: clean
 clean:
-	rm -rf $(TESTBENCH_EXES) *.vcd *.e2e.tv \
+	rm -rf $(TESTBENCH_EXES) $(TESTBENCH_CHECK) *.vcd *.e2e.tv \
 	       $(ALL_ELFS) $(TRACE_JSONLS) $(TRACE_TEXTS)
