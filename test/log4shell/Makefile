@@ -5,7 +5,7 @@ IMAGE_NAME := trailofbits/mttn-log4shell
 
 log4shell.trace: compile
 	make -C vulnerable-app log4shell-poc.jar
-	docker run -it --rm --security-opt seccomp=unconfined --mount type=bind,source="$(REPO_DIR)",target=/app/mttn \
+	docker run -it --rm --security-opt seccomp=unconfined --mount type=bind,source="$(REPO_DIR)/mttn",target=/app/mttn \
 		-e RUST_LOG=debug \
 		--workdir=/app/mttn/test/log4shell $(IMAGE_NAME) \
 		mttn --ignore-unsupported-memops java -- \
@@ -15,7 +15,7 @@ log4shell.trace: compile
 
 .PHONY: run
 run: docker
-	docker run -it --rm --security-opt seccomp=unconfined --mount type=bind,source="$(REPO_DIR)",target=/app/mttn $(IMAGE_NAME) /bin/bash
+	docker run -it --rm --security-opt seccomp=unconfined --mount type=bind,source="$(REPO_DIR)/mttn",target=/app/mttn $(IMAGE_NAME) /bin/bash
 
 .PHONY: test
 test:
@@ -24,7 +24,7 @@ test:
 
 .PHONY: compile
 compile: docker
-	docker run -it --rm --security-opt seccomp=unconfined --mount type=bind,source="$(REPO_DIR)",target=/app/mttn $(IMAGE_NAME) cargo build
+	docker run -it --rm --security-opt seccomp=unconfined --mount type=bind,source="$(REPO_DIR)/mttn",target=/app/mttn $(IMAGE_NAME) cargo build
 
 .PHONY: docker
 docker: .last_built
