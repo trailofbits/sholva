@@ -1,6 +1,6 @@
 FROM trailofbits/openjdk-i386 as openjdk
 
-FROM rust:1.57
+FROM rust:1.58
 
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt update && apt install -y nasm gdb gcc-multilib
