@@ -3,6 +3,7 @@ module Syscall.Transmit
     ) where
 
 import Clash.Prelude
+import Prelude ()
 
 import Syscall.Internal
 

@@ -3,6 +3,7 @@ module Syscall.Recieve
     ) where
 
 import Clash.Prelude
+import Prelude ()
 
 import Syscall.Internal
 

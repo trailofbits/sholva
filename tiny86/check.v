@@ -1,7 +1,7 @@
 `default_nettype none
 module check(
-  input [559:0] step0,
-  input [559:0] step1,
+  input [655:0] step0,
+  input [655:0] step1,
 
   output ok
 );
@@ -25,11 +25,14 @@ tiny86 check0(
   .o_esp(o_esp),
   .o_ebp(o_ebp),
   .o_eip(o_eip),
+  .os_eax(ns_eax),
+  .os_ebx(ns_ebx),
+  .os_ecx(ns_ecx),
   .o_eflags(o_eflags)
 );
 
 // Next (input) states.
-wire [31:0] n_eax, n_ebx, n_ecx, n_edx, n_esi, n_edi, n_esp, n_ebp, n_eip, n_eflags;
+wire [31:0] n_eax, n_ebx, n_ecx, n_edx, n_esi, n_edi, n_esp, n_ebp, n_eip, n_eflags, ns_eax, ns_ebx, ns_ecx;
 
 wire [95:0] _raw_instr;
 wire [71:0] raw_hint1;
@@ -49,6 +52,9 @@ fetch fetch1(
   .ebp(n_ebp),
   .eip(n_eip),
   .eflags(n_eflags),
+  .s_eax(ns_eax),
+  .s_ebx(ns_ebx),
+  .s_ecx(ns_ecx),
   .raw_hint1(raw_hint1),
   .raw_hint2(raw_hint2)
 );

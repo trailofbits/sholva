@@ -1,3 +1,6 @@
+.PHONY: all
+all: test
+
 #
 # HDL TESTS
 #
@@ -19,9 +22,12 @@ SHOLVA_MODULES := \
 	move \
 	mux8_32 \
 	regfile \
-	tiny86
+	tiny86 \
+	syscall
+PIPELINE_MODULES := check
+
 TESTBENCH_EXES := $(addsuffix .tb.vvp,$(SHOLVA_MODULES))
-TESTBENCH_CHECK := check.tb.vvp
+PIPELINE_EXES  := $(addsuffix .tb.vvp,$(PIPELINE_MODULES))
 
 %.tb.yml: $(TBGEN) $(TVGEN) $(E2EGEN)
 
@@ -128,18 +134,23 @@ check.tv: check.e2e.tv
 #
 # TOP-LEVEL
 #
-.PHONY: all
-all: $(TESTBENCH_EXES) $(TESTBENCH_CHECK) $(ALL_ELF)
-
+ARCH := $(shell uname -m)
 .PHONY: test
-test: _test-mttn _test-sholva
+ifeq ($(ARCH), x86_64)
+test: _test-sholva _test-pipeline _test-mttn
+else
+test: _test-sholva
+	$(warning "mttn tests only possible on x86 architectures.")
+endif
 
+# mttn self tests
 .PHONY: _test-mttn
 _test-mttn: $(ALL_ELFS)
 	cargo test --manifest-path=$(MTTN_PREFIX)/Cargo.toml
 
+## sholva self tests
 .PHONY: _test-sholva
-_test-sholva: _test-clash _test-verilog _test-check
+_test-sholva: _test-clash _test-verilog
 
 .PHONY: _test-clash
 _test-clash:
@@ -147,13 +158,13 @@ _test-clash:
 
 .PHONY: _test-verilog
 _test-verilog: $(TESTBENCH_EXES)
-	@./run-tests $(CHECKS)
+	@./run-tests $(SHOLVA_MODULES)
 
-.PHONY: _test-check
-_test-check: $(TESTBENCH_CHECK)
-	@./run-tests
+.PHONY: _test-pipeline
+_test-pipeline: $(PIPELINE_EXES)
+	@./run-tests $(PIPELINE_MODULES)
 
 .PHONY: clean
 clean:
-	rm -rf $(TESTBENCH_EXES) $(TESTBENCH_CHECK) *.vcd *.e2e.tv \
+	rm -rf $(TESTBENCH_EXES) $(PIPELINE_EXES) *.vcd *.e2e.tv \
 	       $(ALL_ELFS) $(TRACE_JSONLS) $(TRACE_TEXTS)

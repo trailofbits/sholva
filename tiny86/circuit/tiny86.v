@@ -2,7 +2,7 @@
 `include "defines.v"
 
 module tiny86(
-  input [559:0] step,
+  input [655:0] step,
 
   output [7:0]  o_syscall_state,
   output [31:0] o_eax,
@@ -14,6 +14,11 @@ module tiny86(
   output [31:0] o_esp,
   output [31:0] o_ebp,
   output [31:0] o_eip,
+  /* syscall registers */
+  output [31:0] os_eax,
+  output [31:0] os_ebx,
+  output [31:0] os_ecx,
+
   output [31:0] o_eflags
 );
 
@@ -21,6 +26,7 @@ module tiny86(
 
 wire [95:0] raw_instr;
 wire [31:0] eax, ebx, ecx, edx, esi, edi, esp, ebp, eip, eflags;
+wire [31:0] s_eax, s_ebx, s_ecx;
 wire [71:0] raw_hint1;
 wire [71:0] raw_hint2;
 
@@ -38,6 +44,9 @@ fetch fetch_x(
   .ebp(ebp),
   .eip(eip),
   .eflags(eflags),
+  .s_eax(s_eax),
+  .s_ebx(s_ebx),
+  .s_ecx(s_ecx),
   .raw_hint1(raw_hint1),
   .raw_hint2(raw_hint2)
 );
