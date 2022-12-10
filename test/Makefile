@@ -111,7 +111,7 @@ MTTN := cargo run --manifest-path=$(MTTN_PREFIX)/Cargo.toml --bin mttn --
 
 # NOTE(ww): No default traces for the C tests, since some are interactive/take
 # environmental inputs.
-TRACE_JSONLS := $(ASM_ELFS:.elf=.trace.jsonl)
+TRACE_JSONLS := $(ASM_ELFS:.elf=.trace.jsonl) $(C_ELFS:.elf=.trace.jsonl)
 TRACE_TEXTS := $(ASM_ELFS:.elf=.trace.txt)
 
 .DELETE_ON_ERROR:

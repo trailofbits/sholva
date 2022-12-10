@@ -174,6 +174,10 @@ pub struct RegisterFile {
     pub rflags: u64,
     pub fs_base: u64,
     pub gs_base: u64,
+    // NOTE(jl): syscall state.
+    pub s_eax: u32,
+    pub s_ebx: u32,
+    pub s_ecx: u32,
     // TODO: Are this needed?
     pub orig_rax: u64,
     pub cs: u64,
@@ -305,6 +309,9 @@ impl From<libc::user_regs_struct> for RegisterFile {
             rflags: user_regs.eflags,
             fs_base: user_regs.fs_base,
             gs_base: user_regs.gs_base,
+            s_eax: 0,
+            s_ebx: 0,
+            s_ecx: 0,
             orig_rax: user_regs.orig_rax,
             cs: user_regs.cs,
             ds: user_regs.ds,
