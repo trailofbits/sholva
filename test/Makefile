@@ -48,13 +48,14 @@ PIPELINE_EXES  := $(addsuffix .tb.vvp,$(PIPELINE_MODULES))
 		$<
 
 #
-# TESTS
+# PROGRAM TESTS
 #
 ASM_TESTS := \
 	alu_adc \
 	alu_add \
 	alu_add_neg \
 	cdq \
+	exit \
 	jmp \
 	lea \
 	loop_ \
@@ -67,8 +68,11 @@ ASM_TESTS := \
 	stosb \
 	stosd \
 	stosw \
+	transmit \
+	xchg_r_r \
 	tinysyscall \
-	xchg_r_r
+	transmit
+
 ASM_SOURCES := $(ASM_TESTS:=.s)
 ASM_OBJS := $(ASM_SOURCES:.s=.o)
 ASM_ELFS := $(ASM_OBJS:.o=.elf)
@@ -80,6 +84,9 @@ C_TESTS := \
 	smallcall
 C_SOURCES := $(C_TESTS:=.c)
 C_ELFS := $(C_SOURCES:.c=.elf)
+
+CGC_TESTS := \
+	Palindrome
 
 ALL_ELFS := $(ASM_ELFS) $(C_ELFS)
 
@@ -100,7 +107,7 @@ ALL_ELFS := $(ASM_ELFS) $(C_ELFS)
 # TRACING
 #
 MTTN_PREFIX := ../mttn
-MTTN := cargo run --manifest-path=$(MTTN_PREFIX)/Cargo.toml --quiet --bin mttn --
+MTTN := cargo run --manifest-path=$(MTTN_PREFIX)/Cargo.toml --bin mttn --
 
 # NOTE(ww): No default traces for the C tests, since some are interactive/take
 # environmental inputs.
@@ -114,6 +121,10 @@ TRACE_TEXTS := $(ASM_ELFS:.elf=.trace.txt)
 .DELETE_ON_ERROR:
 %.trace.txt: %.elf
 	$(MTTN) -At --syscall-model=decree -m32 -F tiny86-text ./$< > $@
+
+.DELETE_ON_ERROR:
+%.trace.txt: %.cgc
+	$(MTTN) -At --syscall-model=linux32 -m32 -F inst-count ./$<
 
 #
 # INTEGRATION

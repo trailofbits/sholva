@@ -512,10 +512,13 @@ impl<'a> Tracee<'a> {
 
             match syscall {
                 DecreeSyscall::Terminate => ptrace::kill(self.tracee_pid)?,
+                DecreeSyscall::Transmit => (), // data has left into the void
+                DecreeSyscall::Recieve => (),
                 _ => return Err(anyhow!("unimplemented DECREE syscall: {:?}", syscall)),
             }
         } else {
             // Linux x86 syscalls.
+            log::debug!("selected {:?}", syscall);
             return Err(anyhow!("Linux syscalls are completely unimplemented!"));
         }
 
