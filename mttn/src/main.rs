@@ -39,6 +39,14 @@ fn app() -> Command<'static> {
                 .long("ignore-unsupported-memops"),
         )
         .arg(
+            Arg::new("ignore-first-n-instr")
+                .help("Begin full trace after executing N instructions")
+                .short('N')
+                .long("ignore-first-n-instr")
+                .takes_value(true)
+                .default_value("0"),
+        )
+        .arg(
             Arg::new("tiny86-only")
                 .help("Fail if the tracer encounters x86 functionality that Tiny86 doesn't support")
                 .short('t')
@@ -104,6 +112,7 @@ fn run() -> Result<()> {
     let tracer = trace::Tracer::from(&matches);
 
     let mut traces = tracer.trace()?;
+    traces.step_without_trace(tracer.ignore_first_n_instr)?;
 
     match matches.value_of("output-format").unwrap() {
         "jsonl" => {

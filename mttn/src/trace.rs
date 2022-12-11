@@ -1,9 +1,11 @@
 use std::convert::{TryFrom, TryInto};
 use std::io::IoSliceMut;
+use std::num::ParseIntError;
 use std::os::unix::process::CommandExt;
 use std::process::Command;
 
 use anyhow::{anyhow, Context, Result};
+use clap::builder::NonEmptyStringValueParser;
 use derivative::Derivative;
 use iced_x86::{
     Code, Decoder, DecoderOptions, Instruction, InstructionInfoFactory, InstructionInfoOptions,
@@ -385,7 +387,22 @@ impl<'a> Tracee<'a> {
         }
     }
 
-    /// Count the total number of instructions in the trace by stepping the tracee forwards
+    /// Skip over n instructions without tracing.
+    /// Can't use Iterator::skip because we need different behavior than next().
+    /// Generally used for omitting trace prior to control flow based on secret input.
+    pub fn step_without_trace(&self, n: usize) -> Result<()> {
+        for i in 0..n {
+            if !self.terminated {
+                ptrace::step(self.tracee_pid, None)?;
+                self.wait();
+            } else {
+                return Err(anyhow!("step_without_trace: process terminated early, after {} instructions instead of {}", i, n));
+            }
+        }
+        Ok(())
+    }
+
+    /// Count the total number of instructions in the trace (post-initialization) by stepping the tracee forwards
     /// one instruction at a time, but _without_ modeling memory. After calling this function,
     /// `self.terminated` will be `true` and this `Tracee` will be an empty `Step` iterator.
     pub fn count_instructions(mut self) -> Result<usize> {
@@ -798,6 +815,7 @@ impl Iterator for Tracee<'_> {
 #[derive(Debug)]
 pub struct Tracer {
     pub ignore_unsupported_memops: bool,
+    pub ignore_first_n_instr: usize,
     pub tiny86_only: bool,
     pub decree_syscalls: bool,
     pub debug_on_fault: bool,
@@ -835,6 +853,11 @@ impl From<&clap::ArgMatches> for Tracer {
         #[allow(clippy::redundant_field_names)]
         Self {
             ignore_unsupported_memops: matches.is_present("ignore-unsupported-memops"),
+            ignore_first_n_instr: matches
+                .value_of("ignore-first-n-instr")
+                .unwrap()
+                .parse::<usize>()
+                .expect("Invalid integer for ignore-first-n-instr"),
             tiny86_only: matches.is_present("tiny86-only"),
             decree_syscalls: matches.value_of("syscall-model").unwrap() == "decree",
             debug_on_fault: matches.is_present("debug-on-fault"),
@@ -896,6 +919,7 @@ mod tests {
 
         Tracer {
             ignore_unsupported_memops: false,
+            ignore_first_n_instr: 0,
             tiny86_only: true,
             decree_syscalls: true,
             debug_on_fault: false,
