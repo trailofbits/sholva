@@ -39,12 +39,19 @@ fn app() -> Command<'static> {
                 .long("ignore-unsupported-memops"),
         )
         .arg(
-            Arg::new("ignore-first-n-instr")
+            Arg::new("begin-trace-after")
                 .help("Begin full trace after executing N instructions")
-                .short('N')
-                .long("ignore-first-n-instr")
+                .short('b')
+                .long("begin-trace-after")
                 .takes_value(true)
                 .default_value("0"),
+        )
+        .arg(
+            Arg::new("end-trace-after")
+                .help("End after tracing M instructions")
+                .short('e')
+                .long("end-trace-after")
+                .takes_value(true),
         )
         .arg(
             Arg::new("tiny86-only")
@@ -112,7 +119,7 @@ fn run() -> Result<()> {
     let tracer = trace::Tracer::from(&matches);
 
     let mut traces = tracer.trace()?;
-    traces.step_without_trace(tracer.ignore_first_n_instr)?;
+    traces.step_without_trace(tracer.begin_trace_after)?;
 
     match matches.value_of("output-format").unwrap() {
         "jsonl" => {

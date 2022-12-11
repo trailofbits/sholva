@@ -366,6 +366,7 @@ pub enum Target {
 ///
 /// Tracees are associated with their parent `Tracer`.
 pub struct Tracee<'a> {
+    num_inst_traced: usize,
     terminated: bool,
     tracee_pid: Pid,
     tracer: &'a Tracer,
@@ -379,6 +380,7 @@ impl<'a> Tracee<'a> {
     fn new(tracee_pid: Pid, tracer: &'a Tracer) -> Self {
         #[allow(clippy::redundant_field_names)]
         Self {
+            num_inst_traced: 0,
             terminated: false,
             tracee_pid: tracee_pid,
             tracer: tracer,
@@ -510,6 +512,7 @@ impl<'a> Tracee<'a> {
             // ...then, after we've stepped the program, we fill in the data
             // associated with each Write hint in stage 2.
             self.tracee_hints_stage2(&mut hints)?;
+            self.num_inst_traced += 1;
         }
 
         self.wait()?;
@@ -804,7 +807,7 @@ impl Iterator for Tracee<'_> {
     type Item = Result<Step>;
 
     fn next(&mut self) -> Option<Self::Item> {
-        if self.terminated {
+        if self.terminated || self.num_inst_traced == self.tracer.end_trace_after {
             None
         } else {
             Some(self.step())
@@ -815,7 +818,8 @@ impl Iterator for Tracee<'_> {
 #[derive(Debug)]
 pub struct Tracer {
     pub ignore_unsupported_memops: bool,
-    pub ignore_first_n_instr: usize,
+    pub begin_trace_after: usize,
+    pub end_trace_after: usize,
     pub tiny86_only: bool,
     pub decree_syscalls: bool,
     pub debug_on_fault: bool,
@@ -853,11 +857,16 @@ impl From<&clap::ArgMatches> for Tracer {
         #[allow(clippy::redundant_field_names)]
         Self {
             ignore_unsupported_memops: matches.is_present("ignore-unsupported-memops"),
-            ignore_first_n_instr: matches
-                .value_of("ignore-first-n-instr")
+            begin_trace_after: matches
+                .value_of("start-trace-after")
                 .unwrap()
                 .parse::<usize>()
-                .expect("Invalid integer for ignore-first-n-instr"),
+                .expect("Invalid number of instructions for start-trace-after"),
+            end_trace_after: matches
+                .value_of("end-trace-after")
+                .unwrap()
+                .parse::<usize>()
+                .expect("Invalid number of instructions for end-trace-after"),
             tiny86_only: matches.is_present("tiny86-only"),
             decree_syscalls: matches.value_of("syscall-model").unwrap() == "decree",
             debug_on_fault: matches.is_present("debug-on-fault"),
