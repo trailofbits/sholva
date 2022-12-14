@@ -11,6 +11,7 @@ lint:
 format:
 	$(MAKE) -C mttn format
 
+<<<<<<< HEAD
 .PHONY: test
 test: all
 	$(MAKE) -C test test
@@ -22,6 +23,25 @@ docker: docker.nix
 
 .PHONY: install
 install:
+
+.PHONY: stat
+stat:
+	$(MAKE) -C tiny86 stat
+
+.PHONY: test
+test:
+	$(MAKE) -C test test
+
+# generate traces for all benchmark programs/exploits.
+.PHONY: benchmarks
+benchmarks:
+	$(MAKE) -C test buffer_overflow_benchmark
+	$(MAKE) -C test nop_benchmark
+
+# generate ZK artifacts.
+.PHONY: artifacts
+artifacts: tiny86/tiny86.blif
+	TOP_CIRCUIT=$(abspath $<) $(MAKE) -C test artifacts
 
 clean:
 	$(MAKE) -C tiny86 clean
