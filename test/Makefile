@@ -9,6 +9,7 @@ SHOLVA_MODULES ?= \
 	agu \
 	alu \
 	cfu \
+	check \
 	decode \
 	decode_hint \
 	decode_opc_phase1 \
@@ -83,11 +84,15 @@ C_TESTS := \
 	smallcall
 C_SOURCES := $(C_TESTS:=.c)
 C_ELFS := $(C_SOURCES:.c=.elf)
+CFLAGS += -fno-pic -g -m32 -mtune=i386 -Wl,-emain -nostdlib -static -std=c99 \
+		-mpreferred-stack-boundary=2 -fno-stack-protector -z execstack
 
 CGC_TESTS := \
 	Palindrome
 
 ALL_ELFS := $(ASM_ELFS) $(C_ELFS)
+
+elfs: $(ALL_ELFS)
 
 %.elf: %.o
 	ld -m elf_i386 $(basename $@).o -o $(basename $@).elf
@@ -97,9 +102,7 @@ ALL_ELFS := $(ASM_ELFS) $(C_ELFS)
 	nasm -f elf32 $(basename $@).s -o $(basename $@).o
 
 %.elf: %.c
-	$(CC) -fno-pic -g -m32 -mtune=i386 -Wl,-emain -nostdlib -static -std=c99 \
-		$(basename $@).c -o $(basename $@).elf -mpreferred-stack-boundary=2 \
-		-fno-stack-protector -z execstack
+	$(CC) $(CFLAGS) $(basename $@).c -o $(basename $@).elf 
 
 
 #
@@ -205,3 +208,21 @@ _test-pipeline: $(PIPELINE_EXES)
 clean:
 	rm -rf $(TESTBENCH_EXES) $(PIPELINE_EXES) *.vcd *.e2e.tv \
 	       *.elf *.jsonl *.trace.txt
+
+#
+# ARTIFACTS
+#
+.PHONY: nop_benchmark
+nop_benchmark:
+	@./nop-benchmark.sh
+
+.PHONY: buffer_overflow_benchmark
+buffer_overflow_benchmark: buffer_overflow.c
+	@./buffer-overflow-benchmark.sh
+
+# produce consumable IR0 artifacts for all generated program traces.
+.PHONY: artifacts
+artifacts: $(TRACE_TEXTS:.trace.txt=.circuit)
+
+%.circuit: %.trace.txt
+	sv-compositor -b $(TOP_CIRCUIT) -o $@ -w $^
