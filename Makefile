@@ -12,6 +12,7 @@ format:
 	$(MAKE) -C mttn format
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 .PHONY: test
 test: all
 	$(MAKE) -C test test
@@ -24,6 +25,8 @@ docker: docker.nix
 .PHONY: install
 install:
 
+=======
+>>>>>>> 3742971 (TEST(jl): buffer overflow artifacts.)
 .PHONY: stat
 stat:
 	$(MAKE) -C tiny86 stat
@@ -43,6 +46,7 @@ benchmarks:
 artifacts: tiny86/tiny86.blif
 	TOP_CIRCUIT=$(abspath $<) $(MAKE) -C test artifacts
 
+.PHONY: clean
 clean:
 	$(MAKE) -C tiny86 clean
 	$(MAKE) -C mttn clean

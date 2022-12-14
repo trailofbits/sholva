@@ -189,14 +189,15 @@ _test-pipeline: $(PIPELINE_EXES)
 .PHONY: clean
 clean:
 	rm -rf $(TESTBENCH_EXES) $(PIPELINE_EXES) *.vcd *.e2e.tv \
-	       $(ALL_ELFS) $(TRACE_JSONLS) $(TRACE_TEXTS)
+	       $(ALL_ELFS) $(TRACE_JSONLS) $(TRACE_TEXTS) \
+	       *.trace.* *.circuit *.*_input
 
 #
 # ARTIFACTS
 #
 .PHONY: nop_benchmark
 nop_benchmark:
-	@./nop-benchmark.sh
+	@./nop-benchmark/gen.sh
 
 .PHONY: buffer_overflow_benchmark
 buffer_overflow_benchmark: buffer_overflow.c

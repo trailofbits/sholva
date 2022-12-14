@@ -82,8 +82,27 @@ _lint-synth: codegen $(ALL_V_WITHOUT_TESTS_OR_CODEGEN)
 		-ycircuit/execute \
 		-t null check.v
 
+<<<<<<< HEAD
 .PHONY: install
 install:
+=======
+tiny86.blif:
+	sv-netlist $(IFLAGS) --top tiny86 $@ $(ALL_V_WITHOUT_TESTS_OR_CODEGEN)
+
+.PHONY: stat
+stat:
+	sv-stat $(IFLAGS) --top tiny86 $(ALL_V_WITHOUT_TESTS_OR_CODEGEN)
+
+.PHONY: codegen
+codegen:
+	$(MAKE) -C circuit/codegen
+
+.PHONY: lint
+lint:
+	# TODO(ww): Add -Wall here once we're actually using more of our wires.
+	verilator --top-module $(TOP_MODULE) --lint-only $(IFLAGS) $(ALL_V_WITHOUT_TESTS_OR_CODEGEN)
+	hlint -g
+>>>>>>> 3742971 (TEST(jl): buffer overflow artifacts.)
 
 .PHONY: clean
 clean:
