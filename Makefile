@@ -15,17 +15,17 @@ format:
 test: all
 	$(MAKE) -C test test
 
-.PHONY: docker
-docker: docker.nix
-	nix-build docker.nix
-	docker load < result
-
 .PHONY: install
 install:
+
+.PHONY: stat
+stat:
+	$(MAKE) -C tiny86 stat
 
 .PHONY: test
 test:
 	$(MAKE) -C test test
 
+.PHONY: clean
 clean:
 	$(MAKE) -C test clean
