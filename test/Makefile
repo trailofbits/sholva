@@ -74,6 +74,9 @@ C_TESTS := \
 	smallcall
 C_SOURCES := $(C_TESTS:=.c)
 C_ELFS := $(C_SOURCES:.c=.elf)
+CFLAGS += -fno-pic -g -m32 -mtune=i386 -Wl,-emain -nostdlib -static -std=c99 \
+		-mpreferred-stack-boundary=2 -fno-stack-protector -z execstack
+
 
 ALL_ELFS := $(ASM_ELFS) $(C_ELFS)
 
@@ -85,9 +88,7 @@ ALL_ELFS := $(ASM_ELFS) $(C_ELFS)
 	nasm -f elf32 $(basename $@).s -o $(basename $@).o
 
 %.elf: %.c
-	$(CC) -fno-pic -g -m32 -mtune=i386 -Wl,-emain -nostdlib -static -std=c99 \
-		$(basename $@).c -o $(basename $@).elf -mpreferred-stack-boundary=2 \
-		-fno-stack-protector -z execstack
+	$(CC) $(CFLAGS) $(basename $@).c -o $(basename $@).elf 
 
 
 #
@@ -152,4 +153,28 @@ _test-verilog: $(TESTBENCH_EXES)
 .PHONY: clean
 clean:
 	rm -rf $(TESTBENCH_EXES) *.vcd *.e2e.tv \
-	       $(ALL_ELFS) $(TRACE_JSONLS) $(TRACE_TEXTS)
+	       *.trace.* *.circuit *.*_input
+
+#
+# ARTIFACTS
+#
+.PHONY: nop_benchmark
+nop_benchmark:
+	@./nop-benchmark/gen.sh
+
+.PHONY: buffer_overflow_benchmark
+buffer_overflow_benchmark: buffer_overflow.c
+	@./buffer-overflow-benchmark.sh
+
+TRACES := $(wildcard *.trace.txt)
+
+# produce consumable IR0 artifacts for all generated program traces.
+.PHONY: artifacts
+artifacts: $(TRACES:.trace.txt=.circuit)
+
+%.circuit: %.trace.txt
+	sv-compositor -b $(TOP_CIRCUIT) -o $@ -w $^
+
+tiny86.bristol: tiny86.blif
+	# use a test trace as witness.
+	cat circuit/test/alu_add.trace.txt | head -n1 | sv-compositor -b $^ -o $@ -w /dev/stdin
