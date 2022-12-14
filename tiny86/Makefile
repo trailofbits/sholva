@@ -20,7 +20,7 @@ all: codegen $(ALL_V) $(CLASH_VERILOG)
 		-t null check.v
 
 tiny86.blif:
-	python /root/sieve/verilog_tools/yosys/netlistify.py $(IFLAGS) --top tiny86 $@ $(ALL_V_WITHOUT_TESTS_OR_CODEGEN)
+	sv-netlist $(IFLAGS) --top tiny86 $@ $(ALL_V_WITHOUT_TESTS_OR_CODEGEN)
 
 .PHONY: stat
 stat:

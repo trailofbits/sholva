@@ -80,8 +80,6 @@ CFLAGS += -fno-pic -g -m32 -mtune=i386 -Wl,-emain -nostdlib -static -std=c99 \
 
 ALL_ELFS := $(ASM_ELFS) $(C_ELFS)
 
-elfs: $(ALL_ELFS)
-
 %.elf: %.o
 	ld -m elf_i386 $(basename $@).o -o $(basename $@).elf
 	chmod +x $(basename $@).elf
@@ -155,7 +153,7 @@ _test-verilog: $(TESTBENCH_EXES)
 .PHONY: clean
 clean:
 	rm -rf $(TESTBENCH_EXES) *.vcd *.e2e.tv \
-	       *.elf  *.trace.* *.circuit *.*_input nop*.s
+	       *.trace.* *.circuit *.*_input nop*.s
 
 #
 # ARTIFACTS

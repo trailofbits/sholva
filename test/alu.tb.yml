@@ -1,0 +1,89 @@
+module: alu
+file: ../tiny86/circuit/execute/alu.v
+inputs:
+  - "18 cntl"
+  - "7 status_in"
+  - "32 opnd0_r"
+  - "32 opnd1_r"
+outputs:
+  - "7 status_out"
+  - "32 result"
+vector_specs:
+    - _description: "ALU_OP_ADD, no carry in/out, parity even (PF=1), AF=1"
+
+      # INPUTS
+      cntl: 0b00000000000010
+      opnd0_r: 0xaaaa
+      opnd1_r: 0xbbbb
+
+      # OUTPUTS
+      status_out: 0b0101000
+      result: 0x16665
+
+    - _description: "ALU_OP_ADD, no carry in/out, parity even (PF=1), AF=0"
+
+      # INPUTS
+      cntl: 0b00000000000010
+      opnd0_r: 7
+      opnd1_r: 8
+
+      # OUTPUTS
+      status_out: 0b0001000
+      result: 15
+
+    - _description: "ALU_OP_ADD, no carry in, CF=1, SF=1, AF=1 parity odd"
+
+      # INPUTS
+      cntl: 0b00000000000010
+      opnd0_r: -5
+      opnd1_r: -3
+
+      # OUTPUTS
+      status_out: 0b0110010
+      result: -8
+
+    - _description: "ALU_OP_ADD, carry in (no carry out, no overflow)"
+
+      # INPUTS
+      cntl: 0b00000010000010
+      status_in: 0b010000
+      opnd0_r: 3
+      opnd1_r: 4
+
+      # OUTPUTS
+      status_out: 0b0000000
+      result: 8
+
+    - _description: "ALU_OP_ADD, no carry in, SF=1 AF=1"
+
+      # INPUTS
+      cntl: 0b00000000000010
+      opnd0_r: 0x12345678
+      opnd1_r: 0x90abcdef
+
+      # OUTPUTS
+      status_out: 0b0100010
+      result: 0xa2e02467
+
+    - _description: "ALU_OP_ADD, no carry in, SF=1, AF=1, CF=1"
+
+      # INPUTS
+      cntl: 0b00000000000010
+      opnd0_r: 0xffffffff
+      opnd1_r: 0xffffffff
+
+      # OUTPUTS
+      status_out: 0b0110010
+      result: 0xfffffffe
+
+    - _description: "ALU_OP_SUB (11 SUB 10), sign+carry in, no write, all statuses cleared"
+
+      # INPUTS
+      cntl: 0b000000011000000000
+      status_in: 0b0010010
+      opnd0_r: 0x0b
+      opnd1_r: 0x0a
+
+      # OUTPUTS
+      status_out: 0b0000000
+      result: 0
