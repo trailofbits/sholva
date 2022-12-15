@@ -1,9 +1,6 @@
 # iverilog default output
 a.out
 
-# BLIF outputs
-*.blif
-
 # clash output
 .stack-work/
 verilog/
