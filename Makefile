@@ -26,6 +26,11 @@ stat:
 test:
 	$(MAKE) -C test test
 
+# generate ZK artifacts.
+.PHONY: artifacts
+artifacts: tiny86/tiny86.blif
+	$(MAKE) -C test artifacts
+
 .PHONY: clean
 clean:
 	$(MAKE) -C test clean
