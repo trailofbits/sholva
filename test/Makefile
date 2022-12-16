@@ -173,7 +173,7 @@ TRACES := $(wildcard *.trace.txt)
 artifacts: $(TRACES:.trace.txt=.circuit)
 
 %.circuit: %.trace.txt
-	sv-compositor -b $(TOP_CIRCUIT) -o $@ -w $^
+	sv-compositor -b ../tiny86/tiny86.blif -o $@ -w $^
 
 tiny86.bristol: tiny86.blif
 	# use a test trace as witness.
