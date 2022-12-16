@@ -208,4 +208,4 @@ buffer_overflow_benchmark: buffer_overflow.c
 artifacts: $(TRACE_TEXTS:.trace.txt=.circuit)
 
 %.circuit: %.trace.txt
-	sv-compositor -b $(TOP_CIRCUIT) -o $@ -w $^
+	sv-compositor -b ../tiny86/tiny86.blif -o $@ -w $^
