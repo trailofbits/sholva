@@ -13,7 +13,7 @@ mov eax, 1
 int 0x80
 """
 
-n=$((2**$1))
+n=$1
 f=nop${n}
 
 { echo "${PRELUDE}";
