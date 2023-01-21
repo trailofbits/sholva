@@ -177,7 +177,8 @@ TRACES := $(wildcard *.trace.txt)
 artifacts: $(TRACES:.trace.txt=.circuit)
 
 %.circuit: %.trace.txt
-	sv-compositor -b ../tiny86/tiny86.blif -o $@ -w $^
+	# added PATH for Phase 2 T&E
+	PATH=~/.cargo/bin:$(PATH) sv-compositor -b ../tiny86/tiny86.blif -o $@ -w $^
 
 tiny86.bristol: tiny86.blif
 	# use a test trace as witness.
