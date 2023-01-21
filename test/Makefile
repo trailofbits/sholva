@@ -23,6 +23,10 @@ SHOLVA_MODULES := \
 	tiny86
 TESTBENCH_EXES := $(addsuffix .tb.vvp,$(SHOLVA_MODULES))
 
+.EXPORT_ALL_VARIABLES:
+
+PATH := $(PATH):~/.cargo/bin
+
 %.tb.yml: $(TBGEN) $(TVGEN) $(E2EGEN)
 
 %.tb.gen.v: %.tb.yml
