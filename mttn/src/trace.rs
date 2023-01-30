@@ -444,7 +444,7 @@ impl<'a> Tracee<'a> {
     /// Step the tracee forwards by one instruction, returning the trace `Step` or
     /// an `Err` if an internal tracing step fails.
     fn step(&mut self) -> Result<Step> {
-        self.tracee_regs()?;
+        self.register_file = self.tracee_regs()?;
         let (instr, instr_bytes) = self.tracee_instr()?;
 
         if self.tracer.tiny86_only {
@@ -541,22 +541,22 @@ impl<'a> Tracee<'a> {
     }
 
     /// Loads the our register file from the tracee's user register state.
-    fn tracee_regs(&mut self) -> Result<()> {
-        self.register_file = RegisterFile::from(ptrace::getregs(self.tracee_pid)?);
+    fn tracee_regs(&mut self) -> Result<RegisterFile> {
+        let mut register_file = RegisterFile::from(ptrace::getregs(self.tracee_pid)?);
 
         if self.tracer.tiny86_only {
             // The IF flag is purely a remnant of our tracer (since we're single-stepping),
             // so clear it for maximum fidelity when we're tracing for Tiny86.
-            self.register_file.rflags &= !RFLAGS_IF_MASK;
+            register_file.rflags &= !RFLAGS_IF_MASK;
 
             // Similarly: `ptrace(PTRACE_GETREGS, ...)` seems to be slightly bugged on
             // x86-64 Linux, and returns `rflags: 0` at process start. This
             // is architecturally impossible (`rflags >= 2` because of the reserved bit),
             // so we just fix it up here.
-            self.register_file.rflags |= RFLAGS_RESERVED_MASK;
+            register_file.rflags |= RFLAGS_RESERVED_MASK;
         }
 
-        Ok(())
+        Ok(register_file)
     }
 
     /// Returns the iced-x86 `Instruction` and raw instruction bytes at the tracee's
