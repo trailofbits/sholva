@@ -49,6 +49,7 @@ ASM_TESTS := \
 	alu_add \
 	alu_add_neg \
 	cdq \
+	cmov \
 	jmp \
 	lea \
 	loop_ \

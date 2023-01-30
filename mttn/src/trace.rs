@@ -517,11 +517,33 @@ impl<'a> Tracee<'a> {
         self.wait()?;
 
         #[allow(clippy::redundant_field_names)]
-        Ok(vec![Step {
-            instr: instr_bytes,
-            regs: self.register_file,
-            hints: hints,
-        }])
+        Ok(
+            // Decompose compound instructions.
+            match instr.code() {
+                // cmov
+                Code::Cmovb_r32_rm32 => {
+                    let decomposed_instr = if self.register_file.rflags & 0b1 == 1 {
+                        Code::Mov_r32_rm32
+                    } else {
+                        Code::Nopw
+                    };
+
+                    log::debug!("decompose: {:?} to {:?}", instr.code(), decomposed_instr);
+                    vec![Step {
+                        instr: decomposed_instr.op_code().op_code().to_be_bytes().to_vec(),
+                        regs: self.register_file,
+                        hints: hints.clone(),
+                    }]
+                }
+                _ => {
+                    vec![Step {
+                        instr: instr_bytes,
+                        regs: self.register_file,
+                        hints: hints.clone(),
+                    }]
+                }
+            },
+        )
     }
 
     fn do_syscall(&mut self, instr: &Instruction, syscall: u32) -> Result<()> {
