@@ -363,12 +363,27 @@ pub enum Target {
 /// Represents an actively traced program, in some indeterminate state.
 ///
 /// Tracees are associated with their parent `Tracer`.
+#[derive(Debug)]
 pub struct Tracee<'a> {
     terminated: bool,
     tracee_pid: Pid,
     tracer: &'a Tracer,
     info_factory: InstructionInfoFactory,
     register_file: RegisterFile,
+}
+
+pub struct TraceeIter<'a>(&'a mut Tracee<'a>);
+
+impl Iterator for TraceeIter<'_> {
+    type Item = Result<Vec<Step>>;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.0.terminated {
+            None
+        } else {
+            Some(self.0.step())
+        }
+    }
 }
 
 impl<'a> Tracee<'a> {
@@ -383,6 +398,10 @@ impl<'a> Tracee<'a> {
             info_factory: InstructionInfoFactory::new(),
             register_file: Default::default(),
         }
+    }
+
+    pub fn iter(&'a mut self) -> TraceeIter<'a> {
+        TraceeIter(self)
     }
 
     /// Count the total number of instructions in the trace by stepping the tracee forwards
@@ -443,7 +462,7 @@ impl<'a> Tracee<'a> {
 
     /// Step the tracee forwards by one instruction, returning the trace `Step` or
     /// an `Err` if an internal tracing step fails.
-    fn step(&mut self) -> Result<Step> {
+    fn step(&mut self) -> Result<Vec<Step>> {
         self.register_file = self.tracee_regs()?;
         let (instr, instr_bytes) = self.tracee_instr()?;
 
@@ -498,11 +517,11 @@ impl<'a> Tracee<'a> {
         self.wait()?;
 
         #[allow(clippy::redundant_field_names)]
-        Ok(Step {
+        Ok(vec![Step {
             instr: instr_bytes,
             regs: self.register_file,
             hints: hints,
-        })
+        }])
     }
 
     fn do_syscall(&mut self, instr: &Instruction, syscall: u32) -> Result<()> {
@@ -780,18 +799,6 @@ impl<'a> Tracee<'a> {
         }
 
         Ok(())
-    }
-}
-
-impl Iterator for Tracee<'_> {
-    type Item = Result<Step>;
-
-    fn next(&mut self) -> Option<Self::Item> {
-        if self.terminated {
-            None
-        } else {
-            Some(self.step())
-        }
     }
 }
 
