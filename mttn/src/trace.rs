@@ -953,14 +953,18 @@ mod tests {
                     let trace1 = tracer
                         .trace()
                         .expect("spawn failed")
-                        .collect::<Result<Vec<Step>>>()
-                        .expect("trace failed");
+                        .iter()
+                        .flatten()
+                        .flatten()
+                        .collect::<Vec<Step>>();
 
                     let trace2 = tracer
                         .trace()
                         .expect("spawn failed")
-                        .collect::<Result<Vec<Step>>>()
-                        .expect("trace failed");
+                        .iter()
+                        .flatten()
+                        .flatten()
+                        .collect::<Vec<Step>>();
 
                     assert_eq!(trace1.len(), trace2.len());
                     for (step1, step2) in trace1.iter().zip(trace2.iter()) {
