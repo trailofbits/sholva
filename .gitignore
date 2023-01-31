@@ -2,18 +2,21 @@
 a.out
 
 # compiled circuit outputs
-*.blif
 *.bin
+*.blif
 *.bristol
 
 # testing & compilation intermediates
-circuit/test/*.tv
+*.elf
+*.jsonl
+*.trace.txt
+*.tv
 
 # clash, haskell output
-.stack-work/
-verilog/
 *.dyn_*
 *.hi
 *.o
-dist-newstyle/
 .ghc.*
+.stack-work/
+dist-newstyle/
+verilog/
