@@ -400,8 +400,8 @@ impl<'a> Tracee<'a> {
         }
     }
 
-    pub fn iter(&'a mut self) -> TraceeIter<'a> {
-        TraceeIter(self)
+    pub fn iter(&'a mut self) -> impl Iterator<Item = Step> + 'a {
+        TraceeIter(self).flatten().flatten()
     }
 
     /// Count the total number of instructions in the trace by stepping the tracee forwards

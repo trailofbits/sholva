@@ -108,15 +108,11 @@ fn run() -> Result<()> {
     match matches.value_of("output-format").unwrap() {
         "jsonl" => traces
             .iter()
-            .flatten()
-            .flatten()
             .try_for_each(|s| jsonl::write(stdout(), &s).map_err(|e| anyhow!("{:?}", e)))?,
         "tiny86" => traces
             .iter()
-            .flatten()
-            .flatten()
             .try_for_each(|s| s.tiny86_write(&mut stdout()))?,
-        "tiny86-text" => traces.iter().flatten().flatten().try_for_each(|s| {
+        "tiny86-text" => traces.iter().try_for_each(|s| {
             s.bitstring()
                 .and_then(|bs| Ok(writeln!(stdout(), "{}", bs)?))
         })?,
