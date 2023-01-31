@@ -1021,7 +1021,6 @@ mod tests {
         stosb,
         stosd,
         stosw,
-        tinysyscall,
         xchg_r_r,
     }
 }
