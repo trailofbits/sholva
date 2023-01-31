@@ -49,7 +49,8 @@ ASM_TESTS := \
 	alu_add \
 	alu_add_neg \
 	cdq \
-	cmov \
+	decomposition_cmov_a \
+	decomposition_cmov_b \
 	jmp \
 	lea \
 	loop_ \

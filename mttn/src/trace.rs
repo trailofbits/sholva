@@ -1007,6 +1007,8 @@ mod tests {
         alu_add,
         alu_add_neg,
         cdq,
+        decomposition_cmov_a,
+        decomposition_cmov_b,
         jmp,
         lea,
         loop_,
@@ -1019,6 +1021,7 @@ mod tests {
         stosb,
         stosd,
         stosw,
+        tinysyscall,
         xchg_r_r,
     }
 }
