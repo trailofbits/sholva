@@ -267,9 +267,9 @@ mod tests {
         assert_eq!(&regfile_bytes[20..24], vec![0x66; 4]); // rdi
         assert_eq!(&regfile_bytes[24..28], vec![0x77; 4]); // rsp
         assert_eq!(&regfile_bytes[28..32], vec![0x88; 4]); // rbp
-        assert_eq!(&regfile_bytes[32..36], vec![0; 4]);    // s_eax
-        assert_eq!(&regfile_bytes[36..40], vec![0; 4]);    // s_ebx
-        assert_eq!(&regfile_bytes[40..44], vec![0; 4]);    // s_ecx
+        assert_eq!(&regfile_bytes[32..36], vec![0; 4]); // s_eax
+        assert_eq!(&regfile_bytes[36..40], vec![0; 4]); // s_ebx
+        assert_eq!(&regfile_bytes[40..44], vec![0; 4]); // s_ecx
         assert_eq!(&regfile_bytes[44..48], vec![0x99; 4]); // rip
         assert_eq!(&regfile_bytes[48..52], vec![0xaa; 4]); // rflags
     }
