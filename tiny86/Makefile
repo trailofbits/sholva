@@ -1,11 +1,13 @@
 TOP_MODULE := check
 IVERILOG_FLAGS := -gstrict-expr-width
+VERILATOR_FLAGS := -Wno-WIDTH
 IFLAGS := -Icircuit -Icircuit/include
 
 ALL_V := $(shell find . -name "*.v")
 ALL_V_WITHOUT_TESTS_OR_CODEGEN := $(shell \
 	find . -type f -name '*.v' \
 		! -path '*/test/*' \
+		! -path '*/verilog/*' \
 		! -name '*.gen.v' \
 )
 CLASH_VERILOG = circuit/execute/alu.v circuit/syscall.v
@@ -40,7 +42,7 @@ codegen:
 .PHONY: lint
 lint:
 	# TODO(ww): Add -Wall here once we're actually using more of our wires.
-	verilator --top-module $(TOP_MODULE) --lint-only $(IFLAGS) $(ALL_V_WITHOUT_TESTS_OR_CODEGEN)
+	verilator $(VERILATOR_FLAGS) --top-module $(TOP_MODULE) --lint-only $(IFLAGS) $(ALL_V_WITHOUT_TESTS_OR_CODEGEN)
 	hlint -g
 
 .PHONY: clean
