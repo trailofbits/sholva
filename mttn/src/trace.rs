@@ -976,16 +976,12 @@ mod tests {
                         .trace()
                         .expect("spawn failed")
                         .iter()
-                        .flatten()
-                        .flatten()
                         .collect::<Vec<Step>>();
 
                     let trace2 = tracer
                         .trace()
                         .expect("spawn failed")
                         .iter()
-                        .flatten()
-                        .flatten()
                         .collect::<Vec<Step>>();
 
                     assert_eq!(trace1.len(), trace2.len());
