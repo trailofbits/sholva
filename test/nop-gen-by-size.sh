@@ -26,5 +26,10 @@ f=nop${n}
 make "$f".circuit
 
 # NOTE(jl): verify existance of directory.
-mkdir -p $2
-cp nop"${n}".{circuit,circuit.{public,private}_input} $2
+mkdir -p "$2"
+mkdir -p "$2"/instance
+cp ${f%.s}.circuit.public_input "$2"/instance/${f%.s}.public_input
+mkdir -p "$2"/witness
+cp ${f%.s}.circuit.private_input "$2"/witness/${f%.s}.private_input
+mkdir -p "$2"/relation
+cp ${f%.s}.circuit "$2"/relation/${f%.s}.circuit
