@@ -396,12 +396,27 @@ pub enum Target {
 /// Represents an actively traced program, in some indeterminate state.
 ///
 /// Tracees are associated with their parent `Tracer`.
+#[derive(Debug)]
 pub struct Tracee<'a> {
     terminated: bool,
     tracee_pid: Pid,
     tracer: &'a Tracer,
     info_factory: InstructionInfoFactory,
     register_file: RegisterFile,
+}
+
+pub struct TraceeIter<'a>(&'a mut Tracee<'a>);
+
+impl Iterator for TraceeIter<'_> {
+    type Item = Result<Vec<Step>>;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.0.terminated {
+            None
+        } else {
+            Some(self.0.step())
+        }
+    }
 }
 
 impl<'a> Tracee<'a> {
@@ -416,6 +431,10 @@ impl<'a> Tracee<'a> {
             info_factory: InstructionInfoFactory::new(),
             register_file: Default::default(),
         }
+    }
+
+    pub fn iter(&'a mut self) -> impl Iterator<Item = Step> + 'a {
+        TraceeIter(self).flatten().flatten()
     }
 
     /// Count the total number of instructions in the trace by stepping the tracee forwards
@@ -476,8 +495,8 @@ impl<'a> Tracee<'a> {
 
     /// Step the tracee forwards by one instruction, returning the trace `Step` or
     /// an `Err` if an internal tracing step fails.
-    fn step(&mut self) -> Result<Step> {
-        self.tracee_regs()?;
+    fn step(&mut self) -> Result<Vec<Step>> {
+        self.register_file = self.tracee_regs()?;
         let (instr, instr_bytes) = self.tracee_instr()?;
 
         if self.tracer.tiny86_only {
@@ -531,11 +550,11 @@ impl<'a> Tracee<'a> {
         self.wait()?;
 
         #[allow(clippy::redundant_field_names)]
-        Ok(Step {
+        Ok(vec![Step {
             instr: instr_bytes,
             regs: self.register_file,
             hints: hints,
-        })
+        }])
     }
 
     fn do_syscall(
@@ -625,22 +644,22 @@ impl<'a> Tracee<'a> {
     }
 
     /// Loads the our register file from the tracee's user register state.
-    fn tracee_regs(&mut self) -> Result<()> {
-        self.register_file = RegisterFile::from(ptrace::getregs(self.tracee_pid)?);
+    fn tracee_regs(&mut self) -> Result<RegisterFile> {
+        let mut register_file = RegisterFile::from(ptrace::getregs(self.tracee_pid)?);
 
         if self.tracer.tiny86_only {
             // The IF flag is purely a remnant of our tracer (since we're single-stepping),
             // so clear it for maximum fidelity when we're tracing for Tiny86.
-            self.register_file.rflags &= !RFLAGS_IF_MASK;
+            register_file.rflags &= !RFLAGS_IF_MASK;
 
             // Similarly: `ptrace(PTRACE_GETREGS, ...)` seems to be slightly bugged on
             // x86-64 Linux, and returns `rflags: 0` at process start. This
             // is architecturally impossible (`rflags >= 2` because of the reserved bit),
             // so we just fix it up here.
-            self.register_file.rflags |= RFLAGS_RESERVED_MASK;
+            register_file.rflags |= RFLAGS_RESERVED_MASK;
         }
 
-        Ok(())
+        Ok(register_file)
     }
 
     /// Returns the iced-x86 `Instruction` and raw instruction bytes at the tracee's
@@ -867,18 +886,6 @@ impl<'a> Tracee<'a> {
     }
 }
 
-impl Iterator for Tracee<'_> {
-    type Item = Result<Step>;
-
-    fn next(&mut self) -> Option<Self::Item> {
-        if self.terminated {
-            None
-        } else {
-            Some(self.step())
-        }
-    }
-}
-
 #[derive(Debug)]
 pub struct Tracer {
     pub ignore_unsupported_memops: bool,
@@ -1030,14 +1037,14 @@ mod tests {
                     let trace1 = tracer
                         .trace()
                         .expect("spawn failed")
-                        .collect::<Result<Vec<Step>>>()
-                        .expect("trace failed");
+                        .iter()
+                        .collect::<Vec<Step>>();
 
                     let trace2 = tracer
                         .trace()
                         .expect("spawn failed")
-                        .collect::<Result<Vec<Step>>>()
-                        .expect("trace failed");
+                        .iter()
+                        .collect::<Vec<Step>>();
 
                     assert_eq!(trace1.len(), trace2.len());
                     for (step1, step2) in trace1.iter().zip(trace2.iter()) {
