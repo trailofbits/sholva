@@ -20,6 +20,7 @@ use serde::Serialize;
 use spawn_ptrace::CommandPtraceSpawn;
 
 use crate::dump;
+use crate::syscall;
 
 const MAX_INSTR_LEN: usize = 15;
 const RFLAGS_RESERVED_MASK: u64 = 2;
@@ -40,7 +41,7 @@ impl CommandPersonality for Command {
 pub enum DecreeSyscall {
     Terminate = 1,
     Transmit = 2,
-    Recieve = 3,
+    Receive = 3,
     Fdwait = 4,
     Allocate = 5,
     Deallocate = 6,
@@ -54,12 +55,37 @@ impl TryFrom<u32> for DecreeSyscall {
         Ok(match syscall {
             1 => Self::Terminate,
             2 => Self::Transmit,
-            3 => Self::Recieve,
+            3 => Self::Receive,
             4 => Self::Fdwait,
             5 => Self::Allocate,
             6 => Self::Deallocate,
             7 => Self::Random,
             _ => return Err(anyhow!("unknown DECREE syscall: {}", syscall)),
+        })
+    }
+}
+
+#[derive(Copy, Clone, Debug, PartialEq, Eq, Serialize)]
+#[repr(u8)]
+pub enum LinuxSyscall {
+    Read = 0,
+    Write = 1,
+    Open = 2,
+    Close = 3,
+    Exit = 60,
+}
+
+impl TryFrom<u32> for LinuxSyscall {
+    type Error = anyhow::Error;
+
+    fn try_from(syscall: u32) -> Result<Self> {
+        Ok(match syscall {
+            0 => Self::Read,
+            1 => Self::Write,
+            2 => Self::Open,
+            3 => Self::Close,
+            60 => Self::Exit,
+            _ => return Err(anyhow!("unhandled Linux syscall: {}", syscall)),
         })
     }
 }
@@ -472,7 +498,7 @@ impl<'a> Tracee<'a> {
             let syscall = self.register_file.rax;
             log::debug!("requested syscall {}", syscall);
 
-            self.do_syscall(&instr, syscall as u32)?;
+            self.do_syscall(&instr, syscall as u32, &mut hints)?;
         } else {
             // Hints are generated in two phases: we build a complete list of
             // expected hints (including all Read hints) in stage 1...
@@ -512,27 +538,75 @@ impl<'a> Tracee<'a> {
         })
     }
 
-    fn do_syscall(&mut self, instr: &Instruction, syscall: u32) -> Result<()> {
-        if self.tracer.decree_syscalls {
-            let syscall = DecreeSyscall::try_from(syscall)?;
-            log::debug!("selected {:?}", syscall);
-
-            match syscall {
-                DecreeSyscall::Terminate => ptrace::kill(self.tracee_pid)?,
-                DecreeSyscall::Transmit => (), // data has left into the void
-                DecreeSyscall::Recieve => (),
-                _ => return Err(anyhow!("unimplemented DECREE syscall: {:?}", syscall)),
-            }
+    fn do_syscall(
+        &mut self,
+        instr: &Instruction,
+        syscall: u32,
+        hints: &mut Vec<MemoryHint>,
+    ) -> Result<()> {
+        let syscall = if self.tracer.decree_syscalls {
+            // Tracing a binary using DECREE syscalls natively.
+            DecreeSyscall::try_from(syscall)?
         } else {
-            // Linux x86 syscalls.
-            log::debug!("selected {:?}", syscall);
-            return Err(anyhow!("Linux syscalls are completely unimplemented!"));
+            // Tracing a binary using Linux syscalls.
+            // Reinterpret and perform emulations.
+            let x86_syscall = LinuxSyscall::try_from(syscall)?;
+            let decree_syscall = match x86_syscall {
+                LinuxSyscall::Read => DecreeSyscall::Receive,
+                LinuxSyscall::Write => DecreeSyscall::Transmit,
+                LinuxSyscall::Open => {
+                    // NOTE(jl): do any filesystem interaction here.
+                    todo!()
+                }
+                LinuxSyscall::Close => {
+                    // NOTE(jl): do any filesystem interaction here.
+                    todo!()
+                }
+                LinuxSyscall::Exit => DecreeSyscall::Terminate,
+            };
+            log::debug!("decomposed {:?} into {:?}", x86_syscall, decree_syscall);
+            decree_syscall
+        };
+        log::debug!("selected {:?}", syscall);
+
+        match syscall {
+            DecreeSyscall::Terminate => ptrace::kill(self.tracee_pid)?,
+            DecreeSyscall::Transmit => {
+                let fd = self.register_file.rbx;
+                let buf = self.register_file.rcx;
+                let count = self.register_file.rdx;
+                log::debug!(
+                    "transmit: buffer @{:#04x} of length {} to FD {}",
+                    buf,
+                    count,
+                    fd
+                );
+                hints.push(self.syscall_transmit(fd, buf, count));
+            }
+            DecreeSyscall::Receive => {
+                let fd = self.register_file.rbx;
+                let buf = self.register_file.rcx;
+                let count = self.register_file.rdx;
+
+                ptrace::step(self.tracee_pid, None)?;
+                log::debug!(
+                    "recieve: FD {} of length {} to buffer @{:#04x}",
+                    fd,
+                    count,
+                    buf
+                );
+
+                for _ in 0..count {
+                    self.tracee_data(buf as u64, MemoryMask::Byte)?;
+                }
+            }
+            _ => return Err(anyhow!("unimplemented DECREE syscall: {:?}", syscall)),
         }
 
         // Jump right over the syscall.
         let mut user_regs = libc::user_regs_struct::from(&self.register_file);
         user_regs.rip += instr.len() as u64;
-        log::debug!("jumping to: {:x}", user_regs.rip);
+        log::debug!("jumping {:?} bytes to {:x}", instr.len(), user_regs.rip);
 
         // We might have killed the program immediately above, in which case
         // this will fail with ESRCH because the process has disappeared.
