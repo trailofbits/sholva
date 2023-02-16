@@ -20,7 +20,7 @@ use serde::Serialize;
 use spawn_ptrace::CommandPtraceSpawn;
 
 use crate::dump;
-use crate::syscall;
+use crate::syscall::SyscallDFA;
 
 const MAX_INSTR_LEN: usize = 15;
 const RFLAGS_RESERVED_MASK: u64 = 2;
@@ -150,12 +150,21 @@ pub enum MemoryOp {
     Write,
 }
 
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize)]
+#[repr(u8)]
+pub enum SyscallState {
+    Done = 0,
+    Read = 1,
+    Write = 2,
+}
+
 /// Represents an entire traced memory operation, including its kind (`MemoryOp`),
 /// size (`MemoryMask`), concrete address, and actual read or written data.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize)]
 pub struct MemoryHint {
     pub address: u64,
     pub operation: MemoryOp,
+    pub syscall_state: SyscallState,
     pub mask: MemoryMask,
     pub data: Vec<u8>,
 }
@@ -505,7 +514,7 @@ impl<'a> Tracee<'a> {
 
         let mut hints = vec![];
 
-        if self.tracer.tiny86_only && instr.mnemonic() == Mnemonic::Int {
+        return if self.tracer.tiny86_only && instr.mnemonic() == Mnemonic::Int {
             log::debug!("tiny86: entering syscall");
 
             // We only support INT 80h, since that's the standard syscall
@@ -517,7 +526,7 @@ impl<'a> Tracee<'a> {
             let syscall = self.register_file.rax;
             log::debug!("requested syscall {}", syscall);
 
-            self.do_syscall(&instr, syscall as u32, &mut hints)?;
+            self.do_syscall(&instr, syscall as u32)
         } else {
             // Hints are generated in two phases: we build a complete list of
             // expected hints (including all Read hints) in stage 1...
@@ -545,24 +554,19 @@ impl<'a> Tracee<'a> {
             // ...then, after we've stepped the program, we fill in the data
             // associated with each Write hint in stage 2.
             self.tracee_hints_stage2(&mut hints)?;
-        }
 
-        self.wait()?;
+            self.wait()?;
 
-        #[allow(clippy::redundant_field_names)]
-        Ok(vec![Step {
-            instr: instr_bytes,
-            regs: self.register_file,
-            hints: hints,
-        }])
+            #[allow(clippy::redundant_field_names)]
+            Ok(vec![Step {
+                instr: instr_bytes,
+                regs: self.register_file,
+                hints: hints,
+            }])
+        };
     }
 
-    fn do_syscall(
-        &mut self,
-        instr: &Instruction,
-        syscall: u32,
-        hints: &mut Vec<MemoryHint>,
-    ) -> Result<()> {
+    fn do_syscall(&mut self, instr: &Instruction, syscall: u32) -> Result<Vec<Step>> {
         let syscall = if self.tracer.decree_syscalls {
             // Tracing a binary using DECREE syscalls natively.
             DecreeSyscall::try_from(syscall)?
@@ -584,43 +588,17 @@ impl<'a> Tracee<'a> {
                 LinuxSyscall::Exit => DecreeSyscall::Terminate,
             };
             log::debug!("decomposed {:?} into {:?}", x86_syscall, decree_syscall);
+
             decree_syscall
         };
         log::debug!("selected {:?}", syscall);
 
-        match syscall {
-            DecreeSyscall::Terminate => ptrace::kill(self.tracee_pid)?,
-            DecreeSyscall::Transmit => {
-                let fd = self.register_file.rbx;
-                let buf = self.register_file.rcx;
-                let count = self.register_file.rdx;
-                log::debug!(
-                    "transmit: buffer @{:#04x} of length {} to FD {}",
-                    buf,
-                    count,
-                    fd
-                );
-                hints.push(self.syscall_transmit(fd, buf, count));
-            }
-            DecreeSyscall::Receive => {
-                let fd = self.register_file.rbx;
-                let buf = self.register_file.rcx;
-                let count = self.register_file.rdx;
-
-                ptrace::step(self.tracee_pid, None)?;
-                log::debug!(
-                    "recieve: FD {} of length {} to buffer @{:#04x}",
-                    fd,
-                    count,
-                    buf
-                );
-
-                for _ in 0..count {
-                    self.tracee_data(buf as u64, MemoryMask::Byte)?;
-                }
-            }
-            _ => return Err(anyhow!("unimplemented DECREE syscall: {:?}", syscall)),
-        }
+        let dfa = self.transition(
+            syscall,
+            self.register_file.rbx,
+            self.register_file.rcx,
+            self.register_file.rdx,
+        )?;
 
         // Jump right over the syscall.
         let mut user_regs = libc::user_regs_struct::from(&self.register_file);
@@ -640,7 +618,7 @@ impl<'a> Tracee<'a> {
             Err(e) => return Err(e.into()),
         };
 
-        Ok(())
+        Ok(dfa)
     }
 
     /// Loads the our register file from the tracee's user register state.
@@ -837,6 +815,7 @@ impl<'a> Tracee<'a> {
                 hints.push(MemoryHint {
                     address: addr,
                     operation: *op,
+                    syscall_state: SyscallState::Done,
                     mask: mask,
                     data: data,
                 });

@@ -3,7 +3,7 @@ use std::io::Write;
 
 use anyhow::{anyhow, Result};
 
-use crate::trace::{MemoryHint, MemoryMask, RegisterFile, Step};
+use crate::trace::{MemoryHint, MemoryMask, RegisterFile, Step, SyscallState};
 
 const TINY86_MAX_INSTR_LEN: usize = 12;
 const TINY86_MAX_HINT_DATA_LEN: usize = (u32::BITS / 8) as usize;
@@ -43,13 +43,16 @@ impl Tiny86Write for MemoryHint {
         //
         // |  7     6     5     4     3  |  2  |  1     0    |
         // |==================================================
-        // |  1  |    reserved           | r/w |    mask     |
+        // |  1  |     syscall state     | r/w |    mask     |
         // |=================================================|
         // |  7     6     5     4     3  |  2  |  1     0    |
         //
         // The high bit is always 1, to indicate a valid memory hint.
-        let mut packed: u8 = self.mask as u8;
-        packed |= ((self.operation as u8) << 2) | 0x80;
+        let mut packed: u8 = 0;
+        packed |= self.mask as u8;
+        packed |= (self.operation as u8) << 2;
+        packed |= (self.syscall_state as u8) << 3;
+        packed |= 0x80;
 
         w.write_all(&[packed])?;
         w.write_all(&(self.address as u32).to_be_bytes())?;
@@ -210,6 +213,7 @@ mod tests {
         MemoryHint {
             address: 0xababababcdcdcdcd,
             operation: MemoryOp::Write,
+            syscall_state: SyscallState::Done,
             mask: MemoryMask::Word,
             data: vec![0xcc, 0xcc],
         }
@@ -219,6 +223,7 @@ mod tests {
         MemoryHint {
             address: 0xababababcdcdcdcd,
             operation: MemoryOp::Write,
+            syscall_state: SyscallState::Done,
             mask: MemoryMask::DWord,
             data: vec![0x41, 0x41, 0x41, 0x41],
         }
