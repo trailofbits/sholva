@@ -1,5 +1,5 @@
-module Syscall.Recieve
-    ( syscallRecieveDFA
+module Syscall.Receive
+    ( syscallReceiveDFA
     ) where
 
 import Clash.Prelude
@@ -9,8 +9,8 @@ import Syscall.Internal
 
 -- FIXME(jl): compiler unconvinced these guards are total.
 -- annoyingly this hides useful errors if new states are added.
-syscallRecieveDFA :: SyscallDFA
-syscallRecieveDFA s@(MkDFAState { eax = eax'
+syscallReceiveDFA :: SyscallDFA
+syscallReceiveDFA s@(MkDFAState { eax = eax'
                                 , ebx = ebx'
                                 , ecx = ecx'
                                 , state = state'
