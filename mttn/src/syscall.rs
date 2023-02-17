@@ -17,7 +17,7 @@ impl<'a> SyscallDFA for Tracee<'a> {
     fn transition(
         &self,
         syscall: DecreeSyscall,
-        mut ebx: u32,
+        ebx: u32, // NOTE(jl): non-`mut`; constant FD for currently supported syscalls.
         mut ecx: u32,
         mut edx: u32,
     ) -> Result<Vec<Step>> {

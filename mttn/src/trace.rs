@@ -178,10 +178,10 @@ impl Default for MemoryHint {
     fn default() -> Self {
         MemoryHint {
             address: Default::default(),
-            operation: MemoryOp::Read, // non-defaulted enum, but uninterpreted.
+            operation: MemoryOp::Read,
             syscall_state: SyscallState::Done,
-            mask: MemoryMask::Byte, // non-defaulted enum, uninterpreted.
-            data: Default::default(),
+            mask: MemoryMask::Byte,
+            data: vec![0u8],
         }
     }
 }
