@@ -36,7 +36,6 @@ impl<'a> SyscallDFA for Tracee<'a> {
 
                 while edx > 0 {
                     dfa.push(
-                        // Last transmit, finished.
                         Step {
                             instr: Default::default(),
                             regs: RegisterFile {
