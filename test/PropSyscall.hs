@@ -3,7 +3,7 @@
 module PropSyscall where
 
 import Syscall.Internal
-import Syscall.Recieve
+import Syscall.Receive
 
 import Test.QuickCheck
 
@@ -28,12 +28,12 @@ instance Arbitrary ValidSyscallDFAState where
 
 prop_syscall_recieve_none :: ValidSyscallDFAState -> Property
 prop_syscall_recieve_none (ValidSyscallDFAState s) =
-    (state s == SYSCALL_STATE_DONE) ==> syscallRecieveDFA s == s
+    (state s == SYSCALL_STATE_DONE) ==> syscallReceiveDFA s == s
 
 prop_syscall_recieve_read :: ValidSyscallDFAState -> Property
 prop_syscall_recieve_read (ValidSyscallDFAState s) =
     (state s == SYSCALL_STATE_READ && ecx s > 0) ==>
-    let s' = syscallRecieveDFA s
+    let s' = syscallReceiveDFA s
      in (eax s) == (eax s') &&
         (ebx s) + 1 == (ebx s') && (ecx s) - 1 == (ecx s')
 
