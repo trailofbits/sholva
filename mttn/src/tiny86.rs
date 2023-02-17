@@ -107,9 +107,9 @@ impl Tiny86Write for RegisterFile {
         w.write_all(&(self.rbp as u32).to_be_bytes())?;
 
         // syscall registers.
-        w.write_all(&(self.s_eax).to_be_bytes())?;
         w.write_all(&(self.s_ebx).to_be_bytes())?;
         w.write_all(&(self.s_ecx).to_be_bytes())?;
+        w.write_all(&(self.s_edx).to_be_bytes())?;
 
         // EIP and EFLAGS.
         w.write_all(&(self.rip as u32).to_be_bytes())?;
@@ -272,9 +272,9 @@ mod tests {
         assert_eq!(&regfile_bytes[20..24], vec![0x66; 4]); // rdi
         assert_eq!(&regfile_bytes[24..28], vec![0x77; 4]); // rsp
         assert_eq!(&regfile_bytes[28..32], vec![0x88; 4]); // rbp
-        assert_eq!(&regfile_bytes[32..36], vec![0; 4]); // s_eax
-        assert_eq!(&regfile_bytes[36..40], vec![0; 4]); // s_ebx
-        assert_eq!(&regfile_bytes[40..44], vec![0; 4]); // s_ecx
+        assert_eq!(&regfile_bytes[32..36], vec![0; 4]); // s_ebx
+        assert_eq!(&regfile_bytes[36..40], vec![0; 4]); // s_ecx
+        assert_eq!(&regfile_bytes[40..44], vec![0; 4]); // s_edx
         assert_eq!(&regfile_bytes[44..48], vec![0x99; 4]); // rip
         assert_eq!(&regfile_bytes[48..52], vec![0xaa; 4]); // rflags
     }

@@ -35,5 +35,5 @@ syscallTransmitDFA s@(MkDFAState { eax = eax'
             { eax = eax'
             , ebx = ebx' + toEnum stepPtrBytes -- increment the pointer into RAM.
             , ecx = ecx' - toEnum stepDataBytes -- decrement the number of bytes left to consume.
-            , state = SYSCALL_STATE_WRITE
+            , state = SYSCALL_STATE_READ
             }

@@ -150,6 +150,8 @@ pub enum MemoryOp {
     Write,
 }
 
+/// DFA States Tiny86 syscalls can occupy.
+/// Names are relative to that of Tiny86's memory: e.g. a `Read` indicates memory read -- a `Transmit`.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize)]
 #[repr(u8)]
 pub enum SyscallState {
@@ -167,6 +169,21 @@ pub struct MemoryHint {
     pub syscall_state: SyscallState,
     pub mask: MemoryMask,
     pub data: Vec<u8>,
+}
+
+impl Default for MemoryHint {
+    // SyscallState is maintained inside MemoryHints, and when these states are "on", most of the
+    // information contained is irrelevant.
+    // For ease of construction,
+    fn default() -> Self {
+        MemoryHint {
+            address: Default::default(),
+            operation: MemoryOp::Read, // non-defaulted enum, but uninterpreted.
+            syscall_state: SyscallState::Done,
+            mask: MemoryMask::Byte, // non-defaulted enum, uninterpreted.
+            data: Default::default(),
+        }
+    }
 }
 
 /// Represents an individual step in the trace, including the raw instruction bytes,
@@ -210,9 +227,9 @@ pub struct RegisterFile {
     pub fs_base: u64,
     pub gs_base: u64,
     // NOTE(jl): syscall state.
-    pub s_eax: u32,
     pub s_ebx: u32,
     pub s_ecx: u32,
+    pub s_edx: u32,
     // TODO: Are this needed?
     pub orig_rax: u64,
     pub cs: u64,
@@ -344,9 +361,9 @@ impl From<libc::user_regs_struct> for RegisterFile {
             rflags: user_regs.eflags,
             fs_base: user_regs.fs_base,
             gs_base: user_regs.gs_base,
-            s_eax: 0,
             s_ebx: 0,
             s_ecx: 0,
+            s_edx: 0,
             orig_rax: user_regs.orig_rax,
             cs: user_regs.cs,
             ds: user_regs.ds,
@@ -597,9 +614,9 @@ impl<'a> Tracee<'a> {
         // Generage syscall DFA.
         let dfa = self.transition(
             syscall,
-            self.register_file.rbx,
-            self.register_file.rcx,
-            self.register_file.rdx,
+            self.register_file.rbx as u32,
+            self.register_file.rcx as u32,
+            self.register_file.rdx as u32,
         )?;
 
         // Perform any Tracee side effects resulting from syscall.

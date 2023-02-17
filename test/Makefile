@@ -124,7 +124,7 @@ TRACE_TEXTS := $(ASM_ELFS:.elf=.trace.txt)
 
 .DELETE_ON_ERROR:
 %.trace.txt: %.cgc
-	$(MTTN) -At --syscall-model=linux32 -m32 -F inst-count ./$<
+	$(MTTN) -At --syscall-model=linux32 -m32 -F tiny86-text ./$<
 
 #
 # INTEGRATION
