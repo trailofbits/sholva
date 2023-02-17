@@ -106,13 +106,14 @@ fn run() -> Result<()> {
     let mut traces = tracer.trace()?;
 
     match matches.value_of("output-format").unwrap() {
-        "jsonl" => {
-            traces.try_for_each(|s| jsonl::write(stdout(), &s?).map_err(|e| anyhow!("{:?}", e)))?
-        }
-        "tiny86" => traces.try_for_each(|s| s?.tiny86_write(&mut stdout()))?,
-        "tiny86-text" => traces.try_for_each(|s| {
-            // TODO(ww): Clean this up.
-            s?.bitstring()
+        "jsonl" => traces
+            .iter()
+            .try_for_each(|s| jsonl::write(stdout(), &s).map_err(|e| anyhow!("{:?}", e)))?,
+        "tiny86" => traces
+            .iter()
+            .try_for_each(|s| s.tiny86_write(&mut stdout()))?,
+        "tiny86-text" => traces.iter().try_for_each(|s| {
+            s.bitstring()
                 .and_then(|bs| Ok(writeln!(stdout(), "{}", bs)?))
         })?,
         "inst-count" => match traces.count_instructions() {
