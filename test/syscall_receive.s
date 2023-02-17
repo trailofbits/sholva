@@ -4,7 +4,7 @@ global _start
 _start:
   ; receive
   mov eax, 3
-  mov ebx, 1
+  mov ebx, 0
   mov ecx, msg
   mov edx, 12
   int 0x80

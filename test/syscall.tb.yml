@@ -11,7 +11,7 @@ outputs:
   - "32 o_ecx"
   - "8 o_syscall_state"
 vector_specs:
-    - _description: "SYSCALL_STATE_NONE, no change"
+    - _description: "SYSCALL_STATE_NONE, register restoration"
 
       # INPUTS
       i_syscall_state: 0
@@ -22,8 +22,8 @@ vector_specs:
       # OUTPUTS
       i_syscall_state: 0
       o_eax: 0
-      o_ebx: 4
-      o_ecx: 5
+      o_ebx: 0
+      o_ecx: 0
 
     - _description: "SYSCALL_STATE_READ: transmit 8 bytes and continue"
 
