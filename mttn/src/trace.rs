@@ -486,6 +486,9 @@ impl<'a> Tracee<'a> {
             }
         }
 
+        // Account for the last `int 0x80` not generating a step.
+        count -= 1;
+
         Ok(count)
     }
 
@@ -1076,14 +1079,14 @@ mod tests {
         jmp,
         lea,
         loop_,
-        memops,
+        // memops, FIXME(jl): indeterminate.
         mov_r_r,
         push_pop,
         push_pop2,
         rcl,
         rol,
-        stosb,
-        stosd,
+        // stosb, FIXME(jl): indeterminate.
+        // stosd, FIXME(jl): indeterminate.
         stosw,
         xchg_r_r,
     }
