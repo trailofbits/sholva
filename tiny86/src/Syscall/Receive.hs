@@ -19,7 +19,7 @@ syscallReceiveDFA s@(MkDFAState { eax = eax'
     | state' == SYSCALL_STATE_DONE = s
     -- syscall, but not us.
     | state' == SYSCALL_STATE_READ = s
-    -- less than a full step's worth of data left to recieve and write into RAM.
+    -- less than a full step's worth of data left to receive and write into RAM.
     -- finished.
     | state' == SYSCALL_STATE_WRITE && ecx' <= toEnum stepDataBytes =
         MkDFAState

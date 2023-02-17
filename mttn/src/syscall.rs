@@ -66,7 +66,7 @@ impl<'a> SyscallDFA for Tracee<'a> {
             }
             DecreeSyscall::Receive => {
                 log::info!(
-                    "recieve: FD {} of length {} to buffer @{:#04x}",
+                    "receive: FD {} of length {} to buffer @{:#04x}",
                     ebx,
                     edx,
                     ecx

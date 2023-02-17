@@ -26,12 +26,12 @@ instance Arbitrary ValidSyscallDFAState where
         (ValidSyscallState state') <- arbitrary
         return $ ValidSyscallDFAState $ MkDFAState eax' ecx' edx' state'
 
-prop_syscall_recieve_none :: ValidSyscallDFAState -> Property
-prop_syscall_recieve_none (ValidSyscallDFAState s) =
+prop_syscall_receive_none :: ValidSyscallDFAState -> Property
+prop_syscall_receive_none (ValidSyscallDFAState s) =
     (state s == SYSCALL_STATE_DONE) ==> syscallReceiveDFA s == s
 
-prop_syscall_recieve_read :: ValidSyscallDFAState -> Property
-prop_syscall_recieve_read (ValidSyscallDFAState s) =
+prop_syscall_receive_read :: ValidSyscallDFAState -> Property
+prop_syscall_receive_read (ValidSyscallDFAState s) =
     (state s == SYSCALL_STATE_READ && ecx s > 0) ==>
     let s' = syscallReceiveDFA s
      in (eax s) == (eax s') &&
