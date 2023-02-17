@@ -35,21 +35,19 @@ impl<'a> SyscallDFA for Tracee<'a> {
                 let mut state = SyscallState::Read;
 
                 while edx > 0 {
-                    dfa.push(
-                        Step {
-                            instr: Default::default(),
-                            regs: RegisterFile {
-                                s_ebx: ebx,
-                                s_ecx: ecx,
-                                s_edx: edx,
-                                ..Default::default()
-                            },
-                            hints: vec![MemoryHint {
-                                syscall_state: state,
-                                ..Default::default()
-                            }],
+                    dfa.push(Step {
+                        instr: Default::default(),
+                        regs: RegisterFile {
+                            s_ebx: ebx,
+                            s_ecx: ecx,
+                            s_edx: edx,
+                            ..Default::default()
                         },
-                    );
+                        hints: vec![MemoryHint {
+                            syscall_state: state,
+                            ..Default::default()
+                        }],
+                    });
 
                     if edx <= Self::DATA_TRANSITION_BYTES {
                         // last transmission, finish.

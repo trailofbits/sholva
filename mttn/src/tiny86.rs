@@ -3,7 +3,7 @@ use std::io::Write;
 
 use anyhow::{anyhow, Result};
 
-use crate::trace::{MemoryHint, MemoryMask, RegisterFile, Step, SyscallState};
+use crate::trace::{MemoryHint, MemoryMask, RegisterFile, Step};
 
 const TINY86_MAX_INSTR_LEN: usize = 12;
 const TINY86_MAX_HINT_DATA_LEN: usize = (u32::BITS / 8) as usize;
@@ -207,7 +207,7 @@ where
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::trace::{MemoryMask, MemoryOp};
+    use crate::trace::{MemoryMask, MemoryOp, SyscallState};
 
     fn dummy_word_hint() -> MemoryHint {
         MemoryHint {

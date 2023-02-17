@@ -623,6 +623,7 @@ impl<'a> Tracee<'a> {
         )?;
 
         // Perform any Tracee side effects resulting from syscall.
+        #[allow(clippy::single_match)]
         match syscall {
             DecreeSyscall::Terminate => ptrace::kill(self.tracee_pid)?,
             _ => (),
