@@ -514,7 +514,7 @@ impl<'a> Tracee<'a> {
 
         let mut hints = vec![];
 
-        return if self.tracer.tiny86_only && instr.mnemonic() == Mnemonic::Int {
+        let steps = if self.tracer.tiny86_only && instr.mnemonic() == Mnemonic::Int {
             log::debug!("tiny86: entering syscall");
 
             // We only support INT 80h, since that's the standard syscall
@@ -555,8 +555,6 @@ impl<'a> Tracee<'a> {
             // associated with each Write hint in stage 2.
             self.tracee_hints_stage2(&mut hints)?;
 
-            self.wait()?;
-
             #[allow(clippy::redundant_field_names)]
             Ok(vec![Step {
                 instr: instr_bytes,
@@ -564,6 +562,9 @@ impl<'a> Tracee<'a> {
                 hints: hints,
             }])
         };
+
+        self.wait()?;
+        steps
     }
 
     fn do_syscall(&mut self, instr: &Instruction, syscall: u32) -> Result<Vec<Step>> {
@@ -593,12 +594,19 @@ impl<'a> Tracee<'a> {
         };
         log::debug!("selected {:?}", syscall);
 
+        // Generage syscall DFA.
         let dfa = self.transition(
             syscall,
             self.register_file.rbx,
             self.register_file.rcx,
             self.register_file.rdx,
         )?;
+
+        // Perform any Tracee side effects resulting from syscall.
+        match syscall {
+            DecreeSyscall::Terminate => ptrace::kill(self.tracee_pid)?,
+            _ => (),
+        };
 
         // Jump right over the syscall.
         let mut user_regs = libc::user_regs_struct::from(&self.register_file);
