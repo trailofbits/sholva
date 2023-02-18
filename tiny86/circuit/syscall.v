@@ -17,13 +17,13 @@ module syscall
   // src/Syscall.hs:34:1-3
   reg [2:0] \c$syscallDFAState'_case_alt ;
   reg [97:0] result_0;
-  // src/Syscall/Recieve.hs:13:1-17
+  // src/Syscall/Receive.hs:13:1-17
   reg [97:0] \$j ;
-  // src/Syscall/Recieve.hs:13:1-17
+  // src/Syscall/Receive.hs:13:1-17
   wire [97:0] c$$j_case_alt;
-  // src/Syscall/Recieve.hs:13:1-17
+  // src/Syscall/Receive.hs:13:1-17
   wire [97:0] c$$j_case_alt_0;
-  // src/Syscall/Recieve.hs:13:1-17
+  // src/Syscall/Receive.hs:13:1-17
   reg  c$$j_app_arg;
   reg [97:0] result_1;
   reg [7:0] c$case_alt;

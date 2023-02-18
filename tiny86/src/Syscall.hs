@@ -17,7 +17,7 @@ syscall' dfaState =
     \case
         SYSCALL_TERMINATE -> todo
         SYSCALL_TRANSMIT -> syscallReceiveDFA dfaState
-        SYSCALL_RECIEVE -> syscallReceiveDFA dfaState
+        SYSCALL_RECEIVE -> syscallReceiveDFA dfaState
         SYSCALL_FDWAIT -> todo
         SYSCALL_ALLOCATE -> todo
         SYSCALL_DEALLOCATE -> todo

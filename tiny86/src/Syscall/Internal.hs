@@ -25,7 +25,7 @@ stepPtrBytes = 2 * 4 -- the number of address bytes present per step.
 data Syscall
     = SYSCALL_TERMINATE
     | SYSCALL_TRANSMIT
-    | SYSCALL_RECIEVE
+    | SYSCALL_RECEIVE
     | SYSCALL_FDWAIT
     | SYSCALL_ALLOCATE
     | SYSCALL_DEALLOCATE
@@ -39,14 +39,14 @@ type SyscallReg = BitVector 32
 instance Enum Syscall where
     fromEnum SYSCALL_TERMINATE = 1
     fromEnum SYSCALL_TRANSMIT = 2
-    fromEnum SYSCALL_RECIEVE = 3
+    fromEnum SYSCALL_RECEIVE = 3
     fromEnum SYSCALL_FDWAIT = 4
     fromEnum SYSCALL_ALLOCATE = 5
     fromEnum SYSCALL_DEALLOCATE = 6
     fromEnum SYSCALL_RANDOM = 7
     toEnum 1 = SYSCALL_TERMINATE
     toEnum 2 = SYSCALL_TRANSMIT
-    toEnum 3 = SYSCALL_RECIEVE
+    toEnum 3 = SYSCALL_RECEIVE
     toEnum 4 = SYSCALL_FDWAIT
     toEnum 5 = SYSCALL_ALLOCATE
     toEnum 6 = SYSCALL_DEALLOCATE
