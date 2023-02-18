@@ -43,13 +43,16 @@ impl Tiny86Write for MemoryHint {
         //
         // |  7     6     5     4     3  |  2  |  1     0    |
         // |==================================================
-        // |  1  |    reserved           | r/w |    mask     |
+        // |  1  |     syscall state     | r/w |    mask     |
         // |=================================================|
         // |  7     6     5     4     3  |  2  |  1     0    |
         //
         // The high bit is always 1, to indicate a valid memory hint.
-        let mut packed: u8 = self.mask as u8;
-        packed |= ((self.operation as u8) << 2) | 0x80;
+        let mut packed: u8 = 0;
+        packed |= self.mask as u8;
+        packed |= (self.operation as u8) << 2;
+        packed |= (self.syscall_state as u8) << 3;
+        packed |= 0x80;
 
         w.write_all(&[packed])?;
         w.write_all(&(self.address as u32).to_be_bytes())?;
@@ -79,10 +82,11 @@ impl Tiny86Write for MemoryHint {
 /// A Tiny86 register file is serialized as 10 fields:
 ///
 /// * 8 GPRs (each 4 bytes)
+/// * 3 syscall registers (each 4 bytes)
 /// * EIP (4 bytes)
 /// * EFLAGS (4 bytes)
 impl Tiny86Write for RegisterFile {
-    const SERIALIZED_SIZE: usize = 40;
+    const SERIALIZED_SIZE: usize = (8 * 4) + (3 * 4) + 4 + 4;
 
     fn pad_write(w: &mut impl Write) -> Result<()> {
         let nothing = vec![0u8; Self::SERIALIZED_SIZE];
@@ -101,6 +105,11 @@ impl Tiny86Write for RegisterFile {
         w.write_all(&(self.rdi as u32).to_be_bytes())?;
         w.write_all(&(self.rsp as u32).to_be_bytes())?;
         w.write_all(&(self.rbp as u32).to_be_bytes())?;
+
+        // syscall registers.
+        w.write_all(&(self.s_ebx).to_be_bytes())?;
+        w.write_all(&(self.s_ecx).to_be_bytes())?;
+        w.write_all(&(self.s_edx).to_be_bytes())?;
 
         // EIP and EFLAGS.
         w.write_all(&(self.rip as u32).to_be_bytes())?;
@@ -198,12 +207,13 @@ where
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::trace::{MemoryMask, MemoryOp};
+    use crate::trace::{MemoryMask, MemoryOp, SyscallState};
 
     fn dummy_word_hint() -> MemoryHint {
         MemoryHint {
             address: 0xababababcdcdcdcd,
             operation: MemoryOp::Write,
+            syscall_state: SyscallState::Done,
             mask: MemoryMask::Word,
             data: vec![0xcc, 0xcc],
         }
@@ -213,6 +223,7 @@ mod tests {
         MemoryHint {
             address: 0xababababcdcdcdcd,
             operation: MemoryOp::Write,
+            syscall_state: SyscallState::Done,
             mask: MemoryMask::DWord,
             data: vec![0x41, 0x41, 0x41, 0x41],
         }
@@ -253,16 +264,19 @@ mod tests {
 
     fn regfile_asserts(regfile_bytes: &[u8]) {
         // These values are consistent with dummy_regfile.
-        assert_eq!(&regfile_bytes[..4], vec![0x11; 4]);
-        assert_eq!(&regfile_bytes[4..8], vec![0x22; 4]);
-        assert_eq!(&regfile_bytes[8..12], vec![0x33; 4]);
-        assert_eq!(&regfile_bytes[12..16], vec![0x44; 4]);
-        assert_eq!(&regfile_bytes[16..20], vec![0x55; 4]);
-        assert_eq!(&regfile_bytes[20..24], vec![0x66; 4]);
-        assert_eq!(&regfile_bytes[24..28], vec![0x77; 4]);
-        assert_eq!(&regfile_bytes[28..32], vec![0x88; 4]);
-        assert_eq!(&regfile_bytes[32..36], vec![0x99; 4]);
-        assert_eq!(&regfile_bytes[36..40], vec![0xaa; 4]);
+        assert_eq!(&regfile_bytes[..4], vec![0x11; 4]); // rax
+        assert_eq!(&regfile_bytes[4..8], vec![0x22; 4]); // rbx
+        assert_eq!(&regfile_bytes[8..12], vec![0x33; 4]); // rcx
+        assert_eq!(&regfile_bytes[12..16], vec![0x44; 4]); // rdx
+        assert_eq!(&regfile_bytes[16..20], vec![0x55; 4]); // rsi
+        assert_eq!(&regfile_bytes[20..24], vec![0x66; 4]); // rdi
+        assert_eq!(&regfile_bytes[24..28], vec![0x77; 4]); // rsp
+        assert_eq!(&regfile_bytes[28..32], vec![0x88; 4]); // rbp
+        assert_eq!(&regfile_bytes[32..36], vec![0; 4]); // s_ebx
+        assert_eq!(&regfile_bytes[36..40], vec![0; 4]); // s_ecx
+        assert_eq!(&regfile_bytes[40..44], vec![0; 4]); // s_edx
+        assert_eq!(&regfile_bytes[44..48], vec![0x99; 4]); // rip
+        assert_eq!(&regfile_bytes[48..52], vec![0xaa; 4]); // rflags
     }
 
     #[test]

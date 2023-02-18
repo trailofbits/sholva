@@ -1,12 +1,22 @@
 # iverilog default output
 a.out
 
-# BLIF outputs
+# compiled circuit outputs
+*.bin
 *.blif
+*.bristol
 
-# clash output
-.stack-work/
-verilog/
+# testing & compilation intermediates
+*.elf
+*.jsonl
+*.trace.txt
+*.tv
+
+# clash, haskell output
 *.dyn_*
 *.hi
 *.o
+.ghc.*
+.stack-work/
+dist-newstyle/
+verilog/

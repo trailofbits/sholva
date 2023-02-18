@@ -3,6 +3,7 @@
 
 module execute(
   input [6:0] opc,
+
   input [31:0] eflags,
   input ecx_is_zero,
   input [31:0] eip,
@@ -385,8 +386,8 @@ assign opnd1_w = exe_is_mu                   ? mu_opnd1_w :
 // Update our flag state based on whichever execution unit actually took effect.
 // Only the ALU and meta units can modify flag state, so we don't need to check
 // for the move unit here.
-assign o_eflags = exe_is_alu  ? alu_eflags  :
-                  exe_is_meta ? meta_eflags :
-                                eflags      ;
+assign o_eflags = exe_is_alu     ? alu_eflags     :
+                  exe_is_meta    ? meta_eflags    :
+                                   eflags         ;
 
 endmodule

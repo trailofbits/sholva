@@ -1,6 +1,7 @@
+`default_nettype none
 module check(
-  input [559:0] step0,
-  input [559:0] step1,
+  input [655:0] step0,
+  input [655:0] step1,
 
   output ok
 );
@@ -9,17 +10,12 @@ module check(
 
 // Output states.
 wire [31:0] o_eax, o_ebx, o_ecx, o_edx, o_esi, o_edi, o_esp, o_ebp, o_eip, o_eflags;
-
-// Next (input) states.
-wire [31:0] n_eax, n_ebx, n_ecx, n_edx, n_esi, n_edi, n_esp, n_ebp, n_eip, n_eflags;
-
-wire [95:0] unused_raw_instr;
-wire [71:0] unused_raw_hint1;
-wire [71:0] unused_raw_hint2;
+wire [7:0] o_syscall_state;
 
 tiny86 check0(
   .step(step0),
 
+  .o_syscall_state(o_syscall_state),
   .o_eax(o_eax),
   .o_ebx(o_ebx),
   .o_ecx(o_ecx),
@@ -29,13 +25,23 @@ tiny86 check0(
   .o_esp(o_esp),
   .o_ebp(o_ebp),
   .o_eip(o_eip),
+  .os_eax(ns_eax),
+  .os_ebx(ns_ebx),
+  .os_ecx(ns_ecx),
   .o_eflags(o_eflags)
 );
+
+// Next (input) states.
+wire [31:0] n_eax, n_ebx, n_ecx, n_edx, n_esi, n_edi, n_esp, n_ebp, n_eip, n_eflags, ns_eax, ns_ebx, ns_ecx;
+
+wire [95:0] _raw_instr;
+wire [71:0] raw_hint1;
+wire [71:0] raw_hint2;
 
 fetch fetch1(
   .step(step1),
 
-  .raw_instr(unused_raw_instr),
+  .raw_instr(_raw_instr),
   .eax(n_eax),
   .ebx(n_ebx),
   .ecx(n_ecx),
@@ -46,11 +52,20 @@ fetch fetch1(
   .ebp(n_ebp),
   .eip(n_eip),
   .eflags(n_eflags),
-  .raw_hint1(unused_raw_hint1),
-  .raw_hint2(unused_raw_hint2)
+  .s_eax(ns_eax),
+  .s_ebx(ns_ebx),
+  .s_ecx(ns_ecx),
+  .raw_hint1(raw_hint1),
+  .raw_hint2(raw_hint2)
 );
 
-assign ok = (o_eax == n_eax) &
+// NOTE(jl): could just instantiate whole `decode_hint` circuit here.
+wire [7:0] meta1 = raw_hint1[71:64];
+wire [7:0] meta2 = raw_hint2[71:64];
+wire [7:0] n_syscall_state = {raw_hint1[6:3], raw_hint2[6:3]};
+
+assign ok = (o_syscall_state == n_syscall_state) &&
+            (o_eax == n_eax) &
             (o_ebx == n_ebx) &
             (o_ecx == n_ecx) &
             (o_edx == n_edx) &
