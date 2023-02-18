@@ -55,7 +55,6 @@ ASM_TESTS := \
 	alu_add \
 	alu_add_neg \
 	cdq \
-	exit \
 	jmp \
 	lea \
 	loop_ \
@@ -68,10 +67,10 @@ ASM_TESTS := \
 	stosb \
 	stosd \
 	stosw \
-	transmit \
-	xchg_r_r \
-	tinysyscall \
-	transmit
+	syscall_receive \
+	syscall_terminate \
+	syscall_transmit \
+	xchg_r_r
 
 ASM_SOURCES := $(ASM_TESTS:=.s)
 ASM_OBJS := $(ASM_SOURCES:.s=.o)
