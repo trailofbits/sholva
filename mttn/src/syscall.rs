@@ -21,6 +21,7 @@ impl<'a> SyscallDFA for Tracee<'a> {
         mut ecx: u32,
         mut edx: u32,
     ) -> Result<Vec<Step>> {
+        // NOTE(jl): assuming a fully DECREE-syscall centric approach.
         match syscall {
             DecreeSyscall::Terminate => Ok(vec![]),
             DecreeSyscall::Transmit => {
