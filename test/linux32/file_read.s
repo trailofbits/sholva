@@ -15,9 +15,13 @@ _start:
   mov ebx, eax
 
   ; file read, fd in ebx
-  mov eax, 1
-  mov ecx, 10
+  mov eax, 0
+  mov ecx, contents
+  mov edx, 11
   int 0x80
+
+  ; compare contents 
+
 
   ; file close, fd in ebx
   mov eax, 3
@@ -28,4 +32,9 @@ _start:
   int     0x80
 
 section .data
-filename: db "/home/user/file.txt\n", 0
+;filename: db "/home/user/file.txt", 0
+filename: db "file.txt", 0
+expected_contents: db "Hola Mundo", 0
+
+section .bss
+contents: resb 12

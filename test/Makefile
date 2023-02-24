@@ -51,43 +51,52 @@ PIPELINE_EXES  := $(addsuffix .tb.vvp,$(PIPELINE_MODULES))
 # PROGRAM TESTS
 #
 ASM_TESTS := \
-	alu_adc \
-	alu_add \
-	alu_add_neg \
-	cdq \
-	jmp \
-	lea \
-	loop_ \
-	memops \
-	mov_r_r \
-	push_pop \
-	push_pop2 \
-	rcl \
-	rol \
-	stosb \
-	stosd \
-	stosw \
-	syscall_receive \
-	syscall_terminate \
-	syscall_transmit \
-	xchg_r_r
+	decree/alu_adc \
+	decree/alu_add \
+	decree/alu_add_neg \
+	decree/cdq \
+	decree/jmp \
+	decree/lea \
+	decree/loop_ \
+	decree/memops \
+	decree/mov_r_r \
+	decree/push_pop \
+	decree/push_pop2 \
+	decree/rcl \
+	decree/rol \
+	decree/stosb \
+	decree/stosd \
+	decree/stosw \
+	decree/syscall_receive \
+	decree/syscall_terminate \
+	decree/syscall_transmit \
+	decree/xchg_r_r
 
 ASM_SOURCES := $(ASM_TESTS:=.s)
 ASM_OBJS := $(ASM_SOURCES:.s=.o)
 ASM_ELFS := $(ASM_OBJS:.o=.elf)
 
 C_TESTS := \
-	condition \
-	jumptable \
-	seteip \
-	smallcall
+	decree/condition \
+	decree/jumptable \
+	decree/seteip \
+	decree/smallcall
 C_SOURCES := $(C_TESTS:=.c)
 C_ELFS := $(C_SOURCES:.c=.elf)
 
 CGC_TESTS := \
 	Palindrome
 
-ALL_ELFS := $(ASM_ELFS) $(C_ELFS)
+DECREE_ELFS := $(ASM_ELFS) $(C_ELFS)
+
+LINUX_TESTS := \
+	linux32/file_read
+
+LINUX_SOURCES := $(LINUX_TESTS:=.s)
+LINUX_OBJS := $(LINUX_SOURCES:.s=.o)
+LINUX_ELFS := $(LINUX_OBJS:.o=.elf)
+
+LINUX_ELFS := $(LINUX_ELFS) 
 
 %.elf: %.o
 	ld -m elf_i386 $(basename $@).o -o $(basename $@).elf
@@ -114,15 +123,19 @@ TRACE_JSONLS := $(ASM_ELFS:.elf=.trace.jsonl) $(C_ELFS:.elf=.trace.jsonl)
 TRACE_TEXTS := $(ASM_ELFS:.elf=.trace.txt)
 
 .DELETE_ON_ERROR:
-%.trace.jsonl: %.elf
+decree/%.trace.jsonl: decree/%.elf
 	$(MTTN) -At --syscall-model=decree -m32 -F jsonl ./$< > $@
 
 .DELETE_ON_ERROR:
-%.trace.txt: %.elf
+decree/%.trace.txt: decree/%.elf
 	$(MTTN) -At --syscall-model=decree -m32 -F tiny86-text ./$< > $@
 
 .DELETE_ON_ERROR:
-%.trace.txt: %.cgc
+linux32/%.trace.txt: linux32/%.elf
+	$(MTTN) -At --syscall-model=linux32 -m32 -F tiny86-text ./$< > $@
+
+.DELETE_ON_ERROR:
+linux32/%.trace.txt: linux32/%.cgc
 	$(MTTN) -At --syscall-model=linux32 -m32 -F tiny86-text ./$<
 
 #
@@ -147,15 +160,19 @@ check.tv: check.e2e.tv
 ARCH := $(shell uname -m)
 .PHONY: test
 ifeq ($(ARCH), x86_64)
-test: _test-sholva _test-pipeline _test-mttn
+test: _test-sholva _test-pipeline _test-mttn-decree
 else
 test: _test-sholva
 	$(warning "mttn tests only possible on x86 architectures.")
 endif
 
 # mttn self tests
-.PHONY: _test-mttn
-_test-mttn: $(ALL_ELFS)
+.PHONY: _test-mttn-decree
+_test-mttn-decree: $(DECREE_ELFS)
+	cargo test --manifest-path=$(MTTN_PREFIX)/Cargo.toml
+
+.PHONY: _test-mttn-linux
+_test-mttn-linux: $(LINUX_ELFS)
 	cargo test --manifest-path=$(MTTN_PREFIX)/Cargo.toml
 
 ## sholva self tests
@@ -177,4 +194,4 @@ _test-pipeline: $(PIPELINE_EXES)
 .PHONY: clean
 clean:
 	rm -rf $(TESTBENCH_EXES) $(PIPELINE_EXES) *.vcd *.e2e.tv \
-	       $(ALL_ELFS) $(TRACE_JSONLS) $(TRACE_TEXTS)
+	       $(LINUX_ELFS) $(DECREE_ELFS) $(TRACE_JSONLS) $(TRACE_TEXTS)
