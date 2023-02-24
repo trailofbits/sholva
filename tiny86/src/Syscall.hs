@@ -5,6 +5,7 @@ module Syscall where
 
 import Syscall.Internal
 import Syscall.Receive (syscallReceiveDFA)
+import Syscall.Transmit (syscallTransmitDFA)
 
 import Clash.Annotations.TH
 import Clash.Prelude
@@ -16,7 +17,7 @@ syscall' :: SyscallDFAState -> Syscall -> SyscallDFAState
 syscall' dfaState =
     \case
         SYSCALL_TERMINATE -> todo
-        SYSCALL_TRANSMIT -> syscallReceiveDFA dfaState
+        SYSCALL_TRANSMIT -> syscallTransmitDFA dfaState
         SYSCALL_RECEIVE -> syscallReceiveDFA dfaState
         SYSCALL_FDWAIT -> todo
         SYSCALL_ALLOCATE -> todo

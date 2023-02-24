@@ -14,26 +14,35 @@ module syscall
     , output wire [31:0] o_ecx
     , output wire [7:0] o_syscall_state
     );
-  // src/Syscall.hs:34:1-3
+  // src/Syscall.hs:35:1-3
   reg [2:0] \c$syscallDFAState'_case_alt ;
   reg [97:0] result_0;
-  // src/Syscall/Receive.hs:13:1-17
+  // src/Syscall/Transmit.hs:13:1-18
   reg [97:0] \$j ;
-  // src/Syscall/Receive.hs:13:1-17
+  // src/Syscall/Transmit.hs:13:1-18
   wire [97:0] c$$j_case_alt;
-  // src/Syscall/Receive.hs:13:1-17
+  // src/Syscall/Transmit.hs:13:1-18
   wire [97:0] c$$j_case_alt_0;
-  // src/Syscall/Receive.hs:13:1-17
+  // src/Syscall/Transmit.hs:13:1-18
   reg  c$$j_app_arg;
   reg [97:0] result_1;
+  // src/Syscall/Receive.hs:13:1-17
+  reg [97:0] \$j_0 ;
+  // src/Syscall/Receive.hs:13:1-17
+  wire [97:0] c$$j_case_alt_1;
+  // src/Syscall/Receive.hs:13:1-17
+  wire [97:0] c$$j_case_alt_2;
+  // src/Syscall/Receive.hs:13:1-17
+  reg  c$$j_app_arg_0;
+  reg [97:0] result_2;
   reg [7:0] c$case_alt;
-  // src/Syscall.hs:34:1-3
+  // src/Syscall.hs:35:1-3
   wire [31:0] i_eax_0;
-  // src/Syscall.hs:34:1-3
+  // src/Syscall.hs:35:1-3
   wire [31:0] i_ebx_0;
-  // src/Syscall.hs:34:1-3
+  // src/Syscall.hs:35:1-3
   wire [31:0] i_ecx_0;
-  // src/Syscall.hs:34:1-3
+  // src/Syscall.hs:35:1-3
   wire [7:0] i_state;
   // src/Syscall/Internal.hs:63:24-27
   wire signed [63:0] x;
@@ -82,7 +91,7 @@ module syscall
 
   always @(*) begin
     case(c$case_alt_0)
-      2'b01 : \$j  = {i_eax_0,   i_ebx_0,
+      2'b10 : \$j  = {i_eax_0,   i_ebx_0,
                       i_ecx_0,   c$case_alt_0};
       default : \$j  = c$$j_case_alt;
     endcase
@@ -96,7 +105,7 @@ module syscall
   assign c$$j_case_alt_0 = (c$$j_app_arg & (i_ecx_0 > 32'b00000000000000000000000000001000)) ? {i_eax_0,
                                                                                                 i_ebx_0 + 32'b00000000000000000000000000001000,
                                                                                                 i_ecx_0 - 32'b00000000000000000000000000001000,
-                                                                                                2'd2} : ({98 {1'bx}});
+                                                                                                2'd1} : ({98 {1'bx}});
 
   always @(*) begin
     case(c$case_alt_0)
@@ -106,13 +115,48 @@ module syscall
   end
 
   always @(*) begin
-    case(\c$syscallDFAState'_case_alt )
-      3'b010 : result_1 = result_0;
-      default : result_1 = {98 {1'bx}};
+    case(c$case_alt_0)
+      2'b00 : result_1 = {i_eax_0,   i_ebx_0,
+                          i_ecx_0,   c$case_alt_0};
+      2'b01 : result_1 = \$j_0 ;
+      default : result_1 = \$j_0 ;
     endcase
   end
 
-  assign c$case_alt_selection_1 = result_1[1:0];
+  always @(*) begin
+    case(c$case_alt_0)
+      2'b01 : \$j_0  = {i_eax_0,   i_ebx_0,
+                        i_ecx_0,   c$case_alt_0};
+      default : \$j_0  = c$$j_case_alt_1;
+    endcase
+  end
+
+  assign c$$j_case_alt_1 = (c$$j_app_arg_0 & (i_ecx_0 <= 32'b00000000000000000000000000001000)) ? {32'b00000000000000000000000000000000,
+                                                                                                   i_ebx_0 + i_ecx_0,
+                                                                                                   i_ecx_0 - i_ecx_0,
+                                                                                                   2'd0} : c$$j_case_alt_2;
+
+  assign c$$j_case_alt_2 = (c$$j_app_arg_0 & (i_ecx_0 > 32'b00000000000000000000000000001000)) ? {i_eax_0,
+                                                                                                  i_ebx_0 + 32'b00000000000000000000000000001000,
+                                                                                                  i_ecx_0 - 32'b00000000000000000000000000001000,
+                                                                                                  2'd2} : ({98 {1'bx}});
+
+  always @(*) begin
+    case(c$case_alt_0)
+      2'b00 : c$$j_app_arg_0 = 1'b0;
+      default : c$$j_app_arg_0 = 1'b1;
+    endcase
+  end
+
+  always @(*) begin
+    case(\c$syscallDFAState'_case_alt )
+      3'b001 : result_2 = result_0;
+      3'b010 : result_2 = result_1;
+      default : result_2 = {98 {1'bx}};
+    endcase
+  end
+
+  assign c$case_alt_selection_1 = result_2[1:0];
 
   always @(*) begin
     case(c$case_alt_selection_1)
@@ -122,8 +166,8 @@ module syscall
     endcase
   end
 
-  assign result = {result_1[97:66],
-                   result_1[65:34],   result_1[33:2],
+  assign result = {result_2[97:66],
+                   result_2[65:34],   result_2[33:2],
                    c$case_alt};
 
   assign i_eax_0 = ds[103:72];
