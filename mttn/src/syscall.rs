@@ -23,6 +23,7 @@ impl<'a> SyscallDFA for Tracee<'a> {
     ) -> Result<Vec<Step>> {
         // NOTE(jl): assuming a fully DECREE-syscall centric approach.
         match syscall {
+            DecreeSyscall::Nop => Ok(vec![]),
             DecreeSyscall::Terminate => Ok(vec![]),
             DecreeSyscall::Transmit => {
                 log::info!(
@@ -93,7 +94,6 @@ impl<'a> SyscallDFA for Tracee<'a> {
                             }],
                         },
                     );
-
                     if edx <= Self::DATA_TRANSITION_BYTES {
                         // last transmission, finish.
                         state = SyscallState::Done;
@@ -106,7 +106,7 @@ impl<'a> SyscallDFA for Tracee<'a> {
                 }
 
                 Ok(dfa)
-            }
+            },
             _ => Err(anyhow!("unhandled DFA transition {:?}", self)),
         }
     }

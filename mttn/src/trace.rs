@@ -1,7 +1,12 @@
 use std::convert::{TryFrom, TryInto};
+use std::fs::File;
 use std::io::IoSliceMut;
+use std::io::Read;
+use std::mem;
 use std::os::unix::process::CommandExt;
+use std::os::unix::io::{AsRawFd, FromRawFd}; 
 use std::process::Command;
+use std::str;
 
 use anyhow::{anyhow, Context, Result};
 use derivative::Derivative;
@@ -26,6 +31,11 @@ const MAX_INSTR_LEN: usize = 15;
 const RFLAGS_RESERVED_MASK: u64 = 2;
 const RFLAGS_IF_MASK: u64 = 512;
 
+// limits found https://github.com/torvalds/linux/blob/master/include/uapi/linux/limits.h
+const MAX_FILENAME: usize = 255;
+//const MAX_PATH: usize = 4096;
+
+
 pub trait CommandPersonality {
     fn personality(&mut self, persona: Persona);
 }
@@ -39,6 +49,7 @@ impl CommandPersonality for Command {
 #[derive(Copy, Clone, Debug, PartialEq, Eq, Serialize)]
 #[repr(u8)]
 pub enum DecreeSyscall {
+    Nop = 0,
     Terminate = 1,
     Transmit = 2,
     Receive = 3,
@@ -53,6 +64,7 @@ impl TryFrom<u32> for DecreeSyscall {
 
     fn try_from(syscall: u32) -> Result<Self> {
         Ok(match syscall {
+            0 => Self::Nop,
             1 => Self::Terminate,
             2 => Self::Transmit,
             3 => Self::Receive,
@@ -89,6 +101,8 @@ impl TryFrom<u32> for LinuxSyscall {
         })
     }
 }
+
+
 
 /// Represents the width of a concrete memory operation.
 ///
@@ -594,17 +608,68 @@ impl<'a> Tracee<'a> {
         } else {
             // Tracing a binary using Linux syscalls.
             // Reinterpret and perform emulations.
+            // TODO: Generalize syscall interface
             let x86_syscall = LinuxSyscall::try_from(syscall)?;
             let decree_syscall = match x86_syscall {
-                LinuxSyscall::Read => DecreeSyscall::Receive,
+                LinuxSyscall::Read => {
+                    log::debug!("Reading from {} bytes from FD {:?}", self.register_file.rdx, self.register_file.rbx);
+                    let mut file = unsafe { File::from_raw_fd(self.register_file.rbx as i32) };
+                    // TODO: Change this to variable length
+                    let mut buffer = [0u8; 10]; 
+                    let read_count = file.read(&mut buffer)?;
+
+                    log::debug!("read_count {:?} contents {:?}", read_count, str::from_utf8(&buffer).unwrap());
+                    
+                    //TODO: compare the contents to a commitment
+                    DecreeSyscall::Receive
+                },
                 LinuxSyscall::Write => DecreeSyscall::Transmit,
                 LinuxSyscall::Open => {
-                    // NOTE(jl): do any filesystem interaction here.
-                    todo!()
+                    // This should open and return a file descriptor
+
+                    let mut filepath = vec![0; MAX_FILENAME];
+
+                    let mut addr = self.register_file.rbx;
+                    let mut r = self.tracee_data(addr, MemoryMask::Byte)?;
+                    
+                    let mut len = 0;
+                    while r[0] != 0 && len < MAX_FILENAME {
+                        filepath[len] = r[0];
+                        addr += 1;
+                        len += 1;
+                        r = self.tracee_data(addr, MemoryMask::Byte)?;
+                    }
+                    filepath.truncate(len);
+
+                    let filepath = str::from_utf8(&filepath).unwrap();
+
+                    log::debug!("Filename: {:?}", filepath);
+
+                    let file = match File::open(&filepath) {
+                        // The `description` method of `io::Error` returns a string that
+                        // describes the error
+                        Err(why) => panic!("couldn't open {}: {:?}", filepath,
+                                                                   why),
+                        Ok(file) => file,
+                    };
+                    log::debug!("File Descriptor: {}",file.as_raw_fd());
+
+                    self.register_file.rax = file.as_raw_fd() as u64;
+                    
+                    // This is so the FD won't be freed by Rust
+                    mem::forget(file);
+
+                    DecreeSyscall::Nop
                 }
                 LinuxSyscall::Close => {
-                    // NOTE(jl): do any filesystem interaction here.
-                    todo!()
+                    // 
+
+                    log::debug!("File Descriptor: {}",self.register_file.rbx);
+                    let file = unsafe { File::from_raw_fd(self.register_file.rbx as i32) };
+
+                    drop(file);
+
+                    DecreeSyscall::Nop
                 }
                 LinuxSyscall::Exit => DecreeSyscall::Terminate,
             };
@@ -990,13 +1055,13 @@ mod tests {
         }
     }
 
-    fn test_program_tracer(program: &str) -> Tracer {
+    fn test_program_tracer(program: &str, decree : bool) -> Tracer {
         let target = Target::Program(program.into(), vec![]);
 
         Tracer {
             ignore_unsupported_memops: false,
             tiny86_only: true,
-            decree_syscalls: true,
+            decree_syscalls: decree,
             debug_on_fault: false,
             disable_aslr: true,
             bitness: 32,
@@ -1034,12 +1099,13 @@ mod tests {
     }
 
     macro_rules! trace_consistency_tests {
-        ($($name:ident,)*) => {
+        ($($syscall:ident-$name:ident,)*) => {
             $(
                 #[test]
                 fn $name() {
-                    let program = concat!(env!("CARGO_MANIFEST_DIR"), "/../test/", stringify!($name), ".elf");
-                    let tracer = test_program_tracer(&program);
+
+                    let program = concat!(env!("CARGO_MANIFEST_DIR"), "/../test/", stringify!($syscall), "/", stringify!($name), ".elf");
+                    let tracer = test_program_tracer(&program, stringify!($syscall) == "decree");
 
                     // TODO(ww): Don't collect these.
                     let trace1 = tracer
@@ -1077,24 +1143,27 @@ mod tests {
 
     // find test/ -name '*.s' | sort | xargs -n1 basename -s .s
     trace_consistency_tests! {
-        alu_adc,
-        alu_add,
-        alu_add_neg,
-        cdq,
-        jmp,
-        lea,
-        loop_,
-        // memops, FIXME(jl): indeterminate.
-        mov_r_r,
-        push_pop,
-        push_pop2,
-        rcl,
-        rol,
-        // stosb, FIXME(jl): indeterminate.
-        // stosd, FIXME(jl): indeterminate.
-        stosw,
-        syscall_transmit,
-        syscall_receive,
-        xchg_r_r,
+        decree-alu_adc,
+        decree-alu_add,
+        decree-alu_add_neg,
+        decree-cdq,
+        decree-jmp,
+        decree-lea,
+        decree-loop_,
+        // decree-memops, FIXME(jl): indeterminate.
+        decree-mov_r_r,
+        decree-push_pop,
+        decree-push_pop2,
+        decree-rcl,
+        decree-rol,
+        // decree-stosb, FIXME(jl): indeterminate.
+        // decree-stosd, FIXME(jl): indeterminate.
+        decree-stosw,
+        decree-syscall_transmit,
+        decree-syscall_receive,
+        decree-xchg_r_r,
+        linux32-file_read,
     }
+
+
 }
