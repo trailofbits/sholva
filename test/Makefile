@@ -167,6 +167,17 @@ test: _test-tiny86
 	$(warning "mttn tests only possible on x86 architectures.")
 endif
 
+# run normal test suite in addition to any developer-specific release tooling.
+# this target may include dependencies not publicly available, and is not intended for general use.
+.PHONY: _test-dev
+_test-dev: test
+	wtk-firealarm
+
+# mttn self tests
+.PHONY: _test-mttn
+_test-mttn: $(ALL_ELFS)
+	cargo test --manifest-path=$(MTTN_PREFIX)/Cargo.toml
+
 ## sholva self tests
 .PHONY: _test-tiny86
 _test-tiny86: _test-clash _test-verilog

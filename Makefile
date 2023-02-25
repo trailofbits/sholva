@@ -23,5 +23,8 @@ docker: docker.nix
 .PHONY: install
 install:
 
+.PHONY: dev-test
+	$(MAKE) -C test _test-dev
+
 clean:
 	$(MAKE) -C test clean
