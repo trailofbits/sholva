@@ -167,10 +167,13 @@ test: _test-tiny86
 	$(warning "mttn tests only possible on x86 architectures.")
 endif
 
+%.circuit: %.trace.txt
+	foo
+
 # run normal test suite in addition to any developer-specific release tooling.
 # this target may include dependencies not publicly available, and is not intended for general use.
 .PHONY: _test-dev
-_test-dev: test
+_test-dev:
 	wtk-firealarm
 
 # mttn self tests
