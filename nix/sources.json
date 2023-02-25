@@ -11,16 +11,28 @@
         "url": "https://github.com/NixOS/nixpkgs/archive/2df37941652c28e0858b9a9520ce5763c43c2ec1.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
+    "sv_circuit": {
+        "branch": "jl/nix",
+        "description": null,
+        "homepage": null,
+        "owner": "trailofbits",
+        "repo": "sv_circuit",
+        "rev": "10b75ef9f94c074bc7adfb93fe1e4a6e1e085610",
+        "sha256": "1vqgnd1myszlxvxwn6kiqmp26lmkcll1zi5cyf09nxiwv83jhbij",
+        "type": "tarball",
+        "url": "https://github.com/trailofbits/sv_circuit/archive/10b75ef9f94c074bc7adfb93fe1e4a6e1e085610.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
     "verilog_tools": {
-        "branch": "main",
+        "branch": "jl/nix",
         "description": "verilog circuit utilities.",
         "homepage": null,
         "owner": "trailofbits",
         "repo": "verilog_tools",
-        "rev": "52ec45a1d666e7264a8d58007039d2727a1b3e5a",
-        "sha256": "1a9km7f464i8xg5067kn945hm9ag55k8mp9s613ya47myhz4azqr",
+        "rev": "24798730abd9ff2a9a090fb5fb38c4583873864a",
+        "sha256": "1357w20mnr1pp5ddi5r047rq4ayladmwljffmxp5ck08rwsw21qx",
         "type": "tarball",
-        "url": "https://github.com/trailofbits/verilog_tools/archive/52ec45a1d666e7264a8d58007039d2727a1b3e5a.tar.gz",
+        "url": "https://github.com/trailofbits/verilog_tools/archive/24798730abd9ff2a9a090fb5fb38c4583873864a.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     }
 }

@@ -45,6 +45,10 @@ lint:
 	verilator $(VERILATOR_FLAGS) --top-module $(TOP_MODULE) --lint-only $(IFLAGS) $(ALL_V_WITHOUT_TESTS_OR_CODEGEN)
 	hlint -g
 
+.PHONY: install
+install:
+	# No artifacts.
+
 .PHONY: clean
 clean:
 	rm -rf verilog/

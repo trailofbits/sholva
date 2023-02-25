@@ -20,3 +20,6 @@ a.out
 .stack-work/
 dist-newstyle/
 verilog/
+
+# nix output
+mttn/result

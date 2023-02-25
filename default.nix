@@ -1,34 +1,22 @@
+{ sources ? import ./nix/sources.nix
+, pkgs ? import sources.nixpkgs { }
+}:
+
 let
-  pkgs = import (builtins.fetchTarball {
-    name = "nixpkgs-unstable-2022-07-19";
-    url = "https://github.com/nixos/nixpkgs/archive/2df37941652c28e0858b9a9520ce5763c43c2ec1.tar.gz";
-    sha256 = "sha256:12d5w1bvhjlxrvdhsc44gq1lv5s3z1lv18s39q1702hwmp2bz071";
-  }) {};
+  # local derivations
+  mttn = pkgs.callPackage ./mttn/derivation.nix { };
+  tiny86 = pkgs.callPackage ./tiny86/derivation.nix { };
+  # remote derivations, managed by niv
+  verilog_tools = import sources.verilog_tools { };
+  sv_circuit = import sources.sv_circuit { };
+in
+with pkgs; stdenv.mkDerivation {
+  name = "sholva";
 
-  clash = pkgs.haskellPackages.ghcWithPackages (p: with p; [
-    clash-lib clash-ghc clash-prelude
-    haskell-language-server
-    hindent
-    hlint
-  ]);
-
-in with pkgs; stdenv.mkDerivation {
-  name = "sholva-dev";
-
-  nativeBuildInputs = [
-    cargo
-    clash
-    verilog verilator
+  propagatedBuildInputs = [
+    mttn
+    sv_circuit
+    tiny86
+    verilog_tools
   ];
-  buildInputs = [
-    clippy
-    gdb
-    git
-    nasm
-    python3
-    ruby
-    rustfmt
-  ];
-
-  src = ./.;
 }
