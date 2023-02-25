@@ -1,12 +1,7 @@
 use std::convert::{TryFrom, TryInto};
-use std::fs::File;
 use std::io::IoSliceMut;
-use std::io::Read;
-use std::mem;
 use std::os::unix::process::CommandExt;
-use std::os::unix::io::{AsRawFd, FromRawFd}; 
 use std::process::Command;
-use std::str;
 
 use anyhow::{anyhow, Context, Result};
 use derivative::Derivative;
@@ -26,14 +21,11 @@ use spawn_ptrace::CommandPtraceSpawn;
 
 use crate::dump;
 use crate::syscall::SyscallDFA;
+use crate::filesystem::FileSystemOp;
 
 const MAX_INSTR_LEN: usize = 15;
 const RFLAGS_RESERVED_MASK: u64 = 2;
 const RFLAGS_IF_MASK: u64 = 512;
-
-// limits found https://github.com/torvalds/linux/blob/master/include/uapi/linux/limits.h
-const MAX_FILENAME: usize = 255;
-//const MAX_PATH: usize = 4096;
 
 
 pub trait CommandPersonality {
@@ -49,7 +41,6 @@ impl CommandPersonality for Command {
 #[derive(Copy, Clone, Debug, PartialEq, Eq, Serialize)]
 #[repr(u8)]
 pub enum DecreeSyscall {
-    Nop = 0,
     Terminate = 1,
     Transmit = 2,
     Receive = 3,
@@ -64,7 +55,6 @@ impl TryFrom<u32> for DecreeSyscall {
 
     fn try_from(syscall: u32) -> Result<Self> {
         Ok(match syscall {
-            0 => Self::Nop,
             1 => Self::Terminate,
             2 => Self::Transmit,
             3 => Self::Receive,
@@ -602,76 +592,41 @@ impl<'a> Tracee<'a> {
     }
 
     fn do_syscall(&mut self, instr: &Instruction, syscall: u32) -> Result<Vec<Step>> {
-        let syscall = if self.tracer.decree_syscalls {
+        let syscall : Option<DecreeSyscall> = if self.tracer.decree_syscalls {
             // Tracing a binary using DECREE syscalls natively.
-            DecreeSyscall::try_from(syscall)?
+            Some(DecreeSyscall::try_from(syscall)?)
         } else {
             // Tracing a binary using Linux syscalls.
             // Reinterpret and perform emulations.
             // TODO: Generalize syscall interface
             let x86_syscall = LinuxSyscall::try_from(syscall)?;
-            let decree_syscall = match x86_syscall {
+            let decree_syscall : Option<DecreeSyscall> = match x86_syscall {
                 LinuxSyscall::Read => {
-                    log::debug!("Reading from {} bytes from FD {:?}", self.register_file.rdx, self.register_file.rbx);
-                    let mut file = unsafe { File::from_raw_fd(self.register_file.rbx as i32) };
-                    // TODO: Change this to variable length
-                    let mut buffer = [0u8; 10]; 
-                    let read_count = file.read(&mut buffer)?;
-
-                    log::debug!("read_count {:?} contents {:?}", read_count, str::from_utf8(&buffer).unwrap());
+                    // ebx points to the FD
+                    // ecx is the output buffer
+                    // edx is how much to read
+                    self.filesystem_read(
+                        self.register_file.rbx as u32,
+                        self.register_file.rcx as u32,
+                        self.register_file.rdx as u32,
+                    )?;
                     
-                    //TODO: compare the contents to a commitment
-                    DecreeSyscall::Receive
+                    Some(DecreeSyscall::Receive)
                 },
-                LinuxSyscall::Write => DecreeSyscall::Transmit,
+                LinuxSyscall::Write => Some(DecreeSyscall::Transmit),
                 LinuxSyscall::Open => {
-                    // This should open and return a file descriptor
+                    // ebx points to the filename
+                    let fd = self.filesystem_open(self.register_file.rbx)?;
+                    self.register_file.rax = fd as u64;
 
-                    let mut filepath = vec![0; MAX_FILENAME];
-
-                    let mut addr = self.register_file.rbx;
-                    let mut r = self.tracee_data(addr, MemoryMask::Byte)?;
-                    
-                    let mut len = 0;
-                    while r[0] != 0 && len < MAX_FILENAME {
-                        filepath[len] = r[0];
-                        addr += 1;
-                        len += 1;
-                        r = self.tracee_data(addr, MemoryMask::Byte)?;
-                    }
-                    filepath.truncate(len);
-
-                    let filepath = str::from_utf8(&filepath).unwrap();
-
-                    log::debug!("Filename: {:?}", filepath);
-
-                    let file = match File::open(&filepath) {
-                        // The `description` method of `io::Error` returns a string that
-                        // describes the error
-                        Err(why) => panic!("couldn't open {}: {:?}", filepath,
-                                                                   why),
-                        Ok(file) => file,
-                    };
-                    log::debug!("File Descriptor: {}",file.as_raw_fd());
-
-                    self.register_file.rax = file.as_raw_fd() as u64;
-                    
-                    // This is so the FD won't be freed by Rust
-                    mem::forget(file);
-
-                    DecreeSyscall::Nop
+                    None
                 }
                 LinuxSyscall::Close => {
-                    // 
-
-                    log::debug!("File Descriptor: {}",self.register_file.rbx);
-                    let file = unsafe { File::from_raw_fd(self.register_file.rbx as i32) };
-
-                    drop(file);
-
-                    DecreeSyscall::Nop
+                    self.filesystem_close(self.register_file.rbx as u32);
+                    
+                    None
                 }
-                LinuxSyscall::Exit => DecreeSyscall::Terminate,
+                LinuxSyscall::Exit => Some(DecreeSyscall::Terminate),
             };
             log::debug!("decomposed {:?} into {:?}", x86_syscall, decree_syscall);
 
@@ -679,18 +634,23 @@ impl<'a> Tracee<'a> {
         };
         log::debug!("selected {:?}", syscall);
 
-        // Generage syscall DFA.
-        let dfa = self.transition(
-            syscall,
-            self.register_file.rbx as u32,
-            self.register_file.rcx as u32,
-            self.register_file.rdx as u32,
-        )?;
+        let dfa = match syscall {
+            Some(decree_syscall) => {
+                // Generage syscall DFA.
+                self.transition(
+                    decree_syscall,
+                    self.register_file.rbx as u32,
+                    self.register_file.rcx as u32,
+                    self.register_file.rdx as u32,
+                )?
+            },
+            _ => vec![],
+        };
 
         // Perform any Tracee side effects resulting from syscall.
         #[allow(clippy::single_match)]
         match syscall {
-            DecreeSyscall::Terminate => ptrace::kill(self.tracee_pid)?,
+            Some(DecreeSyscall::Terminate) => ptrace::kill(self.tracee_pid)?,
             _ => (),
         };
 
@@ -773,7 +733,7 @@ impl<'a> Tracee<'a> {
     }
 
     /// Reads a piece of the tracee's memory, starting at `addr`.
-    fn tracee_data(&self, addr: u64, mask: MemoryMask) -> Result<Vec<u8>> {
+    pub fn tracee_data(&self, addr: u64, mask: MemoryMask) -> Result<Vec<u8>> {
         log::debug!("attempting to read tracee @ 0x{:x} ({:?})", addr, mask);
 
         // NOTE(ww): Could probably use ptrace::read() here since we're always <= 64 bits,

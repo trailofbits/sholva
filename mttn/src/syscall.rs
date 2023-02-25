@@ -23,7 +23,6 @@ impl<'a> SyscallDFA for Tracee<'a> {
     ) -> Result<Vec<Step>> {
         // NOTE(jl): assuming a fully DECREE-syscall centric approach.
         match syscall {
-            DecreeSyscall::Nop => Ok(vec![]),
             DecreeSyscall::Terminate => Ok(vec![]),
             DecreeSyscall::Transmit => {
                 log::info!(

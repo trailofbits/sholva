@@ -5,6 +5,7 @@ use anyhow::{anyhow, Result};
 use clap::{Arg, ArgGroup, Command};
 
 mod dump;
+mod filesystem;
 mod syscall;
 mod tiny86;
 mod trace;
