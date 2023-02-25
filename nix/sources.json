@@ -1,0 +1,26 @@
+{
+    "nixpkgs": {
+        "branch": "nixpkgs-unstable",
+        "description": "Nix Packages collection",
+        "homepage": "",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "2df37941652c28e0858b9a9520ce5763c43c2ec1",
+        "sha256": "12d5w1bvhjlxrvdhsc44gq1lv5s3z1lv18s39q1702hwmp2bz071",
+        "type": "tarball",
+        "url": "https://github.com/NixOS/nixpkgs/archive/2df37941652c28e0858b9a9520ce5763c43c2ec1.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
+    "verilog_tools": {
+        "branch": "main",
+        "description": "verilog circuit utilities.",
+        "homepage": null,
+        "owner": "trailofbits",
+        "repo": "verilog_tools",
+        "rev": "52ec45a1d666e7264a8d58007039d2727a1b3e5a",
+        "sha256": "1a9km7f464i8xg5067kn945hm9ag55k8mp9s613ya47myhz4azqr",
+        "type": "tarball",
+        "url": "https://github.com/trailofbits/verilog_tools/archive/52ec45a1d666e7264a8d58007039d2727a1b3e5a.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    }
+}
