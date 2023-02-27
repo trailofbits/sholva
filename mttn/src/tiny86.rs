@@ -198,7 +198,7 @@ where
         // Probably not the fastest.
         Ok(buf
             .iter()
-            .map(|b| format!("{:08b}", b))
+            .map(|b| format!("{b:08b}"))
             .collect::<Vec<_>>()
             .concat())
     }
