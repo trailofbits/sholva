@@ -5,10 +5,6 @@ let
     clash-lib
     clash-ghc
     clash-prelude
-    # FIXME(jl): dev deps
-    # haskell-language-server
-    # hindent
-    # hlint
   ]);
 in
 with pkgs; stdenv.mkDerivation {
@@ -16,18 +12,9 @@ with pkgs; stdenv.mkDerivation {
 
   propagatedBuildInputs = [
     clash
-    nasm
     python3
-    ruby
     verilator
     verilog
-  ];
-  buildInputs = [
-    # FIXME(jl): dev deps
-    clippy
-    gdb
-    git
-    rustfmt
   ];
 
   doCheck = false;

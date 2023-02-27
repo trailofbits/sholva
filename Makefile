@@ -1,7 +1,5 @@
 .PHONY: all
 all:
-	$(MAKE) -C tiny86 all
-	$(MAKE) -C mttn all
 
 .PHONY: lint
 lint:
@@ -15,6 +13,9 @@ format:
 .PHONY: test
 test:
 	$(MAKE) -C test test
+
+.PHONY: install
+install:
 
 clean:
 	$(MAKE) -C tiny86 clean
