@@ -735,7 +735,7 @@ impl<'a> Tracee<'a> {
                 ptrace::detach(self.tracee_pid, Some(signal::Signal::SIGSTOP))?;
             }
 
-            return Err(e).with_context(|| format!("Fault: size: {:?}, address: {:x}", mask, addr));
+            return Err(e).with_context(|| format!("Fault: size: {mask:?}, address: {addr:x}"));
         } else {
             log::debug!("fetched data bytes: {:?}", bytes);
         }
@@ -915,10 +915,10 @@ impl From<&clap::ArgMatches> for Tracer {
             let dump_name = matches
                 .value_of("memory-file")
                 .map(Into::into)
-                .unwrap_or_else(|| format!("{}.memory", pid));
+                .unwrap_or_else(|| format!("{pid}.memory"));
 
             // There's no sense in proceeding if the dump fails.
-            dump::dump(pid, &dump_name).unwrap();
+            dump::dump(pid, dump_name).unwrap();
 
             Target::Process(pid)
         } else {
@@ -964,7 +964,7 @@ impl Tracer {
                 Pid::from_raw(child.id() as i32)
             }
             Target::Process(pid) => {
-                ptrace::attach(*pid).with_context(|| format!("couldn't attach to {}", pid))?;
+                ptrace::attach(*pid).with_context(|| format!("couldn't attach to {pid}"))?;
                 *pid
             }
         };

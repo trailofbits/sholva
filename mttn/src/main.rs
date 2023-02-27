@@ -21,7 +21,7 @@ fn app() -> Command<'static> {
                 .short('F')
                 .long("format")
                 .takes_value(true)
-                .possible_values(&["jsonl", "tiny86", "tiny86-text", "inst-count"])
+                .possible_values(["jsonl", "tiny86", "tiny86-text", "inst-count"])
                 .default_value("jsonl"),
         )
         .arg(
@@ -30,7 +30,7 @@ fn app() -> Command<'static> {
                 .short('m')
                 .long("mode")
                 .takes_value(true)
-                .possible_values(&["32", "64"])
+                .possible_values(["32", "64"])
                 .default_value("64"),
         )
         .arg(
@@ -49,7 +49,7 @@ fn app() -> Command<'static> {
             Arg::new("syscall-model")
                 .help("For Tiny86: which syscall model to use when emulating syscalls")
                 .long("syscall-model")
-                .possible_values(&["decree", "linux32"])
+                .possible_values(["decree", "linux32"])
                 .default_value("decree")
                 .requires("tiny86-only"),
         )
@@ -113,19 +113,18 @@ fn run() -> Result<()> {
         "tiny86" => traces
             .iter()
             .try_for_each(|s| s.tiny86_write(&mut stdout()))?,
-        "tiny86-text" => traces.iter().try_for_each(|s| {
-            s.bitstring()
-                .and_then(|bs| Ok(writeln!(stdout(), "{}", bs)?))
-        })?,
+        "tiny86-text" => traces
+            .iter()
+            .try_for_each(|s| s.bitstring().and_then(|bs| Ok(writeln!(stdout(), "{bs}")?)))?,
         "inst-count" => match traces.count_instructions() {
             Ok(count) => {
-                write!(stdout(), "{}", count)?;
+                write!(stdout(), "{count}")?;
                 stdout().flush()?;
                 writeln!(stderr(), " instructions")?;
                 stderr().flush()?;
             }
             Err(error) => {
-                writeln!(stderr(), "Error counting instructions: {}", error)?;
+                writeln!(stderr(), "Error counting instructions: {error}")?;
             }
         },
         _ => unreachable!(),
@@ -140,7 +139,7 @@ fn main() {
     process::exit(match run() {
         Ok(()) => 0,
         Err(e) => {
-            eprintln!("Fatal: {:#}", e);
+            eprintln!("Fatal: {e:#}");
             1
         }
     });
