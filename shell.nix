@@ -43,5 +43,6 @@ mkShell {
     haskell
     rust
     gdb
+    ruby
   ];
 }

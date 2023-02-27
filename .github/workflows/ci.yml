@@ -7,7 +7,7 @@ on:
   pull_request:
   schedule:
     # run CI every day even if no PRs/merges occur
-    - cron: '0 12 * * *'
+    - cron: "0 12 * * *"
 
 jobs:
   format:
@@ -17,8 +17,11 @@ jobs:
       - uses: cachix/install-nix-action@v17
         with:
           nix_path: nixpkgs=channel:nixos-unstable
-      - name: Format
-        run: nix-shell --pure --run "make format"
+      - name:
+          Format
+          # FIXME(jl): the `--pure` nix shell should include `git`; however running in impure shell as `git` is broken
+          # in the currently pinned `nixpkgs`.
+        run: nix-shell --run "make format"
   lint:
     runs-on: ubuntu-latest
     steps:
@@ -27,16 +30,10 @@ jobs:
         with:
           nix_path: nixpkgs=channel:nixos-unstable
       - name: Lint
-        run: nix-shell --pure --run "make lint"
-  build:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - uses: cachix/install-nix-action@v16
-      with:
-        nix_path: nixpkgs=channel:nixos-unstable
-    - name: build
-      run: nix-shell --pure --run "make"
+        run:
+          # FIXME(jl): the `--pure` nix shell should include `git`; however running in impure shell as `git` is broken
+          # in the currently pinned `nixpkgs`.
+          nix-shell --run "make lint"
   test:
     runs-on: ubuntu-latest
     steps:
