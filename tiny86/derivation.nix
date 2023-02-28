@@ -1,6 +1,13 @@
-{ lib, stdenv, haskellPackages, pkgs }:
+{ sources ? import ../nix/sources.nix
+, pkgs ? import sources.nixpkgs { }
+, lib
+, stdenv
+, haskellPackages
+}:
 
 let
+  verilog_tools = import sources.verilog_tools { };
+
   clash = haskellPackages.ghcWithPackages (p: with p; [
     clash-lib
     clash-ghc
@@ -9,14 +16,21 @@ let
 in
 with pkgs; stdenv.mkDerivation {
   name = "tiny86";
+  src = ./.;
+
+  buildInputs = [
+    python3
+  ];
 
   propagatedBuildInputs = [
     clash
-    python3
-    verilator
     verilog
+    verilog_tools
   ];
 
-  doCheck = false;
-  src = ./.;
+  installPhase = ''
+    mkdir -p $out/circuit
+    ls
+    cp tiny86.blif $out/circuit
+  '';
 }

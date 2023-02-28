@@ -10,7 +10,7 @@ on:
     - cron: "0 12 * * *"
 
 jobs:
-  format:
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -21,25 +21,11 @@ jobs:
           Format
           # FIXME(jl): the `--pure` nix shell should include `git`; however running in impure shell as `git` is broken
           # in the currently pinned `nixpkgs`.
-        run: nix-shell --run "make format"
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: cachix/install-nix-action@v17
-        with:
-          nix_path: nixpkgs=channel:nixos-unstable
+        run: nix-shell --run "make format lint test"
       - name: Lint
         run:
           # FIXME(jl): the `--pure` nix shell should include `git`; however running in impure shell as `git` is broken
           # in the currently pinned `nixpkgs`.
           nix-shell --run "make lint"
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: cachix/install-nix-action@v17
-        with:
-          nix_path: nixpkgs=channel:nixos-unstable
       - name: Test
         run: nix-shell --pure --run "make test"
