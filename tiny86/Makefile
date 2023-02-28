@@ -43,14 +43,17 @@ circuit/syscall.v: src/Syscall.hs src/Syscall/*.hs
 	sed '/timescale/d' verilog/Syscall.top/syscall.v > $@
 
 .PHONY: lint
-lint: iverilog
+lint: _lint-syntax _lint-synth
+
+.PHONY: _lint-syntax
+_lint-syntax: $(ALL_V_WITHOUT_TESTS_OR_CODEGEN)
 	# TODO(ww): Add -Wall here once we're actually using more of our wires.
-	verilator $(VERILATOR_FLAGS) --top-module $(TOP_MODULE) --lint-only $(IFLAGS) $(ALL_V_WITHOUT_TESTS_OR_CODEGEN)
+	verilator $(VERILATOR_FLAGS) --top-module $(TOP_MODULE) --lint-only $(IFLAGS) $^
 	hlint -g
 
-# Synthesize with iVerilog
-.PHONY: iverilog
-iverilog: codegen $(ALL_V)
+
+.PHONY: _lint-synth
+_lint-synth: codegen $(ALL_V_WITHOUT_TESTS_OR_CODEGEN)
 	iverilog $(IVERILOG_FLAGS) $(IFLAGS) \
 		-ycircuit \
 		-ycircuit/decode \

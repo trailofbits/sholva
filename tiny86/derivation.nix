@@ -12,6 +12,9 @@ let
     clash-lib
     clash-ghc
     clash-prelude
+  ] ++ [
+    hlint
+    hindent
   ]);
 in
 with pkgs; stdenv.mkDerivation {
@@ -24,13 +27,16 @@ with pkgs; stdenv.mkDerivation {
 
   propagatedBuildInputs = [
     clash
+    verilator
     verilog
     verilog_tools
   ];
 
   installPhase = ''
     mkdir -p $out/circuit
+    mkdir -p $out/bin
     ls
     cp tiny86.blif $out/circuit
+    cp proof-statement $out/bin
   '';
 }
