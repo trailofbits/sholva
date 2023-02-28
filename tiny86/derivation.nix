@@ -12,8 +12,7 @@ let
     clash-lib
     clash-ghc
     clash-prelude
-  ] ++ [
-    hlint
+  ] ++ [ hlint
     hindent
   ]);
 in
@@ -34,9 +33,6 @@ with pkgs; stdenv.mkDerivation {
 
   installPhase = ''
     mkdir -p $out/circuit
-    mkdir -p $out/bin
-    ls
     cp tiny86.blif $out/circuit
-    cp proof-statement $out/bin
   '';
 }

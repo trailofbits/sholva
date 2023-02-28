@@ -1,9 +1,0 @@
-#!/bin/sh
-
-PROOF=$(basename "$1" ".trace.txt")
-
-if [ -z "$2" ]; then
-    sv-compositor -b tiny86.blif -o "${PROOF}".circuit
-else
-    sv-compositor -b tiny86.blif -o "${PROOF}".circuit -w "$2"
-fi
