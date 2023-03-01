@@ -14,6 +14,11 @@ format:
 test:
 	$(MAKE) -C test test
 
+.PHONY: docker
+docker: docker.nix
+	nix-build docker.nix
+	docker load < result
+
 .PHONY: install
 install:
 

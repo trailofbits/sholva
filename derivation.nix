@@ -1,4 +1,4 @@
-{ sources ? import ../nix/sources.nix
+{ sources ? import ./nix/sources.nix
 , pkgs ? import sources.nixpkgs { }
 }:
 
@@ -11,9 +11,8 @@ with pkgs; stdenv.mkDerivation {
   name = "sholva";
   src = ./.;
 
-  buildInputs = [
+  propagatedBuildInputs = [
     mttn
     tiny86
-    git
   ];
 }
