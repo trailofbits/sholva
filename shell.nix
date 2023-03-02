@@ -1,33 +1,17 @@
-{ sources ? import ./nix/sources.nix
-, pkgs ? import sources.nixpkgs { }
-}:
+{ sources ? import ./nix/sources.nix, pkgs ? import sources.nixpkgs { } }:
 
 let
   # local derivations
-  mttn = pkgs.callPackage ./mttn/derivation.nix { };
-  tiny86 = pkgs.callPackage ./tiny86/derivation.nix { };
+  sholva = pkgs.callPackage ./derivation.nix { };
   # remote derivations, managed by niv
   sv_circuit = import sources.sv_circuit { };
 
-  haskell = pkgs.haskellPackages.ghcWithPackages (p: with p; [
-    haskell-language-server
-    hindent
-    hlint
-  ]);
-in
-with pkgs;
+  haskell = pkgs.haskellPackages.ghcWithPackages
+    (p: with p; [ haskell-language-server hindent hlint ]);
+in with pkgs;
 mkShell {
-  nativeBuildInputs = [
-    mttn
-    sv_circuit
-    tiny86
-  ];
+  nativeBuildInputs = [ sholva ];
 
   # development-specific dependencies
-  buildInputs = [
-    haskell
-    gdb
-    nasm
-    qemu
-  ];
+  buildInputs = [ haskell gdb nasm qemu ];
 }
