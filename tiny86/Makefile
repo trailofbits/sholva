@@ -17,7 +17,7 @@ ALL_V_WITHOUT_TESTS_OR_CODEGEN := $(CLASH_VERILOG) \
 )
 
 .PHONY: all
-all: tiny86.blif
+all: $(ALL_V_WITHOUT_TESTS_OR_CODEGEN)
 
 .PHONY: tiny86.blif
 tiny86.blif: $(ALL_V_WITHOUT_TESTS_OR_CODEGEN)

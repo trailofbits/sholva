@@ -26,3 +26,5 @@ jobs:
         run: nix-shell --run "make format"
       - name: Lint
         run: nix-shell --pure --run "make lint"
+      - name: Test
+        run: nix-shell --pure --run "make test"

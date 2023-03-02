@@ -11,8 +11,7 @@ stdenv.mkDerivation {
 
   propagatedBuildInputs = [ mttn tiny86 ];
 
-  doCheck = true;
-  checkTarget = "test";
+  doCheck = false;
 
   installPhase = ''
     mkdir -p $out/bin
