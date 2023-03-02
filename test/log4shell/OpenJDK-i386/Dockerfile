@@ -89,4 +89,9 @@ WORKDIR /workdir
 
 VOLUME /workdir
 
+<<<<<<< HEAD:test/log4shell/OpenJDK-i386/Dockerfile
+=======
+ENV PATH=/jdk/build/linux-x86-server-release/jdk/bin:/app/mttn/target/debug/:$PATH
+ENV LD_LIBRARY_PATH=/jdk/build/linux-x86-server-release/jdk/lib:$LD_LIBRARY_PATH
+>>>>>>> 1252281 (TASK(jl): fully integrated Docker+nix):exploit/OpenJDK-i386/Dockerfile
 CMD /jdk/build/linux-x86-server-release/jdk/bin/java

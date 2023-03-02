@@ -1,0 +1,8 @@
+----------------
+IN: 
+0x08049000:  b8 aa aa aa aa           movl     $0xaaaaaaaa, %eax
+0x08049005:  bb bb bb bb bb           movl     $0xbbbbbbbb, %ebx
+0x0804900a:  8d 4c 43 02              leal     2(%ebx, %eax, 2), %ecx
+0x0804900e:  b8 01 00 00 00           movl     $1, %eax
+0x08049013:  cd 80                    int      $0x80
+
