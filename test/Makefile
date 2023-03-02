@@ -162,11 +162,11 @@ _test-clash:
 
 .PHONY: _test-verilog
 _test-verilog: $(TESTBENCH_EXES)
-	@./run-tests $(SHOLVA_MODULES)
+	ruby run-tests $(SHOLVA_MODULES)
 
 .PHONY: _test-pipeline
 _test-pipeline: $(PIPELINE_EXES)
-	@./run-tests $(PIPELINE_MODULES)
+	ruby run-tests $(PIPELINE_MODULES)
 
 .PHONY: clean
 clean:
