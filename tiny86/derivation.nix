@@ -31,9 +31,4 @@ with pkgs; stdenv.mkDerivation {
     verilog_tools
     ruby
   ];
-
-  installPhase = ''
-    mkdir -p $out/circuit
-    cp tiny86.blif $out/circuit
-  '';
 }
