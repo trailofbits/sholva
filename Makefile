@@ -20,6 +20,9 @@ docker: docker.nix
 	nix-build docker.nix
 	docker load < result
 
+.PHONY: install
+install:
+
 clean:
 	$(MAKE) -C tiny86 clean
 	$(MAKE) -C mttn clean

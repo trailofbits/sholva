@@ -13,8 +13,5 @@ stdenv.mkDerivation {
 
   doCheck = false;
 
-  installPhase = ''
-    mkdir -p $out/bin
-    cp tools/* $out/bin/
-  '';
+  installPhase = "";
 }

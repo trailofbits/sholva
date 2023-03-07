@@ -31,4 +31,6 @@ with pkgs; stdenv.mkDerivation {
     verilog_tools
     ruby
   ];
+
+  installPhase = "";
 }
