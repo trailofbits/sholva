@@ -1,14 +1,12 @@
-{-# LANGUAGE BinaryLiterals, TemplateHaskell #-}
-
-import Control.Monad (void)
+import Test.QuickCheck
 
 import PropAlu
 import PropSyscall
-
-return []
+import System.Exit
 
 main :: IO ()
 main = do
-    void PropAlu.check
-    void PropSyscall.check
-    return ()
+  results <- sequenceA [PropAlu.check, PropSyscall.check]
+  if and results
+    then exitSuccess
+    else exitFailure
