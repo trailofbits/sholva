@@ -164,7 +164,7 @@ _test-sholva: _test-clash _test-verilog
 
 .PHONY: _test-clash
 _test-clash:
-	runghc -i$(SHOLVA_PREFIX)/src Main.hs
+	runghc -i$(SHOLVA_PREFIX)/src -iClash Clash.hs
 
 .PHONY: _test-verilog
 _test-verilog: $(TESTBENCH_EXES)

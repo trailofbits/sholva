@@ -1,6 +1,6 @@
 {-# LANGUAGE BinaryLiterals, TemplateHaskell #-}
 
-module PropSyscall where
+module Clash.PropSyscall where
 
 import Syscall.Internal
 import Syscall.Receive

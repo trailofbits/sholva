@@ -1,6 +1,6 @@
 {-# LANGUAGE BinaryLiterals, TemplateHaskell #-}
 
-module PropAlu
+module Clash.PropAlu
     ( check
     ) where
 

@@ -1,7 +1,9 @@
+module Clash where
+
 import Test.QuickCheck
 
-import PropAlu (check)
-import PropSyscall (check)
+import Clash.PropAlu as PropAlu (check)
+import Clash.PropSyscall as PropSyscall (check)
 import System.Exit
 
 main :: IO ()
