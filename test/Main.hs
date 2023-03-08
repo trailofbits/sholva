@@ -1,7 +1,7 @@
 import Test.QuickCheck
 
-import PropAlu
-import PropSyscall
+import PropAlu (check)
+import PropSyscall (check)
 import System.Exit
 
 main :: IO ()
