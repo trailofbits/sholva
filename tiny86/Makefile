@@ -24,7 +24,7 @@ tiny86.blif: $(ALL_V_WITHOUT_TESTS_OR_CODEGEN)
 	sv-netlist $(IFLAGS) --top tiny86 $^ -o $@
 
 %.circuit: %.blif
-	sv-compositor 
+	sv-compositor -b $< --output_file $@
 
 .PHONY: stat
 stat: $(ALL_V_WITHOUT_TESTS_OR_CODEGEN)

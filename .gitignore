@@ -5,12 +5,16 @@ a.out
 *.bin
 *.blif
 *.bristol
+*.circuit
+*.public_input
+*.private_input
 
 # testing & compilation intermediates
 *.elf
 *.jsonl
 *.trace.txt
 *.tv
+*.qemu.trace
 
 # clash, haskell output
 *.dyn_*
@@ -22,4 +26,4 @@ dist-newstyle/
 verilog/
 
 # nix output
-mttn/result
+result

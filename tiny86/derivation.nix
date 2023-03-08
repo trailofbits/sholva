@@ -7,6 +7,7 @@
 
 let
   verilog_tools = import sources.verilog_tools { };
+  sv_circuit = import sources.sv_circuit { };
 
   clash = haskellPackages.ghcWithPackages (p: with p; [
     clash-lib
@@ -26,6 +27,7 @@ with pkgs; stdenv.mkDerivation {
 
   propagatedBuildInputs = [
     clash
+    sv_circuit
     verilator
     verilog
     verilog_tools
