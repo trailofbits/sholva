@@ -145,6 +145,7 @@ check.tv: check.e2e.tv
 # 
 BLIF := ../tiny86/tiny86.blif
 
+.PHONY: $(BLIF)
 $(BLIF):
 	$(MAKE) -C ../tiny86 tiny86.blif
 
