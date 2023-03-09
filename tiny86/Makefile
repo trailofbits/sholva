@@ -37,6 +37,10 @@ tiny86.json: $(ALL_V_WITHOUT_TESTS_OR_CODEGEN)
 # e.g., `YOSYS_MODULE=alu make yosys-show` will generate an SVG of the ALU circuit.
 YOSYS_MODULE ?=
 
+.PHONY: yosys-show
+yosys-show:
+	yosys -QT -p 'read_json tiny86.json; show -format svg -prefix ./$(YOSYS_MODULE) $(YOSYS_MODULE)'
+
 .PHONY: yosys-stat
 yosys-stat:
 	yosys -QT -p 'read_json tiny86.json; stat $(YOSYS_MODULE)'
