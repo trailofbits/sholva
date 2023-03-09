@@ -181,7 +181,7 @@ _test-verilog: $(TESTBENCH_EXES)
 
 .PHONY: _test-pipeline
 _test-pipeline: $(PIPELINE_EXES)
-	ruby run-tests $(PIPELINE_MODULES)
+	ruby run-tests
 
 .PHONY: clean
 clean:
