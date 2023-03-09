@@ -105,8 +105,7 @@ ALL_ELFS := $(ASM_ELFS) $(C_ELFS)
 #
 # TRACING
 #
-MTTN_PREFIX := ../mttn
-MTTN := cargo run --manifest-path=$(MTTN_PREFIX)/Cargo.toml --bin mttn --
+MTTN := mttn
 
 # NOTE(ww): No default traces for the C tests, since some are interactive/take
 # environmental inputs.
@@ -147,16 +146,11 @@ check.tv: check.e2e.tv
 ARCH := $(shell uname -m)
 .PHONY: test
 ifeq ($(ARCH), x86_64)
-test: _test-sholva _test-pipeline _test-mttn
+test: _test-sholva _test-pipeline
 else
 test: _test-sholva
 	$(warning "mttn tests only possible on x86 architectures.")
 endif
-
-# mttn self tests
-.PHONY: _test-mttn
-_test-mttn: $(ALL_ELFS)
-	cargo test --manifest-path=$(MTTN_PREFIX)/Cargo.toml
 
 ## sholva self tests
 .PHONY: _test-sholva
@@ -168,11 +162,11 @@ _test-clash:
 
 .PHONY: _test-verilog
 _test-verilog: $(TESTBENCH_EXES)
-	@./run-tests $(SHOLVA_MODULES)
+	ruby run-tests $(SHOLVA_MODULES)
 
 .PHONY: _test-pipeline
 _test-pipeline: $(PIPELINE_EXES)
-	@./run-tests $(PIPELINE_MODULES)
+	ruby run-tests $(PIPELINE_MODULES)
 
 .PHONY: clean
 clean:

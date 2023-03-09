@@ -1,7 +1,6 @@
 .PHONY: all
 all:
 	$(MAKE) -C tiny86 all
-	$(MAKE) -C mttn all
 
 .PHONY: lint
 lint:
@@ -13,8 +12,16 @@ format:
 	$(MAKE) -C mttn format
 
 .PHONY: test
-test:
+test: all
 	$(MAKE) -C test test
+
+.PHONY: docker
+docker: docker.nix
+	nix-build docker.nix
+	docker load < result
+
+.PHONY: install
+install:
 
 clean:
 	$(MAKE) -C tiny86 clean
