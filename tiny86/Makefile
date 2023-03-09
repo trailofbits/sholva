@@ -39,7 +39,7 @@ YOSYS_MODULE ?=
 
 .PHONY: yosys-show
 yosys-show:
-	yosys -QT -p 'read_json tiny86.json; show -format svg -prefix ./$(YOSYS_MODULE) $(YOSYS_MODULE)'
+	yosys -QT -p 'read_json tiny86.json; show -format dot -prefix ./$(YOSYS_MODULE) $(YOSYS_MODULE)'
 
 .PHONY: yosys-stat
 yosys-stat:
