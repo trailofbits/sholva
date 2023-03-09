@@ -1,8 +1,8 @@
 module: check
 file: ../tiny86/circuit/../check.v
 inputs:
-  - "560 step0"
-  - "560 step1"
+  - "656 step0"
+  - "656 step1"
 outputs:
   - "1 ok"
 
