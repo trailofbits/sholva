@@ -141,6 +141,20 @@ check.e2e.tv: $(E2EGEN) $(TRACE_TEXTS)
 check.tv: check.e2e.tv
 
 #
+# BACK-ENDS
+# 
+BLIF := ../tiny86/tiny86.blif
+
+$(BLIF):
+	$(MAKE) -C ../tiny86 tiny86.blif
+
+%.circuit: %.trace.txt $(BLIF)
+	sv-compositor -b $(BLIF) -w $< -o $@
+
+%.ir1: %.trace.txt $(BLIF)
+	sv-compositor -b $(BLIF) -w $< -o $@
+
+#
 # TOP-LEVEL
 #
 ARCH := $(shell uname -m)

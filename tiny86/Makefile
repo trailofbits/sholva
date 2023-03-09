@@ -30,9 +30,6 @@ tiny86.blif: $(ALL_V_WITHOUT_TESTS_OR_CODEGEN)
 tiny86.json: $(ALL_V_WITHOUT_TESTS_OR_CODEGEN)
 	sv-netlist $(IFLAGS) --json --top tiny86 $^ -o $@
 
-%.circuit: %.blif
-	sv-compositor -b $< -o $@
-
 # FIXME(jl): these `yosys-*` targets should depend on `tiny86.json`,
 # but that re-synthesizes the whole circuit on every invocation?
 
