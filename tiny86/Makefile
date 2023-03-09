@@ -80,7 +80,7 @@ _lint-haskell: $(CLASH_SRC)
 	hlint $^
 
 .PHONY: _lint-yosys
-_lint-yosys:
+_lint-yosys: tiny86.json
 	yosys -QT -p 'read_json tiny86.json; check'
 
 .PHONY: _lint-synth
@@ -96,4 +96,5 @@ install:
 
 .PHONY: clean
 clean:
-	rm -rf $(CLASH_VERILOG) verilog/
+	rm -rf $(CLASH_VERILOG) verilog/ \
+		tiny86.*
