@@ -52,9 +52,6 @@ fetch fetch1(
   .ebp(n_ebp),
   .eip(n_eip),
   .eflags(n_eflags),
-  .s_eax(ns_eax),
-  .s_ebx(ns_ebx),
-  .s_ecx(ns_ecx),
   .raw_hint1(raw_hint1),
   .raw_hint2(raw_hint2)
 );

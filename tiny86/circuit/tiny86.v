@@ -26,7 +26,6 @@ module tiny86(
 
 wire [95:0] raw_instr;
 wire [31:0] eax, ebx, ecx, edx, esi, edi, esp, ebp, eip, eflags;
-wire [31:0] s_eax, s_ebx, s_ecx;
 wire [71:0] raw_hint1;
 wire [71:0] raw_hint2;
 
@@ -44,9 +43,6 @@ fetch fetch_x(
   .ebp(ebp),
   .eip(eip),
   .eflags(eflags),
-  .s_eax(s_eax),
-  .s_ebx(s_ebx),
-  .s_ecx(s_ecx),
   .raw_hint1(raw_hint1),
   .raw_hint2(raw_hint2)
 );
@@ -168,9 +164,7 @@ wire [7:0] syscall_state_o;
 wire [7:0] syscall_state = {hint1_syscall_state, hint2_syscall_state}; // FIXME(jl): using the hints like this means the tracer will have to insert 'dummy' hints for odd numbers.
 wire [63:0] hint_data = {hint1_data, hint2_data};
 wire [63:0] hint_address = {hint1_address, hint2_address}; // FIXME(jl): endianness can only be divined not derived
-
 wire is_syscall = syscall_state != 8'b0;
-
 wire is_syscall_state_none  = syscall_state == `SYSCALL_STATE_DONE;
 wire is_syscall_state_read  = syscall_state == `SYSCALL_STATE_READ;
 wire is_syscall_state_write = syscall_state == `SYSCALL_STATE_WRITE;
@@ -180,14 +174,15 @@ wire [63:0] _out; // transmit; word read from RAM.
 
 assign _out = is_syscall_state_write ? hint_data : 0;
 
+wire [31:0] s_eax, s_ebx, s_ecx;
 syscall syscall_x(
     .i_eax(eax),
     .i_ebx(ebx),
     .i_ecx(ecx),
     .i_syscall_state(syscall_state),
-    .o_eax(o_eax),
-    .o_ebx(o_ebx),
-    .o_ecx(o_ecx),
+    .o_eax(s_eax),
+    .o_ebx(s_ebx),
+    .o_ecx(s_ecx),
     .o_syscall_state(o_syscall_state)
 );
 
@@ -200,9 +195,9 @@ wire syscall_finished = o_syscall_state == 8'b0;
 // TODO(jl): the register file needs to swap 'ignore' the execute unit in the case of a syscall.
 regfile regfile_x(
   .en(1'b1), // TODO(jl): afaik syscalls can actually leave the register file to its own devices.
-  .i_eax(eax),
-  .i_ebx(ebx),
-  .i_ecx(ecx),
+  .i_eax(is_syscall ? s_eax : eax ),
+  .i_ebx(is_syscall ? s_ebx : ebx),
+  .i_ecx(is_syscall ? s_ecx : ecx),
   .i_edx(edx),
   .i_esi(esi),
   .i_edi(edi),

@@ -3,3 +3,8 @@
 
 # debugging outputs
 *.vcd
+
+# artifacts
+*.ir1
+*.circuit
+*.(private|public)_input
