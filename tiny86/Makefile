@@ -22,16 +22,13 @@ all: $(ALL_V_WITHOUT_TESTS_OR_CODEGEN)
 #
 # Circuit artifacts
 #
-.PHONY: tiny86.blif
+
 tiny86.blif: $(ALL_V_WITHOUT_TESTS_OR_CODEGEN)
 	sv-netlist $(IFLAGS) --top tiny86 $^ -o $@
 
-.PHONY: tiny86.json
 tiny86.json: $(ALL_V_WITHOUT_TESTS_OR_CODEGEN)
 	sv-netlist $(IFLAGS) --json --top tiny86 $^ -o $@
 
-# FIXME(jl): these `yosys-*` targets should depend on `tiny86.json`,
-# but that re-synthesizes the whole circuit on every invocation?
 
 # the parametrized verilog module; defaults to top-level
 # e.g., `YOSYS_MODULE=alu make yosys-show` will generate an SVG of the ALU circuit.
