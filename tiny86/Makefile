@@ -19,15 +19,37 @@ ALL_V_WITHOUT_TESTS_OR_CODEGEN := $(CLASH_VERILOG) \
 .PHONY: all
 all: $(ALL_V_WITHOUT_TESTS_OR_CODEGEN)
 
+#
+# Circuit artifacts
+#
 .PHONY: tiny86.blif
 tiny86.blif: $(ALL_V_WITHOUT_TESTS_OR_CODEGEN)
 	sv-netlist $(IFLAGS) --top tiny86 $^ -o $@
 
-%.circuit: %.blif
-	sv-compositor -b $< --output_file $@
+.PHONY: tiny86.json
+tiny86.json: $(ALL_V_WITHOUT_TESTS_OR_CODEGEN)
+	sv-netlist $(IFLAGS) --json --top tiny86 $^ -o $@
 
-.PHONY: stat
-stat: $(ALL_V_WITHOUT_TESTS_OR_CODEGEN)
+%.circuit: %.blif
+	sv-compositor -b $< -o $@
+
+# FIXME(jl): these `yosys-*` targets should depend on `tiny86.json`,
+# but that re-synthesizes the whole circuit on every invocation?
+
+# the parametrized verilog module; defaults to top-level
+# e.g., `YOSYS_MODULE=alu make yosys-show` will generate an SVG of the ALU circuit.
+YOSYS_MODULE ?=
+
+.PHONY: yosys-show
+yosys-show:
+	yosys -QT -p 'read_json tiny86.json; show -format svg -prefix ./$(YOSYS_MODULE) $(YOSYS_MODULE)'
+
+.PHONY: yosys-stat
+yosys-stat:
+	yosys -QT -p 'read_json tiny86.json; stat $(YOSYS_MODULE)'
+
+.PHONY: sv-stat
+sv-stat: $(ALL_V_WITHOUT_TESTS_OR_CODEGEN)
 	sv-stat $(IFLAGS) --top tiny86 $^
 
 .PHONY: codegen
@@ -46,7 +68,7 @@ circuit/syscall.v: src/Syscall.hs src/Syscall/*.hs
 	sed '/timescale/d' verilog/Syscall.top/syscall.v > $@
 
 .PHONY: lint
-lint: _lint-verilog _lint-haskell _lint-synth
+lint: _lint-verilog _lint-haskell _lint-synth _lint-yosys
 
 .PHONY: _lint-verilog
 _lint-verilog: $(ALL_V_WITHOUT_TESTS_OR_CODEGEN)
@@ -57,6 +79,9 @@ _lint-verilog: $(ALL_V_WITHOUT_TESTS_OR_CODEGEN)
 _lint-haskell: $(CLASH_SRC)
 	hlint $^
 
+.PHONY: _lint-yosys
+_lint-yosys:
+	yosys -QT -p 'read_json tiny86.json; check'
 
 .PHONY: _lint-synth
 _lint-synth: codegen $(ALL_V_WITHOUT_TESTS_OR_CODEGEN)

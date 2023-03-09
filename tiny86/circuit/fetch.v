@@ -5,7 +5,6 @@ module fetch(
 
   output [95:0] raw_instr,
   output [31:0] eax, ebx, ecx, edx, esi, edi, esp, ebp, eip, eflags,
-  output [31:0] s_eax, s_ebx, s_ecx,
   output [71:0] raw_hint1,
   output [71:0] raw_hint2 
 );
