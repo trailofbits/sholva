@@ -1,7 +1,7 @@
 module: fetch
 file: ../tiny86/circuit/fetch.v
 inputs:
-  - "560 step"
+  - "656 step"
 outputs:
   - "96 raw_instr"
   - "32 eax"

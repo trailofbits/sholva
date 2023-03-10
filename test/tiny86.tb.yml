@@ -1,7 +1,7 @@
 module: tiny86
 file: ../tiny86/circuit/tiny86.v
 inputs:
-  - "560 step"
+  - "656 step"
 outputs:
   - "32 o_eax"
   - "32 o_ebx"
