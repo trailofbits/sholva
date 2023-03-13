@@ -12,15 +12,15 @@
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "sv_circuit": {
-        "branch": "main",
+        "branch": "jl/circuit-mapping-fix",
         "description": null,
         "homepage": null,
         "owner": "trailofbits",
         "repo": "sv_circuit",
-        "rev": "95295f2ec8b434447b3d974277626340185abce0",
-        "sha256": "1j4qirk995pb5jsz4mb592gjxvhmyg6zwag28p03ph1m58sq8icf",
+        "rev": "7b6db722e08d1a11c4c5b01bc5f53dcad185c529",
+        "sha256": "1chp89axwvq4v5v2h36q07zb9p2isr8q6ja9yff3g0xqfbl57jga",
         "type": "tarball",
-        "url": "https://github.com/trailofbits/sv_circuit/archive/95295f2ec8b434447b3d974277626340185abce0.tar.gz",
+        "url": "https://github.com/trailofbits/sv_circuit/archive/7b6db722e08d1a11c4c5b01bc5f53dcad185c529.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "verilog_tools": {

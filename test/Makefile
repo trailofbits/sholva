@@ -149,7 +149,11 @@ BLIF := ../tiny86/tiny86.blif
 $(BLIF):
 	$(MAKE) -C ../tiny86 tiny86.blif
 
-%.circuit: %.trace.txt $(BLIF)
+.PHONY: %.verify
+%.verify: %.circuit
+	wtk-firealarm $^ $(basename $^).public_input $(basename $^).private_input
+
+%.circuit %.public_input %.private_input: %.trace.txt $(BLIF)
 	sv-compositor -b $(BLIF) -w $< -o $@
 
 %.ir1: %.trace.txt $(BLIF)
