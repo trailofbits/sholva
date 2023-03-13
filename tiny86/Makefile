@@ -24,10 +24,10 @@ all: $(ALL_V_WITHOUT_TESTS_OR_CODEGEN)
 #
 
 tiny86.blif: $(ALL_V_WITHOUT_TESTS_OR_CODEGEN)
-	sv-netlist $(IFLAGS) --top tiny86 $^ -o $@
+	sv-netlist $(IFLAGS) --top check $^ -o $@
 
 tiny86.json: $(ALL_V_WITHOUT_TESTS_OR_CODEGEN)
-	sv-netlist $(IFLAGS) --json --top tiny86 $^ -o $@
+	sv-netlist $(IFLAGS) --json --top check $^ -o $@
 
 
 # the parametrized verilog module; defaults to top-level
