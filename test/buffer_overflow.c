@@ -1,5 +1,5 @@
 #ifndef BUF_LEN
-#error "-DBUF_LEN"
+#error "-DBUF_LEN undefined! Define a length in CFLAGS."
 #endif
 
 char *strcpy(char *dst, const char *src) {

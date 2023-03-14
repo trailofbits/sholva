@@ -1,21 +1,28 @@
 #!/usr/bin/env bash
 
+# buffer-overflow-gen-by-size.sh
 #
-# NOTE(jl): needs to be ran from sholva's test directory.
-# returns: the IR0 artifacts in directory $2 for a buffer overflow of size $1
+# in an attempt to make a "real world exploit" that's also scalable
+# to an arbitrary number of trace steps, we've contrived a simple
+# buffer overflow example parametrized by the C preprocessor `-DBUF_LEN`
 #
+# arguments:
+# - $1: the defined buffer size. Larger generates number generates more trace steps.
+# - $2: the output directory to be formatted in the expected T&E format.
+#
+# NOTE(jl): because this script directly calls `make`, it needs to be run from
+# sholva's test/ directory.
 
-n=$1
-CFLAGS="-DBUF_LEN=${n}" make buffer_overflow.trace.txt -B
-mv buffer_overflow.trace.txt buffer_overflow"${n}".trace.txt
-make buffer_overflow"${n}".circuit
+SIZE=$1
 
-# NOTE(jl): verify existance of directory.
+CFLAGS="-DBUF_LEN=${SIZE}" make buffer_overflow.trace.txt
+mv buffer_overflow.trace.txt "buffer_overflow${SIZE}.trace.txt"
+make "buffer_overflow${SIZE}.circuit"
+
 mkdir -p "$2"
 mkdir -p "$2"/instance
-cp buffer_overflow"${n}".circuit.public_input "$2"/instance/buffer_overflow"${n}".public_input
+mv buffer_overflow"${SIZE}".public_input "$2"/instance/
 mkdir -p "$2"/witness
-cp buffer_overflow"${n}".circuit.private_input "$2"/witness/buffer_overflow"${n}".private_input
+mv buffer_overflow"${SIZE}".private_input "$2"/witness/
 mkdir -p "$2"/relation
-cp buffer_overflow"${n}".circuit "$2"/relation/buffer_overflow"${n}".circuit
-
+mv buffer_overflow"${SIZE}".circuit "$2"/relation/

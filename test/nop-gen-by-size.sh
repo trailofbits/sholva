@@ -1,5 +1,16 @@
 #!/usr/bin/env bash
 
+# nop-gen-by-size.sh
+#
+# a contrived scalability test that generates a trace of all NOPs.
+#
+# arguments:
+# - $1: the number of NOPs.
+# - $2: the output directory to be formatted in the expected T&E format.
+#
+# NOTE(jl): because this script directly calls `make`, it needs to be run from
+# sholva's test/ directory.
+
 PRELUDE="""
 section .text
 global _start
@@ -13,23 +24,23 @@ mov eax, 1
 int 0x80
 """
 
-n=$1
-f=nop${n}
+SIZE=$1
+TARGET=nop${SIZE}
 
+# write to $TARGET.s assembly source containing $SIZE nops.
 { echo "${PRELUDE}";
-  for _ in $(seq "$n"); do
+  for _ in $(seq "$SIZE"); do
   	echo "nop"
   done
   echo "${POSTLUDE}";
-} > "$f".s
+} > "$TARGET".s
 
-make "$f".circuit
+make "$TARGET".circuit
 
-# NOTE(jl): verify existance of directory.
 mkdir -p "$2"
-mkdir -p "$2"/instance
-cp ${f%.s}.circuit.public_input "$2"/instance/${f%.s}.public_input
-mkdir -p "$2"/witness
-cp ${f%.s}.circuit.private_input "$2"/witness/${f%.s}.private_input
-mkdir -p "$2"/relation
-cp ${f%.s}.circuit "$2"/relation/${f%.s}.circuit
+mkdir -p "$2/instance"
+mv "${TARGET}.public_input" "$2/instance/${TARGET}.public_input"
+mkdir -p "$2/witness"
+mv "${TARGET}.private_input" "$2/witness/${TARGET}.private_input"
+mkdir -p "$2/relation"
+mv "${TARGET}.circuit" "$2/relation/${TARGET}.circuit"
