@@ -24,11 +24,10 @@ all: $(ALL_V_WITHOUT_TESTS_OR_CODEGEN)
 #
 
 tiny86.blif: $(ALL_V_WITHOUT_TESTS_OR_CODEGEN)
-	sv-netlist $(IFLAGS) --top tiny86 $^ -o $@
+	sv-netlist $(IFLAGS) --top check $^ -o $@
 
-<<<<<<< HEAD
 tiny86.json: $(ALL_V_WITHOUT_TESTS_OR_CODEGEN)
-	sv-netlist $(IFLAGS) --json --top tiny86 $^ -o $@
+	sv-netlist $(IFLAGS) --json --top check $^ -o $@
 
 
 # the parametrized verilog module; defaults to top-level
@@ -84,24 +83,6 @@ _lint-synth: codegen $(ALL_V_WITHOUT_TESTS_OR_CODEGEN)
 
 .PHONY: install
 install:
-
-tiny86.blif:
-	sv-netlist $(IFLAGS) --top tiny86 $@ $(ALL_V_WITHOUT_TESTS_OR_CODEGEN)
-
-.PHONY: stat
-stat:
-	sv-stat $(IFLAGS) --top tiny86 $(ALL_V_WITHOUT_TESTS_OR_CODEGEN)
-
-.PHONY: codegen
-codegen:
-	$(MAKE) -C circuit/codegen
-
-.PHONY: lint
-lint:
-	# TODO(ww): Add -Wall here once we're actually using more of our wires.
-	verilator --top-module $(TOP_MODULE) --lint-only $(IFLAGS) $(ALL_V_WITHOUT_TESTS_OR_CODEGEN)
-	hlint -g
->>>>>>> 3742971 (TEST(jl): buffer overflow artifacts.)
 
 .PHONY: clean
 clean:
