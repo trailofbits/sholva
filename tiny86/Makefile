@@ -84,14 +84,6 @@ _lint-synth: codegen $(ALL_V_WITHOUT_TESTS_OR_CODEGEN)
 .PHONY: install
 install:
 
-.PHONY: stat
-stat:
-	sv-stat $(IFLAGS) --top tiny86 $(ALL_V_WITHOUT_TESTS_OR_CODEGEN)
-
-.PHONY: codegen
-codegen:
-	$(MAKE) -C circuit/codegen
-
 .PHONY: clean
 clean:
 	rm -rf $(CLASH_VERILOG) verilog/ tiny86.*
