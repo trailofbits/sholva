@@ -11,8 +11,6 @@ lint:
 format:
 	$(MAKE) -C mttn format
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 .PHONY: test
 test: all
 	$(MAKE) -C test test
@@ -25,8 +23,6 @@ docker: docker.nix
 .PHONY: install
 install:
 
-=======
->>>>>>> 3742971 (TEST(jl): buffer overflow artifacts.)
 .PHONY: stat
 stat:
 	$(MAKE) -C tiny86 stat

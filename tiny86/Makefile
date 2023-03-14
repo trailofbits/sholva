@@ -82,10 +82,9 @@ _lint-synth: codegen $(ALL_V_WITHOUT_TESTS_OR_CODEGEN)
 		-ycircuit/execute \
 		-t null check.v
 
-<<<<<<< HEAD
 .PHONY: install
 install:
-=======
+
 tiny86.blif:
 	sv-netlist $(IFLAGS) --top tiny86 $@ $(ALL_V_WITHOUT_TESTS_OR_CODEGEN)
 
