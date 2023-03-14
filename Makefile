@@ -11,6 +11,12 @@ lint:
 format:
 	$(MAKE) -C mttn format
 
+# tests including any development-only tooling.
+.PHONY: dev-test
+dev-test:
+	$(MAKE) -C test _test-dev
+
+# general test suite.
 .PHONY: test
 test: all
 	$(MAKE) -C test test
@@ -18,17 +24,9 @@ test: all
 .PHONY: install
 install:
 
-.PHONY: stat
-stat:
-	$(MAKE) -C tiny86 stat
-
-.PHONY: test
-test:
-	$(MAKE) -C test test
-
 # generate ZK artifacts.
 .PHONY: artifacts
-artifacts: tiny86/tiny86.blif
+artifacts:
 	$(MAKE) -C test artifacts
 
 .PHONY: clean
