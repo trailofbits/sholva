@@ -11,23 +11,18 @@ lint:
 format:
 	$(MAKE) -C mttn format
 
-# tests including any development-only tooling.
-.PHONY: dev-test
-dev-test:
-	$(MAKE) -C test _test-dev
-
 # general test suite.
 .PHONY: test
 test: all
 	$(MAKE) -C test test
 
+# tests including any development-only tooling.
+.PHONY: dev-test
+dev-test:
+	$(MAKE) -C test artifacts
+
 .PHONY: install
 install:
-
-# generate ZK artifacts.
-.PHONY: artifacts
-artifacts:
-	$(MAKE) -C test artifacts
 
 .PHONY: clean
 clean:
