@@ -32,6 +32,7 @@ with pkgs; stdenv.mkDerivation {
     verilog
     verilog_tools
     ruby
+    nasm
   ];
 
   installPhase = "";
