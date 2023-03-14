@@ -204,4 +204,4 @@ _test-pipeline: $(PIPELINE_EXES)
 .PHONY: clean
 clean:
 	rm -rf $(TESTBENCH_EXES) $(PIPELINE_EXES) *.vcd *.e2e.tv \
-	       $(ALL_ELFS) $(TRACE_JSONLS) $(TRACE_TEXTS)
+	       *.elf *.jsonl *.trace.txt
