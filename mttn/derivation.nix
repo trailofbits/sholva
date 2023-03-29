@@ -19,5 +19,5 @@ with pkgs; rustPlatform.buildRustPackage rec {
 
   propagatedBuildInputs = [ latest.rustChannels.nightly.rust ];
 
-  cargoHash = "sha256-s4BmlbzwA0du0rsO2M5PjEqeMxJJLez20IiNjibN2DI=";
+  cargoHash = "sha256-EKtNJIz2cbT/hwDc85fGrmvAhIGCJH6y1uxgMpDmSRk="; 
 }
