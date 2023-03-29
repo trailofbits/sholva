@@ -6,7 +6,7 @@ edition = "2021"
 
 [dependencies]
 anyhow = "1.0"
-clap = "3.2.22"
+clap = "4.2.0"
 derivative = "2.2"
 env_logger = "0.9"
 iced-x86 = "1.18.0"
