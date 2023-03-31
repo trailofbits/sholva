@@ -19,5 +19,8 @@ with pkgs; rustPlatform.buildRustPackage rec {
 
   propagatedBuildInputs = [ latest.rustChannels.nightly.rust ];
 
-  cargoHash = "sha256-EKtNJIz2cbT/hwDc85fGrmvAhIGCJH6y1uxgMpDmSRk="; 
+  cargoLock = {
+    lockFile = ./Cargo.lock;
+    allowBuiltinFetchGit = true;
+  };
 }
