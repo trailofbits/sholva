@@ -13,5 +13,5 @@ mkShell {
   nativeBuildInputs = [ sholva ];
 
   # development-specific dependencies
-  buildInputs = [ haskell gdb nasm qemu ];
+  buildInputs = [ haskell gdb nasm qemu graphviz-nox ];
 }
