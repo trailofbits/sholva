@@ -10,12 +10,8 @@ let
   sv_circuit = import sources.sv_circuit { };
 
   clash = haskellPackages.ghcWithPackages (p: with p; [
-    clash-lib
-    clash-ghc
-    clash-prelude
-  ] ++ [ hlint
-    hindent
-  ]);
+    clash-lib clash-ghc clash-prelude
+  ] ++ [ hlint hindent ]);
 in
 with pkgs; stdenv.mkDerivation {
   name = "tiny86";
@@ -34,5 +30,5 @@ with pkgs; stdenv.mkDerivation {
     ruby
   ];
 
-  installPhase = "";
+  dontInstall = true;
 }

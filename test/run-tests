@@ -1,3 +1,4 @@
+#!/usr/bin/env ruby
 # run-tests: collect all .vvps and run each, parsing the output of each run
 # produce output in TAP format
 

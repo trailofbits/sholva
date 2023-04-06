@@ -1,14 +1,14 @@
 {
     "nixpkgs": {
-        "branch": "nixpkgs-unstable",
+        "branch": "22.11",
         "description": "Nix Packages collection",
         "homepage": "",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "2df37941652c28e0858b9a9520ce5763c43c2ec1",
-        "sha256": "12d5w1bvhjlxrvdhsc44gq1lv5s3z1lv18s39q1702hwmp2bz071",
+        "rev": "4d2b37a84fad1091b9de401eb450aae66f1a741e",
+        "sha256": "11w3wn2yjhaa5pv20gbfbirvjq6i3m7pqrq2msf0g7cv44vijwgw",
         "type": "tarball",
-        "url": "https://github.com/NixOS/nixpkgs/archive/2df37941652c28e0858b9a9520ce5763c43c2ec1.tar.gz",
+        "url": "https://github.com/NixOS/nixpkgs/archive/4d2b37a84fad1091b9de401eb450aae66f1a741e.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "sv_circuit": {
@@ -17,10 +17,10 @@
         "homepage": null,
         "owner": "trailofbits",
         "repo": "sv_circuit",
-        "rev": "db34baa87a130e1418296b2c0e8d0dcd9aa3feb5",
-        "sha256": "0nxvilyl3scfyzkz9l8a3cdri1ayqk86rjra4xpwykfn4cf4jlrd",
+        "rev": "95295f2ec8b434447b3d974277626340185abce0",
+        "sha256": "1j4qirk995pb5jsz4mb592gjxvhmyg6zwag28p03ph1m58sq8icf",
         "type": "tarball",
-        "url": "https://github.com/trailofbits/sv_circuit/archive/db34baa87a130e1418296b2c0e8d0dcd9aa3feb5.tar.gz",
+        "url": "https://github.com/trailofbits/sv_circuit/archive/95295f2ec8b434447b3d974277626340185abce0.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "verilog_tools": {
