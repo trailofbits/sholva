@@ -63,7 +63,7 @@ Dependencies are managed using [`niv`](https://github.com/nmattia/niv). To bump 
 # Update all dependencies.
 $ niv update
 # Update, e.g. nixpkgs, to a specific branch. Note that subsequent updates continue to pull from this branch.
-$ niv upate nixpkgs -b 22.11
+$ niv update nixpkgs -b 22.11
 ```
 
 ## Distribution and Licensing
