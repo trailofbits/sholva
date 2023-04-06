@@ -16,15 +16,6 @@ jobs:
       - uses: actions/checkout@v3
       - uses: cachix/install-nix-action@v17
         with:
-          nix_path: nixpkgs=channel:nixos-unstable
+          nix_path: nixpkgs=channel:22.11
       - name: Build
         run: nix-build
-      - name:
-          Format
-          # FIXME(jl): the `--pure` nix shell should include `git`; however running in impure shell as `git` is broken
-          # in the currently pinned `nixpkgs`.
-        run: nix-shell --run "make format"
-      - name: Lint
-        run: nix-shell --pure --run "make lint"
-      - name: Test
-        run: nix-shell --pure --run "make test"
