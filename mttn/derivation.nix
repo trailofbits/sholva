@@ -1,7 +1,4 @@
-{ sources ? import ../nix/sources.nix
-, rustPlatform
-, fetchFromGitHub
-}:
+{ sources ? import ../nix/sources.nix }:
 let
   pkgs = import sources.nixpkgs {
     overlays = [
@@ -17,10 +14,9 @@ with pkgs; rustPlatform.buildRustPackage rec {
   doCheck = false;
   src = ./.;
 
-  propagatedBuildInputs = [ latest.rustChannels.nightly.rust ];
+  buildInputs = [ (pkgs.rustChannelOf { date = "2023-03-01"; channel = "nightly"; }).rust ];
 
   cargoLock = {
     lockFile = ./Cargo.lock;
-    allowBuiltinFetchGit = true;
   };
 }
