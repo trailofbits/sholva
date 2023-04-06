@@ -16,25 +16,54 @@ Follow the upstream [nix installation instructions](https://nixos.org/download.h
 
 ### Building
 
-*shol'va* currently builds as a sanity test, producing no actual outputs.
+*shol'va* currently builds as a sanity test; producing proofs objects for each example in `test`.
 To run the build:
 
 ```bash
-$ nix-shell --run "make"
+$ nix-build
 ```
 
-Independently, you can run *shol'va*'s self tests:
+### Testing
+
+Dropping into a development shell and manually running the full test suite,
 
 ```bash
-$ make check
-# or limit the checks to a subset
-$ CHECKS="alu fetch execute" nix-shell --run "make check"
+$ nix-shell {--pure}
+# --pure restricts programs in $PATH to _only_ those used for building/testing *shol'va*.
+[nix-shell]$ cd test
+[nix-shell]$ make test
 ```
 
-You can also run *shol'va*'s modules through Verilator's linter.
+In the same sub-shell context, further subsets of the test suite for each subcomponent:
 
 ```bash
-$ nix-shell --run "make lint"
+# test the full Tiny86 circuit test suite
+$ make _test-tiny86
+# test the Tiny86 circuit Clash components Haskell source
+$ make _test-clash
+# test the Tiny86 circuit Verilog components
+$ make _test-verilog
+# test the Tiny86 circuit Verilog components, isolating modules
+$ SHOLVA_MODULES="alu syscall" make _test-verilog
+# test the manual end-to-end test suite
+$ make _test-pipeline
+```
+
+### Development Notes
+
+For an interactive visualization of the dependency graph using [`nix-tree`](https://github.com/utdemir/nix-tree),
+
+```bash
+$ nix-instantiate | xargs -o nix-tree --derivation
+```
+
+Dependencies are managed using [`niv`](https://github.com/nmattia/niv). To bump dependencies,
+
+```bash
+# Update all dependencies.
+$ niv update
+# Update, e.g. nixpkgs, to a specific branch. Note that subsequent updates continue to pull from this branch.
+$ niv upate nixpkgs -b 22.11
 ```
 
 ## Distribution and Licensing

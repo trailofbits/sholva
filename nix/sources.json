@@ -17,10 +17,10 @@
         "homepage": null,
         "owner": "trailofbits",
         "repo": "sv_circuit",
-        "rev": "db34baa87a130e1418296b2c0e8d0dcd9aa3feb5",
-        "sha256": "0nxvilyl3scfyzkz9l8a3cdri1ayqk86rjra4xpwykfn4cf4jlrd",
+        "rev": "5906147be27c8c3a58ba8c1ad7dd880d5146758f",
+        "sha256": "0qryn7bmsscbv31kzv91gpbw8f1qs31qdrw0c776n89z52r2q5cm",
         "type": "tarball",
-        "url": "https://github.com/trailofbits/sv_circuit/archive/db34baa87a130e1418296b2c0e8d0dcd9aa3feb5.tar.gz",
+        "url": "https://github.com/trailofbits/sv_circuit/archive/5906147be27c8c3a58ba8c1ad7dd880d5146758f.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "verilog_tools": {

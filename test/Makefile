@@ -5,7 +5,7 @@ all: test
 # HDL TESTS
 #
 SHOLVA_PREFIX  := ../tiny86
-SHOLVA_MODULES := \
+SHOLVA_MODULES ?= \
 	agu \
 	alu \
 	cfu \
@@ -161,15 +161,15 @@ $(BLIF):
 ARCH := $(shell uname -m)
 .PHONY: test
 ifeq ($(ARCH), x86_64)
-test: _test-sholva _test-pipeline
+test: _test-tiny86 _test-pipeline
 else
-test: _test-sholva
+test: _test-tiny86
 	$(warning "mttn tests only possible on x86 architectures.")
 endif
 
 ## sholva self tests
-.PHONY: _test-sholva
-_test-sholva: _test-clash _test-verilog
+.PHONY: _test-tiny86
+_test-tiny86: _test-clash _test-verilog
 
 .PHONY: _test-clash
 _test-clash:
@@ -177,11 +177,11 @@ _test-clash:
 
 .PHONY: _test-verilog
 _test-verilog: $(TESTBENCH_EXES)
-	ruby run-tests $(SHOLVA_MODULES)
+	./run-tests $(SHOLVA_MODULES)
 
 .PHONY: _test-pipeline
 _test-pipeline: $(PIPELINE_EXES)
-	ruby run-tests
+	./run-tests $(PIPELINE_MODULES)
 
 .PHONY: clean
 clean:

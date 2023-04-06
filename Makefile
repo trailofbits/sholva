@@ -24,6 +24,4 @@ docker: docker.nix
 install:
 
 clean:
-	$(MAKE) -C tiny86 clean
-	$(MAKE) -C mttn clean
 	$(MAKE) -C test clean
