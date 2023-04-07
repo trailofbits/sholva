@@ -148,21 +148,18 @@ check.tv: check.e2e.tv
 #
 # BACK-ENDS
 # 
-BLIF := ../tiny86/tiny86.blif
-
-.PHONY: $(BLIF)
-$(BLIF):
-	$(MAKE) -C ../tiny86 tiny86.blif
+tiny86.blif:
+	tiny86.sh > $@
 
 .PHONY: %.verify
 %.verify: %.circuit
 	wtk-firealarm $^ $(basename $^).public_input $(basename $^).private_input
 
-%.circuit %.public_input %.private_input: %.trace.txt $(BLIF)
-	sv-compositor -b $(BLIF) -w $< -o $@
+%.circuit %.public_input %.private_input: %.trace.txt tiny86.blif
+	sv-compositor -b tiny86.blif -w $< -o $@
 
-%.ir1: %.trace.txt $(BLIF)
-	sv-compositor -b $(BLIF) -w $< -o $@
+%.ir1: %.trace.txt tiny86.blif
+	sv-compositor -b tiny86.blif -w $< -o $@
 
 #
 # TOP-LEVEL
@@ -217,6 +214,3 @@ buffer_overflow_benchmark: buffer_overflow.c
 # produce consumable IR0 artifacts for all generated program traces.
 .PHONY: artifacts
 artifacts: $(TRACE_TEXTS:.trace.txt=.circuit)
-
-%.circuit: %.trace.txt
-	sv-compositor -b ../tiny86/tiny86.blif -o $@ -w $^
