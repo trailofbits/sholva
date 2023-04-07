@@ -17,7 +17,7 @@ ALL_V_WITHOUT_TESTS_OR_CODEGEN := $(CLASH_VERILOG) \
 )
 
 .PHONY: all
-all: $(ALL_V_WITHOUT_TESTS_OR_CODEGEN)
+all: tiny86.blif
 
 #
 # Circuit artifacts

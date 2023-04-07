@@ -31,5 +31,17 @@ with pkgs; stdenv.mkDerivation {
     nasm
   ];
 
-  dontInstall = true;
+  # a small wrapper to expose the synthesized circuit through a script in the derivation output
+  installPhase = ''
+    mkdir -p $out/circuit
+    mv tiny86.blif $out/circuit
+
+    mkdir -p $out/bin
+    cat << EOF >> $out/bin/tiny86.sh
+    #!/bin/sh
+    cat $out/circuit/tiny86.blif
+    EOF
+
+    chmod +x $out/bin/tiny86.sh
+  '';
 }
