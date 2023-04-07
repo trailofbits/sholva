@@ -1,0 +1,13 @@
+name: Automated niv-managed dependency updates
+on:
+  schedule:
+    - cron:  '0 10 * * *'
+jobs:
+  niv-updater:
+    name: 'Create PRs for niv-managed dependencies'
+    runs-on: ubuntu-latest
+    steps:
+      - name: niv-updater-action
+        uses: knl/niv-updater-action@v12
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
