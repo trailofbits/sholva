@@ -8,3 +8,4 @@
 *.ir1
 *.circuit
 *.(private|public)_input
+*.elf

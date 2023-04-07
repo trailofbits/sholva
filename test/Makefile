@@ -9,6 +9,7 @@ SHOLVA_MODULES ?= \
 	agu \
 	alu \
 	cfu \
+	check \
 	decode \
 	decode_hint \
 	decode_opc_phase1 \
@@ -28,6 +29,8 @@ PIPELINE_MODULES := check
 
 TESTBENCH_EXES := $(addsuffix .tb.vvp,$(SHOLVA_MODULES))
 PIPELINE_EXES  := $(addsuffix .tb.vvp,$(PIPELINE_MODULES))
+
+.EXPORT_ALL_VARIABLES:
 
 %.tb.yml: $(TBGEN) $(TVGEN) $(E2EGEN)
 
@@ -83,11 +86,15 @@ C_TESTS := \
 	smallcall
 C_SOURCES := $(C_TESTS:=.c)
 C_ELFS := $(C_SOURCES:.c=.elf)
+CFLAGS += -fno-pic -g -m32 -mtune=i386 -Wl,-emain -nostdlib -static -std=c99 \
+		-mpreferred-stack-boundary=2 -fno-stack-protector -z execstack
 
 CGC_TESTS := \
 	Palindrome
 
 ALL_ELFS := $(ASM_ELFS) $(C_ELFS)
+
+elfs: $(ALL_ELFS)
 
 %.elf: %.o
 	ld -m elf_i386 $(basename $@).o -o $(basename $@).elf
@@ -97,9 +104,7 @@ ALL_ELFS := $(ASM_ELFS) $(C_ELFS)
 	nasm -f elf32 $(basename $@).s -o $(basename $@).o
 
 %.elf: %.c
-	$(CC) -fno-pic -g -m32 -mtune=i386 -Wl,-emain -nostdlib -static -std=c99 \
-		$(basename $@).c -o $(basename $@).elf -mpreferred-stack-boundary=2 \
-		-fno-stack-protector -z execstack
+	$(CC) $(CFLAGS) $(basename $@).c -o $(basename $@).elf 
 
 
 #
@@ -143,17 +148,18 @@ check.tv: check.e2e.tv
 #
 # BACK-ENDS
 # 
-BLIF := ../tiny86/tiny86.blif
+tiny86.blif:
+	tiny86.sh > $@
 
-.PHONY: $(BLIF)
-$(BLIF):
-	$(MAKE) -C ../tiny86 tiny86.blif
+.PHONY: %.verify
+%.verify: %.circuit
+	wtk-firealarm $^ $(basename $^).public_input $(basename $^).private_input
 
-%.circuit: %.trace.txt $(BLIF)
-	sv-compositor -b $(BLIF) -w $< -o $@
+%.circuit %.public_input %.private_input: %.trace.txt tiny86.blif
+	sv-compositor -b tiny86.blif -w $< -o $@
 
-%.ir1: %.trace.txt $(BLIF)
-	sv-compositor -b $(BLIF) -w $< -o $@
+%.ir1: %.trace.txt tiny86.blif
+	sv-compositor -b tiny86.blif -w $< -o $@
 
 #
 # TOP-LEVEL
@@ -166,6 +172,11 @@ else
 test: _test-tiny86
 	$(warning "mttn tests only possible on x86 architectures.")
 endif
+
+# mttn self tests
+.PHONY: _test-mttn
+_test-mttn: $(ALL_ELFS)
+	cargo test --manifest-path=$(MTTN_PREFIX)/Cargo.toml
 
 ## sholva self tests
 .PHONY: _test-tiny86
@@ -186,4 +197,20 @@ _test-pipeline: $(PIPELINE_EXES)
 .PHONY: clean
 clean:
 	rm -rf $(TESTBENCH_EXES) $(PIPELINE_EXES) *.vcd *.e2e.tv \
-	       $(ALL_ELFS) $(TRACE_JSONLS) $(TRACE_TEXTS)
+	       *.elf *.jsonl *.trace.txt \
+	       *.trace.* *.circuit *.*_input
+
+#
+# ARTIFACTS
+#
+.PHONY: nop_benchmark
+nop_benchmark:
+	@./nop-benchmark/gen.sh
+
+.PHONY: buffer_overflow_benchmark
+buffer_overflow_benchmark: buffer_overflow.c
+	@./buffer-overflow-benchmark.sh
+
+# produce consumable IR0 artifacts for all generated program traces.
+.PHONY: artifacts
+artifacts: $(TRACE_TEXTS:.trace.txt=.circuit)

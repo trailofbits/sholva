@@ -11,17 +11,19 @@ lint:
 format:
 	$(MAKE) -C mttn format
 
+# general test suite.
 .PHONY: test
 test: all
 	$(MAKE) -C test test
 
-.PHONY: docker
-docker: docker.nix
-	nix-build docker.nix
-	docker load < result
+# tests including any development-only tooling.
+.PHONY: dev-test
+dev-test:
+	$(MAKE) -C test artifacts
 
 .PHONY: install
 install:
 
+.PHONY: clean
 clean:
 	$(MAKE) -C test clean
