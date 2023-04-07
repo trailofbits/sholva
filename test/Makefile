@@ -32,8 +32,6 @@ PIPELINE_EXES  := $(addsuffix .tb.vvp,$(PIPELINE_MODULES))
 
 .EXPORT_ALL_VARIABLES:
 
-PATH := $(PATH):~/.cargo/bin
-
 %.tb.yml: $(TBGEN) $(TVGEN) $(E2EGEN)
 
 %.tb.gen.v: %.tb.yml
