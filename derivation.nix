@@ -20,12 +20,18 @@ stdenv.mkDerivation {
   name = "sholva";
   src = ./.;
 
-  buildInputs = [ mttn tiny86 sholva-qemu nasm which gdb ];
+  buildInputs = [ nasm ];
+  propagatedBuildInputs = [ mttn tiny86 sholva-qemu nasm which gdb ];
 
   preCheck = ''
     patchShebangs ./test/
   '';
   doCheck = true;
+
+  installPhase = ''
+    mkdir -p $out/bin
+    cp -r tools/* $out/bin
+  '';
 
   meta = with lib; {
     description = "Zero-knowledge proofs for i386 program execution";
