@@ -23,6 +23,12 @@ To run the build:
 $ nix-build
 ```
 
+### Exploit Modeling
+
+- [log4shell](https://www.cve.org/CVERecord?id=CVE-2021-44228)
+
+Uses a provided jdk build cross-compiled to 80386.
+
 ### Testing
 
 Dropping into a development shell and manually running the full test suite,

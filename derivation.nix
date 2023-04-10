@@ -20,10 +20,16 @@ stdenv.mkDerivation {
   name = "sholva";
   src = ./.;
 
-  buildInputs = [ mttn tiny86 sholva-qemu nasm ];
+  buildInputs = [ nasm ];
+  propagatedBuildInputs = [ mttn tiny86 sholva-qemu python3 ];
 
   preCheck = ''
     patchShebangs ./test/
   '';
   doCheck = true;
+
+  installPhase = ''
+    mkdir -p $out/bin
+    cp -r tools/* $out/bin
+  '';
 }
