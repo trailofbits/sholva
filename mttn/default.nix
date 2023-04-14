@@ -1,5 +1,5 @@
-{ sources ? import ../nix/sources.nix
-, pkgs ? import sources.nixpkgs { }
-}:
-
-pkgs.callPackage ./derivation.nix { }
+let
+  sources = import ../nix/sources.nix;
+  pkgs = import sources.nixpkgs { };
+in
+pkgs.callPackage ./derivation.nix { sources = sources }

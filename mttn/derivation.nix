@@ -1,4 +1,4 @@
-{ sources ? import ../nix/sources.nix }:
+{ sources }:
 let
   pkgs = import sources.nixpkgs {
     overlays = [

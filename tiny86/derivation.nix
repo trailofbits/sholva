@@ -1,15 +1,9 @@
-{ sources ? import ../nix/sources.nix
-, pkgs ? import sources.nixpkgs { }
-, lib
-, stdenv
-, haskellPackages
-}:
+{ sources, sv_circuit, verilog_tools }:
 
 let
-  verilog_tools = import sources.verilog_tools { };
-  sv_circuit = import sources.sv_circuit { };
+  pkgs = import sources.nixpkgs { };
 
-  clash = haskellPackages.ghcWithPackages (p: with p; [
+  clash = pkgs.haskellPackages.ghcWithPackages (p: with p; [
     clash-lib clash-ghc clash-prelude
   ] ++ [ hlint hindent ]);
 in
