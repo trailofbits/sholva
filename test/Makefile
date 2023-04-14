@@ -78,6 +78,7 @@ ASM_TESTS := \
 ASM_SOURCES := $(ASM_TESTS:=.s)
 ASM_OBJS := $(ASM_SOURCES:.s=.o)
 ASM_ELFS := $(ASM_OBJS:.o=.elf)
+ASM_FLAGS += -g -F dwarf -f elf32
 
 C_TESTS := \
 	condition \
@@ -86,7 +87,7 @@ C_TESTS := \
 	smallcall
 C_SOURCES := $(C_TESTS:=.c)
 C_ELFS := $(C_SOURCES:.c=.elf)
-CFLAGS += -fno-pic -g -m32 -mtune=i386 -Wl,-emain -nostdlib -static -std=c99 \
+CFLAGS += -fno-pic -Og -ggdb -m32 -mtune=i386 -Wl,-emain -nostdlib -static -std=c99 \
 		-mpreferred-stack-boundary=2 -fno-stack-protector -z execstack
 
 CGC_TESTS := \
@@ -101,7 +102,7 @@ elfs: $(ALL_ELFS)
 	chmod +x $(basename $@).elf
 
 %.o: %.s
-	nasm -f elf32 $(basename $@).s -o $(basename $@).o
+	nasm $(ASM_FLAGS) $(basename $@).s -o $(basename $@).o
 
 %.elf: %.c
 	$(CC) $(CFLAGS) $(basename $@).c -o $(basename $@).elf 
