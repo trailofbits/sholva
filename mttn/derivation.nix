@@ -2,11 +2,12 @@
 let
   pkgs = import sources.nixpkgs {
     overlays = [
-      (import (fetchTarball "https://github.com/mozilla/nixpkgs-mozilla/archive/master.tar.gz"))
+      (import (fetchTarball
+        "https://github.com/mozilla/nixpkgs-mozilla/archive/master.tar.gz"))
     ];
   };
-in
-with pkgs; rustPlatform.buildRustPackage rec {
+in with pkgs;
+rustPlatform.buildRustPackage rec {
   pname = "mttn";
   version = "1.0.0";
 
@@ -14,9 +15,12 @@ with pkgs; rustPlatform.buildRustPackage rec {
   doCheck = false;
   src = ./.;
 
-  buildInputs = [ (pkgs.rustChannelOf { date = "2023-03-01"; channel = "nightly"; }).rust ];
+  buildInputs = [
+    (pkgs.rustChannelOf {
+      date = "2023-03-01";
+      channel = "nightly";
+    }).rust
+  ];
 
-  cargoLock = {
-    lockFile = ./Cargo.lock;
-  };
+  cargoLock = { lockFile = ./Cargo.lock; };
 }

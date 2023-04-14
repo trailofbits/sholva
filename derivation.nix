@@ -6,9 +6,7 @@ let
   sv_circuit = import sources.sv_circuit;
   verilog_tools = import sources.verilog_tools;
 
-  mttn = pkgs.callPackage ./mttn/derivation.nix {
-    sources = sources;
-  };
+  mttn = pkgs.callPackage ./mttn/derivation.nix { sources = sources; };
   tiny86 = pkgs.callPackage ./tiny86/derivation.nix {
     sources = sources;
     sv_circuit = sv_circuit;

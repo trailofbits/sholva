@@ -3,27 +3,17 @@
 let
   pkgs = import sources.nixpkgs { };
 
-  clash = pkgs.haskellPackages.ghcWithPackages (p: with p; [
-    clash-lib clash-ghc clash-prelude
-  ] ++ [ hlint hindent ]);
-in
-with pkgs; stdenv.mkDerivation {
+  clash = pkgs.haskellPackages.ghcWithPackages
+    (p: with p; [ clash-lib clash-ghc clash-prelude ] ++ [ hlint hindent ]);
+in with pkgs;
+stdenv.mkDerivation {
   name = "tiny86";
   src = ./.;
 
-  buildInputs = [
-    python3
-  ];
+  buildInputs = [ python3 ];
 
-  propagatedBuildInputs = [
-    clash
-    sv_circuit
-    verilator
-    verilog
-    verilog_tools
-    ruby
-    nasm
-  ];
+  propagatedBuildInputs =
+    [ clash sv_circuit verilator verilog verilog_tools ruby nasm ];
 
   # a small wrapper to expose the synthesized circuit through a script in the derivation output
   installPhase = ''
