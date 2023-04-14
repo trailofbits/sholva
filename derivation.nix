@@ -1,4 +1,4 @@
-{ sources }:
+{ sources, pkgs-unstable }:
 
 let
   pkgs = import sources.nixpkgs { };
@@ -15,21 +15,17 @@ let
 
   sholva-qemu =
     pkgs.callPackage ./runtime/qemu/qemu-i386.nix { sources = sources; };
+  sholva-jdk = pkgs.callPackage ./runtime/openjdk/openjdk-llvm-i386.nix { pkgs = pkgs-unstable; };
 in with pkgs;
 stdenv.mkDerivation {
   name = "sholva";
   src = ./.;
 
   buildInputs = [ nasm ];
-  propagatedBuildInputs = [ mttn tiny86 sholva-qemu python3 ];
+  propagatedBuildInputs = [ mttn tiny86 sholva-qemu python3 sholva-jdk ];
 
   preCheck = ''
     patchShebangs ./test/
   '';
   doCheck = true;
-
-  installPhase = ''
-    mkdir -p $out/bin
-    cp -r tools/* $out/bin
-  '';
 }
