@@ -12,27 +12,27 @@
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "sv_circuit": {
-        "branch": "jl/nix-pinning",
+        "branch": "main",
         "description": null,
         "homepage": null,
         "owner": "trailofbits",
         "repo": "sv_circuit",
-        "rev": "42dea5235463bc72fec495c193b641cca59bb31f",
-        "sha256": "1l4fkffny62xs7701z0zjcjqfwfmkmh79892r1n0w0s5npi7y14b",
+        "rev": "47413ba5321bf23a39b77aee2c2841839af0a86c",
+        "sha256": "1mr6pplszz2mdxrkfgfv33542fh202q4h9qpwn5lgmiz2mibbl3l",
         "type": "tarball",
-        "url": "https://github.com/trailofbits/sv_circuit/archive/42dea5235463bc72fec495c193b641cca59bb31f.tar.gz",
+        "url": "https://github.com/trailofbits/sv_circuit/archive/47413ba5321bf23a39b77aee2c2841839af0a86c.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "verilog_tools": {
-        "branch": "jl/nix",
+        "branch": "main",
         "description": "verilog circuit utilities.",
         "homepage": null,
         "owner": "trailofbits",
         "repo": "verilog_tools",
-        "rev": "71e6b6c5f732aa62a6a1e35585721699666f8bca",
-        "sha256": "0fdd36brlddj19xp7yicw0rg69f1nxyw8ardnlydw49r5nkpzf4i",
+        "rev": "edc7ba0196fa26728b40ade69454d99fbf5e86f1",
+        "sha256": "0s6dv2a8fyzdzl6njfaxhi97pswx26i35nifnn1043nihwkgg61h",
         "type": "tarball",
-        "url": "https://github.com/trailofbits/verilog_tools/archive/71e6b6c5f732aa62a6a1e35585721699666f8bca.tar.gz",
+        "url": "https://github.com/trailofbits/verilog_tools/archive/edc7ba0196fa26728b40ade69454d99fbf5e86f1.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     }
 }
