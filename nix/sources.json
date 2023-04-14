@@ -12,15 +12,15 @@
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "sv_circuit": {
-        "branch": "jl/circuit-mapping-fix",
+        "branch": "main",
         "description": null,
         "homepage": null,
         "owner": "trailofbits",
         "repo": "sv_circuit",
-        "rev": "7b6db722e08d1a11c4c5b01bc5f53dcad185c529",
-        "sha256": "1chp89axwvq4v5v2h36q07zb9p2isr8q6ja9yff3g0xqfbl57jga",
+        "rev": "47413ba5321bf23a39b77aee2c2841839af0a86c",
+        "sha256": "1mr6pplszz2mdxrkfgfv33542fh202q4h9qpwn5lgmiz2mibbl3l",
         "type": "tarball",
-        "url": "https://github.com/trailofbits/sv_circuit/archive/7b6db722e08d1a11c4c5b01bc5f53dcad185c529.tar.gz",
+        "url": "https://github.com/trailofbits/sv_circuit/archive/47413ba5321bf23a39b77aee2c2841839af0a86c.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "verilog_tools": {
@@ -29,10 +29,10 @@
         "homepage": null,
         "owner": "trailofbits",
         "repo": "verilog_tools",
-        "rev": "70e188963f0784246170dea6e12a3da6d0530758",
-        "sha256": "16gjbmglqsq2hbngw4xlvgimqmpx3rwrx2cndfms4za5wra6scg2",
+        "rev": "edc7ba0196fa26728b40ade69454d99fbf5e86f1",
+        "sha256": "0s6dv2a8fyzdzl6njfaxhi97pswx26i35nifnn1043nihwkgg61h",
         "type": "tarball",
-        "url": "https://github.com/trailofbits/verilog_tools/archive/70e188963f0784246170dea6e12a3da6d0530758.tar.gz",
+        "url": "https://github.com/trailofbits/verilog_tools/archive/edc7ba0196fa26728b40ade69454d99fbf5e86f1.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     }
 }
