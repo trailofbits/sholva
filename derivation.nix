@@ -12,8 +12,11 @@ let
     sv_circuit = sv_circuit;
     verilog_tools = verilog_tools;
   };
-  sholva-qemu = pkgs.callPackage ./runtime/qemu/qemu-i386.nix { sources = sources; };
-  sholva-jdk = pkgs.callPackage ./runtime/openjdk/openjdk-llvm-i386.nix { sources = sources; };
+  sholva-qemu =
+    pkgs.callPackage ./runtime/qemu/qemu-i386.nix { sources = sources; };
+  sholva-jdk = pkgs.callPackage ./runtime/openjdk/openjdk-llvm-i386.nix {
+    sources = sources;
+  };
 in with pkgs;
 stdenv.mkDerivation {
   name = "sholva";
@@ -21,14 +24,14 @@ stdenv.mkDerivation {
 
   buildInputs = [ nasm ];
   propagatedBuildInputs = [
-    which
-    numactl
     gdb
     mttn
-    tiny86
-    sholva-qemu
+    numactl
     python3
-    (enableDebugging pkgsi686Linux.jdk8_headless)
+    sholva-jdk
+    sholva-qemu
+    tiny86
+    which
   ];
 
   preCheck = ''
