@@ -24,14 +24,14 @@ stdenv.mkDerivation {
 
   buildInputs = [ nasm ];
   propagatedBuildInputs = [
-    which
-    numactl
     gdb
     mttn
-    tiny86
-    sholva-qemu
+    numactl
     python3
-    (enableDebugging pkgsi686Linux.jdk8_headless)
+    sholva-jdk
+    sholva-qemu
+    tiny86
+    which
   ];
 
   preCheck = ''
