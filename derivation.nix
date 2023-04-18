@@ -20,7 +20,7 @@ stdenv.mkDerivation {
   name = "sholva";
   src = ./.;
 
-  buildInputs = [ mttn tiny86 sholva-qemu nasm ];
+  buildInputs = [ mttn tiny86 sholva-qemu nasm which gdb ];
 
   preCheck = ''
     patchShebangs ./test/
