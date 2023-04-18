@@ -3,29 +3,20 @@ let
   pkgs = import sources.nixpkgs { };
 
   sholva-qemu = pkgs.qemu.overrideAttrs (old: rec {
-    numaSupport = false;
-    seccompSupport = false;
-    alsaSupport = false;
-    pulseSupport = false;
-    sdlSupport = false;
-    jackSupport = false;
-    gtkSupport = false;
-    vncSupport = false;
-    smartcardSupport = false;
-    spiceSupport = false;
-    ncursesSupport = false;
-    usbredirSupport = false;
-    xenSupport = false;
-    cephSupport = false;
-    glusterfsSupport = false;
-    openGLSupport = false;
-    virglSupport = false;
-    libiscsiSupport = false;
-    smbdSupport = false;
-    tpmSupport = false;
-    uringSupport = false;
+    # rather than disable nearly all default configuration options, just override with
+    # the minimal flags for desired i386 userspace emulation
+    configureFlags = [
+      "--disable-strip"
+      "--enable-capstone"
+      "--enable-tools"
+      "--localstatedir=/var"
+      "--meson=meson"
+      "--sysconfdir=/etc"
+      "--target-list=i386-linux-user"
+    ];
 
+    # FIMXE(jl): downside to configuration flags overriding is the build inputs
+    # are pulling in extraneous packages at build-time.
     buildInputs = old.buildInputs ++ (with pkgs; [ capstone ]);
-    configureFlags = old.configureFlags ++ [ "--enable-capstone" ];
   });
 in sholva-qemu
