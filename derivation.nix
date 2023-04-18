@@ -12,12 +12,15 @@ let
     sv_circuit = sv_circuit;
     verilog_tools = verilog_tools;
   };
+
+  sholva-qemu =
+    pkgs.callPackage ./runtime/qemu/qemu-i386.nix { sources = sources; };
 in with pkgs;
 stdenv.mkDerivation {
   name = "sholva";
   src = ./.;
 
-  buildInputs = [ mttn tiny86 qemu nasm ];
+  buildInputs = [ mttn tiny86 sholva-qemu nasm ];
 
   preCheck = ''
     patchShebangs ./test/
