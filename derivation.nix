@@ -26,4 +26,10 @@ stdenv.mkDerivation {
     patchShebangs ./test/
   '';
   doCheck = true;
+
+  meta = with lib; {
+    description = "Zero-knowledge proofs for i386 program execution";
+    license = licenses.agpl3Only;
+    platforms = [ "x86_64-linux" "i686-linux" ];
+  };
 }
