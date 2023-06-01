@@ -11,7 +11,7 @@ lint:
 .PHONY: format
 format:
 	$(MAKE) -C mttn format
-	verible-verilog-format -i src/*.v
+	verible-verilog-format src/*.v
 
 # general test suite.
 .PHONY: test
