@@ -23,4 +23,10 @@ rustPlatform.buildRustPackage rec {
   ];
 
   cargoLock = { lockFile = ./Cargo.lock; };
+
+  meta = with lib; {
+    description = "Tiny86 tracer";
+    license = licenses.agpl3Only;
+    platforms = [ "x86_64-linux" "i686-linux" ];
+  };
 }

@@ -3,8 +3,9 @@ let
   pkgs = import sources.nixpkgs { };
 
   sv_circuit = import sources.sv_circuit;
-  verilog_tools = import sources.verilog_tools { };
+  verilog_tools = import sources.verilog_tools;
 in pkgs.callPackage ./derivation.nix {
+  sources = sources;
   sv_circuit = sv_circuit;
   verilog_tools = verilog_tools;
 }
