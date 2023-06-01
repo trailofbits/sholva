@@ -28,4 +28,9 @@ stdenv.mkDerivation {
 
     chmod +x $out/bin/tiny86.sh
   '';
+
+  meta = with lib; {
+    description = "Tiny86 transition circuit";
+    license = licenses.agpl3Only;
+  };
 }
