@@ -1,4 +1,5 @@
 // 8-way 32-bit multiplexor.
+`default_nettype none
 
 module mux8_32(
   input [2:0] sel,

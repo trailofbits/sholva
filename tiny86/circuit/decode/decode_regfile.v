@@ -1,3 +1,5 @@
+`default_nettype none
+
 module decode_regfile(
   input [319:0] raw_regs,
 

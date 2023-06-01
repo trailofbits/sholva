@@ -1,3 +1,5 @@
+`default_nettype none
+
 module decode_prefix(
   input [95:0] raw_instr,
 

@@ -1,3 +1,4 @@
+`default_nettype none
 `include "defines.v"
 `include "codegen/commands.gen.v"
 

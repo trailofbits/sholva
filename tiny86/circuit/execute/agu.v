@@ -1,3 +1,5 @@
+`default_nettype none
+
 module agu(
   input [1:0] scale,
   input [31:0] index,

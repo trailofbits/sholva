@@ -3,6 +3,7 @@
 // 2. Control flow transfer, relative to the current EIP
 // 3. Control flow transfer, relative to the next EIP
 // 4. Control flow transfer, absolute displacement
+`default_nettype none
 
 `include "defines.v"
 `include "codegen/commands.gen.v"
