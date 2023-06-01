@@ -6,12 +6,11 @@ all:
 lint:
 	$(MAKE) -C tiny86 lint
 	$(MAKE) -C mttn lint
-	verible-verilog-lint /Users/xh/sholva/tiny86/circuit/*.v
 
 .PHONY: format
 format:
 	$(MAKE) -C mttn format
-	verible-verilog-format --inplace /Users/xh/sholva/tiny86/circuit/*.v
+	$(MAKE) -C tiny86 format
 
 # general test suite.
 .PHONY: test
