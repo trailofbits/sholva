@@ -1,3 +1,5 @@
+`default_nettype none
+
 module decode_hint(
   input [71:0] raw_hint,
 

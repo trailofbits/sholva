@@ -1,3 +1,5 @@
+`default_nettype none
+
 module decode(
   input [95:0] raw_instr,
   input [31:0] eax,

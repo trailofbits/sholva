@@ -1,3 +1,5 @@
+`default_nettype none
+
 module decode_opc_phase1(
   input [87:0] unprefixed_instr,
 
