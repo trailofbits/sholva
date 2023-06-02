@@ -162,9 +162,7 @@ module tiny86 (
   `define SYSCALL_STATE_WRITE 2
 
   wire [7:0] syscall_state_o;
-  wire [7:0] syscall_state = {
-    hint1_syscall_state, hint2_syscall_state
-  };
+  wire [7:0] syscall_state = {hint1_syscall_state, hint2_syscall_state};
   wire [63:0] hint_data = {hint1_data, hint2_data};
   wire [63:0] hint_address = {
     hint1_address, hint2_address
