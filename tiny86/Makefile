@@ -57,6 +57,13 @@ circuit/syscall.v: src/Syscall.hs src/Syscall/*.hs
 	clash -isrc -fclash-clear $< --verilog
 	sed '/timescale/d' verilog/Syscall.top/syscall.v > $@
 
+.PHONY: format
+format: _format-verilog
+
+.PHONY: _format-verilog
+_format-verilog: $(ALL_V_WITHOUT_TESTS_OR_CODEGEN)
+	verible-verilog-format --inplace $^
+
 .PHONY: lint
 lint: _lint-verilog _lint-haskell _lint-synth _lint-yosys
 
@@ -64,6 +71,7 @@ lint: _lint-verilog _lint-haskell _lint-synth _lint-yosys
 _lint-verilog: $(ALL_V_WITHOUT_TESTS_OR_CODEGEN)
 	# TODO(ww): Add -Wall here once we're actually using more of our wires.
 	verilator $(VERILATOR_FLAGS) --top-module $(TOP_MODULE) --lint-only $(IFLAGS) $^
+	verible-verilog-lint $^
 
 .PHONY: _lint-haskell
 _lint-haskell: $(CLASH_SRC)

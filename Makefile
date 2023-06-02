@@ -10,6 +10,7 @@ lint:
 .PHONY: format
 format:
 	$(MAKE) -C mttn format
+	$(MAKE) -C tiny86 format
 
 # general test suite.
 .PHONY: test

@@ -1,19 +1,19 @@
 // 64 bit one-hot decoder
 function [63:0] one_hot64;
-   input  [5:0] binary;
-   begin
-      one_hot64         = 64'h0000_0000_0000_0000;
-      one_hot64[binary] =  1'b1;
-   end
+  input [5:0] binary;
+  begin
+    one_hot64         = 64'h0000_0000_0000_0000;
+    one_hot64[binary] = 1'b1;
+  end
 endfunction
 
 // 128 bit one-hot decoder
 function [127:0] one_hot128;
-   input  [6:0] binary;
-   begin
-      one_hot128         = 128'h0000_0000_0000_0000_0000_0000_0000_0000;
-      one_hot128[binary] =  1'b1;
-   end
+  input [6:0] binary;
+  begin
+    one_hot128         = 128'h0000_0000_0000_0000_0000_0000_0000_0000;
+    one_hot128[binary] = 1'b1;
+  end
 endfunction
 
 function [7:0] one_hot8;
@@ -70,6 +70,6 @@ endfunction
 function [31:0] long_regsel;
   input [2:0] regsel;
   begin
-    long_regsel = { 29'b0, regsel };
+    long_regsel = {29'b0, regsel};
   end
 endfunction

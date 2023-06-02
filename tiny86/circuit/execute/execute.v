@@ -1,87 +1,86 @@
+`default_nettype none
 `include "defines.v"
 `include "codegen/commands.gen.v"
 
-module execute(
-  input [6:0] opc,
+module execute (
+    input [6:0] opc,
 
-  input [31:0] eflags,
-  input ecx_is_zero,
-  input [31:0] eip,
-  input [3:0] instr_len,
-  input [31:0] opnd0_r,
-  input [31:0] opnd1_r,
-  input [31:0] opnd2_r,
+    input [31:0] eflags,
+    input ecx_is_zero,
+    input [31:0] eip,
+    input [3:0] instr_len,
+    input [31:0] opnd0_r,
+    input [31:0] opnd1_r,
+    input [31:0] opnd2_r,
 
-  // TODO(ww): Input signal for 8/16/32 bit opnds? Maybe?
+    // TODO(ww): Input signal for 8/16/32 bit opnds? Maybe?
 
-  output [31:0] o_eflags,
-  output [31:0] next_eip,
-  output [31:0] opnd0_w,
-  output [31:0] opnd1_w
+    output [31:0] o_eflags,
+    output [31:0] next_eip,
+    output [31:0] opnd0_w,
+    output [31:0] opnd1_w
 );
 
-`include "funcs.v"
+  `include "funcs.v"
 
-wire [127:0] opc_1hot = one_hot128(opc);
+  wire [127:0] opc_1hot = one_hot128(opc);
 
-// Convenience wires, for commands that have shared semantics.
+  // Convenience wires, for commands that have shared semantics.
 
-// Is our command a CALL?
-wire opc_is_call = opc_1hot[`CMD_CALLr] | opc_1hot[`CMD_CALLi];
+  // Is our command a CALL?
+  wire opc_is_call = opc_1hot[`CMD_CALLr] | opc_1hot[`CMD_CALLi];
 
-// Is our command a LOOPcc?
-wire opc_is_loop = opc_1hot[`CMD_LOOP]   |
-                   opc_1hot[`CMD_LOOPE]  |
-                   opc_1hot[`CMD_LOOPNE] ;
+  // Is our command a LOOPcc?
+  wire opc_is_loop = opc_1hot[`CMD_LOOP] | opc_1hot[`CMD_LOOPE] | opc_1hot[`CMD_LOOPNE];
 
-// Does our command perform some kind of "adjust", e.g. of ECX or ESP?
-wire opc_is_adjust = opc_is_call          |
+  // Does our command perform some kind of "adjust", e.g. of ECX or ESP?
+  wire opc_is_adjust = opc_is_call          |
                      opc_1hot[`CMD_PUSH]  |
                      opc_1hot[`CMD_POP]   |
                      opc_1hot[`CMD_RET]   |
                      opc_1hot[`CMD_LEAVE] |
                      opc_is_loop          ;
 
-///
-/// BEGIN ALU
-///
+  ///
+  /// BEGIN ALU
+  ///
 
-// The ALU is responsible for the following instructions:
-//
-// ADD, ADC, INC         -> ALU_OP_ADD
-// SUB, SBB, DEC, CMP(S) -> ALU_OP_SUB
-// AND, TEST             -> ALU_OP_AND
-// OR                    -> ALU_OP_OR
-// XOR, NOT              -> ALU_OP_XOR
-// MUL, IMUL             -> ALU_OP_MUL
-// DIV, IDIV             -> ALU_OP_DIV
-//
-// TODO(ww): Document the shift/rotate mapping here.
-//
-// Additionally, the ALU provides stack adjustments for the following:
-//
-// PUSH, CALL -> ALU_OP_SUB
-// POP, RET   -> ALY_OP_ADD
-//
-// And ECX adjustments for the following:
-//
-// LOOPcc -> ALU_OP_SUB
+  // The ALU is responsible for the following instructions:
+  //
+  // ADD, ADC, INC         -> ALU_OP_ADD
+  // SUB, SBB, DEC, CMP(S) -> ALU_OP_SUB
+  // AND, TEST             -> ALU_OP_AND
+  // OR                    -> ALU_OP_OR
+  // XOR, NOT              -> ALU_OP_XOR
+  // MUL, IMUL             -> ALU_OP_MUL
+  // DIV, IDIV             -> ALU_OP_DIV
+  //
+  // TODO(ww): Document the shift/rotate mapping here.
+  //
+  // Additionally, the ALU provides stack adjustments for the following:
+  //
+  // PUSH, CALL -> ALU_OP_SUB
+  // POP, RET   -> ALY_OP_ADD
+  //
+  // And ECX adjustments for the following:
+  //
+  // LOOPcc -> ALU_OP_SUB
 
-// TODO(ww): The ALU needs to support each of the following:
-// BSF, BSR, BT, BTC, BTR, BTS
-// SETcc (?), PUSH(A), POP(A)
+  // TODO(ww): The ALU needs to support each of the following:
+  // BSF, BSR, BT, BTC, BTR, BTS
+  // SETcc (?), PUSH(A), POP(A)
 
-// ALU control signals.
+  // ALU control signals.
 
-// Core operation signals.
-wire alu_op_add = opc_1hot[`CMD_ADD]   |
+  // Core operation signals.
+  wire alu_op_add = opc_1hot[`CMD_ADD]   |
                   opc_1hot[`CMD_ADC]   |
                   opc_1hot[`CMD_INC]   |
                   opc_1hot[`CMD_POP]   |
                   opc_1hot[`CMD_RET]   |
                   opc_1hot[`CMD_LEAVE] ;
 
-wire alu_op_sub = opc_1hot[`CMD_SUB]  |
+  wire alu_op_sub = opc_1hot[`CMD_SUB]  |
                   opc_1hot[`CMD_SBB]  |
                   opc_1hot[`CMD_DEC]  |
                   opc_1hot[`CMD_CMP]  |
@@ -90,32 +89,28 @@ wire alu_op_sub = opc_1hot[`CMD_SUB]  |
                   opc_1hot[`CMD_PUSH] |
                   opc_is_loop         ;
 
-wire alu_op_and = opc_1hot[`CMD_AND] |
-                  opc_1hot[`CMD_TEST];
+  wire alu_op_and = opc_1hot[`CMD_AND] | opc_1hot[`CMD_TEST];
 
-wire alu_op_or = opc_1hot[`CMD_OR];
+  wire alu_op_or = opc_1hot[`CMD_OR];
 
-wire alu_op_xor = opc_1hot[`CMD_XOR] |
-                  opc_1hot[`CMD_NOT] ;
+  wire alu_op_xor = opc_1hot[`CMD_XOR] | opc_1hot[`CMD_NOT];
 
-wire alu_op_mul = opc_1hot[`CMD_MUL] |
-                  opc_1hot[`CMD_IMUL];
+  wire alu_op_mul = opc_1hot[`CMD_MUL] | opc_1hot[`CMD_IMUL];
 
-wire alu_op_div = opc_1hot[`CMD_DIV] |
-                  opc_1hot[`CMD_IDIV];
+  wire alu_op_div = opc_1hot[`CMD_DIV] | opc_1hot[`CMD_IDIV];
 
-// TODO(ww): SHLD, SHRD.
+  // TODO(ww): SHLD, SHRD.
 
-wire alu_op_shl = opc_1hot[`CMD_SHL];
+  wire alu_op_shl = opc_1hot[`CMD_SHL];
 
-wire alu_op_shr = opc_1hot[`CMD_SHR];
+  wire alu_op_shr = opc_1hot[`CMD_SHR];
 
-wire alu_op_rol = opc_1hot[`CMD_ROL];
+  wire alu_op_rol = opc_1hot[`CMD_ROL];
 
-wire alu_op_ror = opc_1hot[`CMD_ROR];
+  wire alu_op_ror = opc_1hot[`CMD_ROR];
 
-// Are we performing an ALU operation?
-wire exe_is_alu = alu_op_add |
+  // Are we performing an ALU operation?
+  wire exe_is_alu = alu_op_add |
                   alu_op_sub |
                   alu_op_and |
                   alu_op_or  |
@@ -127,129 +122,122 @@ wire exe_is_alu = alu_op_add |
                   alu_op_rol |
                   alu_op_ror ;
 
-// Auxiliary signals.
-wire alu_src_inv = opc_1hot[`CMD_SUB] |
-                   opc_1hot[`CMD_SBB] |
-                   opc_1hot[`CMD_DEC];
+  // Auxiliary signals.
+  wire alu_src_inv = opc_1hot[`CMD_SUB] | opc_1hot[`CMD_SBB] | opc_1hot[`CMD_DEC];
 
-wire alu_use_carry = opc_1hot[`CMD_ADC] |
-                     opc_1hot[`CMD_SBB];
+  wire alu_use_carry = opc_1hot[`CMD_ADC] | opc_1hot[`CMD_SBB];
 
-wire alu_src_inc = opc_1hot[`CMD_SUB] |
-                   opc_1hot[`CMD_SBB];
+  wire alu_src_inc = opc_1hot[`CMD_SUB] | opc_1hot[`CMD_SBB];
 
-// These commands do not use the ALU's 32-bit result.
-wire alu_no_wr = opc_1hot[`CMD_CMP] |
-                 opc_1hot[`CMD_CMPS] |
-                 opc_1hot[`CMD_TEST];
+  // These commands do not use the ALU's 32-bit result.
+  wire alu_no_wr = opc_1hot[`CMD_CMP] | opc_1hot[`CMD_CMPS] | opc_1hot[`CMD_TEST];
 
-// These commands do not use the ALU to modify the EFLAGS.
-wire alu_no_flags = opc_1hot[`CMD_NOT] |
-                    opc_is_adjust      ;
+  // These commands do not use the ALU to modify the EFLAGS.
+  wire alu_no_flags = opc_1hot[`CMD_NOT] | opc_is_adjust;
 
-// TODO(ww): Flesh these out more:
-// https://sandpile.org/x86/flags.htm
-wire alu_clear_cf = opc_1hot[`CMD_AND] |
+  // TODO(ww): Flesh these out more:
+  // https://sandpile.org/x86/flags.htm
+  wire alu_clear_cf = opc_1hot[`CMD_AND] |
                     opc_1hot[`CMD_OR] |
                     opc_1hot[`CMD_XOR] |
                     opc_1hot[`CMD_TEST];
 
-wire alu_clear_of = opc_1hot[`CMD_AND] |
+  wire alu_clear_of = opc_1hot[`CMD_AND] |
                     opc_1hot[`CMD_OR] |
                     opc_1hot[`CMD_XOR] |
                     opc_1hot[`CMD_TEST];
 
-wire [17:0] alu_cntl = {
-                          alu_op_ror,    // 17
-                          alu_op_rol,    // 16
-                          alu_op_shr,    // 15
-                          alu_op_shl,    // 14
-                          alu_clear_of,  // 13
-                          alu_clear_cf,  // 12
-                          alu_no_flags,  // 11
-                          alu_op_sub,    // 10
-                          alu_no_wr,     // 9
-                          alu_src_inc,   // 8
-                          alu_use_carry, // 7
-                          alu_op_div,    // 6
-                          alu_op_mul,    // 5
-                          alu_op_xor,    // 4
-                          alu_op_or,     // 3
-                          alu_op_and,    // 2
-                          alu_op_add,    // 1
-                          alu_src_inv    // 0
-                       };
+  wire [17:0] alu_cntl = {
+    alu_op_ror,  // 17
+    alu_op_rol,  // 16
+    alu_op_shr,  // 15
+    alu_op_shl,  // 14
+    alu_clear_of,  // 13
+    alu_clear_cf,  // 12
+    alu_no_flags,  // 11
+    alu_op_sub,  // 10
+    alu_no_wr,  // 9
+    alu_src_inc,  // 8
+    alu_use_carry,  // 7
+    alu_op_div,  // 6
+    alu_op_mul,  // 5
+    alu_op_xor,  // 4
+    alu_op_or,  // 3
+    alu_op_and,  // 2
+    alu_op_add,  // 1
+    alu_src_inv  // 0
+  };
 
-// Input arithmetic flag states.
-wire [6:0] status_in = {
-                          eflags[`EFLAGS_DF], // 6
-                          eflags[`EFLAGS_AF], // 5
-                          eflags[`EFLAGS_CF], // 4
-                          eflags[`EFLAGS_PF], // 3
-                          eflags[`EFLAGS_ZF], // 2
-                          eflags[`EFLAGS_SF], // 1
-                          eflags[`EFLAGS_OF]  // 0
-                       };
+  // Input arithmetic flag states.
+  wire [6:0] status_in = {
+    eflags[`EFLAGS_DF],  // 6
+    eflags[`EFLAGS_AF],  // 5
+    eflags[`EFLAGS_CF],  // 4
+    eflags[`EFLAGS_PF],  // 3
+    eflags[`EFLAGS_ZF],  // 2
+    eflags[`EFLAGS_SF],  // 1
+    eflags[`EFLAGS_OF]  // 0
+  };
 
-wire [6:0] alu_status_out;
-wire [31:0] alu_result;
+  wire [6:0] alu_status_out;
+  wire [31:0] alu_result;
 
-// When we're using the ALU as part of a adjusting instruction (stack or ECX),
-// we need to do some operand re-routing. Specifically, we need to use opnd#1
-// and opnd#2 as opnd#0 and opnd#1 respectively.
-wire [31:0] alu_opnd0_r = opc_is_adjust ? opnd1_r : opnd0_r;
-wire [31:0] alu_opnd1_r = opc_is_adjust ? opnd2_r : opnd1_r;
+  // When we're using the ALU as part of a adjusting instruction (stack or ECX),
+  // we need to do some operand re-routing. Specifically, we need to use opnd#1
+  // and opnd#2 as opnd#0 and opnd#1 respectively.
+  wire [31:0] alu_opnd0_r = opc_is_adjust ? opnd1_r : opnd0_r;
+  wire [31:0] alu_opnd1_r = opc_is_adjust ? opnd2_r : opnd1_r;
 
-alu alu_x(
-  .cntl(alu_cntl),
-  .status_in(status_in),
-  .opnd0_r(alu_opnd0_r),
-  .opnd1_r(alu_opnd1_r),
+  alu alu_x (
+      .cntl(alu_cntl),
+      .status_in(status_in),
+      .opnd0_r(alu_opnd0_r),
+      .opnd1_r(alu_opnd1_r),
 
-  .status_out(alu_status_out),
-  .result(alu_result)
-);
+      .status_out(alu_status_out),
+      .result(alu_result)
+  );
 
-// Mash the ALU states back into our prospective EFLAGS.
-wire [31:0] alu_eflags = {
-                            eflags[31:12],
-                            alu_status_out[`STAT_OF],
-                            eflags[`EFLAGS_DF],
-                            eflags[`EFLAGS_IF],
-                            eflags[`EFLAGS_TF],
-                            alu_status_out[`STAT_SF],
-                            alu_status_out[`STAT_ZF],
-                            eflags[5], // reserved
-                            alu_status_out[`STAT_AF],
-                            eflags[3], // reserved
-                            alu_status_out[`STAT_PF],
-                            eflags[1], // reserved
-                            alu_status_out[`STAT_CF]
-                         };
+  // Mash the ALU states back into our prospective EFLAGS.
+  wire [31:0] alu_eflags = {
+    eflags[31:12],
+    alu_status_out[`STAT_OF],
+    eflags[`EFLAGS_DF],
+    eflags[`EFLAGS_IF],
+    eflags[`EFLAGS_TF],
+    alu_status_out[`STAT_SF],
+    alu_status_out[`STAT_ZF],
+    eflags[5],  // reserved
+    alu_status_out[`STAT_AF],
+    eflags[3],  // reserved
+    alu_status_out[`STAT_PF],
+    eflags[1],  // reserved
+    alu_status_out[`STAT_CF]
+  };
 
-///
-/// END ALU
-///
+  ///
+  /// END ALU
+  ///
 
-///
-/// BEGIN MOVE UNIT
-///
+  ///
+  /// BEGIN MOVE UNIT
+  ///
 
-// The move unit is responsible for the following instructions:
-//
-// MOV, MOVSZ, MOVZX, LEA, MOVS, XCHG -> MU_OP_MOV
+  // The move unit is responsible for the following instructions:
+  //
+  // MOV, MOVSZ, MOVZX, LEA, MOVS, XCHG -> MU_OP_MOV
 
 
-// Move unit control signals.
+  // Move unit control signals.
 
-// TODO(ww): Needed? We'll probably perform these extensions during opnd handling.
-wire mu_sext = opc_1hot[`CMD_MOVSX];
-wire mu_zext = opc_1hot[`CMD_MOVZX];
+  // TODO(ww): Needed? We'll probably perform these extensions during opnd handling.
+  wire mu_sext = opc_1hot[`CMD_MOVSX];
+  wire mu_zext = opc_1hot[`CMD_MOVZX];
 
-// Are we performing a move operation?
-// We treat LEAs as moves: every LEA is essentially an address calculation,
-// moved into a register.
-wire exe_is_mu = opc_1hot[`CMD_MOV]   |
+  // Are we performing a move operation?
+  // We treat LEAs as moves: every LEA is essentially an address calculation,
+  // moved into a register.
+  wire exe_is_mu = opc_1hot[`CMD_MOV]   |
                  opc_1hot[`CMD_LEA]   |
                  opc_1hot[`CMD_MOVS]  |
                  opc_1hot[`CMD_MOVSX] |
@@ -257,137 +245,135 @@ wire exe_is_mu = opc_1hot[`CMD_MOV]   |
                  opc_1hot[`CMD_XCHG]  |
                  opc_1hot[`CMD_CDQ]   ;
 
-// XCHG is the only swap operation, so far.
-wire [1:0] mu_cntl = {
-                        opc_1hot[`CMD_CDQ],  // 1: MU_SEXT
-                        ~opc_1hot[`CMD_XCHG] // 0: MU_MOVE
-                     };
+  // XCHG is the only swap operation, so far.
+  wire [1:0] mu_cntl = {
+    opc_1hot[`CMD_CDQ],  // 1: MU_SEXT
+    ~opc_1hot[`CMD_XCHG]  // 0: MU_MOVE
+  };
 
-wire [31:0] mu_opnd0_w;
-wire [31:0] mu_opnd1_w;
+  wire [31:0] mu_opnd0_w;
+  wire [31:0] mu_opnd1_w;
 
-move move_x(
-  .cntl(mu_cntl),
-  .opnd0_r(opnd0_r),
-  .opnd1_r(opnd1_r),
+  move move_x (
+      .cntl(mu_cntl),
+      .opnd0_r(opnd0_r),
+      .opnd1_r(opnd1_r),
 
-  .opnd0_w(mu_opnd0_w),
-  .opnd1_w(mu_opnd1_w)
-);
+      .opnd0_w(mu_opnd0_w),
+      .opnd1_w(mu_opnd1_w)
+  );
 
-///
-/// END MOVE UNIT
-///
+  ///
+  /// END MOVE UNIT
+  ///
 
-///
-/// BEGIN META UNIT
-///
+  ///
+  /// BEGIN META UNIT
+  ///
 
-// The "meta" unit is responsible for various instructions that manipulate
-// EFLAGS or other non-GPR/memory architectural state directly.
+  // The "meta" unit is responsible for various instructions that manipulate
+  // EFLAGS or other non-GPR/memory architectural state directly.
 
-wire exe_is_meta = opc_1hot[`CMD_STC]  |
+  wire exe_is_meta = opc_1hot[`CMD_STC]  |
                    opc_1hot[`CMD_STD]  |
                    opc_1hot[`CMD_CLC]  |
                    opc_1hot[`CMD_CLD]  |
                    opc_1hot[`CMD_LAHF] |
                    opc_1hot[`CMD_SAHF];
 
-wire ah_wr;
-wire [31:0] meta_result;
-wire [6:0] meta_status_out;
+  wire ah_wr;
+  wire [31:0] meta_result;
+  wire [6:0] meta_status_out;
 
 
-// TODO(ww): Need to actually wire up opnd0_r to EAX to LAHF/SAHF.
-meta meta_x(
-  .opc(opc),
-  .opnd_in(opnd0_r),
-  .status_in(status_in),
+  // TODO(ww): Need to actually wire up opnd0_r to EAX to LAHF/SAHF.
+  meta meta_x (
+      .opc(opc),
+      .opnd_in(opnd0_r),
+      .status_in(status_in),
 
-  .ah_wr(ah_wr),
-  .result(meta_result),
-  .status_out(meta_status_out)
-);
+      .ah_wr(ah_wr),
+      .result(meta_result),
+      .status_out(meta_status_out)
+  );
 
-// Mash any flag changes from the meta unit back into our prospective EFLAGS.
-wire [31:0] meta_eflags = {
-                            eflags[31:12],
-                            meta_status_out[`STAT_OF], // not actually modified
-                            meta_status_out[`STAT_DF],
-                            eflags[`EFLAGS_IF],
-                            eflags[`EFLAGS_TF],
-                            meta_status_out[`STAT_SF],
-                            meta_status_out[`STAT_ZF],
-                            eflags[5], // reserved
-                            meta_status_out[`STAT_AF],
-                            eflags[3], // reserved
-                            meta_status_out[`STAT_PF],
-                            eflags[1], // reserved
-                            meta_status_out[`STAT_CF]
-                          };
+  // Mash any flag changes from the meta unit back into our prospective EFLAGS.
+  wire [31:0] meta_eflags = {
+    eflags[31:12],
+    meta_status_out[`STAT_OF],  // not actually modified
+    meta_status_out[`STAT_DF],
+    eflags[`EFLAGS_IF],
+    eflags[`EFLAGS_TF],
+    meta_status_out[`STAT_SF],
+    meta_status_out[`STAT_ZF],
+    eflags[5],  // reserved
+    meta_status_out[`STAT_AF],
+    eflags[3],  // reserved
+    meta_status_out[`STAT_PF],
+    eflags[1],  // reserved
+    meta_status_out[`STAT_CF]
+  };
 
-///
-/// END META UNIT
-///
+  ///
+  /// END META UNIT
+  ///
 
-///
-/// BEGIN CFU
-///
+  ///
+  /// BEGIN CFU
+  ///
 
-// Every step changes the EIP in *some* way, so the CFU always runs.
+  // Every step changes the EIP in *some* way, so the CFU always runs.
 
-// ecx_is_zero normally comes from a test against the input regfile, but with
-// an exception: if we're executing a LOOPcc, it performs the ECX adjust before
-// testing it. In that case, we need to check the ALU's result (i.e., ECX - 1)
-// instead of the input ECX.
-wire cfu_ecx_is_zero = opc_is_loop ? alu_result == 32'b0 : ecx_is_zero;
+  // ecx_is_zero normally comes from a test against the input regfile, but with
+  // an exception: if we're executing a LOOPcc, it performs the ECX adjust before
+  // testing it. In that case, we need to check the ALU's result (i.e., ECX - 1)
+  // instead of the input ECX.
+  wire cfu_ecx_is_zero = opc_is_loop ? alu_result == 32'b0 : ecx_is_zero;
 
-cfu cfu_x(
-  .opc(opc),
-  .eflags(eflags),
-  .ecx_is_zero(cfu_ecx_is_zero),
-  .eip(eip),
-  .instr_len(instr_len),
-  .address(opnd0_r),
+  cfu cfu_x (
+      .opc(opc),
+      .eflags(eflags),
+      .ecx_is_zero(cfu_ecx_is_zero),
+      .eip(eip),
+      .instr_len(instr_len),
+      .address(opnd0_r),
 
-  .next_eip(next_eip)
-);
+      .next_eip(next_eip)
+  );
 
-///
-/// END CFU
-///
+  ///
+  /// END CFU
+  ///
 
-// The CFU never *directly* affects the write operands. But it can *influence*
-// them, e.g. if the instruction is a CALL, by operating in tandem with the ALU.
-// When that happens, `exe_is_alu` is high and we apply the result correctly.
-// See the HACK note below.
+  // The CFU never *directly* affects the write operands. But it can *influence*
+  // them, e.g. if the instruction is a CALL, by operating in tandem with the ALU.
+  // When that happens, `exe_is_alu` is high and we apply the result correctly.
+  // See the HACK note below.
 
-// HACK(ww): Another terrible hack -- we've pre-moved POP and LEAVE's write
-// operand (i.e., the value popped from the stack) into opnd0_r during the
-// decoding phase. We special case it here because it doesn't go through any of
-// the execution units, despite conceptually being a move. This is probably
-// worth refactoring.
-assign opnd0_w = opc_1hot[`CMD_POP] | opc_1hot[`CMD_LEAVE] ? opnd0_r     :
+  // HACK(ww): Another terrible hack -- we've pre-moved POP and LEAVE's write
+  // operand (i.e., the value popped from the stack) into opnd0_r during the
+  // decoding phase. We special case it here because it doesn't go through any of
+  // the execution units, despite conceptually being a move. This is probably
+  // worth refactoring.
+  assign opnd0_w = opc_1hot[`CMD_POP] | opc_1hot[`CMD_LEAVE] ? opnd0_r     :
                  exe_is_alu                                ? alu_result  :
                  exe_is_mu                                 ? mu_opnd0_w  :
                                                              opnd0_r     ; // No operation? Use the input.
 
-// HACK(ww): Route alu_result into opnd1_w if and only if we're executing the
-// ALU in the context of an adjustment operation. We do this
-// because the ALU performs the adjustment for us and other parts of the
-// circuit expect to do the ESP writeback via opnd#1 (since opnd0_r is used
-// for the EIP adjustment or other "primary" instruction semantic).
-// See the construction of dest1_kind and dest1_sel during operand decoding for
-// more context.
-assign opnd1_w = exe_is_mu                   ? mu_opnd1_w :
+  // HACK(ww): Route alu_result into opnd1_w if and only if we're executing the
+  // ALU in the context of an adjustment operation. We do this
+  // because the ALU performs the adjustment for us and other parts of the
+  // circuit expect to do the ESP writeback via opnd#1 (since opnd0_r is used
+  // for the EIP adjustment or other "primary" instruction semantic).
+  // See the construction of dest1_kind and dest1_sel during operand decoding for
+  // more context.
+  assign opnd1_w = exe_is_mu                   ? mu_opnd1_w :
                  exe_is_alu && opc_is_adjust ? alu_result :
                  opnd1_r                                  ; // TODO(ww): Others.
 
-// Update our flag state based on whichever execution unit actually took effect.
-// Only the ALU and meta units can modify flag state, so we don't need to check
-// for the move unit here.
-assign o_eflags = exe_is_alu     ? alu_eflags     :
-                  exe_is_meta    ? meta_eflags    :
-                                   eflags         ;
+  // Update our flag state based on whichever execution unit actually took effect.
+  // Only the ALU and meta units can modify flag state, so we don't need to check
+  // for the move unit here.
+  assign o_eflags = exe_is_alu ? alu_eflags : exe_is_meta ? meta_eflags : eflags;
 
 endmodule
