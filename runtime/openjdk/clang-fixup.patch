@@ -1,0 +1,68 @@
+From db3367dcde1663d2930dc640db28209bf05af30d Mon Sep 17 00:00:00 2001
+From: Jack Leightcap <jack.leightcap@trailofbits.com>
+Date: Thu, 13 Apr 2023 15:51:56 -0400
+Subject: [PATCH] clang fixup
+
+Signed-off-by: Jack Leightcap <jack.leightcap@trailofbits.com>
+
+Unsigned narrowing
+
+Signed-off-by: Jack Leightcap <jack.leightcap@trailofbits.com>
+
+Return nullptr on error
+
+Signed-off-by: Jack Leightcap <jack.leightcap@trailofbits.com>
+---
+ hotspot/src/os/linux/vm/os_linux.cpp                    | 8 +++++++-
+ hotspot/src/share/vm/code/compiledIC.cpp                | 2 +-
+ jdk/src/share/native/com/sun/java/util/jar/pack/jni.cpp | 2 +-
+ 3 files changed, 9 insertions(+), 3 deletions(-)
+
+diff --git a/hotspot/src/os/linux/vm/os_linux.cpp b/hotspot/src/os/linux/vm/os_linux.cpp
+index 2d3880b3..1978f4d6 100644
+--- a/hotspot/src/os/linux/vm/os_linux.cpp
++++ b/hotspot/src/os/linux/vm/os_linux.cpp
+@@ -2016,7 +2016,13 @@ void * os::dll_load(const char *filename, char *ebuf, int ebuflen)
+   // Identify compatability class for VM's architecture and library's architecture
+   // Obtain string descriptions for architectures
+ 
+-  arch_t lib_arch={elf_head.e_machine,0,elf_head.e_ident[EI_CLASS], elf_head.e_ident[EI_DATA], NULL};
++  arch_t lib_arch={
++    elf_head.e_machine,
++    0,
++    static_cast<char>(elf_head.e_ident[EI_CLASS]),
++    static_cast<char>(elf_head.e_ident[EI_DATA]),
++    NULL
++  };
+   int running_arch_index=-1;
+ 
+   for (unsigned int i=0 ; i < ARRAY_SIZE(arch_array) ; i++ ) {
+diff --git a/hotspot/src/share/vm/code/compiledIC.cpp b/hotspot/src/share/vm/code/compiledIC.cpp
+index 63821c06..054b86d0 100644
+--- a/hotspot/src/share/vm/code/compiledIC.cpp
++++ b/hotspot/src/share/vm/code/compiledIC.cpp
+@@ -222,7 +222,7 @@ bool CompiledIC::set_to_megamorphic(CallInfo* call_info, Bytecodes::Code bytecod
+     assert(bytecode == Bytecodes::_invokeinterface, "");
+     int itable_index = call_info->itable_index();
+     entry = VtableStubs::find_itable_stub(itable_index);
+-    if (entry == false) {
++    if (entry == nullptr) {
+       return false;
+     }
+ #ifdef ASSERT
+diff --git a/jdk/src/share/native/com/sun/java/util/jar/pack/jni.cpp b/jdk/src/share/native/com/sun/java/util/jar/pack/jni.cpp
+index e9109cbe..a264e657 100644
+--- a/jdk/src/share/native/com/sun/java/util/jar/pack/jni.cpp
++++ b/jdk/src/share/native/com/sun/java/util/jar/pack/jni.cpp
+@@ -292,7 +292,7 @@ Java_com_sun_java_util_jar_pack_NativeUnpack_getUnusedInput(JNIEnv *env, jobject
+ 
+   if (uPtr->aborting()) {
+     THROW_IOE(uPtr->get_abort_message());
+-    return false;
++    return nullptr;
+   }
+ 
+   // We have fetched all the files.
+-- 
+2.38.4
+
