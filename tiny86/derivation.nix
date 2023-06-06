@@ -1,4 +1,4 @@
-{ sources, sv_circuit, verilog_tools }:
+{ sources, sv_circuit }:
 
 let
   pkgs = import sources.nixpkgs { };
@@ -13,7 +13,7 @@ stdenv.mkDerivation {
   buildInputs = [ python3 ];
 
   propagatedBuildInputs =
-    [ clash sv_circuit verilator verilog verilog_tools ruby nasm verible ];
+    [ clash sv_circuit verilator verilog ruby nasm verible ];
 
   # a small wrapper to expose the synthesized circuit through a script in the derivation output
   installPhase = ''
