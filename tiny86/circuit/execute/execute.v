@@ -1,6 +1,6 @@
 `default_nettype none
-`include "defines.v"
-`include "codegen/commands.gen.v"
+`include "../include/defines.v"
+`include "../codegen/commands.gen.v"
 
 module execute (
     input [6:0] opc,
@@ -21,7 +21,7 @@ module execute (
     output [31:0] opnd1_w
 );
 
-  `include "funcs.v"
+  `include "../include/funcs.v"
 
   wire [127:0] opc_1hot = one_hot128(opc);
 

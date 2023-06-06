@@ -1,7 +1,6 @@
 TOP_MODULE := check
 IVERILOG_FLAGS := -gstrict-expr-width
 VERILATOR_FLAGS := -Wno-WIDTH
-IFLAGS := -Icircuit -Icircuit/include
 
 CLASH_SRC = $(shell find . -type f -name "*.hs")
 CLASH_VERILOG = circuit/execute/alu.v circuit/syscall.v
@@ -24,10 +23,10 @@ all: tiny86.blif
 #
 
 tiny86.blif: $(ALL_V_WITHOUT_TESTS_OR_CODEGEN)
-	sv-netlist $(IFLAGS) --top check $^ -o $@
+	yosys -r check -s sieve_blif.ys $^
 
 tiny86.json: $(ALL_V_WITHOUT_TESTS_OR_CODEGEN)
-	sv-netlist $(IFLAGS) --json --top check $^ -o $@
+	yosys -r check -s sieve_json.ys $^
 
 
 # the parametrized verilog module; defaults to top-level
@@ -35,12 +34,8 @@ tiny86.json: $(ALL_V_WITHOUT_TESTS_OR_CODEGEN)
 YOSYS_MODULE ?=
 
 .PHONY: yosys-stat
-yosys-stat:
+yosys-stat: tiny86.json
 	yosys -QT -p 'read_json tiny86.json; stat $(YOSYS_MODULE)'
-
-.PHONY: sv-stat
-sv-stat: $(ALL_V_WITHOUT_TESTS_OR_CODEGEN)
-	sv-stat $(IFLAGS) --top tiny86 $^
 
 .PHONY: codegen
 codegen:

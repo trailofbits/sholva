@@ -1,5 +1,5 @@
 `default_nettype none
-`include "defines.v"
+`include "include/defines.v"
 
 module tiny86 (
     input [655:0] step,

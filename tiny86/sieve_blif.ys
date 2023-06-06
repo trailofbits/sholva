@@ -1,0 +1,11 @@
+hierarchy -check
+proc
+memory
+fsm
+techmap
+opt -purge
+abc -liberty sieve.lib
+opt
+clean
+read_liberty -lib sieve.lib
+write_blif -gates -impltf -buf BUF IN OUT tiny86.blif

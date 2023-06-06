@@ -5,8 +5,8 @@
 // 4. Control flow transfer, absolute displacement
 `default_nettype none
 
-`include "defines.v"
-`include "codegen/commands.gen.v"
+`include "../include/defines.v"
+`include "../codegen/commands.gen.v"
 
 module cfu (
     input [6:0] opc,
@@ -19,7 +19,7 @@ module cfu (
     output [31:0] next_eip
 );
 
-  `include "funcs.v"
+  `include "../include/funcs.v"
 
   wire [127:0] opc_1hot = one_hot128(opc);
 

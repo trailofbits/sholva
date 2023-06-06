@@ -1,7 +1,7 @@
 `default_nettype none
 
-`include "codegen/commands.gen.v"
-`include "defines.v"
+`include "../codegen/commands.gen.v"
+`include "../include/defines.v"
 
 module decode_opnds(
   input [87:0] unescaped_instr,
@@ -45,7 +45,7 @@ module decode_opnds(
   output [31:0] dest1_sel
 );
 
-`include "funcs.v"
+`include "../include/funcs.v"
 
 wire [3:0] imm_disp_len;
 wire has_imm;
