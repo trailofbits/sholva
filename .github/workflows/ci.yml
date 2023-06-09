@@ -19,3 +19,10 @@ jobs:
           nix_path: nixpkgs=channel:22.11
       - name: Build
         run: nix-build
+      - name: Make Stat
+        run: make stat > stat.txt
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: stat-result
+          path: stat.txt
