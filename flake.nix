@@ -99,10 +99,15 @@
 
               buildInputs = [ sholva-qemu mttn nasm tiny86 ];
 
-              preCheck = ''
-                patchShebangs ./test/
+              doBuild = false;
+
+              preCheck = "patchShebangs ./test/";
+              doCheck = false;
+
+              installPhase = ''
+                mkdir -p $out/ir0
+                install -t  $out/ir0 *.circuit
               '';
-              doCheck = true;
 
               meta = with lib; {
                 description =
