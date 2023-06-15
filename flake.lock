@@ -228,7 +228,9 @@
         "flake-compat": "flake-compat_2",
         "flake-utils": "flake-utils_2",
         "nixpkgs": "nixpkgs_2",
-        "rust-overlay": "rust-overlay"
+        "rust-overlay": "rust-overlay",
+        "sv_circuit": "sv_circuit",
+        "verilog_tools": "verilog_tools"
       }
     },
     "rust-overlay": {
@@ -247,6 +249,22 @@
       "original": {
         "owner": "oxalica",
         "repo": "rust-overlay",
+        "type": "github"
+      }
+    },
+    "sv_circuit": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1685466566,
+        "narHash": "sha256-1NiNY9Mbuzvi1fErGZM7o61Md/I5PN/zy5w7uspJuT8=",
+        "owner": "trailofbits",
+        "repo": "sv_circuit",
+        "rev": "c8b99620ef21a8ec1db3530aa8766c3235f47e7f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "trailofbits",
+        "repo": "sv_circuit",
         "type": "github"
       }
     },
@@ -292,6 +310,22 @@
       "original": {
         "owner": "nix-systems",
         "repo": "default",
+        "type": "github"
+      }
+    },
+    "verilog_tools": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1681509049,
+        "narHash": "sha256-oMmPN/phN5vejCTuwPkuev8aeS2F15ltV+PBalxbAp4=",
+        "owner": "trailofbits",
+        "repo": "verilog_tools",
+        "rev": "b805112758dfef3fe9c64329e0565c8d14cf76f4",
+        "type": "github"
+      },
+      "original": {
+        "owner": "trailofbits",
+        "repo": "verilog_tools",
         "type": "github"
       }
     }
