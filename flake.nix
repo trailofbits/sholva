@@ -29,7 +29,21 @@
       let pkgs = nixpkgs.legacyPackages.${system};
       in {
         packages = rec {
-          # default = ... ;
+          default = sholva;
+
+          sholva-qemu = with import nixpkgs { inherit system; };
+            qemu.overrideAttrs (old: rec {
+              configureFlags = [
+                "--disable-strip"
+                "--enable-capstone"
+                "--enable-tools"
+                "--localstatedir=/var"
+                "--meson=meson"
+                "--sysconfdir=/etc"
+                "--target-list=i386-linux-user"
+              ];
+              buildInputs = old.buildInputs ++ (with pkgs; [ capstone ]);
+            });
 
           mttn = with import nixpkgs {
             inherit system;
@@ -74,6 +88,25 @@
               '';
               meta = with lib; {
                 description = "Tiny86 transition circuit";
+                license = licenses.agpl3Only;
+              };
+            };
+
+          sholva = with import nixpkgs { inherit system; };
+            stdenv.mkDerivation {
+              name = "sholva";
+              src = ./test;
+
+              buildInputs = [ sholva-qemu mttn nasm tiny86 ];
+
+              preCheck = ''
+                patchShebangs ./test/
+              '';
+              doCheck = true;
+
+              meta = with lib; {
+                description =
+                  "Zero-knowledge proofs for i386 program execution";
                 license = licenses.agpl3Only;
               };
             };
