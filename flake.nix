@@ -18,6 +18,11 @@
     };
   };
 
+  nixConfig = {
+    extra-substituters = [ ];
+    extra-trusted-public-keys = [ ];
+  };
+
   outputs = { self, clash, nixpkgs, flake-compat, flake-utils, rust-overlay
     , sv_circuit, verilog_tools, ... }:
     flake-utils.lib.eachDefaultSystem (system:
