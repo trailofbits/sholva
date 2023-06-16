@@ -3,6 +3,7 @@
 OpenJDK build cross-compiled `i386`;
 - compiled with LLVM toolchain,
 - compiling away possible complex instructions (`-msoft-float`, `-mno-mmx`, &c)
+- `clang-fixup.patch` represents minimal changes for successful compilation with clang 
 
 # Development Notes
 

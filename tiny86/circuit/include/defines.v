@@ -5,12 +5,12 @@
 // Valid destination (i.e., write) operand locations.
 // Only registers and memory can be written to.
 // Managed as a one-hot, for quick compares.
-`define OPND_DEST_REG  1'd0
-`define OPND_DEST_MEM  1'd1
+`define OPND_DEST_REG 1'd0
+`define OPND_DEST_MEM 1'd1
 
-`define OPND_DEST_REG_1HOT  2'b01
-`define OPND_DEST_MEM_1HOT  2'b10
-`define OPND_DEST_NONE      2'b00
+`define OPND_DEST_REG_1HOT 2'b01
+`define OPND_DEST_MEM_1HOT 2'b10
+`define OPND_DEST_NONE 2'b00
 
 // No operands, or a special case that we'll handle independently.
 `define OPND_ENC_NONE 4'd0
@@ -98,24 +98,24 @@
 `define REG_EBP 3'd5
 
 // ALU control signal numbering.
-`define ALU_SRC_INV   5'd0   // Invert the source (TODO(ww): Why did I add this?)
-`define ALU_OP_ADD    5'd1   // Perform an ADD
-`define ALU_OP_AND    5'd2   // Perform an AND
-`define ALU_OP_OR     5'd3   // Perform an OR
-`define ALU_OP_XOR    5'd4   // Perform an XOR
-`define ALU_OP_MUL    5'd5   // Perform a MUL
-`define ALU_OP_DIV    5'd6   // Perform a DIV
+`define ALU_SRC_INV 5'd0   // Invert the source (TODO(ww): Why did I add this?)
+`define ALU_OP_ADD 5'd1   // Perform an ADD
+`define ALU_OP_AND 5'd2   // Perform an AND
+`define ALU_OP_OR 5'd3   // Perform an OR
+`define ALU_OP_XOR 5'd4   // Perform an XOR
+`define ALU_OP_MUL 5'd5   // Perform a MUL
+`define ALU_OP_DIV 5'd6   // Perform a DIV
 `define ALU_USE_CARRY 5'd7   // Use the carry-in bit as part of the operation.
-`define ALU_SRC_INC   5'd8   // Increment the source (TODO(ww): Why did I add this?)
-`define ALU_NO_WR     5'd9   // Do not write the result (but maybe modify the flags)
-`define ALU_OP_SUB    5'd10  // Perform a SUB
-`define ALU_NO_FLAGS  5'd11  // Do not modify the flags
-`define ALU_CLEAR_CF  5'd12  // Always clear CF
-`define ALU_CLEAR_OF  5'd13  // Always clear OF
-`define ALU_OP_SHL    5'd14  // Perform a SHL
-`define ALU_OP_SHR    5'd15  // Perform a SHR
-`define ALU_OP_ROL    5'd16  // Perform a ROL
-`define ALU_OP_ROR    5'd17  // Perform a ROR
+`define ALU_SRC_INC 5'd8   // Increment the source (TODO(ww): Why did I add this?)
+`define ALU_NO_WR 5'd9   // Do not write the result (but maybe modify the flags)
+`define ALU_OP_SUB 5'd10  // Perform a SUB
+`define ALU_NO_FLAGS 5'd11  // Do not modify the flags
+`define ALU_CLEAR_CF 5'd12  // Always clear CF
+`define ALU_CLEAR_OF 5'd13  // Always clear OF
+`define ALU_OP_SHL 5'd14  // Perform a SHL
+`define ALU_OP_SHR 5'd15  // Perform a SHR
+`define ALU_OP_ROL 5'd16  // Perform a ROL
+`define ALU_OP_ROR 5'd17  // Perform a ROR
 
 // Move unit control signals.
 // The first bit controls whether we're doing a "move" (SRC -> DST)
