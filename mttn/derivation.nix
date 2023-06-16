@@ -6,14 +6,16 @@ let
         "https://github.com/mozilla/nixpkgs-mozilla/archive/master.tar.gz"))
     ];
   };
+
+  sholva-qemu =
+    pkgs.callPackage ../runtime/qemu/qemu-i386.nix { inherit sources; };
 in with pkgs;
 rustPlatform.buildRustPackage rec {
   pname = "mttn";
   version = "1.0.0";
 
-  # FIXME(jl): a subset of tests depend on files outside of the mttn source tree. disabling at build-time now.
-  doCheck = false;
   src = ./.;
+  cargoLock = { lockFile = ./Cargo.lock; };
 
   buildInputs = [
     (pkgs.rustChannelOf {
@@ -22,7 +24,19 @@ rustPlatform.buildRustPackage rec {
     }).rust
   ];
 
-  cargoLock = { lockFile = ./Cargo.lock; };
+  checkInputs = [ nasm ];
+  preCheck = ''
+    make -C test elfs
+  '';
+  doCheck = true;
+
+  postInstall = ''
+    export MTTN=$out/bin/mttn
+    export RUST_LOG=info
+    make -C test traces
+    mkdir -p $out/traces
+    install -t $out/traces test/*.trace.txt
+  '';
 
   meta = with lib; {
     description = "Tiny86 tracer";
