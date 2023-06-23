@@ -25,17 +25,17 @@ rustPlatform.buildRustPackage rec {
   ];
 
   checkInputs = [ nasm ];
+  # NOTE: mttn tests use example binaries to verify reproducibility.
   preCheck = ''
     make -C test elfs
   '';
   doCheck = true;
 
+  # In addition to the mttn binary,
+  # Package all traced programs into derivation output.
   postInstall = ''
-    export MTTN=$out/bin/mttn
-    export RUST_LOG=info
-    make -C test traces
-    mkdir -p $out/traces
-    install -t $out/traces test/*.trace.txt
+    MTTN=$out/bin/mttn RUST_LOG=info make -C test traces
+    install -Dt $out/traces test/*.trace.txt
   '';
 
   meta = with lib; {
