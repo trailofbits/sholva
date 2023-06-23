@@ -36,6 +36,7 @@ stdenv.mkDerivation {
 
   preCheck = ''
     patchShebangs ./test/
+    cp ${mttn}/traces/*.trace.txt ./test/
   '';
   doCheck = true;
 
