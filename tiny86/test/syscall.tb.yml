@@ -1,5 +1,5 @@
 module: syscall
-file: ../tiny86/circuit/syscall.v
+file: ../circuit/syscall.v
 inputs:
   - "32 i_eax"
   - "32 i_ebx"

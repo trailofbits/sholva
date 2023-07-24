@@ -1,5 +1,5 @@
 module: execute
-file: ../tiny86/circuit/execute/execute.v
+file: ../circuit/execute/execute.v
 inputs:
   - "7 opc"
   - "32 eflags"

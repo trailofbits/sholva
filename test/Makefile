@@ -32,17 +32,6 @@ _test-mttn: $(ALL_ELFS)
 	cargo test --manifest-path=$(MTTN_PREFIX)/Cargo.toml
 
 ## sholva self tests
-.PHONY: _test-tiny86
-_test-tiny86: _test-clash _test-verilog
-
-.PHONY: _test-clash
-_test-clash:
-	runghc -i$(SHOLVA_PREFIX)/src -iClash Clash.hs
-
-.PHONY: _test-verilog
-_test-verilog: $(TESTBENCH_EXES)
-	./run-tests $(SHOLVA_MODULES)
-
 .PHONY: _test-pipeline
 _test-pipeline: $(PIPELINE_EXES)
 	./run-tests $(PIPELINE_MODULES)

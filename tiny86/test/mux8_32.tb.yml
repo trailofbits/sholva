@@ -1,5 +1,5 @@
 module: mux8_32
-file: ../tiny86/circuit/mux8_32.v
+file: ../circuit/mux8_32.v
 inputs:
   - "3 sel"
   - "32 in0"

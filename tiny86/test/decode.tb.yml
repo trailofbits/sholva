@@ -1,5 +1,5 @@
 module: decode
-file: ../tiny86/circuit/decode/decode.v
+file: ../circuit/decode/decode.v
 inputs:
   - "96 raw_instr"
   - "32 eax"

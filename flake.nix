@@ -79,17 +79,33 @@
               [ clash-ghc clash-prelude ] ++ [
                 sv_circuit.packages.${system}.sv_circuit
                 verilog_tools.packages.${system}.verilog_tools
-              ] ++ (with pkgs; [ nasm ruby python3 verible verilator verilog ]);
+              ] ++ (with pkgs; [
+                mttn
+                nasm
+                python3
+                ruby
+                verible
+                verilator
+                verilog
+              ]);
 
-            preInstall = "patchShebangs codegen/";
+            # FIXME(jl)
+            nativeBuildInputs = [ pkgs.breakpointHook ];
+
+            preCheck = ''
+              patchShebangs test/codegen/
+              cp ${mttn}/traces/* test/
+            '';
+            doCheck = true;
+
             installPhase = ''
               set -e
 
-              #mkdir -p $out/circuit
-              #cp tiny86.blif $out/circuit/
+              mkdir -p $out/circuit
+              cp tiny86.blif $out/circuit/
 
               mkdir -p $out/bin
-              cp codegen/* $out/bin/
+              cp test/codegen/* $out/bin/
             '';
           };
 

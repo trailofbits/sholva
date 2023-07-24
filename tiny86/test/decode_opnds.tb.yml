@@ -1,5 +1,5 @@
 module: decode_opnds
-file: ../tiny86/circuit/decode/decode_opnds.v
+file: ../circuit/decode/decode_opnds.v
 inputs:
   - "88 unescaped_instr"
   - "32 eax"

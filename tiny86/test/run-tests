@@ -2,21 +2,14 @@
 # run-tests: collect all .vvps and run each, parsing the output of each run
 # produce output in TAP format
 
+$VERBOSE = true
+
 require_relative "./codegen/common"
 
 require "pathname"
 require "yaml"
 
-def find_vvps
-  Dir["*.tb.vvp"]
-end
-
-vvps = if ARGF.argv.empty?
-  find_vvps
-else
-  ARGF.argv.map { |check| "#{check}.tb.vvp" }
-end
-
+vvps = ARGF.argv
 barf "no testbenches found; run make?" if vvps.empty?
 verbose "discovered #{vvps.size} testbenches: #{vvps}"
 
