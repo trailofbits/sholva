@@ -1,5 +1,5 @@
 module: cfu
-file: ../tiny86/circuit/execute/cfu.v
+file: ../circuit/execute/cfu.v
 inputs:
   - "7 opc"
   - "32 eflags"

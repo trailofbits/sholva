@@ -1,5 +1,5 @@
 module: agu
-file: ../tiny86/circuit/execute/agu.v
+file: ../circuit/execute/agu.v
 inputs:
   - "2 scale"
   - "32 index"

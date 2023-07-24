@@ -1,5 +1,5 @@
 module: decode_opc_phase1
-file: ../tiny86/circuit/decode/decode_opc_phase1.v
+file: ../circuit/decode/decode_opc_phase1.v
 inputs:
   - "88 unprefixed_instr"
 outputs:

@@ -1,5 +1,5 @@
 module: decode_opc_phase2
-file: ../tiny86/circuit/decode/decode_opc_phase2.v
+file: ../circuit/decode/decode_opc_phase2.v
 inputs:
   - "88 unescaped_instr"
   - "1 is_2byte"

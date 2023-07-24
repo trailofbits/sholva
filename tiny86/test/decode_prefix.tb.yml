@@ -1,5 +1,5 @@
 module: decode_prefix
-file: ../tiny86/circuit/decode/decode_prefix.v
+file: ../circuit/decode/decode_prefix.v
 inputs:
   - "96 raw_instr"
 outputs:
