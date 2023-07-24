@@ -80,7 +80,6 @@
                 sv_circuit.packages.${system}.sv_circuit
                 verilog_tools.packages.${system}.verilog_tools
               ] ++ (with pkgs; [
-                mttn
                 nasm
                 python3
                 ruby
@@ -92,19 +91,15 @@
             # FIXME(jl)
             nativeBuildInputs = [ pkgs.breakpointHook ];
 
-            preCheck = ''
-              patchShebangs test/codegen/
-              cp ${mttn}/traces/* test/
-            '';
+            preCheck = "patchShebangs test/";
             doCheck = true;
 
             installPhase = ''
-              set -e
-
               mkdir -p $out/circuit
               cp tiny86.blif $out/circuit/
 
               mkdir -p $out/bin
+              cp test/run-tests $out/bin/
               cp test/codegen/* $out/bin/
             '';
           };

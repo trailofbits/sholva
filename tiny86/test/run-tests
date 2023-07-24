@@ -18,6 +18,8 @@ puts "1..#{vvps.size}"
 vvps.each_with_index do |vvp, i|
   lines = `vvp #{vvp} -lxt2`.split "\n"
 
+  abort "uh oh" if lines.any? { |l| l.start_with? "ERROR:" }
+
   failures = lines
     .select { |l| l.start_with? "TBGEN-FAIL" }
     .map! { |f| [f.split[1].split(":")[1].to_i, f.split(" ", 3)[2]] }
