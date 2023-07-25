@@ -560,13 +560,8 @@ impl<'a> Tracee<'a> {
             //    then phase 2).
             ptrace::step(self.tracee_pid, None)?;
             match nix::sys::wait::waitpid(self.tracee_pid, None)? {
-                nix::sys::wait::WaitStatus::Stopped(pid, sig) => {
-                    if sig == nix::sys::signal::SIGSEGV {
-                        log::error!("Tracee PID={} has SEGFAULT'd", pid);
-                        return Err(anyhow!("Tracee SEGFAULT"));
-                    }
-                }
-                nix::sys::wait::WaitStatus::Signaled(pid, sig, _) => {
+                nix::sys::wait::WaitStatus::Stopped(pid, sig)
+                | nix::sys::wait::WaitStatus::Signaled(pid, sig, _) => {
                     if sig == nix::sys::signal::SIGSEGV {
                         log::error!("Tracee PID={} has SEGFAULT'd", pid);
                         return Err(anyhow!("Tracee SEGFAULT"));
