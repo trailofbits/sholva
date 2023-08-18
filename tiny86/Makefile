@@ -24,6 +24,7 @@ VERILATOR_FLAGS := -Wno-WIDTH
 IFLAGS := -Icircuit -Icircuit/include
 
 CLASH_SRC = $(shell find src/ -type f -name "*.hs")
+CLASH_TESTS = $(shell find test/ -type f -name "*.hs")
 VERILOG_CLASH = circuit/execute/alu.v circuit/syscall.v
 
 VERILOG_SRC = \
@@ -81,15 +82,15 @@ $(TBGEN) $(TVGEN) $(E2EGEN): $(COMMON)
 
 TESTBENCHES := $(addprefix test/, $(addsuffix .tb.vvp, $(SHOLVA_MODULES)))
 TESTVECTORS := $(addprefix test/, $(addsuffix .tv,     $(SHOLVA_MODULES)))
-$(TESTBENCHES) $(TESTVECTORS): $(CIRCUIT_SRC)
+$(TESTBENCHES): $(CIRCUIT_SRC) $(TESTVECTORS)
 
 .PHONY: _test-verilog
-_test-verilog: $(TESTBENCHES) $(TESTVECTORS)
+_test-verilog: $(TESTBENCHES)
 	./test/run-tests $^ || true # FIXME
 
 .PHONY: _test-clash
-_test-clash: $(CLASH_SRC)
-	runghc -isrc -iClash Clash.hs || true # FIXME
+_test-clash: $(CLASH_SRC) $(CLASH_TESTS)
+	$(MAKE) -C test-clash
 
 test/%.tb.yml: $(TBGEN) $(TVGEN) $(E2EGEN)
 
@@ -109,12 +110,10 @@ test/%.tb.vvp: test/%.tb.gen.v
 		-y./circuit/execute \
 		$<
 
+test/check.e2e.tv: $(E2EGEN)
+	$(E2EGEN) $(wildcard *.trace.txt) > $@
+
 test/check.tb.yml: test/check.e2e.tv
-
-test/check.e2e.tv: $(E2EGEN) $(TRACE_TEXTS)
-	$(E2EGEN) $(TRACE_BASES) > $@
-
-test/check.tv: test/check.e2e.tv
 
 #
 # Circuit artifacts

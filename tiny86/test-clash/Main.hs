@@ -1,10 +1,11 @@
-module Clash where
+module Main where
 
 import Test.QuickCheck
 
-import Clash.PropAlu as PropAlu (check)
-import Clash.PropSyscall as PropSyscall (check)
+import PropAlu as PropAlu (check)
+import PropSyscall as PropSyscall (check)
 import System.Exit
+import Prelude
 
 main :: IO ()
 main = do

@@ -1,4 +1,4 @@
-#!/usr/bin/env ruby
+#!/nix/store/wcy993wz0zlcixaxivi6gha33afwq66n-ruby-3.1.4/bin/ruby
 
 # e2egen: generate test vectors for `check.v` from one or more mttn trace files
 
@@ -12,12 +12,7 @@ def find_traces
   Dir["*.trace.txt"]
 end
 
-traces = if ARGF.argv.empty?
-  find_traces
-else
-  ARGF.argv.map { |trace| "#{trace}.trace.txt" }
-end
-
+traces = ARGF.argv
 barf "no traces found" if traces.empty?
 verbose "discovered #{traces.size} traces: #{traces}"
 

@@ -1,4 +1,4 @@
-#!/usr/bin/env ruby
+#!/nix/store/wcy993wz0zlcixaxivi6gha33afwq66n-ruby-3.1.4/bin/ruby
 
 # tvgen: generate a collection of test vectors for a `tbgen`-generated testbench
 
