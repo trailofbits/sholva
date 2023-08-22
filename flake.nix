@@ -17,16 +17,12 @@
     verilog_tools = {
       url = "github:trailofbits/verilog_tools?ref=jl/nix-flake";
     };
-    wiztoolkit = {
-      url = "git+ssh://git@github.mit.edu/sieve-all/wiztoolkit.git?ref=jl/nix";
-    };
   };
 
   outputs = { self, clash, nixpkgs, flake-compat, rust-overlay, sv_circuit
     , verilog_tools, ... }:
     let
-      supportedSystems =
-        [ "x86_64-linux" "x86_64-darwin" "aarch64-linux" "aarch64-darwin" ];
+      supportedSystems = [ "x86_64-linux" ];
       forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
       nixpkgsFor = forAllSystems (system: import nixpkgs { inherit system; });
     in {
@@ -58,7 +54,6 @@
               cargoLock = { lockFile = ./mttn/Cargo.lock; };
 
               nativeCheckInputs = [ nasm ];
-              # NOTE: mttn tests use example binaries to verify reproducibility.
               preCheck = ''
                 make -C test elfs
               '';
@@ -75,23 +70,20 @@
           tiny86 = stdenv.mkDerivation {
             name = "tiny86";
             src = ./tiny86;
-            buildInputs = with clash.packages.${system};
-              [ clash-ghc clash-prelude ] ++ [
-                sv_circuit.packages.${system}.sv_circuit
-                verilog_tools.packages.${system}.verilog_tools
-              ] ++ (with pkgs; [
-                nasm
-                python3
-                ruby
-                verible
-                verilator
-                verilog
-              ]);
+            buildInputs = [
+              clash.packages.${system}.clash-ghc
+              clash.packages.${system}.clash-prelude
+            ] ++ [
+              sv_circuit.packages.${system}.sv_circuit
+              verilog_tools.packages.${system}.verilog_tools
+            ] ++ (with pkgs; [ nasm python3 verible verilator ]);
+            propagatedBuildInputs = with pkgs; [ ruby verilog ];
 
-            # FIXME(jl)
-            nativeBuildInputs = [ pkgs.breakpointHook ];
-
-            preCheck = "patchShebangs test/";
+            checkInputs = [ mttn ];
+            preCheck = ''
+              patchShebangs test/
+              cp -f ${mttn}/traces/*.trace.txt test/
+            '';
             doCheck = true;
 
             installPhase = ''
@@ -99,30 +91,27 @@
               cp tiny86.blif $out/circuit/
 
               mkdir -p $out/bin
+              cp -r test/codegen $out/bin/
               cp test/run-tests $out/bin/
-              cp test/codegen/* $out/bin/
             '';
           };
 
-          buildInputs = [ mttn tiny86 ];
+          checkInputs = [ mttn tiny86 ];
 
         in rec {
           default = sholva;
-          sholva = stdenv.mkDerivation {
+          sholva = stdenv.mkDerivation rec {
             name = "sholva";
             src = ./test;
 
-            inherit buildInputs;
-            doBuild = false;
+            dontBuild = true;
 
-            preCheck = ''
-              cp ${mttn}/traces/*.trace.txt .
-            '';
             doCheck = true;
+            inherit checkInputs;
 
             installPhase = ''
               mkdir -p $out/ir0
-              install -t  $out/ir0 *.circuit
+              # install -t $out/ir0 *.circuit
             '';
 
             meta = with lib; {

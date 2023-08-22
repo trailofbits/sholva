@@ -84,13 +84,24 @@ TESTBENCHES := $(addprefix test/, $(addsuffix .tb.vvp, $(SHOLVA_MODULES)))
 TESTVECTORS := $(addprefix test/, $(addsuffix .tv,     $(SHOLVA_MODULES)))
 $(TESTBENCHES): $(CIRCUIT_SRC) $(TESTVECTORS)
 
-.PHONY: _test-verilog
-_test-verilog: $(TESTBENCHES)
-	./test/run-tests $^ || true # FIXME
 
 .PHONY: _test-clash
 _test-clash: $(CLASH_SRC) $(CLASH_TESTS)
 	$(MAKE) -C test-clash
+
+.PHONY: _test-verilog
+_test-verilog: $(TESTBENCHES)
+	./test/run-tests $^ || true # FIXME
+
+check.tb.yml: check.e2e.tv
+
+# NOTE(jl): traces are populated by the mttn test suite.
+test/check.e2e.tv: $(E2EGEN)
+	$(E2EGEN) $(wildcard test/*.trace.txt) > $@
+
+test/check.tb.yml: test/check.e2e.tv
+
+test/check.tv: test/check.e2e.tv
 
 test/%.tb.yml: $(TBGEN) $(TVGEN) $(E2EGEN)
 
@@ -109,12 +120,6 @@ test/%.tb.vvp: test/%.tb.gen.v
 		-y./circuit/decode \
 		-y./circuit/execute \
 		$<
-
-test/check.e2e.tv: $(E2EGEN)
-	$(E2EGEN) $(wildcard *.trace.txt) > $@
-
-test/check.tb.yml: test/check.e2e.tv
-
 #
 # Circuit artifacts
 #
