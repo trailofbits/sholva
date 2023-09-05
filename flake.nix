@@ -47,26 +47,6 @@
 
         in rec {
           default = sholva;
-          sholva = stdenv.mkDerivation rec {
-            name = "sholva";
-            src = ./test;
-
-            dontBuild = true;
-
-            doCheck = true;
-
-            checkInputs = [ mttn tiny86 ];
-
-            installPhase = ''
-              mkdir -p $out/ir0
-              # install -t $out/ir0 *.circuit
-            '';
-
-            meta = with lib; {
-              description = "Zero-knowledge proofs for i386 program execution";
-              license = licenses.agpl3Only;
-            };
-          };
 
           # https://nixos.wiki/wiki/Overlays, "In a Nix flake"
           mttn = with pkgs.extend (import rust-overlay);
@@ -112,11 +92,28 @@
             installPhase = ''
               mkdir -p $out/circuit
               cp tiny86.blif $out/circuit/
-
-              mkdir -p $out/bin
-              cp -r test/codegen $out/bin/
-              cp test/run-tests $out/bin/
             '';
+          };
+
+          sholva = stdenv.mkDerivation {
+            name = "sholva";
+            src = ./test;
+
+            dontBuild = true;
+
+            doCheck = true;
+            checkInputs = [ sv_circuit.packages.${system}.sv_circuit ];
+            preCheck = ''
+              cp -f ${mttn}/traces/*.trace.txt .
+              cp -f ${tiny86}/circuit/tiny86.blif .
+            '';
+
+            doInstall = false;
+
+            meta = with lib; {
+              description = "Zero-knowledge proofs for i386 program execution";
+              license = licenses.agpl3Only;
+            };
           };
         });
 

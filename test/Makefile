@@ -1,5 +1,8 @@
 TRACES := $(wildcard *.trace.txt)
 
+.PHONY: all
+all:
+
 .PHONY: test
 test: $(TRACES:.trace.txt=.verify)
 
@@ -26,3 +29,7 @@ nop_benchmark:
 .PHONY: buffer_overflow_benchmark
 buffer_overflow_benchmark: buffer_overflow.c
 	@./buffer-overflow-benchmark.sh
+
+.PHONY: clean
+clean:
+	rm -f *.trace.txt tiny86.blif
