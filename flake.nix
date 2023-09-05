@@ -45,6 +45,29 @@
             buildInputs = old.buildInputs ++ (with pkgs; [ capstone ]);
           });
 
+        in rec {
+          default = sholva;
+          sholva = stdenv.mkDerivation rec {
+            name = "sholva";
+            src = ./test;
+
+            dontBuild = true;
+
+            doCheck = true;
+
+            checkInputs = [ mttn tiny86 ];
+
+            installPhase = ''
+              mkdir -p $out/ir0
+              # install -t $out/ir0 *.circuit
+            '';
+
+            meta = with lib; {
+              description = "Zero-knowledge proofs for i386 program execution";
+              license = licenses.agpl3Only;
+            };
+          };
+
           # https://nixos.wiki/wiki/Overlays, "In a Nix flake"
           mttn = with pkgs.extend (import rust-overlay);
             rustPlatform.buildRustPackage rec {
@@ -95,33 +118,11 @@
               cp test/run-tests $out/bin/
             '';
           };
-
-          checkInputs = [ mttn tiny86 ];
-
-        in rec {
-          default = sholva;
-          sholva = stdenv.mkDerivation rec {
-            name = "sholva";
-            src = ./test;
-
-            dontBuild = true;
-
-            doCheck = true;
-            inherit checkInputs;
-
-            installPhase = ''
-              mkdir -p $out/ir0
-              # install -t $out/ir0 *.circuit
-            '';
-
-            meta = with lib; {
-              description = "Zero-knowledge proofs for i386 program execution";
-              license = licenses.agpl3Only;
-            };
-          };
-
-          inherit mttn tiny86;
         });
+
+      formatter = forAllSystems (system:
+        let pkgs = nixpkgsFor.${system};
+        in { formatter.${system} = pkgs.nixfmt; });
 
       apps = forAllSystems (system: {
         mttn = {

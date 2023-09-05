@@ -4,7 +4,10 @@
 
 [![Build Status](https://github.com/trailofbits/sholva/actions/workflows/ci.yml/badge.svg)](https://github.com/trailofbits/sholva/actions?query=workflow%3ACI)
 
-_shol'va_ is a Verilog and [Clash](https://clash-lang.org/) implementation of a Tiny86 trace verifier.
+_shol'va_ is a tool for generating zero knowledge proofs of program execution, composed of
+
+- _mttn_: an instruction-resolution program tracer
+- _tiny86_: a Verilog and [Clash](https://clash-lang.org/) trace verifier circuit
 
 ## Usage
 
