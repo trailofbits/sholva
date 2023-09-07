@@ -13,11 +13,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1686743795,
-        "narHash": "sha256-IwDvG3psRXY1jtK3WNDTZRUuH2px6cY8xo+54G5XnMs=",
+        "lastModified": 1694016505,
+        "narHash": "sha256-F+Gxw+1AwqVJiZooPtWjCwOcbDz0uOQE9eiU5Q9AKVk=",
         "owner": "clash-lang",
         "repo": "clash-compiler",
-        "rev": "26a4bc2d78eb8d544cf0a922257fddaf4a1080ab",
+        "rev": "8ec6e24866ae6fea523d79837c26451a84440e94",
         "type": "github"
       },
       "original": {
@@ -210,11 +210,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1689605451,
-        "narHash": "sha256-u2qp2k9V1smCfk6rdUcgMKvBj3G9jVvaPHyeXinjN9E=",
+        "lastModified": 1694048570,
+        "narHash": "sha256-PEQptwFCVaJ+jLFJgrZll2shQ9VI/7xVhrCYkJo8iIw=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "53657afe29748b3e462f1f892287b7e254c26d77",
+        "rev": "4f77ea639305f1de0a14d9d41eef83313360638c",
         "type": "github"
       },
       "original": {
@@ -274,11 +274,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1686795910,
-        "narHash": "sha256-jDa40qRZ0GRQtP9EMZdf+uCbvzuLnJglTUI2JoHfWDc=",
+        "lastModified": 1694052649,
+        "narHash": "sha256-+eBEU3dw3/fCfi8ZHFNutINxehMazGkQxqNcpeNbTo4=",
         "owner": "oxalica",
         "repo": "rust-overlay",
-        "rev": "5c2b97c0a9bc5217fc3dfb1555aae0fb756d99f9",
+        "rev": "a795148ffbcc77f2b592d50ceebe36147e623a77",
         "type": "github"
       },
       "original": {
@@ -316,16 +316,15 @@
         "rust-overlay": "rust-overlay_2"
       },
       "locked": {
-        "lastModified": 1689684296,
-        "narHash": "sha256-47Tr2QSJujQzRT8P9ITiGIWfmr+KgypVqrLFFvqnbjI=",
+        "lastModified": 1694100616,
+        "narHash": "sha256-ZOcZhUb6lQGrZ8/Q+l7sS/BjhCrWYD42apGfv/LYLZs=",
         "owner": "trailofbits",
         "repo": "sv_circuit",
-        "rev": "251451f19b25fb5093a4687413e146edea5a4a2e",
+        "rev": "0355531f13d5d3c7de8374338b02236b68d05b3f",
         "type": "github"
       },
       "original": {
         "owner": "trailofbits",
-        "ref": "jl/nix-flake",
         "repo": "sv_circuit",
         "type": "github"
       }
@@ -381,16 +380,15 @@
         "nixpkgs": "nixpkgs_3"
       },
       "locked": {
-        "lastModified": 1689688569,
-        "narHash": "sha256-PvtnWIKlj+TIKwf2/cksvzPzp58T6a5eN7ClsTWeG48=",
+        "lastModified": 1694102475,
+        "narHash": "sha256-CAizNXhm7CHQHl9LKyBafDxb3no/2jrMZrqrAxU+cLU=",
         "owner": "trailofbits",
         "repo": "verilog_tools",
-        "rev": "11053f784d23219448a483319357b30cd063e38d",
+        "rev": "1d301f3743bfa0bf18b5508d3d28bf96f4a04731",
         "type": "github"
       },
       "original": {
         "owner": "trailofbits",
-        "ref": "jl/nix-flake",
         "repo": "verilog_tools",
         "type": "github"
       }

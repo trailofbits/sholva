@@ -13,10 +13,8 @@
       url = "github:oxalica/rust-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    sv_circuit = { url = "github:trailofbits/sv_circuit?ref=jl/nix-flake"; };
-    verilog_tools = {
-      url = "github:trailofbits/verilog_tools?ref=jl/nix-flake";
-    };
+    sv_circuit = { url = "github:trailofbits/sv_circuit"; };
+    verilog_tools = { url = "github:trailofbits/verilog_tools"; };
   };
 
   outputs = { self, clash, nixpkgs, flake-compat, rust-overlay, sv_circuit
