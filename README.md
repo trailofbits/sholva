@@ -54,7 +54,7 @@ $ cargo test
 ### tiny86
 
 ```sh
-$ nix build .#mttn
+$ nix build .#tiny86
 ```
 
 This builds:
