@@ -1,7 +1,8 @@
+# NOTE(jl): these files are not commited locally, and are passed from the output of mttn.
 TRACES := $(wildcard *.trace.txt)
 
-.PHONY: all
-all:
+.PHONY: test
+all: $(TRACES:.trace.txt=.circuit)
 
 .PHONY: test
 test: $(TRACES:.trace.txt=.verify)
@@ -32,4 +33,4 @@ buffer_overflow_benchmark: buffer_overflow.c
 
 .PHONY: clean
 clean:
-	rm -f *.trace.txt tiny86.blif
+	rm -f *.trace.txt *.circuit *.*_input tiny86.blif

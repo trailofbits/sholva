@@ -44,8 +44,6 @@
           });
 
         in rec {
-          default = sholva;
-
           # https://nixos.wiki/wiki/Overlays, "In a Nix flake"
           mttn = with pkgs.extend (import rust-overlay);
             rustPlatform.buildRustPackage rec {
@@ -88,8 +86,12 @@
             doCheck = true;
 
             installPhase = ''
+              runHook preInstall
+
               mkdir -p $out/circuit
               cp tiny86.blif $out/circuit/
+
+              runHook postInstall
             '';
           };
 
@@ -97,16 +99,23 @@
             name = "sholva";
             src = ./test;
 
-            dontBuild = true;
-
-            doCheck = true;
-            checkInputs = [ sv_circuit.packages.${system}.sv_circuit ];
-            preCheck = ''
+            buildInputs = [ mttn tiny86 ]
+              ++ [ sv_circuit.packages.${system}.sv_circuit tiny86 ];
+            preBuild = ''
               cp -f ${mttn}/traces/*.trace.txt .
               cp -f ${tiny86}/circuit/tiny86.blif .
             '';
 
-            doInstall = false;
+            doCheck = true;
+
+            installPhase = ''
+              runHook preInstall
+
+              mkdir -p $out/proofs
+              cp -f *.{circuit,*_input} $out/proofs
+
+              runHook postInstall
+            '';
 
             meta = with lib; {
               description = "Zero-knowledge proofs for i386 program execution";
