@@ -115,10 +115,6 @@
           };
         });
 
-      formatter = forAllSystems (system:
-        let pkgs = nixpkgsFor.${system};
-        in { formatter.${system} = pkgs.nixfmt; });
-
       apps = forAllSystems (system: {
         mttn = {
           type = "app";
