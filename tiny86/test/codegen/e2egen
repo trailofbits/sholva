@@ -1,4 +1,4 @@
-#!/nix/store/wcy993wz0zlcixaxivi6gha33afwq66n-ruby-3.1.4/bin/ruby
+#!/usr/bin/env ruby
 
 # e2egen: generate test vectors for `check.v` from one or more mttn trace files
 
