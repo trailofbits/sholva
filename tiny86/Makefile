@@ -27,6 +27,7 @@ CLASH_SRC = $(shell find src/ -type f -name "*.hs")
 CLASH_TESTS = $(shell find test/ -type f -name "*.hs")
 VERILOG_CLASH = circuit/execute/alu.v circuit/syscall.v
 
+# Hand-written verilog.
 VERILOG_SRC = \
   	$(shell find . -type f -name '*.v' \
 		! -path '*/test/*' \
@@ -34,7 +35,9 @@ VERILOG_SRC = \
 		! -name '*.gen.v' \
 )
 
+# All verilog.
 CIRCUIT_SRC := $(VERILOG_CLASH) $(VERILOG_SRC)
+$(CIRCUIT_SRC): circuit-codegen
 
 SHOLVA_MODULES ?= \
 	agu \
@@ -169,5 +172,8 @@ _lint-synth: circuit-codegen $(VERILOG_SRC)
 
 .PHONY: clean
 clean:
-	rm -rf $(VERILOG_CLASH) verilog/ tiny86.* \
-		*.vcd test/*.gen.v test/*.tb.vvp test/*.tv
+	$(MAKE) -C circuit/codegen clean
+	rm -rf $(VERILOG_CLASH) verilog/ \
+		circuit/codegen/*.gen.v \
+		tiny86.* *.vcd \
+		test/*.gen.v test/*.tb.vvp test/*.tv
