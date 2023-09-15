@@ -46,10 +46,12 @@
         in rec {
           # https://nixos.wiki/wiki/Overlays, "In a Nix flake"
           mttn = with pkgs.extend (import rust-overlay);
-            rustPlatform.buildRustPackage rec {
+            (makeRustPlatform {
+              cargo = rust-bin.beta.latest.default;
+              rustc = rust-bin.beta.latest.default;
+            }).buildRustPackage rec {
               name = "mttn";
               src = ./mttn;
-              buildInputs = [ rust-bin.beta.latest.default ];
               cargoLock = { lockFile = ./mttn/Cargo.lock; };
 
               nativeCheckInputs = [ nasm ];
