@@ -1,0 +1,673 @@
+module: decode_opnds
+file: ../circuit/decode/decode_opnds.v
+inputs:
+  - "88 unescaped_instr"
+  - "32 eax"
+  - "32 ebx"
+  - "32 ecx"
+  - "32 edx"
+  - "32 esi"
+  - "32 edi"
+  - "32 esp"
+  - "32 ebp"
+  - "1 hint1_is_write"
+  - "32 hint1_address"
+  - "32 hint1_data"
+  - "1 hint2_is_write"
+  - "32 hint2_address"
+  - "32 hint2_data"
+  - "7 opc"
+  - "4 opnd_form"
+  - "2 opnd_count"
+  - "1 imm_1byte"
+  - "1 reg_1byte"
+  - "1 prefix_operand_16bit"
+  - "1 prefix_address_16bit"
+  - "1 opnd0_is_read"
+  - "1 opnd0_is_write"
+  - "1 opnd1_is_one"
+  - "1 opnd1_is_read"
+  - "1 opnd1_is_write"
+  - "1 opnd2_is_read"
+  - "1 opnd2_is_write"
+  - "1 source_is_sext"
+outputs:
+  - "4 instr_body_len"
+  - "32 opnd0_r"
+  - "32 opnd1_r"
+  - "32 opnd2_r"
+  - "2 dest0_kind"
+  - "2 dest1_kind"
+  - "32 dest0_sel"
+  - "32 dest1_sel"
+vector_specs:
+  # reg-reg encoding forms
+  - _description: "xchg EAX, EBX (~AO)"
+
+    # INPUTS
+    unescaped_instr: 0x93
+    eax: 0xAAAAAAAA
+    ebx: 0xBBBBBBBB
+    opnd_form: 10 # OPND_ENC_EAX_REG
+    prefix_address_16bit: 0
+    opnd0_is_read: 1
+    opnd0_is_write: 1
+    opnd1_is_read: 1
+    opnd1_is_write: 1
+
+    # OUTPUTS
+    instr_body_len: 0
+    opnd0_r: 0xAAAAAAAA
+    opnd1_r: 0xBBBBBBBB
+    dest0_kind: 0b01
+    dest1_kind: 0b01
+    dest0_sel: 0 # EAX
+    dest1_sel: 3 # EBX
+
+  - _description: "xchg EAX, EAX (~AO)"
+
+    # INPUTS
+    unescaped_instr: 0x90
+    eax: 0xAAAAAAAA
+    opnd_form: 10 # OPND_ENC_EAX_REG
+    prefix_address_16bit: 0
+    opnd0_is_read: 1
+    opnd0_is_write: 1
+    opnd1_is_read: 1
+    opnd1_is_write: 1
+
+    # OUTPUTS
+    instr_body_len: 0
+    opnd0_r: 0xAAAAAAAA
+    opnd1_r: 0xAAAAAAAA
+    dest0_kind: 0b01
+    dest1_kind: 0b01
+    dest0_sel: 0 # EAX
+    dest1_sel: 0 # EAX
+
+  - _description: "xchg ECX, EDX (~RM)"
+
+    # INPUTS
+    unescaped_instr: 0xca87
+    ecx: 0xCCCCCCCC
+    edx: 0xDDDDDDDD
+    opnd_form: 7 # OPND_ENC_MODREGRM_REG_RM
+    prefix_address_16bit: 0
+    opnd0_is_read: 1
+    opnd0_is_write: 1
+    opnd1_is_read: 1
+    opnd1_is_write: 1
+
+    # OUTPUTS
+    instr_body_len: 1 # Mod/RM
+    opnd0_r: 0xCCCCCCCC
+    opnd1_r: 0xDDDDDDDD
+    dest0_kind: 0b01
+    dest1_kind: 0b01
+    dest0_sel: 1 # ECX
+    dest1_sel: 2 # EDX
+
+  - _description: "xchg EDX, ECX (~RM)"
+
+    # INPUTS
+    unescaped_instr: 0xd187
+    ecx: 0xCCCCCCCC
+    edx: 0xDDDDDDDD
+    opnd_form: 7 # OPND_ENC_MODREGRM_REG_RM
+    prefix_address_16bit: 0
+    opnd0_is_read: 1
+    opnd0_is_write: 1
+    opnd1_is_read: 1
+    opnd1_is_write: 1
+
+    # OUTPUTS
+    instr_body_len: 1 # ModR/M
+    opnd0_r: 0xDDDDDDDD
+    opnd1_r: 0xCCCCCCCC
+    dest0_kind: 0b01
+    dest1_kind: 0b01
+    dest0_sel: 2 # EDX
+    dest1_sel: 1 # ECX
+
+  - _description: "mov EAX, EBX (~MR)"
+
+    # INPUTS
+    unescaped_instr: 0xd889
+    eax: 0xAAAAAAAA
+    ebx: 0xBBBBBBBB
+    opnd_form: 6 # OPND_ENC_MODREGRM_RM_REG
+    prefix_address_16bit: 0
+    opnd0_is_read: 0
+    opnd0_is_write: 1
+    opnd1_is_read: 1
+    opnd1_is_write: 0
+
+    # OUTPUTS
+    instr_body_len: 1 # ModR/M
+    opnd0_r: 0 # no read
+    opnd1_r: 0xBBBBBBBB
+    dest0_kind: 0b01
+    dest1_kind: 0b00 # OPND_DEST_NONE
+    dest0_sel: 0 # EAX
+
+  - _description: "mov EAX, EBX (~RM)"
+
+    # INPUTS
+    unescaped_instr: 0xc38b
+    eax: 0xAAAAAAAA
+    ebx: 0xBBBBBBBB
+    opnd_form: 7 # OPND_ENC_MODREGRM_REG_RM
+    prefix_address_16bit: 0
+    opnd0_is_read: 0
+    opnd0_is_write: 1
+    opnd1_is_read: 1
+    opnd1_is_write: 0
+
+    # OUTPUTS
+    instr_body_len: 1 # ModR/M
+    opnd0_r: 0 # no read
+    opnd1_r: 0xBBBBBBBB
+    dest0_kind: 0b01
+    dest1_kind: 0b00 # OPND_DEST_NONE
+    dest0_sel: 0 # EAX
+
+  - _description: "inc EAX (~O)"
+
+    # INPUTS
+    unescaped_instr: 0x40
+    eax: 0xAAAAAAAA
+    opnd_form: 4 # OPND_ENC_REG
+    prefix_address_16bit: 0
+    opnd0_is_read: 1
+    opnd0_is_write: 1
+
+    # OUTPUTS
+    instr_body_len: 0
+    opnd0_r: 0xAAAAAAAA
+    opnd1_r: x
+    dest0_kind: 0b01
+    dest1_kind: 0b00
+    dest0_sel: 0 # EAX
+
+  - _description: "inc EBX (~O)"
+
+    # INPUTS
+    unescaped_instr: 0x43
+    ebx: 0xBBBBBBBB
+    opnd_form: 4 # OPND_ENC_REG
+    prefix_address_16bit: 0
+    opnd0_is_read: 1
+    opnd0_is_write: 1
+
+    # OUTPUTS
+    instr_body_len: 0
+    opnd0_r: 0xBBBBBBBB
+    opnd1_r: x
+    dest0_kind: 0b01
+    dest1_kind: 0b00
+    dest0_sel: 3 # EBX
+
+  - _description: "inc ECX (~O)"
+
+    # INPUTS
+    unescaped_instr: 0x41
+    ecx: 0xCCCCCCCC
+    opnd_form: 4 # OPND_ENC_REG
+    prefix_address_16bit: 0
+    opnd0_is_read: 1
+    opnd0_is_write: 1
+
+    # OUTPUTS
+    instr_body_len: 0
+    opnd0_r: 0xCCCCCCCC
+    opnd1_r: x
+    dest0_kind: 0b01
+    dest1_kind: 0b00
+    dest0_sel: 1 # ECX
+
+  - _description: "inc EDX (~O)"
+
+    # INPUTS
+    unescaped_instr: 0x42
+    edx: 0xDDDDDDDD
+    opnd_form: 4 # OPND_ENC_REG
+    prefix_address_16bit: 0
+    opnd0_is_read: 1
+    opnd0_is_write: 1
+
+    # OUTPUTS
+    instr_body_len: 0
+    opnd0_r: 0xDDDDDDDD
+    opnd1_r: x
+    dest0_kind: 0b01
+    dest1_kind: 0b00
+    dest0_sel: 2 # EDX
+
+  - _description: "inc ESI (~O)"
+
+    # INPUTS
+    unescaped_instr: 0x46
+    esi: 0x12121212
+    opnd_form: 4 # OPND_ENC_REG
+    prefix_address_16bit: 0
+    opnd0_is_read: 1
+    opnd0_is_write: 1
+
+    # OUTPUTS
+    instr_body_len: 0
+    opnd0_r: 0x12121212
+    opnd1_r: x
+    dest0_kind: 0b01
+    dest1_kind: 0b00
+    dest0_sel: 6 # ESI
+
+  - _description: "inc EDI (~O)"
+
+    # INPUTS
+    unescaped_instr: 0x47
+    edi: 0x13131313
+    opnd_form: 4 # OPND_ENC_REG
+    prefix_address_16bit: 0
+    opnd0_is_read: 1
+    opnd0_is_write: 1
+
+    # OUTPUTS
+    instr_body_len: 0
+    opnd0_r: 0x13131313
+    opnd1_r: x
+    dest0_kind: 0b01
+    dest1_kind: 0b00
+    dest0_sel: 7 # EDI
+
+  - _description: "inc ESP (~O)"
+
+    # INPUTS
+    unescaped_instr: 0x44
+    esp: 0x14141414
+    opnd_form: 4 # OPND_ENC_REG
+    prefix_address_16bit: 0
+    opnd0_is_read: 1
+    opnd0_is_write: 1
+
+    # OUTPUTS
+    instr_body_len: 0
+    opnd0_r: 0x14141414
+    opnd1_r: x
+    dest0_kind: 0b01
+    dest1_kind: 0b00
+    dest0_sel: 4 # ESP
+
+  - _description: "inc EBP (~O)"
+
+    # INPUTS
+    unescaped_instr: 0x45
+    ebp: 0x15151515
+    opnd_form: 4 # OPND_ENC_REG
+    prefix_address_16bit: 0
+    opnd0_is_read: 1
+    opnd0_is_write: 1
+
+    # OUTPUTS
+    instr_body_len: 0
+    opnd0_r: 0x15151515
+    opnd1_r: x
+    dest0_kind: 0b01
+    dest1_kind: 0b00
+    dest0_sel: 5 # EBP
+
+  - _description: "add EAX, 0xffffffff (~AI)"
+
+    # INPUTS
+    unescaped_instr: 0xffffffff05
+    eax: 0x99999999
+    opnd_form: 9 # OPND_ENC_EAX_IMM
+    prefix_address_16bit: 0
+    opnd0_is_read: 1
+    opnd0_is_write: 1
+    opnd1_is_read: 1
+    opnd1_is_write: 0
+
+    # OUTPUTS
+    instr_body_len: 4 # imm
+    opnd0_r: 0x99999999
+    opnd1_r: x
+    dest0_kind: 0b01
+    dest1_kind: 0b00 # none
+    dest0_sel: 0 # EAX
+
+  - _description: "add EAX, EBX (~MR)"
+
+    # INPUTS
+    unescaped_instr: 0xd801
+    eax: 0xabababab
+    ebx: 0xcdcdcdcd
+    opnd_form: 6 # OPND_ENC_MODREGRM_RM_REG
+    prefix_address_16bit: 0
+    opnd0_is_read: 1
+    opnd0_is_write: 1
+    opnd1_is_read: 1
+    opnd1_is_write: 0
+
+    # OUTPUTS
+    instr_body_len: 1 # ModR/M
+    opnd0_r: 0xabababab
+    opnd1_r: 0xcdcdcdcd
+    dest0_kind: 0b01
+    dest1_kind: 0b00
+    dest0_sel: 0 # EAX
+
+  - _description: "add EAX, [ESP] ([ESP]=0xaaaaaaaa)"
+
+    # INPUTS
+    unescaped_instr: 0x240403
+    eax: 0xbbbbbbbb
+    esp: 0xffffdda8
+    opnd_form: 7 # OPND_ENC_MODREGRM_REG_RM
+    hint1_is_write: 0
+    hint1_address: 0xffffdda8
+    hint1_data: 0xaaaaaaaa
+    opnd0_is_read: 1
+    opnd0_is_write: 1
+    opnd1_is_read: 1
+    opnd1_is_write: 0
+
+    # OUTPUTS
+    instr_body_len: 2 # ModR/M + SIB
+    opnd0_r: 0xbbbbbbbb
+    opnd1_r: 0xaaaaaaaa
+    dest0_kind: 0b01 # reg
+    dest1_kind: 0b00 # none
+
+  - _description: "add EAX, [ESP+8] ([ESP+8]=0xfefefefe)"
+
+    # INPUTS
+    unescaped_instr: 0x08244403
+    eax: 0xbbbbbbbb
+    esp: 0xaaaaaa00
+    opnd_form: 7 # OPND_ENC_MODREGRM_REG_RM
+    hint1_is_write: 0
+    hint1_address: 0xaaaaaa08
+    hint1_data: 0xfefefefe
+    opnd0_is_read: 1
+    opnd0_is_write: 1
+    opnd1_is_read: 1
+    opnd1_is_write: 0
+
+    # OUTPUTS
+    instr_body_len: 3 # ModR/M + SIB + imm8
+    opnd0_r: 0xbbbbbbbb
+    opnd1_r: 0xfefefefe
+    dest0_kind: 0b01
+    dest1_kind: 0b00
+    dest0_sel: 0 # EAX
+
+  - _description: "add EAX, 0xaaaaaaaa (EAX=1)"
+
+    # INPUTS
+    unescaped_instr: 0xaaaaaaaa05
+    eax: 1
+    opnd_form: 9 # OPND_ENC_EAX_IMM
+    opnd0_is_read: 1
+    opnd0_is_write: 1
+    opnd1_is_read: 1
+    opnd1_is_write: 0
+
+    # OUTPUTS
+    instr_body_len: 4 # imm32
+    opnd0_r: 1
+    opnd1_r: 0xaaaaaaaa
+    dest0_kind: 0b01
+    dest1_kind: 0b00
+    dest0_sel: 0 # EAX
+
+  - _description: "mov EAX, 0xaaaaaaaa"
+
+    # INPUTS
+    unescaped_instr: 0xaaaaaaaab8
+    opnd_form: 8 # OPND_ENC_REG_IMM
+    opnd0_is_read: 0
+    opnd0_is_write: 1
+    opnd1_is_read: 1
+    opnd1_is_write: 0
+
+    # OUTPUTS
+    instr_body_len: 4 # imm32
+    opnd0_r: 0
+    opnd1_r: 0xaaaaaaaa
+    dest0_kind: 0b01
+    dest1_kind: 0b00
+    dest0_sel: 0 # EAX
+
+  - _description: "lea ecx, [(eax * 2) + ebx + 2] (eax=0xaaaaaaaa, ebx=0xbbbbbbbb) (~RM)"
+
+    # INPUTS
+    unescaped_instr: 0x02434c8d
+    eax: 0xaaaaaaaa
+    ebx: 0xbbbbbbbb
+    opc: 25 # CMD_LEA
+    opnd_form: 7 # OPND_ENC_MODREGRM_REG_RM
+    opnd0_is_read: 0
+    opnd0_is_write: 1
+    opnd1_is_read: 1
+    opnd1_is_write: 0
+
+    # OUTPUTS
+    instr_body_len: 3 # ModR/M + SIB + disp8
+    opnd0_r: x
+    opnd1_r: 0x11111111
+    dest0_kind: 0b01
+    dest0_sel: 1 # ECX
+
+  - _description: "call 0xffffffff (disp32)"
+
+    # INPUTS
+    unescaped_instr: 0xfffffffbe8
+    esp: 0x11223344
+    opc: 64 # CMD_CALLr
+    opnd_form: 14 # OPND_ENC_DISP32
+    opnd0_is_read: 1
+
+    # OUTPUTS
+    instr_body_len: 4 # disp32
+    opnd0_r: 0xfffffffb # NOTE(ww): Pre-adjustment.
+    opnd1_r: 0x11223344
+    opnd2_r: 4
+    dest0_kind: 0b00 # OPND_DEST_NONE
+    dest0_sel: 0
+    dest1_kind: 1 # OPND_DEST_REG_1HOT
+    dest1_sel: 4 # ESP
+
+  - _description: "call eax"
+
+    # INPUTS
+    unescaped_instr: 0xd0ff
+    eax: 0x11223344
+    esp: 0x55667788
+    opc: 64 # CMD_CALLi
+    opnd_form: 3 # OPND_ENC_MODREGRM_RM
+    opnd0_is_read: 1
+
+    # OUTPUTS
+    instr_body_len: 1 # ModR/M
+    opnd0_r: 0x11223344
+    opnd1_r: 0x55667788
+    opnd2_r: 4
+    dest0_kind: 0b00 # OPND_DEST_NONE
+    dest0_sel: 0
+    dest1_kind: 1 # OPND_DEST_REG_1HOT
+    dest1_sel: 4 # ESP
+
+  - _description: "JMP pcrel+4 (disp8)"
+
+    # INPUTS
+    unescaped_instr: 0x04eb
+    opc: 24 # CMD_JMPr
+    opnd_form: 2 # OPND_ENC_DISP8
+    opnd0_is_read: 1
+    source_is_sext: 1
+
+    # OUTPUTS
+    instr_body_len: 1 # disp8
+    opnd0_r: 4 # NOTE(ww): Pre-adjustment.
+    dest0_kind: 0b00 # OPND_DEST_NONE
+    dest0_sel: 0
+
+  - _description: "cmp DWORD PTR [ebp-0x4],0xa (ebp=0xffc51afc)"
+
+    # INPUTS
+    unescaped_instr: 0x0afc7d83
+    ebp: 0xffc51afc
+    hint1_is_write: 0
+    hint1_address: 0xffc51af8 # ebp - 4
+    hint1_data: 0x0b
+    opc: 13 # CMD_CMP
+    opnd_form: 5 # OPND_ENC_MODREGRM_RM_IMM
+    imm_1byte: 1
+    opnd0_is_read: 1
+    opnd1_is_read: 1
+    source_is_sext: 1
+
+    # OUTPUTS
+    instr_body_len: 3
+    opnd0_r: 0x0b
+    opnd1_r: 0x0a
+
+  - _description: "POP ebx ([esp]=1)"
+
+    # INPUTS
+    unescaped_instr: 0x5b
+    esp: 0xffffd9b8
+    hint1_is_write: 0
+    hint1_address: 0xffffd9b8
+    hint1_data: 0x01
+    opc: 37 # CMD_POP
+    opnd_form: 4 # OPND_ENC_REG
+    opnd0_is_read: 0
+    opnd0_is_write: 1
+
+    # OUTPUTS
+    instr_body_len: 0
+    opnd0_r: 0x01 # [ESP]
+    opnd1_r: 0xffffd9b8 # ESP
+    opnd2_r: 4 # ESP adjust
+    dest0_kind: 0b01 # OPND_DEST_REG_1HOT
+    dest1_kind: 0b01 # OPND_DEST_REG_1HOT
+    dest0_sel: 3 # EBX
+    dest1_sel: 4 # ESP
+
+  - _description: "POP [ebx] ([esp]=1)"
+
+    # INPUTS
+    unescaped_instr: 0x038f
+    ebx: 0xffffd9bc
+    esp: 0xffffd9b8
+    hint1_is_write: 1 # write
+    hint1_address: 0xffffd9bc
+    hint1_data: 0x01
+    hint2_is_write: 0 # read
+    hint2_address: 0xffffd9b8
+    hint2_data: 0x01
+    opc: 37 # CMD_POP
+    opnd_form: 3 # OPND_ENC_MODREGRM_RM
+    opnd0_is_read: 0
+    opnd0_is_write: 1
+
+    # OUTPUTS
+    instr_body_len: 1 # ModR/M
+    opnd0_r: 0x01 # [esp]
+    opnd1_r: 0xffffd9b8 # esp
+    opnd2_r: 4 # esp adjust
+    dest0_kind: 0b10 # OPND_DEST_MEM_1HOT
+    dest1_kind: 0b01 # OPND_DEST_REG_1HOT
+    dest0_sel: 0xffffd9bc # [ebx]
+    dest1_sel: 4 # ESP
+
+  - _description: "MOV EAX, DWORD [EBP - 8]"
+
+    # INPUTS
+    unescaped_instr: 0xf8458b
+    ebp: 0xffffd9cc
+    hint1_is_write: 0
+    hint1_address: 0xffffd9c4
+    hint1_data: 0x10
+    opc: 28 # CMD_MOV
+    opnd_form: 7 # OPND_ENC_MODREGRM_REG_RM
+    opnd0_is_write: 1
+    opnd1_is_read: 1
+
+    # OUTPUTS
+    instr_body_len: 2 # ModR/M + disp8
+    opnd0_r: 0 # NOTE(ww): Not read
+    opnd1_r: 0x10
+    dest0_kind: 0b01 # OPND_DEST_REG_1HOT
+    dest0_sel: 0 # EAX
+
+  - _description: "LEAVE"
+
+    # INPUTS
+    unescaped_instr: 0xc9
+    esp: 0xffffd9a8
+    ebp: 0xffffd9ff
+    hint1_is_write: 0
+    hint1_address: 0xffffd9a8
+    hint1_data: 0xffffd9bc
+    opc: 84 # CMD_LEAVE
+    opnd_form: 0 # OPND_ENC_NONE
+
+    # OUTPUTS
+    instr_body_len: 0
+    opnd0_r: 0xffffd9bc # [ESP]
+    opnd1_r: 0xffffd9ff # EBP (ESP := EBP)
+    opnd2_r: 4 # ESP adjust (for POP)
+    dest0_kind: 0b01 # OPND_DEST_REG_1HOT
+    dest0_sel: 5 # EBP
+    dest1_kind: 0b01 # OPND_DEST_REG_1HOT
+    dest1_sel: 4 # ESP
+
+  - _description: "CDQ (EAX=-100)"
+
+    # INPUTS
+    unescaped_instr: 0x99
+    eax: -100
+    opc: 15 # CMD_CDQ
+    opnd_form: 0 # OPND_ENC_NONE
+    opnd0_is_write: 1
+    opnd1_is_read: 1
+    source_is_sext: 1
+
+    # OUTPUTS
+    instr_body_len: 0
+    opnd0_r: 0 # NOTE(ww): Not read
+    opnd1_r: -100 # EAX
+    dest0_kind: 0b01 # OPND_DEST_REG_1HOT
+    dest0_sel: 2 # EDX
+
+  - _description: "idiv DWORD PTR [ebp+0xc]"
+
+    # INPUTS
+    unescaped_instr: 0x0c7df7
+    edx: 0
+    eax: 2
+    ebp: 0xffffd998
+    hint1_is_write: 0
+    hint1_address: 0xffffd9a4
+    hint1_data: 0x03
+    opc: 18 # CMD_IDIV
+    opnd_form: 3 # OPND_ENC_MODREGRM_RM
+    opnd_count: 3
+    opnd0_is_read: 1
+    opnd0_is_write: 1
+    opnd1_is_read: 1
+    opnd1_is_write: 1
+    opnd2_is_read: 1
+    source_is_sext: 1
+
+    # OUTPUTS
+    instr_body_len: 2 # ModR/M + disp8
+    opnd0_r: 0x00000000 # EDX
+    opnd1_r: 0x00000002 # EAX
+    opnd2_r: 0x00000003 # [ebp + 0xc]
+    dest0_kind: 0b01
+    dest0_sel: 2 # EDX
+    dest1_kind: 0b01
+    dest1_sel: 0 # EAX

@@ -4,7 +4,10 @@
 
 [![Build Status](https://github.com/trailofbits/sholva/actions/workflows/ci.yml/badge.svg)](https://github.com/trailofbits/sholva/actions?query=workflow%3ACI)
 
-_shol'va_ is a Verilog and [Clash](https://clash-lang.org/) implementation of a Tiny86 trace verifier.
+_shol'va_ is a tool for generating zero knowledge proofs of program execution, composed of
+
+- _mttn_: an instruction-resolution program tracer
+- _tiny86_: a Verilog and [Clash](https://clash-lang.org/) trace verifier circuit
 
 ## Usage
 
@@ -12,36 +15,60 @@ _shol'va_ is a Verilog and [Clash](https://clash-lang.org/) implementation of a 
 
 ### Dependencies
 
-Built using [nix](https://nixos.wiki/wiki/Nix_package_manager).
-Follow the upstream [nix installation instructions](https://nixos.org/download.html).
+`sholva` is built using [nix](https://nixos.wiki/wiki/Nix_package_manager).
+It is recommended to use the [Determinate Systems installer](https://determinate.systems/posts/determinate-nix-installer):
 
-### Building
-
-_shol'va_ currently builds as a sanity test; producing proofs objects for each example in `test`.
-To run the build:
-
-```bash
-$ nix-build
+```sh
+$ curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install
 ```
 
-### Exploit Modeling
+## Building
 
-- [log4shell](https://www.cve.org/CVERecord?id=CVE-2021-44228)
+### mttn
 
-Uses a provided jdk build cross-compiled to 80386.
-
-### Testing
-
-Dropping into a development shell and manually running the full test suite,
-
-```bash
-$ nix-shell {--pure}
-# --pure restricts programs in $PATH to _only_ those used for building/testing *shol'va*.
-[nix-shell]$ cd test
-[nix-shell]$ make test
+```sh
+$ nix build .#mttn
 ```
 
-In the same sub-shell context, further subsets of the test suite for each subcomponent:
+This builds:
+
+- `bin/mttn`: tracer binary
+- `traces/*.trace.txt`: self-test tracing results
+
+Enter a shell with development dependencies:
+
+```sh
+$ cd mttn
+$ nix develop .#mttn
+```
+
+Manual testing:
+
+```sh
+# build all the of the test binaries
+$ make -C test elfs
+# run the mttn self-tests
+$ cargo test
+```
+
+### tiny86
+
+```sh
+$ nix build .#tiny86
+```
+
+This builds:
+
+- `circuit/tiny86.blif`: synthesized circuit
+
+Enter a shell with development dependencies:
+
+```sh
+$ cd tiny86
+$ nix develop .#tiny86
+```
+
+Manual testing:
 
 ```bash
 # test the full Tiny86 circuit test suite
@@ -56,22 +83,11 @@ $ SHOLVA_MODULES="alu syscall" make _test-verilog
 $ make _test-pipeline
 ```
 
-### Development Notes
+## Exploit Modeling
 
-For an interactive visualization of the dependency graph using [`nix-tree`](https://github.com/utdemir/nix-tree),
+- [log4shell](https://www.cve.org/CVERecord?id=CVE-2021-44228)
 
-```bash
-$ nix-instantiate | xargs -o nix-tree --derivation
-```
-
-Dependencies are managed using [`niv`](https://github.com/nmattia/niv). To bump dependencies,
-
-```bash
-# Update all dependencies.
-$ niv update
-# Update, e.g. nixpkgs, to a specific branch. Note that subsequent updates continue to pull from this branch.
-$ niv update nixpkgs -b 22.11
-```
+Uses a provided jdk build cross-compiled to 80386.
 
 ## Distribution and Licensing
 

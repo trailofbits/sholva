@@ -1038,7 +1038,7 @@ mod tests {
             $(
                 #[test]
                 fn $name() {
-                    let program = concat!(env!("CARGO_MANIFEST_DIR"), "/../test/", stringify!($name), ".elf");
+                    let program = concat!(env!("CARGO_MANIFEST_DIR"), "/test/", stringify!($name), ".elf");
                     let tracer = test_program_tracer(&program);
 
                     // TODO(ww): Don't collect these.
@@ -1078,14 +1078,15 @@ mod tests {
     // find test/ -name '*.s' | sort | xargs -n1 basename -s .s
     trace_consistency_tests! {
         alu_adc,
-        alu_add,
         alu_add_neg,
+        alu_add,
         cdq,
         jmp,
         lea,
         loop_,
         // memops, FIXME(jl): indeterminate.
         mov_r_r,
+        nop,
         push_pop,
         push_pop2,
         rcl,
@@ -1094,6 +1095,7 @@ mod tests {
         // stosd, FIXME(jl): indeterminate.
         stosw,
         syscall_transmit,
+        syscall_terminate,
         syscall_receive,
         xchg_r_r,
     }

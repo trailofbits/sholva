@@ -1,0 +1,45 @@
+module: decode_prefix
+file: ../circuit/decode/decode_prefix.v
+inputs:
+  - "96 raw_instr"
+outputs:
+  - "88 unprefixed_instr"
+  - "1 prefix_operand_16bit"
+  - "1 prefix_address_16bit"
+  - "2 prefix_rep"
+  - "2 prefix_count"
+vector_specs:
+  - _description: "no prefixes, only NOPs"
+    raw_instr: 0x909090909090909090909090
+    unprefixed_instr: 0x9090909090909090909090
+    prefix_operand_16bit: 0
+    prefix_address_16bit: 0
+    prefix_rep: 0
+    prefix_count: 0
+  - _description: "REP prefix"
+    raw_instr: 0x9090909090909090909090F3
+    unprefixed_instr: 0x9090909090909090909090
+    prefix_operand_16bit: 0
+    prefix_address_16bit: 0
+    prefix_rep: 0b10
+    prefix_count: 0b01
+  - _description: "REPNE prefix"
+    raw_instr: 0x9090909090909090909090F2
+    unprefixed_instr: 0x9090909090909090909090
+    prefix_operand_16bit: 0
+    prefix_address_16bit: 0
+    prefix_rep: 0b01
+    prefix_count: 0b01
+  - _description: "REP lodsw (REP + operand override)"
+    raw_instr: 0xad66f3
+    unprefixed_instr: 0xad
+    prefix_operand_16bit: 1
+    prefix_address_16bit: 0
+    prefix_rep: 0b10
+    prefix_count: 2
+  - _description: "add DWORD PTR [eax+0xbbbb], 0xaaaa (no prefixes)"
+    raw_instr: 0x0000aaaa0000bbbb8081
+    unprefixed_instr: 0x0000aaaa0000bbbb8081
+  - _description: "add DWORD PTR [eax + (ebx * 4) + 0xbbbb], 0xaaaa (no prefixes)"
+    raw_instr: 0x0000aaaa0000bbbb988481
+    unprefixed_instr: 0x0000aaaa0000bbbb988481

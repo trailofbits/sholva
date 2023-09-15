@@ -11,7 +11,6 @@ $(GENS): codegen.py $(COMMANDS_JSON)
 $(COMMANDS_JSON): parse_encodings.py $(ENCODINGS_SPEC)
 	python3 parse_encodings.py
 
-
 .PHONY: clean
 clean:
 	rm -rf $(GENS) $(COMMANDS_JSON)

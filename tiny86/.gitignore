@@ -2,7 +2,9 @@
 *.json
 *.dot
 *.svg
+*.vcd
 
 # Clash artifacts
 circuit/execute/alu.v
 circuit/syscall.v
+test/*.tb.vvp
