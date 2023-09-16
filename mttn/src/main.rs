@@ -2,7 +2,7 @@ use std::io::{stderr, stdout, Write};
 use std::process;
 
 use anyhow::{anyhow, Result};
-use clap::{Arg, ArgGroup, Command};
+use clap::{ArgAction, ArgGroup, Command, arg, command};
 
 mod dump;
 mod syscall;
@@ -11,92 +11,48 @@ mod trace;
 
 use tiny86::{Bitstring, Tiny86Write};
 
-fn app() -> Command<'static> {
-    Command::new(env!("CARGO_PKG_NAME"))
-        .version(env!("CARGO_PKG_VERSION"))
-        .about(env!("CARGO_PKG_DESCRIPTION"))
+fn app() -> Command {
+    command!()    
         .arg(
-            Arg::new("output-format")
-                .help("The output format to use")
-                .short('F')
-                .long("format")
-                .takes_value(true)
-                .possible_values(["jsonl", "tiny86", "tiny86-text", "inst-count"])
-                .default_value("jsonl"),
+            arg!(-F --format <OUTPUT_FORMAT> "The output format to use")
+                .value_parser(["jsonl", "tiny86", "tiny86-text", "inst-count"])
+                .default_value("jsonl")
         )
         .arg(
-            Arg::new("mode")
-                .help("The CPU mode to decode instructions with")
-                .short('m')
-                .long("mode")
-                .takes_value(true)
-                .possible_values(["32", "64"])
-                .default_value("64"),
+            arg!(-m --mode <MODE> "The CPU mode to decode instructions with")
+                .value_parser(["32", "64"])
+                .default_value("64")
         )
+        .arg(arg!(-i --ignore_unsupported_memops "Ignore unsupported memory ops instead of failing"))
+        .arg(arg!(-t --tiny86_only "Fail if the tracer encounters x86 functionality that Tiny86 doesn't support"))
         .arg(
-            Arg::new("ignore-unsupported-memops")
-                .help("Ignore unsupported memory ops instead of failing")
-                .short('I')
-                .long("ignore-unsupported-memops"),
-        )
-        .arg(
-            Arg::new("tiny86-only")
-                .help("Fail if the tracer encounters x86 functionality that Tiny86 doesn't support")
-                .short('t')
-                .long("tiny86-only"),
-        )
-        .arg(
-            Arg::new("syscall-model")
-                .help("For Tiny86: which syscall model to use when emulating syscalls")
-                .long("syscall-model")
-                .possible_values(["decree", "linux32"])
+            arg!(-s --syscall_model <MODEL> "For Tiny86: which syscall model to use when emulating syscalls")
+                .value_parser(["decree", "linux32"])
                 .default_value("decree")
-                .requires("tiny86-only"),
+                .requires("tiny86_only"),
+        )
+        .arg(arg!(-d --debug_on_fault "Suspend the tracee and detach if a memory access faults"))
+        .arg(arg!(-A --disable_aslr "Disable ASLR on the tracee"))
+        .arg(arg!(-M --memory_file <FILE> "the path to write the memory dump to (defaults to <pid>.memory"))
+        .arg(
+            arg!(-a --attach <TRACEE_PID> "Attach to the given PID for tracing")
+                .conflicts_with("disable_aslr")
         )
         .arg(
-            Arg::new("debug-on-fault")
-                .help("Suspend the tracee and detach if a memory access faults")
-                .short('d')
-                .long("debug-on-fault"),
-        )
-        .arg(
-            Arg::new("disable-aslr")
-                .help("Disable ASLR on the tracee")
-                .short('A')
-                .long("disable-aslr"),
-        )
-        .arg(
-            Arg::new("memory-file")
-                .help("the path to write the memory dump to (defaults to <pid>.memory")
-                .short('M')
-                .long("memory-file")
-                .takes_value(true),
-        )
-        .arg(
-            Arg::new("tracee-pid")
-                .help("Attach to the given PID for tracing")
-                .short('a')
-                .long("attach")
-                .conflicts_with("disable-aslr")
-                .takes_value(true),
-        )
-        .arg(
-            Arg::new("tracee-name")
-                .help("The program to trace")
-                .conflicts_with("memory-file")
+            arg!([tracee_name] "The program to trace")
+                .conflicts_with("memory_file")
                 .index(1),
         )
         .arg(
-            Arg::new("tracee-args")
-                .help("The command-line arguments to execute the tracee with")
+            arg!([tracee_args] "The command-line arguments to execute the tracee with")
                 .raw(true)
-                .multiple_values(true)
+                .action(ArgAction::Append)
                 .index(2),
         )
         .group(
             ArgGroup::new("target")
                 .required(true)
-                .args(&["tracee-pid", "tracee-name"]),
+                .args(&["attach", "tracee_name"]),
         )
 }
 
@@ -106,7 +62,7 @@ fn run() -> Result<()> {
 
     let mut traces = tracer.trace()?;
 
-    match matches.value_of("output-format").unwrap() {
+    match matches.get_one::<String>("format").unwrap().as_ref() {
         "jsonl" => traces
             .iter()
             .try_for_each(|s| jsonl::write(stdout(), &s).map_err(|e| anyhow!("{:?}", e)))?,

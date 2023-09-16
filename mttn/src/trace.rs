@@ -907,13 +907,13 @@ pub struct Tracer {
 
 impl From<&clap::ArgMatches> for Tracer {
     fn from(matches: &clap::ArgMatches) -> Self {
-        let target = if let Some(pid) = matches.value_of("tracee-pid") {
+        let target = if let Some(pid) = matches.get_one::<String>("TRACEE_PID") {
             let pid = Pid::from_raw(pid.parse().unwrap());
 
             // If we're starting from a PID, then we need to create
             // a dump of the current memory state. Do that now.
             let dump_name = matches
-                .value_of("memory-file")
+                .get_one::<String>("memory_file")
                 .map(Into::into)
                 .unwrap_or_else(|| format!("{pid}.memory"));
 
@@ -923,9 +923,9 @@ impl From<&clap::ArgMatches> for Tracer {
             Target::Process(pid)
         } else {
             Target::Program(
-                matches.value_of("tracee-name").map(Into::into).unwrap(),
+                matches.get_one::<String>("tracee_name").map(Into::into).unwrap(),
                 matches
-                    .values_of("tracee-args")
+                    .get_many::<String>("tracee_args")
                     .map(|v| v.map(|a| a.to_string()).collect())
                     .unwrap_or_else(Vec::new),
             )
@@ -933,12 +933,12 @@ impl From<&clap::ArgMatches> for Tracer {
 
         #[allow(clippy::redundant_field_names)]
         Self {
-            ignore_unsupported_memops: matches.is_present("ignore-unsupported-memops"),
-            tiny86_only: matches.is_present("tiny86-only"),
-            decree_syscalls: matches.value_of("syscall-model").unwrap() == "decree",
-            debug_on_fault: matches.is_present("debug-on-fault"),
-            disable_aslr: matches.is_present("disable-aslr"),
-            bitness: matches.value_of("mode").unwrap().parse().unwrap(),
+            ignore_unsupported_memops: matches.contains_id("ignore_unsupported_memops"),
+            tiny86_only: matches.contains_id("tiny86_only"),
+            decree_syscalls: matches.get_one::<String>("syscall_model").unwrap() == "decree",
+            debug_on_fault: matches.contains_id("debug_on_fault"),
+            disable_aslr: matches.contains_id("disable_aslr"),
+            bitness: matches.get_one::<String>("mode").unwrap().parse().unwrap(),
             target: target,
         }
     }
