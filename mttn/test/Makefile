@@ -63,12 +63,12 @@ traces: $(TRACE_TEXTS)
 
 .DELETE_ON_ERROR:
 %.trace.jsonl: %.elf
-	$(MTTN) $(MTTN_FLAGS) --syscall-model=decree -F jsonl ./$< > $@
+	$(MTTN) $(MTTN_FLAGS) --syscall_model=decree -F jsonl ./$< > $@
 
 .DELETE_ON_ERROR:
 %.trace.txt: %.elf
-	$(MTTN) $(MTTN_FLAGS) --syscall-model=decree -F tiny86-text ./$< > $@
+	$(MTTN) $(MTTN_FLAGS) --syscall_model=decree -F tiny86-text ./$< > $@
 
 .DELETE_ON_ERROR:
 %.trace.txt: %.cgc
-	$(MTTN) $(MTTN_FLAGS) --syscall-model=linux32 -F tiny86-text ./$<
+	$(MTTN) $(MTTN_FLAGS) --syscall_model=linux32 -F tiny86-text ./$<
