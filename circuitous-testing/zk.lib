@@ -1,0 +1,25 @@
+library(boolean) {
+    cell(NOT) {
+        area: 2;
+        pin(IN) { direction: input; }
+        pin(OUT) { direction: output; function: "IN'"; }
+    }
+    cell(XOR) {
+        area: 1;
+        pin(A) { direction: input; }
+        pin(B) { direction: input; }
+        pin(OUT) { direction: output; function: "(A^B)"; }
+    }
+    cell(AND) {
+        area: 100;
+        preferred: false;
+        pin(A) { direction: input; }
+        pin(B) { direction: input; }
+        pin(OUT) { direction: output; function: "(A&B)"; }
+    }
+    cell(BUF) {
+        area: 1;
+        pin(IN) { direction: input; }
+        pin(OUT) { direction: output; function: "IN"; }
+    }
+}
