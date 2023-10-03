@@ -11,7 +11,7 @@ module decode_hint (
     output [31:0] data
 );
 
-  `include "funcs.v"
+  `include "../include/funcs.v"
 
   wire [7:0] meta = raw_hint[71:64];
 

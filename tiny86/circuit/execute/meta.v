@@ -1,7 +1,7 @@
 `default_nettype none
 
-`include "defines.v"
-`include "codegen/commands.gen.v"
+`include "../include/defines.v"
+`include "../codegen/commands.gen.v"
 
 module meta (
     input [ 6:0] opc,
@@ -13,7 +13,7 @@ module meta (
     output [6:0] status_out
 );
 
-  `include "funcs.v"
+  `include "../include/funcs.v"
 
   wire [127:0] opc_1hot = one_hot128(opc);
 
