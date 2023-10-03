@@ -1,0 +1,11 @@
+module: circuit
+file: ./out.v
+inputs:
+  - "1526 current"
+  - "1526 next"
+outputs:
+  - "1 result"
+
+vector_specs: []
+
+extra_vectors: out.e2e.tv
