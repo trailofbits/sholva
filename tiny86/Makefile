@@ -126,8 +126,16 @@ test/%.tb.vvp: test/%.tb.gen.v
 #
 # Circuit artifacts
 #
+
+## ZK gate mappings
+synth.tcl: zk.lib
+
+## TCL builder script
+$(CIRCUIT_SRC): synth.tcl
+
+## circuit synthesis
 tiny86.blif: $(CIRCUIT_SRC)
-	sv-netlist $(IFLAGS) --top check $^ -o $@
+	yosys -c synth.tcl $^
 
 #
 # Formatting

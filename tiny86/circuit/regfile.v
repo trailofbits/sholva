@@ -1,5 +1,6 @@
 `default_nettype none
-`include "defines.v"
+
+`include "./include/defines.v"
 
 module regfile (
     // register file enabled.
@@ -46,7 +47,7 @@ module regfile (
     o_eflags
 );
 
-  `include "funcs.v"
+  `include "./include/funcs.v"
 
   wire [7:0] dest0_sel_1hot = one_hot8(dest0_sel);
   wire [7:0] dest1_sel_1hot = one_hot8(dest1_sel);

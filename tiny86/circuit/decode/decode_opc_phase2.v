@@ -1,7 +1,7 @@
 `default_nettype none
 
-`include "defines.v"
-`include "codegen/commands.gen.v"
+`include "../include/defines.v"
+`include "../codegen/commands.gen.v"
 
 module decode_opc_phase2 (
     input [87:0] unescaped_instr,
@@ -33,6 +33,6 @@ module decode_opc_phase2 (
   wire [7:0] opc_without_regs = unescaped_instr[7:0] & 8'b11111000;
 
   // Off to the races.
-  `include "codegen/opc_map.gen.v"
+  `include "../codegen/opc_map.gen.v"
 
 endmodule
