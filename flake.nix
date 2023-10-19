@@ -90,8 +90,15 @@
             installPhase = ''
               runHook preInstall
 
+              # install circuit artifacts
               mkdir -p $out/circuit
               cp tiny86.blif $out/circuit/
+
+              # expose testing executables
+              mkdir -p $out/bin
+              cp test/run-tests $out/bin
+              cp -r test/codegen $out/bin
+              mv $out/bin/codegen/{e2egen,tbgen,tvgen} $out/bin
 
               runHook postInstall
             '';

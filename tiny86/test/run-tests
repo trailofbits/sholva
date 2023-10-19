@@ -1,4 +1,4 @@
-#!/nix/store/wcy993wz0zlcixaxivi6gha33afwq66n-ruby-3.1.4/bin/ruby
+#!/usr/bin/env ruby
 # run-tests: collect all .vvps and run each, parsing the output of each run
 # produce output in TAP format
 
