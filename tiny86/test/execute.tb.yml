@@ -133,7 +133,7 @@ vector_specs:
   - _description: "CMD_LEAVE"
 
     # INPUTS
-    opc: 84 # CMD_LEAVE
+    opc: 85 # CMD_LEAVE
     eip: 0x08049048
     instr_len: 1
     opnd0_r: 0xffffd9bc # [ESP]
@@ -148,7 +148,7 @@ vector_specs:
   - _description: "CMD_SUB (2 - 3)"
 
     # INPUTS
-    opc: 53
+    opc: 53 # CMD_SUB
     eflags: 0x82
     eip: 0x08049013
     instr_len: 3
