@@ -36,8 +36,11 @@ VERILOG_SRC = \
 )
 
 # All verilog.
-CIRCUIT_CODEGEN := cirucit/codegen/commands.gen.v cirucit/codegen/opc_map.gen.v
-CIRCUIT_SRC := $(VERILOG_CLASH) $(VERILOG_SRC) $(CIRCUIT_CODEGEN)
+CIRCUIT_CODEGEN = circuit/codegen/commands.gen.v cicuit/codegen/opc_map.gen.v
+$(CIRCUIT_CODEGEN):
+	$(MAKE) -C circuit/codegen
+CIRCUIT_SRC = $(VERILOG_CLASH) $(VERILOG_SRC)
+$(CIRCUIT_SRC): $(CIRCUIT_CODEGEN)
 
 SHOLVA_MODULES ?= \
 	agu \
@@ -62,8 +65,6 @@ SHOLVA_MODULES ?= \
 #
 # Synthesis
 #
-$(CIRCUIT_CODEGEN):
-	$(MAKE) -C circuit/codegen
 
 circuit/execute/alu.v: src/Alu.hs src/Alu/*.hs
 	clash -isrc $< --verilog
