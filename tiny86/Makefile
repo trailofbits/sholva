@@ -36,8 +36,8 @@ VERILOG_SRC = \
 )
 
 # All verilog.
-CIRCUIT_SRC := $(VERILOG_CLASH) $(VERILOG_SRC)
-$(CIRCUIT_SRC): circuit-codegen
+CIRCUIT_CODEGEN := cirucit/codegen/commands.gen.v cirucit/codegen/opc_map.gen.v
+CIRCUIT_SRC := $(VERILOG_CLASH) $(VERILOG_SRC) $(CIRCUIT_CODEGEN)
 
 SHOLVA_MODULES ?= \
 	agu \
@@ -62,16 +62,15 @@ SHOLVA_MODULES ?= \
 #
 # Synthesis
 #
-.PHONY: circuit-codegen
-circuit-codegen:
+$(CIRCUIT_CODEGEN):
 	$(MAKE) -C circuit/codegen
 
 circuit/execute/alu.v: src/Alu.hs src/Alu/*.hs
-	clash -isrc -fclash-clear $< --verilog
+	clash -isrc $< --verilog
 	sed '/timescale/d' verilog/Alu.top/alu.v > $@
 
 circuit/syscall.v: src/Syscall.hs src/Syscall/*.hs
-	clash -isrc -fclash-clear $< --verilog
+	clash -isrc $< --verilog
 	sed '/timescale/d' verilog/Syscall.top/syscall.v > $@
 
 #
@@ -163,7 +162,7 @@ _lint-yosys: tiny86.blif
 	yosys -QT -p 'read_blif $^; check'
 
 .PHONY: _lint-synth
-_lint-synth: circuit-codegen $(VERILOG_SRC)
+_lint-synth: $(CIRCUIT_CODGEN) $(VERILOG_SRC)
 	iverilog $(IVERILOG_FLAGS) $(IFLAGS) \
 		-ycircuit \
 		-ycircuit/decode \
