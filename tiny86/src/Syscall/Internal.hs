@@ -23,7 +23,8 @@ stepPtrBytes = 2 * 4 -- the number of address bytes present per step.
 
 -- see: https://cgc-docs.legitbs.net/libcgc/cgcabi/
 data Syscall
-    = SYSCALL_TERMINATE
+    = SYSCALL_NONE
+    | SYSCALL_TERMINATE
     | SYSCALL_TRANSMIT
     | SYSCALL_RECEIVE
     | SYSCALL_FDWAIT
@@ -37,6 +38,7 @@ type SyscallReg = BitVector 32
 -- auto-derived Enum on Syscall (reasonably) enumerates from 0;
 -- so, implement Enum instance manually.
 instance Enum Syscall where
+    fromEnum SYSCALL_NONE = 0
     fromEnum SYSCALL_TERMINATE = 1
     fromEnum SYSCALL_TRANSMIT = 2
     fromEnum SYSCALL_RECEIVE = 3
@@ -44,6 +46,7 @@ instance Enum Syscall where
     fromEnum SYSCALL_ALLOCATE = 5
     fromEnum SYSCALL_DEALLOCATE = 6
     fromEnum SYSCALL_RANDOM = 7
+    toEnum 0 = SYSCALL_NONE
     toEnum 1 = SYSCALL_TERMINATE
     toEnum 2 = SYSCALL_TRANSMIT
     toEnum 3 = SYSCALL_RECEIVE
