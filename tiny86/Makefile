@@ -33,6 +33,7 @@ VERILOG_SRC = \
 		! -path '*/test/*' \
 		! -path '*/verilog/*' \
 		! -name '*.gen.v' \
+		! -name '*.zk.v' \
 )
 
 # All verilog.
@@ -87,24 +88,23 @@ TESTBENCHES := $(addprefix test/, $(addsuffix .tb.vvp, $(SHOLVA_MODULES)))
 TESTVECTORS := $(addprefix test/, $(addsuffix .tv,     $(SHOLVA_MODULES)))
 $(TESTBENCHES): $(CIRCUIT_SRC) $(TESTVECTORS)
 
-
+# Run tests over Haskell modules.
 .PHONY: _test-clash
 _test-clash: $(CLASH_SRC) $(CLASH_TESTS)
 	$(MAKE) -C test-clash
 
+# Run tests over hand-written Verilog modules.
 .PHONY: _test-verilog
 _test-verilog: $(TESTBENCHES)
 	./test/run-tests $^ 
-
-check.tb.yml: check.e2e.tv
 
 # NOTE(jl): traces are populated by the mttn test suite.
 test/check.e2e.tv: $(E2EGEN)
 	$(E2EGEN) $(wildcard test/*.trace.txt) > $@
 
-test/check.tb.yml: test/check.e2e.tv
-
-test/check.tv: test/check.e2e.tv
+test/check.tb.yml: test/check.e2e.tv check.v
+test/check.zk.tb.yml: test/check.e2e.tv check.zk.v
+test/check.tv test/check.zk.tv: test/check.e2e.tv
 
 test/%.tb.yml: $(TBGEN) $(TVGEN) $(E2EGEN)
 
@@ -123,19 +123,23 @@ test/%.tb.vvp: test/%.tb.gen.v
 		-y./circuit/decode \
 		-y./circuit/execute \
 		$<
+
 #
 # Circuit artifacts
 #
 
-## ZK gate mappings
+## ZK synthesis passes
 synth.tcl: zk.lib
+## BLIF lowering passes
+lower.tcl:
 
-## TCL builder script
-$(CIRCUIT_SRC): synth.tcl
+$(CIRCUIT_SRC): synth.tcl lower.tcl
 
-## circuit synthesis
-tiny86.blif: $(CIRCUIT_SRC)
+check.zk.v: $(CIRCUIT_SRC)
 	yosys -c synth.tcl $^
+
+tiny86.blif: check.zk.v
+	yosys -c lower.tcl $^
 
 #
 # Formatting

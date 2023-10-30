@@ -11,4 +11,4 @@ rmports
 opt
 clean 
 read_liberty -lib zk.lib
-write_blif -gates -impltf -buf BUF IN OUT tiny86.blif
+write_verilog check.zk.v
