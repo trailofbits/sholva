@@ -94,7 +94,7 @@ _test-clash: $(CLASH_SRC) $(CLASH_TESTS)
 
 .PHONY: _test-verilog
 _test-verilog: $(TESTBENCHES)
-	./test/run-tests $^ || true # FIXME
+	./test/run-tests $^ 
 
 check.tb.yml: check.e2e.tv
 
@@ -163,7 +163,7 @@ _lint-yosys: tiny86.blif
 	yosys -QT -p 'read_blif $^; check'
 
 .PHONY: _lint-synth
-_lint-synth: $(CIRCUIT_CODGEN) $(VERILOG_SRC)
+_lint-synth: $(CIRCUIT_CODEGEN) $(VERILOG_SRC)
 	iverilog $(IVERILOG_FLAGS) $(IFLAGS) \
 		-ycircuit \
 		-ycircuit/decode \
