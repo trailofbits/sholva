@@ -104,7 +104,7 @@ test/check.e2e.tv: $(E2EGEN)
 
 test/check.tb.yml: test/check.e2e.tv check.v
 test/check.zk.tb.yml: test/check.e2e.tv check.zk.v
-test/check.tv test/check.zk.tv: test/check.e2e.tv
+test/check.tv: test/check.e2e.tv
 
 test/%.tb.yml: $(TBGEN) $(TVGEN) $(E2EGEN)
 
@@ -113,6 +113,13 @@ test/%.tb.gen.v: test/%.tb.yml
 
 test/%.tv: test/%.tb.yml
 	$(TVGEN) $<
+
+zk.v: zk.lib
+	yosys -f liberty $< -o $@
+
+test/check.zk.tb.vvp: test/check.zk.tb.gen.v check.zk.v zk.v
+	iverilog -o $@ \
+		$^
 
 test/%.tb.vvp: test/%.tb.gen.v
 	iverilog -o $@ \
@@ -133,13 +140,11 @@ synth.tcl: zk.lib
 ## BLIF lowering passes
 lower.tcl:
 
-$(CIRCUIT_SRC): synth.tcl lower.tcl
-
-check.zk.v: $(CIRCUIT_SRC)
+check.zk.v: # FIXME(jl): depends on $(CIRCUIT_SRC)
 	yosys -c synth.tcl $^
 
-tiny86.blif: check.zk.v
-	yosys -c lower.tcl $^
+tiny86.blif: check.zk.v lower.tcl
+	yosys -c lower.tcl check.zk.v
 
 #
 # Formatting
@@ -186,6 +191,5 @@ _lint-synth: $(CIRCUIT_CODEGEN) $(VERILOG_SRC)
 clean:
 	$(MAKE) -C circuit/codegen clean
 	rm -rf $(VERILOG_CLASH) verilog/ \
-		circuit/codegen/*.gen.v \
-		tiny86.* *.vcd \
-		test/*.gen.v test/*.tb.vvp test/*.tv
+		tiny86.blif \
+		*.vcd test/*.gen.v test/*.tb.vvp test/*.tv

@@ -1,4 +1,5 @@
 module: check
+tb_file: check.zk.tb.gen.v
 file: ../circuit/../check.zk.v
 inputs:
   - "656 step0"
