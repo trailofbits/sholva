@@ -1,6 +1,7 @@
 module: regfile
 file: ../circuit/regfile.v
 inputs:
+  - "1 en"
   - "32 i_eax"
   - "32 i_ebx"
   - "32 i_ecx"
@@ -9,6 +10,8 @@ inputs:
   - "32 i_edi"
   - "32 i_esp"
   - "32 i_ebp"
+  - "32 i_eip"
+  - "32 i_eflags"
   - "2 dest0_kind"
   - "2 dest1_kind"
   - "3 dest0_sel"
@@ -32,6 +35,7 @@ vector_specs:
   - _description: "update one GPR (EBX)"
 
     # INPUTS
+    en: 0b1
     i_ebx: 0xAAAAAAAA
     dest0_kind: 0b01 # OPND_DEST_REG
     dest0_sel: 3 # EBX
@@ -43,6 +47,7 @@ vector_specs:
   - _description: "update two GPRs (ECX:EDX)"
 
     # INPUTS
+    en: 0b1
     i_ecx: 0x11111111
     i_edx: 0x22222222
     dest0_kind: 0b01
@@ -59,6 +64,7 @@ vector_specs:
   - _description: "update no GPRs (kind is not reg)"
 
     # INPUTS
+    en: 0b1
     i_eax: 0xAAAAAAAA
     dest0_kind: 0b10 # OPND_DEST_MEM
     dest0_sel: 0 # EAX
@@ -70,6 +76,7 @@ vector_specs:
   - _description: "update EIP"
 
     # INPUTS
+    en: 0b1
     next_eip: 0x41414141
 
     # OUTPUTS
@@ -78,6 +85,7 @@ vector_specs:
   - _description: "update EFLAGS"
 
     # INPUTS
+    en: 0b1
     next_eflags: 0x12121212
 
     # OUTPUTS
@@ -86,6 +94,7 @@ vector_specs:
   - _description: "update ECX"
 
     # INPUTS
+    en: 0b1
     dest0_kind: 0b01
     dest0_sel: 1
     opnd0_w: 0x11111111

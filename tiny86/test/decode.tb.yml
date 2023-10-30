@@ -129,7 +129,7 @@ vector_specs:
 
     # OUTPUTS
     instr_len: 2
-    opc: 80 # CMD_JLE
+    opc: 81 # CMD_JLE
     opnd0_r: 0x11 # pre-adjust
 
   - _description: "cmp DWORD PTR [ebp-0x4],0xa (ebp=0xffc51afc)"
@@ -236,7 +236,7 @@ vector_specs:
 
     # OUTPUTS
     instr_len: 2
-    opc: 82 # CMD_LOOPE
+    opc: 83 # CMD_LOOPE
     opnd0_r: 0x00
     opnd1_r: 50
     opnd2_r: 1
@@ -251,7 +251,7 @@ vector_specs:
 
     # OUTPUTS
     instr_len: 2
-    opc: 83 # CMD_LOOPNE
+    opc: 84 # CMD_LOOPNE
     opnd0_r: 0x00
     opnd1_r: 1
     opnd2_r: 1

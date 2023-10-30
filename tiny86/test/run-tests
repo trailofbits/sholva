@@ -1,4 +1,4 @@
-#!/nix/store/wcy993wz0zlcixaxivi6gha33afwq66n-ruby-3.1.4/bin/ruby
+#!/usr/bin/env ruby
 # run-tests: collect all .vvps and run each, parsing the output of each run
 # produce output in TAP format
 
@@ -16,7 +16,7 @@ verbose "discovered #{vvps.size} testbenches: #{vvps}"
 puts "1..#{vvps.size}"
 
 vvps.each_with_index do |vvp, i|
-  lines = `vvp #{vvp} -lxt2`.split "\n"
+  lines = `vvp #{vvp} -N -lxt2`.split "\n"
 
   abort "uh oh" if lines.any? { |l| l.start_with? "ERROR:" }
 

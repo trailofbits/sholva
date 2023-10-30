@@ -16,6 +16,7 @@ todo = undefined
 syscall' :: SyscallDFAState -> Syscall -> SyscallDFAState
 syscall' dfaState =
     \case
+        SYSCALL_NONE -> MkDFAState {eax = 0, ebx = 0, ecx = 0, state = SYSCALL_STATE_DONE}
         SYSCALL_TERMINATE -> todo
         SYSCALL_TRANSMIT -> syscallTransmitDFA dfaState
         SYSCALL_RECEIVE -> syscallReceiveDFA dfaState

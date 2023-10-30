@@ -77,10 +77,9 @@
             ] ++ [
               sv_circuit.packages.${system}.sv_circuit
               verilog_tools.packages.${system}.verilog_tools
-            ] ++ (with pkgs; [ nasm python3 verible verilator ]);
-            propagatedBuildInputs = with pkgs; [ ruby verilog ];
+            ] ++ (with pkgs; [ nasm python3 verible verilator verilog ]);
 
-            checkInputs = [ mttn ];
+            checkInputs = with pkgs; [ mttn ruby ];
             preCheck = ''
               patchShebangs test/
               cp -f ${mttn}/traces/*.trace.txt test/

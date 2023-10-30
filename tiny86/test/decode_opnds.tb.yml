@@ -611,7 +611,7 @@ vector_specs:
     hint1_is_write: 0
     hint1_address: 0xffffd9a8
     hint1_data: 0xffffd9bc
-    opc: 84 # CMD_LEAVE
+    opc: 85 # CMD_LEAVE
     opnd_form: 0 # OPND_ENC_NONE
 
     # OUTPUTS
