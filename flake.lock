@@ -74,22 +74,6 @@
         "type": "github"
       }
     },
-    "flake-compat_4": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1673956053,
-        "narHash": "sha256-4gtG9iQuiKITOjNQQeQIpoIB6b16fm+504Ch3sNKLd8=",
-        "owner": "edolstra",
-        "repo": "flake-compat",
-        "rev": "35bb57c0c8d8b62bbfd284272c928ceb64ddbde9",
-        "type": "github"
-      },
-      "original": {
-        "owner": "edolstra",
-        "repo": "flake-compat",
-        "type": "github"
-      }
-    },
     "flake-utils": {
       "inputs": {
         "systems": "systems"
@@ -240,30 +224,13 @@
         "type": "github"
       }
     },
-    "nixpkgs_3": {
-      "locked": {
-        "lastModified": 1689605451,
-        "narHash": "sha256-u2qp2k9V1smCfk6rdUcgMKvBj3G9jVvaPHyeXinjN9E=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "53657afe29748b3e462f1f892287b7e254c26d77",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOS",
-        "ref": "nixos-23.05",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
     "root": {
       "inputs": {
         "clash": "clash",
         "flake-compat": "flake-compat_2",
         "nixpkgs": "nixpkgs",
         "rust-overlay": "rust-overlay",
-        "sv_circuit": "sv_circuit",
-        "verilog_tools": "verilog_tools"
+        "sv_circuit": "sv_circuit"
       }
     },
     "rust-overlay": {
@@ -371,25 +338,6 @@
       "original": {
         "owner": "nix-systems",
         "repo": "default",
-        "type": "github"
-      }
-    },
-    "verilog_tools": {
-      "inputs": {
-        "flake-compat": "flake-compat_4",
-        "nixpkgs": "nixpkgs_3"
-      },
-      "locked": {
-        "lastModified": 1694102475,
-        "narHash": "sha256-CAizNXhm7CHQHl9LKyBafDxb3no/2jrMZrqrAxU+cLU=",
-        "owner": "trailofbits",
-        "repo": "verilog_tools",
-        "rev": "1d301f3743bfa0bf18b5508d3d28bf96f4a04731",
-        "type": "github"
-      },
-      "original": {
-        "owner": "trailofbits",
-        "repo": "verilog_tools",
         "type": "github"
       }
     }

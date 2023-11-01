@@ -14,11 +14,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     sv_circuit = { url = "github:trailofbits/sv_circuit"; };
-    verilog_tools = { url = "github:trailofbits/verilog_tools"; };
   };
 
-  outputs = { self, clash, nixpkgs, flake-compat, rust-overlay, sv_circuit
-    , verilog_tools, ... }:
+  outputs =
+    { self, clash, nixpkgs, flake-compat, rust-overlay, sv_circuit, ... }:
     let
       supportedSystems = [ "x86_64-linux" ];
       forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
@@ -74,10 +73,8 @@
             buildInputs = [
               clash.packages.${system}.clash-ghc
               clash.packages.${system}.clash-prelude
-            ] ++ [
               sv_circuit.packages.${system}.sv_circuit
-              verilog_tools.packages.${system}.verilog_tools
-            ] ++ (with pkgs; [ nasm python3 verible verilator verilog ]);
+            ] ++ (with pkgs; [ nasm python3 verible verilator verilog yosys ]);
 
             checkInputs = with pkgs; [ mttn ruby ];
             preCheck = ''
