@@ -3,8 +3,13 @@
 *.dot
 *.svg
 *.vcd
+*.zk.v
 
 # Clash artifacts
 circuit/execute/alu.v
 circuit/syscall.v
+
+# Test artifacts
 test/*.tb.vvp
+test/*.gen.v
+zk.v

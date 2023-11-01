@@ -33,6 +33,7 @@ VERILOG_SRC = \
 		! -path '*/test/*' \
 		! -path '*/verilog/*' \
 		! -name '*.gen.v' \
+		! -name '*.zk.v' \
 )
 
 # All verilog.
@@ -87,23 +88,22 @@ TESTBENCHES := $(addprefix test/, $(addsuffix .tb.vvp, $(SHOLVA_MODULES)))
 TESTVECTORS := $(addprefix test/, $(addsuffix .tv,     $(SHOLVA_MODULES)))
 $(TESTBENCHES): $(CIRCUIT_SRC) $(TESTVECTORS)
 
-
+# Run tests over Haskell modules.
 .PHONY: _test-clash
 _test-clash: $(CLASH_SRC) $(CLASH_TESTS)
 	$(MAKE) -C test-clash
 
+# Run tests over hand-written Verilog modules.
 .PHONY: _test-verilog
 _test-verilog: $(TESTBENCHES)
 	./test/run-tests $^ 
-
-check.tb.yml: check.e2e.tv
 
 # NOTE(jl): traces are populated by the mttn test suite.
 test/check.e2e.tv: $(E2EGEN)
 	$(E2EGEN) $(wildcard test/*.trace.txt) > $@
 
-test/check.tb.yml: test/check.e2e.tv
-
+test/check.tb.yml: test/check.e2e.tv check.v
+test/check.zk.tb.yml: test/check.e2e.tv check.zk.v
 test/check.tv: test/check.e2e.tv
 
 test/%.tb.yml: $(TBGEN) $(TVGEN) $(E2EGEN)
@@ -114,6 +114,13 @@ test/%.tb.gen.v: test/%.tb.yml
 test/%.tv: test/%.tb.yml
 	$(TVGEN) $<
 
+zk.v: zk.lib
+	yosys -f liberty $< -o $@
+
+test/check.zk.tb.vvp: test/check.zk.tb.gen.v check.zk.v zk.v
+	iverilog -o $@ \
+		$^
+
 test/%.tb.vvp: test/%.tb.gen.v
 	iverilog -o $@ \
 		-I./circuit \
@@ -123,19 +130,21 @@ test/%.tb.vvp: test/%.tb.gen.v
 		-y./circuit/decode \
 		-y./circuit/execute \
 		$<
+
 #
 # Circuit artifacts
 #
 
-## ZK gate mappings
+## ZK synthesis passes
 synth.tcl: zk.lib
+## BLIF lowering passes
+lower.tcl:
 
-## TCL builder script
-$(CIRCUIT_SRC): synth.tcl
-
-## circuit synthesis
-tiny86.blif: $(CIRCUIT_SRC)
+check.zk.v: # FIXME(jl): depends on $(CIRCUIT_SRC)
 	yosys -c synth.tcl $^
+
+tiny86.blif: check.zk.v lower.tcl
+	yosys -c lower.tcl check.zk.v
 
 #
 # Formatting
@@ -182,6 +191,5 @@ _lint-synth: $(CIRCUIT_CODEGEN) $(VERILOG_SRC)
 clean:
 	$(MAKE) -C circuit/codegen clean
 	rm -rf $(VERILOG_CLASH) verilog/ \
-		circuit/codegen/*.gen.v \
-		tiny86.* *.vcd \
-		test/*.gen.v test/*.tb.vvp test/*.tv
+		tiny86.blif \
+		*.vcd test/*.gen.v test/*.tb.vvp test/*.tv
