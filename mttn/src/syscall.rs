@@ -3,30 +3,29 @@
 //! These are only used in "Tiny86" tracing mode.
 
 use crate::trace::Step;
-use crate::trace::{DecreeSyscall, MemoryHint, RegisterFile, SyscallState, Tracee};
+use crate::trace::{LinuxSyscall, MemoryHint, RegisterFile, SyscallState, Tracee};
 use anyhow::{anyhow, Result};
 
 pub trait SyscallDFA {
     const POINTER_TRANSITION_BYTES: u32 = 8; // number of pointer bytes offset per syscall transition
     const DATA_TRANSITION_BYTES: u32 = 8; // number of data bytes consumed per syscall transition
-    fn transition(&self, syscall: DecreeSyscall, ebx: u32, ecx: u32, edx: u32)
-        -> Result<Vec<Step>>;
+    fn transition(&self, syscall: LinuxSyscall, ebx: u32, ecx: u32, edx: u32) -> Result<Vec<Step>>;
 }
 
 impl<'a> SyscallDFA for Tracee<'a> {
     fn transition(
         &self,
-        syscall: DecreeSyscall,
+        syscall: LinuxSyscall,
         ebx: u32, // NOTE(jl): non-`mut`; constant FD for currently supported syscalls.
         mut ecx: u32,
         mut edx: u32,
     ) -> Result<Vec<Step>> {
-        // NOTE(jl): assuming a fully DECREE-syscall centric approach.
+        // NOTE(jl): assuming a fully Linux-syscall centric approach.
         match syscall {
-            DecreeSyscall::Terminate => Ok(vec![]),
-            DecreeSyscall::Transmit => {
+            LinuxSyscall::Exit => Ok(vec![]),
+            LinuxSyscall::Write => {
                 log::info!(
-                    "transmit: buffer @{:#04x} of length {} to FD {}",
+                    "write: buffer @{:#04x} of length {} to FD {}",
                     ecx,
                     edx,
                     ebx
@@ -55,23 +54,18 @@ impl<'a> SyscallDFA for Tracee<'a> {
                         state = SyscallState::Done;
                         ecx += edx; // increment pointer by the remaining size
                         edx -= edx; // consume the remaining bytes
-                        log::debug!("transmit: DONE")
+                        log::debug!("write: DONE")
                     } else {
                         ecx += Self::POINTER_TRANSITION_BYTES;
                         edx -= Self::DATA_TRANSITION_BYTES;
-                        log::debug!("transmit: @{:#04x} remaining {}", ecx, edx)
+                        log::debug!("write: @{:#04x} remaining {}", ecx, edx)
                     }
                 }
 
                 Ok(dfa)
             }
-            DecreeSyscall::Receive => {
-                log::info!(
-                    "receive: FD {} of length {} to buffer @{:#04x}",
-                    ebx,
-                    edx,
-                    ecx
-                );
+            LinuxSyscall::Read => {
+                log::info!("read: FD {} of length {} to buffer @{:#04x}", ebx, edx, ecx);
 
                 let mut dfa = vec![];
                 let mut state = SyscallState::Write;
