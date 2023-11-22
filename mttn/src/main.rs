@@ -2,7 +2,7 @@ use std::io::{stderr, stdout, Write};
 use std::process;
 
 use anyhow::{anyhow, Result};
-use clap::{ArgAction, ArgGroup, Command, arg, command};
+use clap::{arg, command, ArgAction, ArgGroup, Command};
 
 mod dump;
 mod syscall;
@@ -12,7 +12,7 @@ mod trace;
 use tiny86::{Bitstring, Tiny86Write};
 
 fn app() -> Command {
-    command!()    
+    command!()
         .arg(
             arg!(-F --format <OUTPUT_FORMAT> "The output format to use")
                 .value_parser(["jsonl", "tiny86", "tiny86-text", "inst-count"])
@@ -28,7 +28,7 @@ fn app() -> Command {
         .arg(
             arg!(-s --syscall_model <MODEL> "For Tiny86: which syscall model to use when emulating syscalls")
                 .value_parser(["decree", "linux32"])
-                .default_value("decree")
+                .default_value("linux32")
                 .requires("tiny86_only"),
         )
         .arg(arg!(-d --debug_on_fault "Suspend the tracee and detach if a memory access faults"))
@@ -52,7 +52,7 @@ fn app() -> Command {
         .group(
             ArgGroup::new("target")
                 .required(true)
-                .args(&["attach", "tracee_name"]),
+                .args(["attach", "tracee_name"]),
         )
 }
 

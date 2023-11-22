@@ -589,28 +589,20 @@ impl<'a> Tracee<'a> {
 
     fn do_syscall(&mut self, instr: &Instruction, syscall: u32) -> Result<Vec<Step>> {
         let syscall = if self.tracer.decree_syscalls {
-            // Tracing a binary using DECREE syscalls natively.
-            DecreeSyscall::try_from(syscall)?
-        } else {
-            // Tracing a binary using Linux syscalls.
-            // Reinterpret and perform emulations.
-            let x86_syscall = LinuxSyscall::try_from(syscall)?;
-            let decree_syscall = match x86_syscall {
-                LinuxSyscall::Read => DecreeSyscall::Receive,
-                LinuxSyscall::Write => DecreeSyscall::Transmit,
-                LinuxSyscall::Open => {
-                    // NOTE(jl): do any filesystem interaction here.
-                    todo!()
-                }
-                LinuxSyscall::Close => {
-                    // NOTE(jl): do any filesystem interaction here.
-                    todo!()
-                }
-                LinuxSyscall::Exit => DecreeSyscall::Terminate,
+            // Legacy support for tracing a DECREE binary, where syscalls are re-written into
+            // native Linux equivalent
+            let decree_syscall = DecreeSyscall::try_from(syscall)?;
+            let linux_syscall = match decree_syscall {
+                DecreeSyscall::Receive => LinuxSyscall::Read,
+                DecreeSyscall::Transmit => LinuxSyscall::Write,
+                DecreeSyscall::Terminate => LinuxSyscall::Exit,
+                _ => todo!(),
             };
-            log::debug!("decomposed {:?} into {:?}", x86_syscall, decree_syscall);
+            log::debug!("decomposed {:?} into {:?}", decree_syscall, linux_syscall);
 
-            decree_syscall
+            linux_syscall
+        } else {
+            LinuxSyscall::try_from(syscall)?
         };
         log::debug!("selected {:?}", syscall);
 
@@ -625,7 +617,7 @@ impl<'a> Tracee<'a> {
         // Perform any Tracee side effects resulting from syscall.
         #[allow(clippy::single_match)]
         match syscall {
-            DecreeSyscall::Terminate => ptrace::kill(self.tracee_pid)?,
+            LinuxSyscall::Exit => ptrace::kill(self.tracee_pid)?,
             _ => (),
         };
 
@@ -923,11 +915,14 @@ impl From<&clap::ArgMatches> for Tracer {
             Target::Process(pid)
         } else {
             Target::Program(
-                matches.get_one::<String>("tracee_name").map(Into::into).unwrap(),
+                matches
+                    .get_one::<String>("tracee_name")
+                    .map(Into::into)
+                    .unwrap(),
                 matches
                     .get_many::<String>("tracee_args")
                     .map(|v| v.map(|a| a.to_string()).collect())
-                    .unwrap_or_else(Vec::new),
+                    .unwrap_or_default(),
             )
         };
 
