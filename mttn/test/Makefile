@@ -34,8 +34,9 @@ C_TESTS := \
 	smallcall \
 C_SOURCES := $(C_TESTS:=.c)
 C_ELFS := $(C_SOURCES:.c=.elf)
-CFLAGS += -fno-pic -g -m32 -mtune=i386 -Wl,-emain -nostdlib -static -std=c99 \
+CFLAGS += -fno-pic -g -m32 -mtune=i386 -std=c99 \
 		-mpreferred-stack-boundary=2 -fno-stack-protector -z execstack
+CFLAGS_NOSTDLIB = $(CFLAGS) -Wl,-emain -nostdlib -static
 
 ALL_ELFS := $(ASM_ELFS) $(C_ELFS)
 elfs: $(ALL_ELFS)
@@ -47,9 +48,11 @@ elfs: $(ALL_ELFS)
 %.o: %.s
 	nasm -f elf32 $^ -o $@
 
+%.nostdlib.elf: %.nostdlib.c
+	$(CC) $(CFLAGS_NOSTDLIB) $^ -o $@
+
 %.elf: %.c
 	$(CC) $(CFLAGS) $^ -o $@
-
 
 #
 # TRACING
