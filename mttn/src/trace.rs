@@ -74,6 +74,7 @@ pub enum LinuxSyscall {
     Write = 4,
     Open = 5,
     Close = 6,
+    Brk = 45,
     GetRandom = 355,
 }
 
@@ -87,6 +88,7 @@ impl TryFrom<u32> for LinuxSyscall {
             4 => Self::Write,
             5 => Self::Open,
             6 => Self::Close,
+            45 => Self::Brk,
             355 => Self::GetRandom,
             _ => return Err(anyhow!("unhandled Linux syscall: {}", syscall)),
         })
@@ -192,7 +194,7 @@ impl Default for MemoryHint {
 /// Represents an individual step in the trace, including the raw instruction bytes,
 /// the register file state before execution, and any memory operations that result
 /// from execution.
-#[derive(Debug, PartialEq, Eq, Serialize)]
+#[derive(Debug, Default, PartialEq, Eq, Serialize)]
 pub struct Step {
     pub instr: Vec<u8>,
     pub regs: RegisterFile,

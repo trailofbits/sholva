@@ -101,6 +101,16 @@ impl<'a> SyscallDFA for Tracee<'a> {
 
                 Ok(dfa)
             }
+            LinuxSyscall::Brk => {
+                log::info!("brk: @{:#04x}", ebx);
+                Ok(vec![Step {
+                    hints: vec![MemoryHint {
+                        syscall_state: SyscallState::Done,
+                       ..Default::default()
+                    }],
+                    ..Default::default()
+                }])
+            }
             LinuxSyscall::GetRandom => {
                 log::info!(
                     "getrandom: buffer @{:#04x} of length {} with flags {}",
@@ -129,7 +139,7 @@ impl<'a> SyscallDFA for Tracee<'a> {
                         },
                     );
 
-                    if edx <= Self::DATA_TRANSITION_BYTES {
+                    if ecx <= Self::DATA_TRANSITION_BYTES {
                         state = SyscallState::Done;
                         ebx += ecx; // increment pointer by the remaining size
                         ecx -= ecx; // consume the remaining bytes
