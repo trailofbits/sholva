@@ -3,7 +3,7 @@
 module PropSyscall where
 
 import Syscall.Internal
-import Syscall.Receive
+import Syscall.Read
 import Prelude
 
 import Test.QuickCheck
@@ -27,16 +27,16 @@ instance Arbitrary ValidSyscallDFAState where
     (ValidSyscallState state') <- arbitrary
     return $ ValidSyscallDFAState $ MkDFAState eax' ecx' edx' state'
 
-prop_syscall_receive_none :: ValidSyscallDFAState -> Property
-prop_syscall_receive_none (ValidSyscallDFAState s) =
-  (state s == SYSCALL_STATE_DONE) ==> syscallReceiveDFA s == s
+prop_syscall_read_none :: ValidSyscallDFAState -> Property
+prop_syscall_read_none (ValidSyscallDFAState s) =
+  (state s == SYSCALL_STATE_DONE) ==> syscallReadDFA s == s
 
-prop_syscall_receive_read :: ValidSyscallDFAState -> Property
-prop_syscall_receive_read (ValidSyscallDFAState s) =
+prop_syscall_read_read :: ValidSyscallDFAState -> Property
+prop_syscall_read_read (ValidSyscallDFAState s) =
   (state s == SYSCALL_STATE_WRITE && ecx s > toEnum stepDataBytes)
   -- WRITE state with bytes remaining to recieve
    ==>
-  let s' = syscallReceiveDFA s -- computed next state
+  let s' = syscallReadDFA s -- computed next state
    in (eax s == eax s') -- %eax unchanged
        &&
       (ebx s + toEnum stepPtrBytes  == ebx s') -- pointer incremented
