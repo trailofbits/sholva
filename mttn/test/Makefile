@@ -2,29 +2,7 @@
 # PROGRAM TESTS
 #
 
-ASM_TESTS := \
-	alu_adc \
-	alu_add \
-	alu_add_neg \
-	cdq \
-	jmp \
-	lea \
-	loop_ \
-	memops \
-	mov_r_r \
-	nop \
-	push_pop \
-	push_pop2 \
-	rcl \
-	rol \
-	stosb \
-	stosd \
-	stosw \
-	syscall_receive \
-	syscall_terminate \
-	syscall_transmit \
-	xchg_r_r
-ASM_SOURCES := $(ASM_TESTS:=.s)
+ASM_SOURCES := $(wildcard *.s)
 ASM_OBJS := $(ASM_SOURCES:.s=.o)
 ASM_ELFS := $(ASM_OBJS:.o=.elf)
 
@@ -66,13 +44,13 @@ traces: $(TRACE_TEXTS)
 
 .DELETE_ON_ERROR:
 %.trace.jsonl: %.gdb %.elf
-	# HACK: `-batch-silent` seem to be the only method of disabling logging.
-	# unfortunately it takes all stdio with it; use stderr for passing PID to mttn.
+	@# HACK: `-batch-silent` seem to be the only method of disabling logging.
+	@# unfortunately it takes all stdio with it; use stderr for passing PID to mttn.
 	gdb -batch-silent -x $< 2>&1 | xargs -I {} $(MTTN) $(MTTN_FLAGS) -F jsonl -a {} > $@
 
 .DELETE_ON_ERROR:
 %.trace.txt: %.gdb %.elf
-	# HACK: see above.
+	@# HACK: see above.
 	gdb -batch-silent -x $< 2>&1 | xargs -I {} $(MTTN) $(MTTN_FLAGS) -F tiny86-text -a {} > $@
 
 .DELETE_ON_ERROR:
