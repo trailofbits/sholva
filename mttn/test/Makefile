@@ -58,20 +58,35 @@ elfs: $(ALL_ELFS)
 # TRACING
 #
 MTTN ?= mttn
-MTTN_FLAGS += -At -m32
+MTTN_FLAGS += --tiny86_only -m32 --syscall_model=linux32
 
 TRACE_JSONLS := $(ALL_ELFS:.elf=.trace.jsonl)
 TRACE_TEXTS := $(ALL_ELFS:.elf=.trace.txt)
 traces: $(TRACE_TEXTS)
 
 .DELETE_ON_ERROR:
+%.trace.jsonl: %.gdb %.elf
+	# HACK: `-batch-silent` seem to be the only method of disabling logging.
+	# unfortunately it takes all stdio with it; use stderr for passing PID to mttn.
+	gdb -batch-silent -x $< 2>&1 | xargs -I {} $(MTTN) $(MTTN_FLAGS) -F jsonl -a {} > $@
+
+.DELETE_ON_ERROR:
+%.trace.txt: %.gdb %.elf
+	# HACK: see above.
+	gdb -batch-silent -x $< 2>&1 | xargs -I {} $(MTTN) $(MTTN_FLAGS) -F tiny86-text -a {} > $@
+
+.DELETE_ON_ERROR:
 %.trace.jsonl: %.elf
-	$(MTTN) $(MTTN_FLAGS) --syscall_model=decree -F jsonl ./$< > $@
+	$(MTTN) $(MTTN_FLAGS) --disable_aslr -F jsonl ./$< > $@
 
 .DELETE_ON_ERROR:
 %.trace.txt: %.elf
-	$(MTTN) $(MTTN_FLAGS) --syscall_model=decree -F tiny86-text ./$< > $@
+	$(MTTN) $(MTTN_FLAGS) --disable_aslr -F tiny86-text ./$< > $@
 
 .DELETE_ON_ERROR:
 %.trace.txt: %.cgc
 	$(MTTN) $(MTTN_FLAGS) --syscall_model=linux32 -F tiny86-text ./$<
+
+.PHONY: clean
+clean:
+	rm -f *.o *.trace.* *.elf *.memory
