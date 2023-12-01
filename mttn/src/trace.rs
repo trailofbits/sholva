@@ -66,13 +66,15 @@ impl TryFrom<u32> for DecreeSyscall {
 }
 
 #[derive(Copy, Clone, Debug, PartialEq, Eq, Serialize)]
-#[repr(u8)]
+#[repr(u32)]
+/// NOTE: https://github.com/torvalds/linux/blob/master/arch/x86/entry/syscalls/syscall_32.tbl
 pub enum LinuxSyscall {
-    Read = 0,
-    Write = 1,
-    Open = 2,
-    Close = 3,
-    Exit = 60,
+    Exit = 1,
+    Read = 3,
+    Write = 4,
+    Open = 5,
+    Close = 6,
+    GetRandom = 355,
 }
 
 impl TryFrom<u32> for LinuxSyscall {
@@ -80,11 +82,12 @@ impl TryFrom<u32> for LinuxSyscall {
 
     fn try_from(syscall: u32) -> Result<Self> {
         Ok(match syscall {
-            0 => Self::Read,
-            1 => Self::Write,
-            2 => Self::Open,
-            3 => Self::Close,
-            60 => Self::Exit,
+            1 => Self::Exit,
+            3 => Self::Read,
+            4 => Self::Write,
+            5 => Self::Open,
+            6 => Self::Close,
+            355 => Self::GetRandom,
             _ => return Err(anyhow!("unhandled Linux syscall: {}", syscall)),
         })
     }
@@ -596,6 +599,7 @@ impl<'a> Tracee<'a> {
                 DecreeSyscall::Receive => LinuxSyscall::Read,
                 DecreeSyscall::Transmit => LinuxSyscall::Write,
                 DecreeSyscall::Terminate => LinuxSyscall::Exit,
+                DecreeSyscall::Random => LinuxSyscall::GetRandom,
                 _ => todo!(),
             };
             log::debug!("decomposed {:?} into {:?}", decree_syscall, linux_syscall);
@@ -899,7 +903,7 @@ pub struct Tracer {
 
 impl From<&clap::ArgMatches> for Tracer {
     fn from(matches: &clap::ArgMatches) -> Self {
-        let target = if let Some(pid) = matches.get_one::<String>("TRACEE_PID") {
+        let target = if let Some(pid) = matches.get_one::<String>("attach") {
             let pid = Pid::from_raw(pid.parse().unwrap());
 
             // If we're starting from a PID, then we need to create
@@ -991,7 +995,7 @@ mod tests {
         Tracer {
             ignore_unsupported_memops: false,
             tiny86_only: true,
-            decree_syscalls: true,
+            decree_syscalls: false,
             debug_on_fault: false,
             disable_aslr: true,
             bitness: 32,
@@ -1089,9 +1093,9 @@ mod tests {
         // stosb, FIXME(jl): indeterminate.
         // stosd, FIXME(jl): indeterminate.
         stosw,
-        syscall_transmit,
-        syscall_terminate,
-        syscall_receive,
+        syscall_exit,
+        syscall_read,
+        syscall_write,
         xchg_r_r,
     }
 }

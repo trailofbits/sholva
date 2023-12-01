@@ -16,7 +16,7 @@ impl<'a> SyscallDFA for Tracee<'a> {
     fn transition(
         &self,
         syscall: LinuxSyscall,
-        ebx: u32, // NOTE(jl): non-`mut`; constant FD for currently supported syscalls.
+        mut ebx: u32,
         mut ecx: u32,
         mut edx: u32,
     ) -> Result<Vec<Step>> {
@@ -96,6 +96,46 @@ impl<'a> SyscallDFA for Tracee<'a> {
                     } else {
                         ecx += Self::POINTER_TRANSITION_BYTES;
                         edx -= Self::DATA_TRANSITION_BYTES;
+                    }
+                }
+
+                Ok(dfa)
+            }
+            LinuxSyscall::GetRandom => {
+                log::info!(
+                    "getrandom: buffer @{:#04x} of length {} with flags {}",
+                    ebx,
+                    ecx,
+                    edx
+                );
+
+                let mut dfa = vec![];
+                let mut state = SyscallState::Write;
+
+                while ecx > 0 {
+                    dfa.push(
+                        Step {
+                            instr: Default::default(),
+                            regs: RegisterFile {
+                                s_ebx: ebx,
+                                s_ecx: ecx,
+                                s_edx: edx,
+                                ..Default::default()
+                            },
+                            hints: vec![MemoryHint {
+                                syscall_state: state,
+                                ..Default::default()
+                            }],
+                        },
+                    );
+
+                    if edx <= Self::DATA_TRANSITION_BYTES {
+                        state = SyscallState::Done;
+                        ebx += ecx; // increment pointer by the remaining size
+                        ecx -= ecx; // consume the remaining bytes
+                    } else {
+                        ebx += Self::POINTER_TRANSITION_BYTES;
+                        ecx -= Self::DATA_TRANSITION_BYTES;
                     }
                 }
 
