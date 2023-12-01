@@ -2,3 +2,4 @@
 *.elf
 *.o
 /test/*.trace.*
+/test/*.memory
