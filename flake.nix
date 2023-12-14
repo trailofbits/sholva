@@ -13,12 +13,10 @@
       url = "github:oxalica/rust-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    sv_circuit = { url = "github:trailofbits/sv_circuit"; };
   };
 
-  outputs =
-    { self, clash, nixpkgs, flake-compat, rust-overlay, sv_circuit, ... }:
-    let
+  outputs = { self, clash, nixpkgs, flake-compat, rust-overlay, ... }:
+   let
       supportedSystems = [ "x86_64-linux" ];
       forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
       nixpkgsFor = forAllSystems (system: import nixpkgs { inherit system; });
@@ -67,14 +65,36 @@
               '';
             };
 
+          sv_circuit = with pkgs.extend (import rust-overlay);
+            let
+              platform = (rustChannelOf {
+                date = "2023-06-15";
+                channel = "nightly";
+              }).default;
+            in (makeRustPlatform {
+              cargo = platform;
+              rustc = platform;
+            }).buildRustPackage rec {
+              name = "sv_circuit";
+              src = ./sv_circuit;
+              cargoLock = { 
+                lockFile = ./sv_circuit/Cargo.lock; 
+                outputHashes = {
+                  "mcircuit-0.1.10" =
+                    "sha256-MUlaG+/IdcIwqiPyv4o3r+flPpf9lzHHWAZHdMkxBjs=";
+                };  
+              };
+            
+            doCheck = true;
+            };
+
           tiny86 = stdenv.mkDerivation {
             name = "tiny86";
             src = ./tiny86;
             buildInputs = [
               clash.packages.${system}.clash-ghc
               clash.packages.${system}.clash-prelude
-              sv_circuit.packages.${system}.sv_circuit
-            ] ++ (with pkgs; [ nasm python3 verible verilator verilog yosys ]);
+            ] ++ (with pkgs; [ sv_circuit nasm python3 verible verilator verilog yosys ]);
 
             checkInputs = with pkgs; [ mttn ruby ];
             preCheck = ''
@@ -97,8 +117,7 @@
             name = "sholva";
             src = ./test;
 
-            buildInputs = [ mttn tiny86 ]
-              ++ [ sv_circuit.packages.${system}.sv_circuit tiny86 ];
+            buildInputs = [ mttn tiny86 sv_circuit ];
             preBuild = ''
               cp -f ${mttn}/traces/*.trace.txt .
               cp -f ${tiny86}/circuit/tiny86.blif .
@@ -126,6 +145,11 @@
         mttn = {
           type = "app";
           program = "${self.packages.${system}.mttn}/bin/mttn";
+        };
+
+        sv_circuit = {
+          type = "app";
+          program = "${self.packages.${system}.sv_circuit}/bin/sv-compositor";
         };
       });
     };
