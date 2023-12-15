@@ -22,8 +22,8 @@ vector_specs:
       # OUTPUTS
       i_syscall_state: 0
       o_eax: 0
-      o_ebx: 0
-      o_ecx: 0
+      o_ebx: 4
+      o_ecx: 5
 
     - _description: "SYSCALL_STATE_READ: transmit 8 bytes and continue"
 

@@ -18,6 +18,7 @@ todo = undefined
 syscall' :: SyscallDFAState -> LinuxSyscall -> SyscallDFAState
 syscall' dfaState =
     \case
+        SYSCALL_NONE -> dfaState
         SYSCALL_EXIT -> todo
         SYSCALL_READ -> syscallReadDFA dfaState
         SYSCALL_WRITE -> syscallWriteDFA dfaState
