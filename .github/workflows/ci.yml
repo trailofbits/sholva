@@ -25,3 +25,5 @@ jobs:
         run: nix build .#mttn
       - name: tiny86
         run: nix build .#tiny86
+      - name: sv_circuit
+        run: nix build .#sv_circuit
