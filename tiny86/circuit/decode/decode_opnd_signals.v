@@ -1,7 +1,7 @@
 `default_nettype none
 
-`include "codegen/commands.gen.v"
-`include "defines.v"
+`include "../codegen/commands.gen.v"
+`include "../include/defines.v"
 
 module decode_opnd_signals (
     input [87:0] unescaped_instr,
@@ -34,7 +34,7 @@ module decode_opnd_signals (
     output opnd1_disp
 );
 
-  `include "funcs.v"
+  `include "../include/funcs.v"
 
   wire [15:0] opnd_form_1hot = one_hot16(opnd_form);
 
@@ -179,7 +179,7 @@ module decode_opnd_signals (
   wire is_imm16 = has_imm && prefix_operand_16bit;
   wire is_imm32 = has_imm && (~is_imm8 && ~is_imm16);
 
-  `include "codegen/imm.gen.v"
+  `include "../codegen/imm.gen.v"
 
   wire [2:0] imm_len = is_imm32 ? 3'd4 : is_imm16 ? 3'd2 : is_imm8 ? 3'd1 : 3'd0;
 
