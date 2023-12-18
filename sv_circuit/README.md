@@ -1,7 +1,5 @@
 # sv_circuit
 
-[![Build Status](https://github.com/trailofbits/sv_circuit/actions/workflows/ci.yml/badge.svg)](https://github.com/trailofbits/sholva/actions?query=workflow%3ACI)
-
 SIEVE circuit compositor.
 
 ## Dependencies
@@ -13,19 +11,10 @@ It is recommended to use the [Determinate Systems installer](https://determinate
 $ curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install
 ```
 
-## Running
-
-Running without installing,
-
-
-```bash
-$ nix run github:trailofbits/sv_circuit
-```
-
 ## Building
 
 ```bash
-$ nix build
+$ nix build .#sv_circuit
 ```
 
 ## Development Environment
@@ -33,7 +22,7 @@ $ nix build
 To enter a shell with all dependencies,
 
 ```bash
-$ nix develop
+$ nix develop .#sv_circuit
 ```
 
 Phases are defined as [Cargo hooks](https://github.com/NixOS/nixpkgs/blob/master/doc/languages-frameworks/rust.section.md#hooks-hooks).
