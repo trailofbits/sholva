@@ -3,7 +3,7 @@ a.out
 
 # compiled circuit outputs
 *.bin
-*.blif
+tiny86/*.blif
 *.bristol
 *.circuit
 *.public_input

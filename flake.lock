@@ -110,24 +110,6 @@
         "type": "github"
       }
     },
-    "flake-utils_3": {
-      "inputs": {
-        "systems": "systems_3"
-      },
-      "locked": {
-        "lastModified": 1681202837,
-        "narHash": "sha256-H+Rh19JDwRtpVPAWp64F+rlEtxUWBAQW28eAi3SRSzg=",
-        "owner": "numtide",
-        "repo": "flake-utils",
-        "rev": "cfacdce06f30d2b68473a46042957675eebb3401",
-        "type": "github"
-      },
-      "original": {
-        "owner": "numtide",
-        "repo": "flake-utils",
-        "type": "github"
-      }
-    },
     "ghc-tcplugins-extra": {
       "flake": false,
       "locked": {
@@ -229,8 +211,7 @@
         "clash": "clash",
         "flake-compat": "flake-compat_2",
         "nixpkgs": "nixpkgs",
-        "rust-overlay": "rust-overlay",
-        "sv_circuit": "sv_circuit"
+        "rust-overlay": "rust-overlay"
       }
     },
     "rust-overlay": {
@@ -251,48 +232,6 @@
       "original": {
         "owner": "oxalica",
         "repo": "rust-overlay",
-        "type": "github"
-      }
-    },
-    "rust-overlay_2": {
-      "inputs": {
-        "flake-utils": "flake-utils_3",
-        "nixpkgs": [
-          "sv_circuit",
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1689647697,
-        "narHash": "sha256-8ZX/DVpKLmr85FRKILb+2p+JuxfLQ49LjXG/gmwsoIU=",
-        "owner": "oxalica",
-        "repo": "rust-overlay",
-        "rev": "ed2774a9131ddad12e552ba04bd92f87df04a28b",
-        "type": "github"
-      },
-      "original": {
-        "owner": "oxalica",
-        "repo": "rust-overlay",
-        "type": "github"
-      }
-    },
-    "sv_circuit": {
-      "inputs": {
-        "flake-compat": "flake-compat_3",
-        "nixpkgs": "nixpkgs_2",
-        "rust-overlay": "rust-overlay_2"
-      },
-      "locked": {
-        "lastModified": 1694100616,
-        "narHash": "sha256-ZOcZhUb6lQGrZ8/Q+l7sS/BjhCrWYD42apGfv/LYLZs=",
-        "owner": "trailofbits",
-        "repo": "sv_circuit",
-        "rev": "0355531f13d5d3c7de8374338b02236b68d05b3f",
-        "type": "github"
-      },
-      "original": {
-        "owner": "trailofbits",
-        "repo": "sv_circuit",
         "type": "github"
       }
     },

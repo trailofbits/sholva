@@ -1,0 +1,33 @@
+[package]
+name = "sv_circuit"
+version = "0.1.1"
+authors = ["Trail of Bits <sieve@trailofbits.com>"]
+edition = "2018"
+description = "Converts circuits in the BLIF circuit format to composite boolean/arithmetic circuits"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = "1.0.71"
+bincode = "1.3.2"
+clap = { version = "4.4.3", features = ["derive"]}
+counter = "0.5.2"
+fnv = "1.0.7"
+indicatif = "0.17.4"
+itertools = "0.12.0"
+log = "0.4"
+maplit = "1.0.2"
+mcircuit = { git = "https://github.com/trailofbits/mcircuit", branch = "main" }
+num-traits = "0.2"
+petgraph = "0.6.3"
+rand = "0.7.3"
+serde = "1.0.163"
+thiserror = "1.0.40"
+
+[lib]
+name = "sv_circuit"
+crate-type = ["lib", "cdylib"]
+
+[[bin]]
+name = "sv-compositor"
+path = "src/main.rs"

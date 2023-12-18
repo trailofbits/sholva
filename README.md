@@ -83,6 +83,27 @@ $ SHOLVA_MODULES="alu syscall" make _test-verilog
 $ make _test-pipeline
 ```
 
+### sv_circuit
+
+```sh
+$ nix build .#sv_circuit
+```
+This builds the `sv-compositor` binary, which takes a BLIF file (defining a single step of Tiny86)
+and trace artifacts as input and yields proof artifacts 
+(currently, a SIEVE IR0 circuit, public input, and private input) as output.
+
+Enter a shell with development dependencies:
+
+```sh
+$ cd sv_circuit
+$ nix develop .#sv_circuit
+```
+
+Manual testing (from the development environment):
+```sh
+$ cargo test
+```
+
 ## Exploit Modeling
 
 - [log4shell](https://www.cve.org/CVERecord?id=CVE-2021-44228)
