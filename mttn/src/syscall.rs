@@ -106,7 +106,28 @@ impl<'a> SyscallDFA for Tracee<'a> {
                 Ok(vec![Step {
                     hints: vec![MemoryHint {
                         syscall_state: SyscallState::Done,
-                       ..Default::default()
+                        ..Default::default()
+                    }],
+                    ..Default::default()
+                }])
+            }
+            LinuxSyscall::Mmap => {
+                log::info!("mmap: length {} @{:#04x}", ecx, ebx);
+                Ok(vec![Step {
+                    hints: vec![MemoryHint {
+                        syscall_state: SyscallState::Done,
+                        ..Default::default()
+                    }],
+                    ..Default::default()
+                }])
+                todo!()
+            }
+            LinuxSyscall::Munmap => {
+                log::info!("munmap: length {} @{:#04x}", ecx, ebx);
+                Ok(vec![Step {
+                    hints: vec![MemoryHint {
+                        syscall_state: SyscallState::Done,
+                        ..Default::default()
                     }],
                     ..Default::default()
                 }])
@@ -123,21 +144,19 @@ impl<'a> SyscallDFA for Tracee<'a> {
                 let mut state = SyscallState::Write;
 
                 while ecx > 0 {
-                    dfa.push(
-                        Step {
-                            instr: Default::default(),
-                            regs: RegisterFile {
-                                s_ebx: ebx,
-                                s_ecx: ecx,
-                                s_edx: edx,
-                                ..Default::default()
-                            },
-                            hints: vec![MemoryHint {
-                                syscall_state: state,
-                                ..Default::default()
-                            }],
+                    dfa.push(Step {
+                        instr: Default::default(),
+                        regs: RegisterFile {
+                            s_ebx: ebx,
+                            s_ecx: ecx,
+                            s_edx: edx,
+                            ..Default::default()
                         },
-                    );
+                        hints: vec![MemoryHint {
+                            syscall_state: state,
+                            ..Default::default()
+                        }],
+                    });
 
                     if ecx <= Self::DATA_TRANSITION_BYTES {
                         state = SyscallState::Done;

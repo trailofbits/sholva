@@ -75,6 +75,8 @@ pub enum LinuxSyscall {
     Open = 5,
     Close = 6,
     Brk = 45,
+    Mmap = 90,
+    Munmap = 91,
     GetRandom = 355,
 }
 
@@ -89,6 +91,8 @@ impl TryFrom<u32> for LinuxSyscall {
             5 => Self::Open,
             6 => Self::Close,
             45 => Self::Brk,
+            90 => Self::Mmap,
+            91 => Self::Munmap,
             355 => Self::GetRandom,
             _ => return Err(anyhow!("unhandled Linux syscall: {}", syscall)),
         })
@@ -601,7 +605,10 @@ impl<'a> Tracee<'a> {
                 DecreeSyscall::Receive => LinuxSyscall::Read,
                 DecreeSyscall::Transmit => LinuxSyscall::Write,
                 DecreeSyscall::Terminate => LinuxSyscall::Exit,
+                // NOTE(jl): below translations do not cover semantic differences, e.g. argument order?
                 DecreeSyscall::Random => LinuxSyscall::GetRandom,
+                DecreeSyscall::Allocate => LinuxSyscall::Mmap,
+                DecreeSyscall::Deallocate => LinuxSyscall::Munmap,
                 _ => todo!(),
             };
             log::debug!("decomposed {:?} into {:?}", decree_syscall, linux_syscall);
