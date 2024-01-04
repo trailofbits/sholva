@@ -3,11 +3,11 @@
 
 module Syscall where
 
+import Syscall.Brk (syscallBrkDFA)
+import Syscall.GetRandom (syscallGetRandomDFA)
 import Syscall.Internal
 import Syscall.Read (syscallReadDFA)
 import Syscall.Write (syscallWriteDFA)
-import Syscall.GetRandom (syscallGetRandomDFA)
-import Syscall.Brk (syscallBrkDFA)
 
 import Clash.Annotations.TH
 import Clash.Prelude
@@ -25,6 +25,8 @@ syscall' dfaState =
         SYSCALL_OPEN -> todo
         SYSCALL_CLOSE -> todo
         SYSCALL_BRK -> syscallBrkDFA dfaState
+        SYSCALL_MMAP -> syscallMmapDFA dfaState
+        SYSCALL_MUNMAP -> syscallMunmapDFA dfaState
         SYSCALL_GETRANDOM -> syscallGetRandomDFA dfaState
 
 top :: ( "i_eax" ::: Signal System SyscallReg
