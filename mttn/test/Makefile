@@ -6,11 +6,12 @@ ASM_SOURCES := $(wildcard *.s)
 ASM_OBJS := $(ASM_SOURCES:.s=.o)
 ASM_ELFS := $(ASM_OBJS:.o=.elf)
 
-C_TESTS := \
-	condition \
-	jumptable \
-	smallcall \
-C_SOURCES := $(C_TESTS:=.c)
+C_SOURCES := \
+	condition.nostdlib.c \
+	jumptable.nostdlib.c \
+	smallcall.nostdlib.c \
+	empty.c \
+	getrandom.c
 C_ELFS := $(C_SOURCES:.c=.elf)
 CFLAGS += -fno-pic -g -m32 -mtune=i386 -std=c99 \
 		-mpreferred-stack-boundary=2 -fno-stack-protector -z execstack

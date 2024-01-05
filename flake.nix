@@ -54,9 +54,9 @@
               src = ./mttn;
               cargoLock = { lockFile = ./mttn/Cargo.lock; };
 
-              nativeCheckInputs = [ nasm ];
+              nativeCheckInputs = [ nasm pkgsi686Linux.gcc gdb ];
               preCheck = ''
-                make -C test elfs
+                CC=${pkgsi686Linux.gcc}/bin/gcc make -C test elfs
               '';
               doCheck = true;
 

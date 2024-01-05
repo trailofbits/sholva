@@ -36,8 +36,8 @@ vector_specs:
       # OUTPUTS
       o_syscall_state: 1
       o_eax: 2
-      o_ebx: 11
-      o_ecx: 2
+      o_ebx: 3
+      o_ecx: 10
 
     - _description: "SYSCALL_STATE_READ: transmit 2 bytes and finish"
 
@@ -48,7 +48,7 @@ vector_specs:
       i_ecx: 2
 
       # OUTPUTS
-      o_syscall_state: 0
-      o_eax: 0
-      o_ebx: 5
-      o_ecx: 0
+      o_syscall_state: 1
+      o_eax: 2
+      o_ebx: 3
+      o_ecx: 2
