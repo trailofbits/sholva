@@ -10,6 +10,8 @@ C_SOURCES := \
 	condition.nostdlib.c \
 	jumptable.nostdlib.c \
 	smallcall.nostdlib.c \
+	brk.c \
+	brk_loop.c \
 	empty.c \
 	getrandom.c
 C_ELFS := $(C_SOURCES:.c=.elf)
