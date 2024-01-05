@@ -119,7 +119,7 @@ impl<'a> SyscallDFA for Tracee<'a> {
                         ..Default::default()
                     }],
                     ..Default::default()
-                }]);
+                }])
             }
             LinuxSyscall::Munmap => {
                 log::info!("munmap: length {} @{:#04x}", ecx, ebx);
