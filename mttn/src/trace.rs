@@ -1031,8 +1031,8 @@ mod tests {
         // stosd, FIXME(jl): indeterminate.
         stosw,
         syscall_exit,
-        syscall_write,
         syscall_read0,
+        syscall_write0,
         xchg_r_r,
     }
 }

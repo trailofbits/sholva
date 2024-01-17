@@ -155,6 +155,7 @@ impl<'a> SyscallDFA for Tracee<'a> {
         // NOTE(jl): assuming a fully Linux-syscall centric approach.
         match syscall {
             LinuxSyscall::Exit => Ok(vec![]),
+            // ssize_t write(int fd, const void buf[.count], size_t count);
             LinuxSyscall::Write => {
                 log::info!(
                     "write: buffer @{:#04x} of length {} to FD {}",
