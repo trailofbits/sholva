@@ -13,11 +13,13 @@
 # NOTE(jl): because this script directly calls `make`, it needs to be run from
 # sholva's test/ directory.
 
+set -e
+
 SIZE=$1
 
-CFLAGS="-DBUF_LEN=${SIZE}" make buffer_overflow.trace.txt
-mv buffer_overflow.trace.txt "buffer_overflow${SIZE}.trace.txt"
-make "buffer_overflow${SIZE}.circuit"
+CFLAGS="-DBUF_LEN=${SIZE}" CC=gcc nix shell .#mttn nixpkgs/nixos-23.05#{gnumake,pkgsi686Linux.gcc} -c make -C ../mttn/test buffer_overflow.trace.txt
+mv ../mttn/test/buffer_overflow.trace.txt "buffer_overflow${SIZE}.trace.txt"
+nix shell .#sv_circuit nixpkgs#gnumake -c make "buffer_overflow${SIZE}.circuit"
 
 mkdir -p "$2"
 mkdir -p "$2"/instance

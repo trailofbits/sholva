@@ -24,6 +24,8 @@ mov eax, 1
 int 0x80
 """
 
+set -eu
+
 SIZE=$1
 TARGET=nop${SIZE}
 
@@ -35,7 +37,7 @@ TARGET=nop${SIZE}
   echo "${POSTLUDE}";
 } > "$TARGET".s
 
-make "$TARGET".circuit
+nix shell .#{mttn,sv_circuit} nixpkgs#{nasm,gnumake,pkgsi686Linux.gcc} -c make "$TARGET".circuit
 
 mkdir -p "$2"
 mkdir -p "$2/instance"
