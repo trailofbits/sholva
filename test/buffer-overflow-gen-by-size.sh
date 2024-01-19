@@ -17,7 +17,7 @@ set -e
 
 SIZE=$1
 
-CFLAGS="-DBUF_LEN=${SIZE}" CC=gcc nix shell .#mttn nixpkgs/nixos-23.05#{gnumake,pkgsi686Linux.gcc} -c make -C ../mttn/test buffer_overflow.trace.txt
+CFLAGS="-DBUF_LEN=${SIZE}" CC=gcc RUST_LOG=debug nix shell .#mttn nixpkgs/nixos-23.05#{gnumake,pkgsi686Linux.gcc} -c make -C ../mttn/test buffer_overflow.trace.txt
 mv ../mttn/test/buffer_overflow.trace.txt "buffer_overflow${SIZE}.trace.txt"
 nix shell .#sv_circuit nixpkgs#gnumake -c make "buffer_overflow${SIZE}.circuit"
 
