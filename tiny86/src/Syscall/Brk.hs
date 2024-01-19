@@ -1,5 +1,5 @@
-module Syscall.Receive
-    ( syscallReceiveDFA
+module Syscall.Brk
+    ( syscallBrkDFA
     ) where
 
 import Clash.Prelude
@@ -9,15 +9,13 @@ import Syscall.Internal
 
 -- FIXME(jl): compiler unconvinced these guards are total.
 -- annoyingly this hides useful errors if new states are added.
-syscallReceiveDFA :: SyscallDFA
-syscallReceiveDFA s@(MkDFAState { eax = eax'
+syscallBrkDFA :: SyscallDFA
+syscallBrkDFA s@(MkDFAState { eax = eax'
                                 , ebx = ebx'
                                 , ecx = ecx'
                                 , state = state'
                                 })
-    -- no syscalls, just vibe.
     | state' == SYSCALL_STATE_DONE = s
-    -- syscall, but not us.
     | state' == SYSCALL_STATE_READ = s
     -- less than a full step's worth of data left to receive and write into RAM.
     -- finished.
