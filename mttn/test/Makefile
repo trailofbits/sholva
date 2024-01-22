@@ -43,7 +43,9 @@ MTTN_FLAGS += --tiny86_only -m32 --syscall_model=linux32
 
 TRACE_JSONLS := $(ALL_ELFS:.elf=.trace.jsonl)
 TRACE_TEXTS := $(ALL_ELFS:.elf=.trace.txt)
-traces: $(TRACE_TEXTS)
+traces: mttn_fail $(TRACE_TEXTS)
+
+mttn_fail: ; $(MTTN) -A 0
 
 .DELETE_ON_ERROR:
 %.trace.jsonl: %.gdb %.elf
