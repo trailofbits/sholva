@@ -45,7 +45,7 @@ TRACE_JSONLS := $(ALL_ELFS:.elf=.trace.jsonl)
 TRACE_TEXTS := $(ALL_ELFS:.elf=.trace.txt)
 traces: mttn_fail $(TRACE_TEXTS)
 
-mttn_fail: ; $(MTTN) -A 0
+mttn_fail: ; echo "$$$$" | xargs -I {} $(MTTN) $(MTTN_FLAGS) -F jsonl -a {}
 
 .DELETE_ON_ERROR:
 %.trace.jsonl: %.gdb %.elf
