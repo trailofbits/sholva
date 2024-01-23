@@ -559,6 +559,16 @@ impl<'a> Tracee<'a> {
             // 2. Otherwise, generate the hints as normal (do phase 1, single-step,
             //    then phase 2).
             ptrace::step(self.tracee_pid, None)?;
+            match nix::sys::wait::waitpid(self.tracee_pid, None)? {
+                nix::sys::wait::WaitStatus::Stopped(pid, sig)
+                | nix::sys::wait::WaitStatus::Signaled(pid, sig, _) => {
+                    if sig == nix::sys::signal::SIGSEGV {
+                        log::error!("Tracee PID={} has SEGFAULT'd", pid);
+                        return Err(anyhow!("Tracee SEGFAULT"));
+                    }
+                }
+                _ => {}
+            }
 
             if instr.is_string_instruction() || instr.is_stack_instruction() {
                 // NOTE(ww): By default, recent-ish x86 CPUs execute MOVS and STOS
