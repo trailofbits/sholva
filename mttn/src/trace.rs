@@ -403,10 +403,7 @@ impl<'a> Tracee<'a> {
             tracer: tracer,
             info_factory: InstructionInfoFactory::new(),
             register_file: Default::default(),
-            tracing_active: match tracer.trace_start_addr {
-                None => true,
-                Some(_) => false,
-            },
+            tracing_active: tracer.trace_start_addr.is_none(),
             trace_start_addr: tracer.trace_start_addr,
         }
     }
@@ -425,14 +422,23 @@ impl<'a> Tracee<'a> {
             // we need to do a full trace, modeling memory
             while !self.terminated {
                 self.step()?;
-                count += 1;
+                if self.tracing_active {
+                    count += 1;
+                }
             }
         } else {
             // we just need to count the number of ptrace steps until the process terminates
             while !self.terminated {
+                if !self.tracing_active && self.register_file.rip == self.trace_start_addr.unwrap()
+                {
+                    self.tracing_active = true;
+                }
+
                 ptrace::step(self.tracee_pid, None)?;
 
-                count += 1;
+                if self.tracing_active {
+                    count += 1;
+                }
 
                 self.wait()?
             }
@@ -479,10 +485,8 @@ impl<'a> Tracee<'a> {
     fn step(&mut self) -> Result<Vec<Step>> {
         self.register_file = self.tracee_regs()?;
 
-        if !self.tracing_active {
-            if self.register_file.rip == self.trace_start_addr.unwrap() {
-                self.tracing_active = true;
-            }
+        if !self.tracing_active && self.register_file.rip == self.trace_start_addr.unwrap() {
+            self.tracing_active = true;
         }
 
         let steps = match self.tracing_active {
