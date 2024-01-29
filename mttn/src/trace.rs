@@ -375,6 +375,8 @@ pub struct Tracee<'a> {
     tracer: &'a Tracer,
     info_factory: InstructionInfoFactory,
     register_file: RegisterFile,
+    tracing_active: bool,
+    trace_start_addr: Option<u64>,
 }
 
 pub struct TraceeIter<'a>(&'a mut Tracee<'a>);
@@ -402,10 +404,16 @@ impl<'a> Tracee<'a> {
             tracer: tracer,
             info_factory: InstructionInfoFactory::new(),
             register_file: Default::default(),
+            tracing_active: match tracer.trace_start_addr {
+                None => true,
+                Some(_) => false
+            },
+            trace_start_addr: tracer.trace_start_addr,
         }
     }
 
     pub fn iter(&'a mut self) -> impl Iterator<Item = Step> + 'a {
+        
         TraceeIter(self).flatten().flatten()
     }
 
@@ -472,61 +480,76 @@ impl<'a> Tracee<'a> {
     /// an `Err` if an internal tracing step fails.
     fn step(&mut self) -> Result<Vec<Step>> {
         self.register_file = self.tracee_regs()?;
-        let (instr, instr_bytes) = self.tracee_instr()?;
 
-        if self.tracer.tiny86_only {
-            self.tiny86_checks(&instr)?;
+        if !self.tracing_active {
+            if self.register_file.rip == self.trace_start_addr.unwrap() {
+                self.tracing_active = true;
+            }
         }
 
-        let mut hints = vec![];
+        let steps = match self.tracing_active {
+            true => {
+                let (instr, instr_bytes) = self.tracee_instr()?;
 
-        let steps = if self.tracer.tiny86_only && instr.mnemonic() == Mnemonic::Int {
-            log::debug!("tiny86: entering syscall");
+                if self.tracer.tiny86_only {
+                    self.tiny86_checks(&instr)?;
+                }
 
-            // We only support INT 80h, since that's the standard syscall
-            // vector on 32-bit Linux.
-            if instr.immediate8() != 0x80 {
-                return Err(anyhow!("invalid interrupt: not syscall"));
+                let mut hints = vec![];
+
+                if self.tracer.tiny86_only && instr.mnemonic() == Mnemonic::Int {
+                    log::debug!("tiny86: entering syscall");
+
+                    // We only support INT 80h, since that's the standard syscall
+                    // vector on 32-bit Linux.
+                    if instr.immediate8() != 0x80 {
+                        return Err(anyhow!("invalid interrupt: not syscall"));
+                    }
+
+                    let syscall = self.register_file.rax;
+                    log::debug!("requested syscall {}", syscall);
+
+                    self.do_syscall(&instr, syscall as u32)
+                } else {
+                    // Hints are generated in two phases: we build a complete list of
+                    // expected hints (including all Read hints) in stage 1...
+                    self.tracee_hints_stage1(&instr, &mut hints)?;
+
+                    // TODO(ww): Check `instr` here and perform one of two cases:
+                    // 1. If `instr` is an instruction that benefits from modeling/emulation
+                    //    (e.g. `MOVS`), then emulate it and generate its memory hints
+                    //    from the emulation.
+                    // 2. Otherwise, generate the hints as normal (do phase 1, single-step,
+                    //    then phase 2).
+                    ptrace::step(self.tracee_pid, None)?;
+
+                    if instr.is_string_instruction() || instr.is_stack_instruction() {
+                        // NOTE(ww): By default, recent-ish x86 CPUs execute MOVS and STOS
+                        // in "fast string operation" mode. This can cause stores to not appear
+                        // when we expect them to, since they can be executed out-of-order.
+                        // The "correct" fix for this is probably to toggle the
+                        // fast-string-enable bit (0b) in the IA32_MISC_ENABLE MSR, but we just sleep
+                        // for a bit to give the CPU a chance to catch up.
+                        // TODO(ww): Longer term, we should just model REP'd instructions outright.
+                        std::thread::sleep(std::time::Duration::from_millis(5));
+                    }
+
+                    // ...then, after we've stepped the program, we fill in the data
+                    // associated with each Write hint in stage 2.
+                    self.tracee_hints_stage2(&mut hints)?;
+
+                    #[allow(clippy::redundant_field_names)]
+                    Ok(vec![Step {
+                        instr: instr_bytes,
+                        regs: self.register_file,
+                        hints: hints,
+                    }])
+                }
             }
-
-            let syscall = self.register_file.rax;
-            log::debug!("requested syscall {}", syscall);
-
-            self.do_syscall(&instr, syscall as u32)
-        } else {
-            // Hints are generated in two phases: we build a complete list of
-            // expected hints (including all Read hints) in stage 1...
-            self.tracee_hints_stage1(&instr, &mut hints)?;
-
-            // TODO(ww): Check `instr` here and perform one of two cases:
-            // 1. If `instr` is an instruction that benefits from modeling/emulation
-            //    (e.g. `MOVS`), then emulate it and generate its memory hints
-            //    from the emulation.
-            // 2. Otherwise, generate the hints as normal (do phase 1, single-step,
-            //    then phase 2).
-            ptrace::step(self.tracee_pid, None)?;
-
-            if instr.is_string_instruction() || instr.is_stack_instruction() {
-                // NOTE(ww): By default, recent-ish x86 CPUs execute MOVS and STOS
-                // in "fast string operation" mode. This can cause stores to not appear
-                // when we expect them to, since they can be executed out-of-order.
-                // The "correct" fix for this is probably to toggle the
-                // fast-string-enable bit (0b) in the IA32_MISC_ENABLE MSR, but we just sleep
-                // for a bit to give the CPU a chance to catch up.
-                // TODO(ww): Longer term, we should just model REP'd instructions outright.
-                std::thread::sleep(std::time::Duration::from_millis(5));
+            false => {
+                ptrace::step(self.tracee_pid, None)?;
+                Ok(Vec::new())
             }
-
-            // ...then, after we've stepped the program, we fill in the data
-            // associated with each Write hint in stage 2.
-            self.tracee_hints_stage2(&mut hints)?;
-
-            #[allow(clippy::redundant_field_names)]
-            Ok(vec![Step {
-                instr: instr_bytes,
-                regs: self.register_file,
-                hints: hints,
-            }])
         };
 
         self.wait()?;
@@ -835,6 +858,7 @@ pub struct Tracer {
     pub debug_on_fault: bool,
     pub disable_aslr: bool,
     pub bitness: u32,
+    pub trace_start_addr: Option<u64>,
     pub target: Target,
 }
 
@@ -875,6 +899,7 @@ impl From<&clap::ArgMatches> for Tracer {
             debug_on_fault: matches.contains_id("debug_on_fault"),
             disable_aslr: matches.contains_id("disable_aslr"),
             bitness: matches.get_one::<String>("mode").unwrap().parse().unwrap(),
+            trace_start_addr: matches.get_one::<u64>("trace_start_addr").copied(),
             target: target,
         }
     }
@@ -936,6 +961,7 @@ mod tests {
             debug_on_fault: false,
             disable_aslr: true,
             bitness: 32,
+            trace_start_addr: None,
             target: target,
         }
     }
