@@ -20,7 +20,7 @@ use serde::Serialize;
 use spawn_ptrace::CommandPtraceSpawn;
 
 use crate::dump;
-use crate::syscall::SyscallDFA;
+use crate::syscall::{DecreeSyscall, LinuxSyscall, SyscallDFA};
 
 const MAX_INSTR_LEN: usize = 15;
 const RFLAGS_RESERVED_MASK: u64 = 2;
@@ -33,65 +33,6 @@ pub trait CommandPersonality {
 impl CommandPersonality for Command {
     fn personality(&mut self, persona: Persona) {
         unsafe { self.pre_exec(move || Ok(personality::set(persona).map(|_| ())?)) };
-    }
-}
-
-#[derive(Copy, Clone, Debug, PartialEq, Eq, Serialize)]
-#[repr(u8)]
-pub enum DecreeSyscall {
-    Terminate = 1,
-    Transmit = 2,
-    Receive = 3,
-    Fdwait = 4,
-    Allocate = 5,
-    Deallocate = 6,
-    Random = 7,
-}
-
-impl TryFrom<u32> for DecreeSyscall {
-    type Error = anyhow::Error;
-
-    fn try_from(syscall: u32) -> Result<Self> {
-        Ok(match syscall {
-            1 => Self::Terminate,
-            2 => Self::Transmit,
-            3 => Self::Receive,
-            4 => Self::Fdwait,
-            5 => Self::Allocate,
-            6 => Self::Deallocate,
-            7 => Self::Random,
-            _ => return Err(anyhow!("unknown DECREE syscall: {}", syscall)),
-        })
-    }
-}
-
-#[derive(Copy, Clone, Debug, PartialEq, Eq, Serialize)]
-#[repr(u32)]
-/// NOTE: https://github.com/torvalds/linux/blob/master/arch/x86/entry/syscalls/syscall_32.tbl
-pub enum LinuxSyscall {
-    Exit = 1,
-    Read = 3,
-    Write = 4,
-    Open = 5,
-    Close = 6,
-    Brk = 45,
-    GetRandom = 355,
-}
-
-impl TryFrom<u32> for LinuxSyscall {
-    type Error = anyhow::Error;
-
-    fn try_from(syscall: u32) -> Result<Self> {
-        Ok(match syscall {
-            1 => Self::Exit,
-            3 => Self::Read,
-            4 => Self::Write,
-            5 => Self::Open,
-            6 => Self::Close,
-            45 => Self::Brk,
-            355 => Self::GetRandom,
-            _ => return Err(anyhow!("unhandled Linux syscall: {}", syscall)),
-        })
     }
 }
 
@@ -597,13 +538,7 @@ impl<'a> Tracee<'a> {
             // Legacy support for tracing a DECREE binary, where syscalls are re-written into
             // native Linux equivalent
             let decree_syscall = DecreeSyscall::try_from(syscall)?;
-            let linux_syscall = match decree_syscall {
-                DecreeSyscall::Receive => LinuxSyscall::Read,
-                DecreeSyscall::Transmit => LinuxSyscall::Write,
-                DecreeSyscall::Terminate => LinuxSyscall::Exit,
-                DecreeSyscall::Random => LinuxSyscall::GetRandom,
-                _ => todo!(),
-            };
+            let linux_syscall = LinuxSyscall::try_from(decree_syscall)?;
             log::debug!("decomposed {:?} into {:?}", decree_syscall, linux_syscall);
 
             linux_syscall
@@ -611,14 +546,6 @@ impl<'a> Tracee<'a> {
             LinuxSyscall::try_from(syscall)?
         };
         log::debug!("selected {:?}", syscall);
-
-        // Generage syscall DFA.
-        let dfa = self.transition(
-            syscall,
-            self.register_file.rbx as u32,
-            self.register_file.rcx as u32,
-            self.register_file.rdx as u32,
-        )?;
 
         // Perform any Tracee side effects resulting from syscall.
         #[allow(clippy::single_match)]
@@ -644,6 +571,14 @@ impl<'a> Tracee<'a> {
             }
             Err(e) => return Err(e.into()),
         };
+
+        // Generage syscall DFA.
+        let dfa = self.transition(
+            syscall,
+            self.register_file.rbx as u32,
+            self.register_file.rcx as u32,
+            self.register_file.rdx as u32,
+        )?;
 
         Ok(dfa)
     }
@@ -706,7 +641,7 @@ impl<'a> Tracee<'a> {
     }
 
     /// Reads a piece of the tracee's memory, starting at `addr`.
-    fn tracee_data(&self, addr: u64, mask: MemoryMask) -> Result<Vec<u8>> {
+    pub fn tracee_data(&self, addr: u64, mask: MemoryMask) -> Result<Vec<u8>> {
         log::debug!("attempting to read tracee @ 0x{:x} ({:?})", addr, mask);
 
         // NOTE(ww): Could probably use ptrace::read() here since we're always <= 64 bits,
@@ -1096,8 +1031,8 @@ mod tests {
         // stosd, FIXME(jl): indeterminate.
         stosw,
         syscall_exit,
-        syscall_read,
-        syscall_write,
+        syscall_read0,
+        syscall_write0,
         xchg_r_r,
     }
 }

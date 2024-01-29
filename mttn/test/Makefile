@@ -38,7 +38,7 @@ elfs: $(ALL_ELFS)
 #
 # TRACING
 #
-MTTN ?= mttn
+MTTN ?= cargo run --
 MTTN_FLAGS += --tiny86_only -m32 --syscall_model=linux32
 
 TRACE_JSONLS := $(ALL_ELFS:.elf=.trace.jsonl)
