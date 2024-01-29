@@ -14,22 +14,13 @@ test: $(TRACES:.trace.txt=.verify)
 %.verify: %.circuit
 	wtk-firealarm $^ $(basename $^).public_input $(basename $^).private_input
 
+%.trace.txt: %.s
+	cp $< ../mttn/test/$<
+	make -C ../mttn/test $@
+	mv ../mttn/test/$@ .
+
 %.circuit %.public_input %.private_input: %.trace.txt tiny86.blif
-	sv-compositor -b tiny86.blif -w $< -o $@
-
-%.ir1: %.trace.txt tiny86.blif
-	sv-compositor -b tiny86.blif -w $< -o $@
-
-#
-# Benchmarks
-#
-.PHONY: nop_benchmark
-nop_benchmark:
-	@./nop-benchmark/gen.sh
-
-.PHONY: buffer_overflow_benchmark
-buffer_overflow_benchmark: buffer_overflow.c
-	@./buffer-overflow-benchmark.sh
+	sv-compositor -b tiny86.blif -w $< -o $(basename $@)
 
 .PHONY: clean
 clean:
