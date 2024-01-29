@@ -1,5 +1,5 @@
 use std::convert::{TryFrom, TryInto};
-use std::io::IoSliceMut;
+use std::io::{self, IoSliceMut, Read, Write};
 use std::os::unix::process::CommandExt;
 use std::process::Command;
 
@@ -9,6 +9,7 @@ use iced_x86::{
     Code, Decoder, DecoderOptions, Instruction, InstructionInfoFactory, InstructionInfoOptions,
     MemorySize, Mnemonic, OpAccess, Register,
 };
+use libc::*;
 use nix::errno::Errno;
 use nix::sys::personality::{self, Persona};
 use nix::sys::ptrace;
@@ -468,6 +469,45 @@ impl<'a> Tracee<'a> {
         Ok(())
     }
 
+    /// Emulate the Tracee side effects of a LinuxSyscall.
+    ///
+    /// Currently the only model of data I/O is passing via stdin/stdout.
+    /// For arbitrary file descriptors, `ptrace` usage needs to be expanded here to include
+    /// side effects on the tracee in full generality.
+    fn syscall_emulate(&mut self, syscall: LinuxSyscall) -> Result<()> {
+        match syscall {
+            LinuxSyscall::Exit => ptrace::kill(self.tracee_pid)?,
+            // TODO(jl): read is currently only modeling data passed via stdin.
+            LinuxSyscall::Read => {
+                let buf: Vec<u8> = io::stdin()
+                    .bytes()
+                    .flatten()
+                    .take(self.register_file.rdx as usize)
+                    .collect();
+                log::debug!("read {} bytes of stdin: {:?}", self.register_file.rdx, buf);
+                if buf.len() != self.register_file.rdx as usize {
+                    log::warn!("stdin has been exhausted of data, further reads will return null!")
+                }
+
+                unsafe {
+                    ptrace::write(
+                        self.tracee_pid,
+                        self.register_file.rcx as *mut c_void,
+                        buf.as_ptr() as *mut c_void,
+                    )?;
+                }
+                log::debug!(
+                    "read buffer written to tracee's memory @{:#04x}",
+                    self.register_file.rcx
+                );
+            }
+            // TODO(jl): for the current stdin/stdout scope, prints to stdout are ignored.
+            LinuxSyscall::Write => (),
+            _ => todo!(),
+        };
+        Ok(())
+    }
+
     /// Step the tracee forwards by one instruction, returning the trace `Step` or
     /// an `Err` if an internal tracing step fails.
     fn step(&mut self) -> Result<Vec<Step>> {
@@ -547,38 +587,37 @@ impl<'a> Tracee<'a> {
         };
         log::debug!("selected {:?}", syscall);
 
-        // Perform any Tracee side effects resulting from syscall.
-        #[allow(clippy::single_match)]
-        match syscall {
-            LinuxSyscall::Exit => ptrace::kill(self.tracee_pid)?,
-            _ => (),
-        };
+        // Emulate syscall effects on tracee.
+        self.syscall_emulate(syscall)?;
 
-        // Jump right over the syscall.
-        let mut user_regs = libc::user_regs_struct::from(&self.register_file);
-        user_regs.rip += instr.len() as u64;
-        log::debug!("jumping {:?} bytes to {:x}", instr.len(), user_regs.rip);
-
-        // We might have killed the program immediately above, in which case
-        // this will fail with ESRCH because the process has disappeared.
-        // This is an expected case, so we swallow the error and expect
-        // the calling context to handle the process exit cleanly.
-        match ptrace::setregs(self.tracee_pid, user_regs) {
-            Ok(_) => ptrace::step(self.tracee_pid, None)
-                .with_context(|| "Fault: resuming program after syscall")?,
-            Err(Errno::ESRCH) => {
-                log::debug!("process disappeared!")
-            }
-            Err(e) => return Err(e.into()),
-        };
-
-        // Generage syscall DFA.
-        let dfa = self.transition(
+        // Generage syscall DFA model.
+        let dfa = self.syscall_model(
             syscall,
             self.register_file.rbx as u32,
             self.register_file.rcx as u32,
             self.register_file.rdx as u32,
         )?;
+
+        // Jump tracee right over the syscall.
+        let mut user_regs = libc::user_regs_struct::from(&self.register_file);
+        user_regs.rip += instr.len() as u64;
+        log::debug!(
+            "jumping {:?} bytes over syscall to {:x}",
+            instr.len(),
+            user_regs.rip
+        );
+
+        match ptrace::setregs(self.tracee_pid, user_regs) {
+            Ok(_) => ptrace::step(self.tracee_pid, None)
+                .with_context(|| "Fault: resuming program after syscall")?,
+            // Exit will fail with ESRCH because the process has disappeared.
+            // This is an expected case, so we swallow the error and expect
+            // the calling context to handle the process exit cleanly.
+            Err(Errno::ESRCH) => {
+                log::debug!("process disappeared!")
+            }
+            Err(e) => return Err(e.into()),
+        };
 
         Ok(dfa)
     }

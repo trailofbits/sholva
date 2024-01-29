@@ -141,11 +141,17 @@ impl<'a> Tracee<'a> {
 pub trait SyscallDFA {
     const POINTER_TRANSITION_BYTES: u32 = 8; // number of pointer bytes offset per syscall transition
     const DATA_TRANSITION_BYTES: u32 = 8; // number of data bytes consumed per syscall transition
-    fn transition(&self, syscall: LinuxSyscall, ebx: u32, ecx: u32, edx: u32) -> Result<Vec<Step>>;
+    fn syscall_model(
+        &self,
+        syscall: LinuxSyscall,
+        ebx: u32,
+        ecx: u32,
+        edx: u32,
+    ) -> Result<Vec<Step>>;
 }
 
 impl<'a> SyscallDFA for Tracee<'a> {
-    fn transition(
+    fn syscall_model(
         &self,
         syscall: LinuxSyscall,
         mut ebx: u32,
