@@ -46,6 +46,7 @@ pub enum LinuxSyscall {
     Write = 4,
     Open = 5,
     Close = 6,
+    Brk = 45,
 }
 
 impl TryFrom<u32> for LinuxSyscall {
@@ -58,6 +59,7 @@ impl TryFrom<u32> for LinuxSyscall {
             4 => Self::Write,
             5 => Self::Open,
             6 => Self::Close,
+            45 => Self::Brk,
             _ => return Err(anyhow!("unhandled Linux syscall: {}", syscall)),
         })
     }
@@ -212,6 +214,16 @@ impl<'a> SyscallDFA for Tracee<'a> {
 
                 Ok(dfa)
             }
+            LinuxSyscall::Brk => {
+                log::info!("brk: @{:#04x}", ebx);
+                Ok(vec![Step {
+                    hints: vec![MemoryHint {
+                        syscall_state: SyscallState::Done,
+                        ..Default::default()
+                    }],
+                    ..Default::default()
+                }])
+            }
                     dfa.push(Step {
                         instr: Default::default(),
                         regs: RegisterFile {
@@ -243,6 +255,16 @@ impl<'a> SyscallDFA for Tracee<'a> {
             }
             LinuxSyscall::Read => {
                 log::info!("read: FD {} of length {} to buffer @{:#04x}", ebx, edx, ecx);
+            LinuxSyscall::Brk => {
+                log::info!("brk: @{:#04x}", ebx);
+                Ok(vec![Step {
+                    hints: vec![MemoryHint {
+                        syscall_state: SyscallState::Done,
+                        ..Default::default()
+                    }],
+                    ..Default::default()
+                }])
+            }
 
                 let mut dfa = vec![];
                 let mut state = SyscallState::Write;

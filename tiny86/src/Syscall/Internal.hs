@@ -40,6 +40,7 @@ data LinuxSyscall
     | SYSCALL_WRITE
     | SYSCALL_OPEN
     | SYSCALL_CLOSE
+    | SYSCALL_BRK
     deriving (Bounded, Show)
 
 type SyscallReg = BitVector 32
@@ -51,12 +52,14 @@ instance Enum LinuxSyscall where
     fromEnum SYSCALL_WRITE = 4
     fromEnum SYSCALL_OPEN = 5
     fromEnum SYSCALL_CLOSE = 6
+    fromEnum SYSCALL_BRK = 45
     toEnum 0 = SYSCALL_NONE
     toEnum 1 = SYSCALL_EXIT
     toEnum 3 = SYSCALL_READ
     toEnum 4 = SYSCALL_WRITE
     toEnum 5 = SYSCALL_OPEN
     toEnum 6 = SYSCALL_CLOSE
+    toEnum 45 = SYSCALL_BRK 
     toEnum _ = undefined
 
 -- NOTE(jl): as a convention, assume sholva's perspective.
