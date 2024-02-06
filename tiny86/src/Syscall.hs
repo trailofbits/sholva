@@ -4,8 +4,9 @@
 module Syscall where
 
 import Syscall.Internal
-import Syscall.Receive (syscallReceiveDFA)
-import Syscall.Transmit (syscallTransmitDFA)
+
+import Syscall.Read (syscallReadDFA)
+import Syscall.Write (syscallWriteDFA)
 
 import Clash.Annotations.TH
 import Clash.Prelude
@@ -13,17 +14,15 @@ import Clash.Prelude
 todo :: a
 todo = undefined
 
-syscall' :: SyscallDFAState -> Syscall -> SyscallDFAState
+syscall' :: SyscallDFAState -> LinuxSyscall -> SyscallDFAState
 syscall' dfaState =
     \case
-        SYSCALL_NONE -> MkDFAState {eax = 0, ebx = 0, ecx = 0, state = SYSCALL_STATE_DONE}
-        SYSCALL_TERMINATE -> todo
-        SYSCALL_TRANSMIT -> syscallTransmitDFA dfaState
-        SYSCALL_RECEIVE -> syscallReceiveDFA dfaState
-        SYSCALL_FDWAIT -> todo
-        SYSCALL_ALLOCATE -> todo
-        SYSCALL_DEALLOCATE -> todo
-        SYSCALL_RANDOM -> todo
+        SYSCALL_NONE -> dfaState
+        SYSCALL_EXIT -> todo
+        SYSCALL_READ -> syscallReadDFA dfaState
+        SYSCALL_WRITE -> syscallWriteDFA dfaState
+        SYSCALL_OPEN -> todo
+        SYSCALL_CLOSE -> todo
 
 top :: ( "i_eax" ::: Signal System SyscallReg
        , "i_ebx" ::: Signal System SyscallReg
@@ -35,7 +34,7 @@ top :: ( "i_eax" ::: Signal System SyscallReg
        , "o_syscall_state" ::: Signal System SyscallStateReg)
 top (i_eax, i_ebx, i_ecx, i_state) = (o_eax, o_ebx, o_ecx, o_state)
   where
-    syscall :: Signal System Syscall
+    syscall :: Signal System LinuxSyscall
     -- coerce input into a Syscall.
     syscall = toEnum . fromEnum <$> i_eax
     syscallState :: Signal System SyscallState
