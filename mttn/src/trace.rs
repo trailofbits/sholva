@@ -20,7 +20,7 @@ use serde::Serialize;
 use spawn_ptrace::CommandPtraceSpawn;
 
 use crate::dump;
-use crate::syscall::SyscallDFA;
+use crate::syscall::{DecreeSyscall, LinuxSyscall, SyscallDFA};
 
 const MAX_INSTR_LEN: usize = 15;
 const RFLAGS_RESERVED_MASK: u64 = 2;
@@ -33,60 +33,6 @@ pub trait CommandPersonality {
 impl CommandPersonality for Command {
     fn personality(&mut self, persona: Persona) {
         unsafe { self.pre_exec(move || Ok(personality::set(persona).map(|_| ())?)) };
-    }
-}
-
-#[derive(Copy, Clone, Debug, PartialEq, Eq, Serialize)]
-#[repr(u8)]
-pub enum DecreeSyscall {
-    Terminate = 1,
-    Transmit = 2,
-    Receive = 3,
-    Fdwait = 4,
-    Allocate = 5,
-    Deallocate = 6,
-    Random = 7,
-}
-
-impl TryFrom<u32> for DecreeSyscall {
-    type Error = anyhow::Error;
-
-    fn try_from(syscall: u32) -> Result<Self> {
-        Ok(match syscall {
-            1 => Self::Terminate,
-            2 => Self::Transmit,
-            3 => Self::Receive,
-            4 => Self::Fdwait,
-            5 => Self::Allocate,
-            6 => Self::Deallocate,
-            7 => Self::Random,
-            _ => return Err(anyhow!("unknown DECREE syscall: {}", syscall)),
-        })
-    }
-}
-
-#[derive(Copy, Clone, Debug, PartialEq, Eq, Serialize)]
-#[repr(u8)]
-pub enum LinuxSyscall {
-    Read = 0,
-    Write = 1,
-    Open = 2,
-    Close = 3,
-    Exit = 60,
-}
-
-impl TryFrom<u32> for LinuxSyscall {
-    type Error = anyhow::Error;
-
-    fn try_from(syscall: u32) -> Result<Self> {
-        Ok(match syscall {
-            0 => Self::Read,
-            1 => Self::Write,
-            2 => Self::Open,
-            3 => Self::Close,
-            60 => Self::Exit,
-            _ => return Err(anyhow!("unhandled Linux syscall: {}", syscall)),
-        })
     }
 }
 

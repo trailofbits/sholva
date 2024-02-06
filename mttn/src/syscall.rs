@@ -3,8 +3,88 @@
 //! These are only used in "Tiny86" tracing mode.
 
 use crate::trace::Step;
-use crate::trace::{LinuxSyscall, MemoryHint, RegisterFile, SyscallState, Tracee};
+use crate::trace::{MemoryHint, MemoryMask, MemoryOp, RegisterFile, SyscallState, Tracee};
 use anyhow::{anyhow, Result};
+use serde::Serialize;
+
+#[derive(Copy, Clone, Debug, PartialEq, Eq, Serialize)]
+#[repr(u8)]
+pub enum DecreeSyscall {
+    Terminate = 1,
+    Transmit = 2,
+    Receive = 3,
+    Fdwait = 4,
+    Allocate = 5,
+    Deallocate = 6,
+    Random = 7,
+}
+
+impl TryFrom<u32> for DecreeSyscall {
+    type Error = anyhow::Error;
+
+    fn try_from(syscall: u32) -> Result<Self> {
+        Ok(match syscall {
+            1 => Self::Terminate,
+            2 => Self::Transmit,
+            3 => Self::Receive,
+            4 => Self::Fdwait,
+            5 => Self::Allocate,
+            6 => Self::Deallocate,
+            7 => Self::Random,
+            _ => return Err(anyhow!("unknown DECREE syscall: {}", syscall)),
+        })
+    }
+}
+
+#[derive(Copy, Clone, Debug, PartialEq, Eq, Serialize)]
+#[repr(u32)]
+/// NOTE: https://github.com/torvalds/linux/blob/master/arch/x86/entry/syscalls/syscall_32.tbl
+pub enum LinuxSyscall {
+    Exit = 1,
+    Read = 3,
+    Write = 4,
+    Open = 5,
+    Close = 6,
+}
+
+impl TryFrom<u32> for LinuxSyscall {
+    type Error = anyhow::Error;
+
+    fn try_from(syscall: u32) -> Result<Self> {
+        Ok(match syscall {
+            1 => Self::Exit,
+            3 => Self::Read,
+            4 => Self::Write,
+            5 => Self::Open,
+            6 => Self::Close,
+            _ => return Err(anyhow!("unhandled Linux syscall: {}", syscall)),
+        })
+    }
+}
+
+impl TryFrom<DecreeSyscall> for LinuxSyscall {
+    type Error = anyhow::Error;
+
+    fn try_from(decree: DecreeSyscall) -> Result<Self> {
+        Ok(match decree {
+            DecreeSyscall::Receive => LinuxSyscall::Read,
+            DecreeSyscall::Transmit => LinuxSyscall::Write,
+            DecreeSyscall::Terminate => LinuxSyscall::Exit,
+            _ => todo!(),
+        })
+    }
+}
+
+impl TryFrom<MemoryOp> for SyscallState {
+    type Error = anyhow::Error;
+
+    fn try_from(op: MemoryOp) -> Result<SyscallState> {
+        Ok(match op {
+            MemoryOp::Read => SyscallState::Read,
+            MemoryOp::Write => SyscallState::Write,
+        })
+    }
+}
 
 pub trait SyscallDFA {
     const POINTER_TRANSITION_BYTES: u32 = 8; // number of pointer bytes offset per syscall transition
