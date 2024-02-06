@@ -6,12 +6,13 @@ _start:
   nop
   nop
   nop
-  jmp done
+  jmp     done
   nop
   nop
   nop
   nop
 done:
   ; exit
-  mov eax, 1
-  int 0x80
+  mov     eax, 1
+  xor     ebx, ebx
+  int     0x80

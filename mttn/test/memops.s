@@ -16,5 +16,8 @@ _start:
   mov     ebx, eax
   add     esp, 16
   pop     ebp
+
+  ; exit
   mov     eax, 1
+  xor     ebx, ebx
   int     0x80
