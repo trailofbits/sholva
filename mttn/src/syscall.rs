@@ -44,8 +44,6 @@ pub enum LinuxSyscall {
     Exit = 1,
     Read = 3,
     Write = 4,
-    Open = 5,
-    Close = 6,
     Brk = 45,
     Mmap = 90,
     Munmap = 91,
@@ -60,9 +58,9 @@ impl TryFrom<u32> for LinuxSyscall {
             1 => Self::Exit,
             3 => Self::Read,
             4 => Self::Write,
-            5 => Self::Open,
-            6 => Self::Close,
             45 => Self::Brk,
+            90 => Self::Mmap,
+            91 => Self::Munmap,
             355 => Self::GetRandom,
             _ => return Err(anyhow!("unhandled Linux syscall: {}", syscall)),
         })
@@ -73,13 +71,15 @@ impl TryFrom<DecreeSyscall> for LinuxSyscall {
     type Error = anyhow::Error;
 
     fn try_from(decree: DecreeSyscall) -> Result<Self> {
-        Ok(match decree {
-            DecreeSyscall::Receive => LinuxSyscall::Read,
-            DecreeSyscall::Transmit => LinuxSyscall::Write,
-            DecreeSyscall::Terminate => LinuxSyscall::Exit,
-            DecreeSyscall::Random => LinuxSyscall::GetRandom,
-            _ => todo!(),
-        })
+        match decree {
+            DecreeSyscall::Terminate => Ok(LinuxSyscall::Exit),
+            DecreeSyscall::Transmit => Ok(LinuxSyscall::Write),
+            DecreeSyscall::Receive => Ok(LinuxSyscall::Read),
+            DecreeSyscall::Fdwait => Err(anyhow!("cannot decompose Decree syscall Fdwait!")),
+            DecreeSyscall::Allocate => Ok(LinuxSyscall::Mmap),
+            DecreeSyscall::Deallocate => Ok(LinuxSyscall::Munmap),
+            DecreeSyscall::Random => Ok(LinuxSyscall::GetRandom),
+        }
     }
 }
 
@@ -146,6 +146,7 @@ pub trait SyscallDFA {
     fn syscall_model(
         &self,
         syscall: LinuxSyscall,
+        rax_return: u32,
         ebx: u32,
         ecx: u32,
         edx: u32,
@@ -156,6 +157,7 @@ impl<'a> SyscallDFA for Tracee<'a> {
     fn syscall_model(
         &self,
         syscall: LinuxSyscall,
+        rax_return: u32,
         mut ebx: u32,
         mut ecx: u32,
         mut edx: u32,
@@ -163,6 +165,32 @@ impl<'a> SyscallDFA for Tracee<'a> {
         // NOTE(jl): assuming a fully Linux-syscall centric approach.
         match syscall {
             LinuxSyscall::Exit => Ok(vec![]),
+            // ssize_t read(int fd, void buf[.count], size_t count);
+            LinuxSyscall::Read => {
+                log::info!("read: FD {} of length {} to buffer @{:#04x}", ebx, edx, ecx);
+
+                let mut dfa = vec![];
+                let memory_hints = self.hint_data(ecx, edx, MemoryOp::Write)?;
+                for memory_hint_chunk in &memory_hints.iter().cloned().chunks(2) {
+                    let regs = RegisterFile {
+                        s_ebx: ebx,
+                        s_ecx: ecx,
+                        s_edx: edx,
+                        ..Default::default()
+                    };
+
+                    dfa.push(Step {
+                        regs,
+                        hints: memory_hint_chunk.collect(),
+                        ..Default::default()
+                    });
+
+                    ecx = ecx.wrapping_add(Self::POINTER_TRANSITION_BYTES);
+                    edx = edx.wrapping_sub(Self::DATA_TRANSITION_BYTES);
+                }
+
+                Ok(dfa)
+            }
             // ssize_t write(int fd, const void buf[.count], size_t count);
             LinuxSyscall::Write => {
                 log::info!(
@@ -194,11 +222,62 @@ impl<'a> SyscallDFA for Tracee<'a> {
 
                 Ok(dfa)
             }
-            LinuxSyscall::Read => {
-                log::info!("read: FD {} of length {} to buffer @{:#04x}", ebx, edx, ecx);
+            // int brk(void *addr);
+            LinuxSyscall::Brk => {
+                log::info!("brk: @{:#04x}", ebx);
+                Ok(vec![Step {
+                    regs: RegisterFile {
+                        rax: rax_return as u64,
+                        ..Default::default()
+                    },
+                    hints: vec![MemoryHint {
+                        syscall_state: SyscallState::Done,
+                        ..Default::default()
+                    }],
+                    ..Default::default()
+                }])
+            }
+            // void *mmap(void addr[.length], size_t length, int prot, int flags, int fd, off_t offset);
+            LinuxSyscall::Mmap => {
+                log::info!("mmap: length {} @{:#04x}", ecx, ebx);
+                Ok(vec![Step {
+                    regs: RegisterFile {
+                        rax: rax_return as u64,
+                        ..Default::default()
+                    },
+                    hints: vec![MemoryHint {
+                        syscall_state: SyscallState::Done,
+                        ..Default::default()
+                    }],
+                    ..Default::default()
+                }])
+            }
+            // int munmap(void addr[.length], size_t length);
+            LinuxSyscall::Munmap => {
+                log::info!("munmap: length {} @{:#04x}", ecx, ebx);
+                Ok(vec![Step {
+                    regs: RegisterFile {
+                        rax: rax_return as u64,
+                        ..Default::default()
+                    },
+                    hints: vec![MemoryHint {
+                        syscall_state: SyscallState::Done,
+                        ..Default::default()
+                    }],
+                    ..Default::default()
+                }])
+            }
+            // ssize_t getrandom(void buf[.buflen], size_t buflen, unsigned int flags);
+            LinuxSyscall::GetRandom => {
+                log::info!(
+                    "getrandom: buffer @{:#04x} of length {} with flags {}",
+                    ebx,
+                    ecx,
+                    edx
+                );
 
                 let mut dfa = vec![];
-                let memory_hints = self.hint_data(ecx, edx, MemoryOp::Write)?;
+                let memory_hints = self.hint_data(ebx, ecx, MemoryOp::Write)?;
                 for memory_hint_chunk in &memory_hints.iter().cloned().chunks(2) {
                     let regs = RegisterFile {
                         s_ebx: ebx,
@@ -213,111 +292,12 @@ impl<'a> SyscallDFA for Tracee<'a> {
                         ..Default::default()
                     });
 
-                    ecx = ecx.wrapping_add(Self::POINTER_TRANSITION_BYTES);
-                    edx = edx.wrapping_sub(Self::DATA_TRANSITION_BYTES);
+                    ebx = ecx.wrapping_add(Self::POINTER_TRANSITION_BYTES);
+                    ecx = edx.wrapping_sub(Self::DATA_TRANSITION_BYTES);
                 }
 
                 Ok(dfa)
             }
-            LinuxSyscall::Brk => {
-                log::info!("brk: @{:#04x}", ebx);
-                Ok(vec![Step {
-                    hints: vec![MemoryHint {
-                        syscall_state: SyscallState::Done,
-                        ..Default::default()
-                    }],
-                    ..Default::default()
-                }])
-            }
-            LinuxSyscall::GetRandom => {
-                log::info!(
-                    "getrandom: buffer @{:#04x} of length {} with flags {}",
-                    ebx,
-                    ecx,
-                    edx
-                );
-
-                let mut dfa = vec![];
-                let mut state = SyscallState::Write;
-
-                while ecx > 0 {
-                    dfa.push(Step {
-                        instr: Default::default(),
-                        regs: RegisterFile {
-                            s_ebx: ebx,
-                            s_ecx: ecx,
-                            s_edx: edx,
-                            ..Default::default()
-                        },
-                        hints: vec![MemoryHint {
-                            syscall_state: state,
-                            ..Default::default()
-                        }],
-                    });
-
-                    if edx <= Self::DATA_TRANSITION_BYTES {
-                        // last transmission, finish.
-                        state = SyscallState::Done;
-                        ecx += edx; // increment pointer by the remaining size
-                        edx -= edx; // consume the remaining bytes
-                        log::debug!("write: DONE")
-                    } else {
-                        ecx += Self::POINTER_TRANSITION_BYTES;
-                        edx -= Self::DATA_TRANSITION_BYTES;
-                        log::debug!("write: @{:#04x} remaining {}", ecx, edx)
-                    }
-                }
-
-                Ok(dfa)
-            }
-            LinuxSyscall::Read => {
-                log::info!("read: FD {} of length {} to buffer @{:#04x}", ebx, edx, ecx);
-            LinuxSyscall::Brk => {
-                log::info!("brk: @{:#04x}", ebx);
-                Ok(vec![Step {
-                    hints: vec![MemoryHint {
-                        syscall_state: SyscallState::Done,
-                        ..Default::default()
-                    }],
-                    ..Default::default()
-                }])
-            }
-
-                let mut dfa = vec![];
-                let mut state = SyscallState::Write;
-
-                while edx > 0 {
-                    dfa.push(
-                        // Last receive, finished.
-                        Step {
-                            instr: Default::default(),
-                            regs: RegisterFile {
-                                s_ebx: ebx,
-                                s_ecx: ecx,
-                                s_edx: edx,
-                                ..Default::default()
-                            },
-                            hints: vec![MemoryHint {
-                                syscall_state: state,
-                                ..Default::default()
-                            }],
-                        },
-                    );
-
-                    if edx <= Self::DATA_TRANSITION_BYTES {
-                        // last transmission, finish.
-                        state = SyscallState::Done;
-                        ecx += edx; // increment pointer by the remaining size
-                        edx -= edx; // consume the remaining bytes
-                    } else {
-                        ecx += Self::POINTER_TRANSITION_BYTES;
-                        edx -= Self::DATA_TRANSITION_BYTES;
-                    }
-                }
-
-                Ok(dfa)
-            }
-            _ => Err(anyhow!("unhandled DFA transition {:?}", self)),
         }
     }
 }

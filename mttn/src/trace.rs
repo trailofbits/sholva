@@ -551,6 +551,8 @@ impl<'a> Tracee<'a> {
         let rcx = self.register_file.rcx as u32;
         let rdx = self.register_file.rdx as u32;
         ptrace::step(self.tracee_pid, None).with_context(|| "Fault: failure executing syscall")?;
+        // syscall return value in %rax
+        let rax_return = self.register_file.rax as u32;
 
         // HACK(jl): for syscalls that consume data from stdin, immediately reading into process
         // memory while generating syscall model DFA causes a race condition where the read
@@ -558,7 +560,7 @@ impl<'a> Tracee<'a> {
         std::thread::sleep(std::time::Duration::from_millis(5));
 
         // Generage syscall DFA model.
-        self.syscall_model(syscall, rbx, rcx, rdx)
+        self.syscall_model(syscall, rax_return, rbx, rcx, rdx)
     }
 
     /// Loads the our register file from the tracee's user register state.
@@ -1008,9 +1010,9 @@ mod tests {
         // stosb, FIXME(jl): indeterminate.
         // stosd, FIXME(jl): indeterminate.
         stosw,
-        syscall_transmit,
-        syscall_terminate,
-        syscall_receive,
+        syscall_exit,
+        syscall_read0,
+        syscall_write0,
         xchg_r_r,
     }
 }

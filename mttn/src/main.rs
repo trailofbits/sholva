@@ -1,4 +1,4 @@
-use std::io::{stderr, stdout, Write};
+use std::io::Write;
 use std::process;
 
 use anyhow::{anyhow, Result};
@@ -68,23 +68,17 @@ fn run() -> Result<()> {
     match matches.get_one::<String>("format").unwrap().as_ref() {
         "jsonl" => traces
             .iter()
-            .try_for_each(|s| jsonl::write(&out, &s).map_err(|e| anyhow!("{:?}", e)))?,
-        "tiny86" => traces.iter().try_for_each(|s| s.tiny86_write(&mut out))?,
-        "tiny86-text" => traces
-            .iter()
-            .try_for_each(|s| s.bitstring().and_then(|bs| Ok(writeln!(&out, "{bs}")?)))?,
-        "inst-count" => match traces.count_instructions() {
-            Ok(count) => {
-                write!(&out, "{count}")?;
-                writeln!(stderr(), " instructions")?;
-                stderr().flush()?;
-            }
-            Err(error) => {
-                writeln!(stderr(), "Error counting instructions: {error}")?;
-            }
-        },
+            .try_for_each(|s| jsonl::write(&out, &s).map_err(|e| anyhow!("{:?}", e))),
+        "tiny86" => traces.iter().try_for_each(|s| s.tiny86_write(&mut out)),
+        "tiny86-text" => traces.iter().try_for_each(|s| {
+            s.bitstring()
+                .and_then(|bs| writeln!(&out, "{bs}").map_err(|e| anyhow!("{:?}", e)))
+        }),
+        "inst-count" => traces
+            .count_instructions()
+            .and_then(|count| writeln!(&out, "{count}").map_err(|e| anyhow!("{:?}", e))),
         _ => unreachable!(),
-    };
+    }?;
 
     Ok(())
 }
