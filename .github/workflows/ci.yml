@@ -22,8 +22,8 @@ jobs:
           name: trailofbits
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
       - name: mttn
-        run: nix build .#mttn
+        run: nix build .#mttn --print-build-logs
       - name: tiny86
-        run: nix build .#tiny86
+        run: nix build .#tiny86 --print-build-logs
       - name: sv_circuit
-        run: nix build .#sv_circuit
+        run: nix build .#sv_circuit --print-build-logs
