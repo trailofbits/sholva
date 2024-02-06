@@ -9,7 +9,6 @@ use iced_x86::{
     Code, Decoder, DecoderOptions, Instruction, InstructionInfoFactory, InstructionInfoOptions,
     MemorySize, Mnemonic, OpAccess, Register,
 };
-use nix::errno::Errno;
 use nix::sys::personality::{self, Persona};
 use nix::sys::ptrace;
 use nix::sys::signal;
@@ -135,7 +134,7 @@ impl Default for MemoryHint {
 /// Represents an individual step in the trace, including the raw instruction bytes,
 /// the register file state before execution, and any memory operations that result
 /// from execution.
-#[derive(Debug, PartialEq, Eq, Serialize)]
+#[derive(Debug, Default, PartialEq, Eq, Serialize)]
 pub struct Step {
     pub instr: Vec<u8>,
     pub regs: RegisterFile,
@@ -492,7 +491,7 @@ impl<'a> Tracee<'a> {
             let syscall = self.register_file.rax;
             log::debug!("requested syscall {}", syscall);
 
-            self.do_syscall(&instr, syscall as u32)
+            self.do_syscall(syscall as u32)
         } else {
             // Hints are generated in two phases: we build a complete list of
             // expected hints (including all Read hints) in stage 1...
@@ -533,17 +532,12 @@ impl<'a> Tracee<'a> {
         steps
     }
 
-    fn do_syscall(&mut self, instr: &Instruction, syscall: u32) -> Result<Vec<Step>> {
+    fn do_syscall(&mut self, syscall: u32) -> Result<Vec<Step>> {
         let syscall = if self.tracer.decree_syscalls {
             // Legacy support for tracing a DECREE binary, where syscalls are re-written into
             // native Linux equivalent
             let decree_syscall = DecreeSyscall::try_from(syscall)?;
-            let linux_syscall = match decree_syscall {
-                DecreeSyscall::Receive => LinuxSyscall::Read,
-                DecreeSyscall::Transmit => LinuxSyscall::Write,
-                DecreeSyscall::Terminate => LinuxSyscall::Exit,
-                _ => todo!(),
-            };
+            let linux_syscall = LinuxSyscall::try_from(decree_syscall)?;
             log::debug!("decomposed {:?} into {:?}", decree_syscall, linux_syscall);
 
             linux_syscall
@@ -552,40 +546,19 @@ impl<'a> Tracee<'a> {
         };
         log::debug!("selected {:?}", syscall);
 
-        // Generage syscall DFA.
-        let dfa = self.transition(
-            syscall,
-            self.register_file.rbx as u32,
-            self.register_file.rcx as u32,
-            self.register_file.rdx as u32,
-        )?;
+        // store pre-syscall boundary register states, step tracee into syscall.
+        let rbx = self.register_file.rbx as u32;
+        let rcx = self.register_file.rcx as u32;
+        let rdx = self.register_file.rdx as u32;
+        ptrace::step(self.tracee_pid, None).with_context(|| "Fault: failure executing syscall")?;
 
-        // Perform any Tracee side effects resulting from syscall.
-        #[allow(clippy::single_match)]
-        match syscall {
-            LinuxSyscall::Exit => ptrace::kill(self.tracee_pid)?,
-            _ => (),
-        };
+        // HACK(jl): for syscalls that consume data from stdin, immediately reading into process
+        // memory while generating syscall model DFA causes a race condition where the read
+        // buffer is occasionally empty. Use 5ms settling time.
+        std::thread::sleep(std::time::Duration::from_millis(5));
 
-        // Jump right over the syscall.
-        let mut user_regs = libc::user_regs_struct::from(&self.register_file);
-        user_regs.rip += instr.len() as u64;
-        log::debug!("jumping {:?} bytes to {:x}", instr.len(), user_regs.rip);
-
-        // We might have killed the program immediately above, in which case
-        // this will fail with ESRCH because the process has disappeared.
-        // This is an expected case, so we swallow the error and expect
-        // the calling context to handle the process exit cleanly.
-        match ptrace::setregs(self.tracee_pid, user_regs) {
-            Ok(_) => ptrace::step(self.tracee_pid, None)
-                .with_context(|| "Fault: resuming program after syscall")?,
-            Err(Errno::ESRCH) => {
-                log::debug!("process disappeared!")
-            }
-            Err(e) => return Err(e.into()),
-        };
-
-        Ok(dfa)
+        // Generage syscall DFA model.
+        self.syscall_model(syscall, rbx, rcx, rdx)
     }
 
     /// Loads the our register file from the tracee's user register state.
@@ -646,7 +619,7 @@ impl<'a> Tracee<'a> {
     }
 
     /// Reads a piece of the tracee's memory, starting at `addr`.
-    fn tracee_data(&self, addr: u64, mask: MemoryMask) -> Result<Vec<u8>> {
+    pub fn tracee_data(&self, addr: u64, mask: MemoryMask) -> Result<Vec<u8>> {
         log::debug!("attempting to read tracee @ 0x{:x} ({:?})", addr, mask);
 
         // NOTE(ww): Could probably use ptrace::read() here since we're always <= 64 bits,
@@ -845,7 +818,7 @@ pub struct Tracer {
 
 impl From<&clap::ArgMatches> for Tracer {
     fn from(matches: &clap::ArgMatches) -> Self {
-        let target = if let Some(pid) = matches.get_one::<String>("TRACEE_PID") {
+        let target = if let Some(pid) = matches.get_one::<String>("attach") {
             let pid = Pid::from_raw(pid.parse().unwrap());
 
             // If we're starting from a PID, then we need to create
@@ -937,7 +910,7 @@ mod tests {
         Tracer {
             ignore_unsupported_memops: false,
             tiny86_only: true,
-            decree_syscalls: true,
+            decree_syscalls: false,
             debug_on_fault: false,
             disable_aslr: true,
             bitness: 32,

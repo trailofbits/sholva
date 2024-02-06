@@ -5,6 +5,7 @@
 use crate::trace::Step;
 use crate::trace::{MemoryHint, MemoryMask, MemoryOp, RegisterFile, SyscallState, Tracee};
 use anyhow::{anyhow, Result};
+use itertools::Itertools;
 use serde::Serialize;
 
 #[derive(Copy, Clone, Debug, PartialEq, Eq, Serialize)]
@@ -86,23 +87,76 @@ impl TryFrom<MemoryOp> for SyscallState {
     }
 }
 
+impl<'a> Tracee<'a> {
+    /// Collect the associated MemoryHints for a given pointer and count.
+    /// Decompose into 32-bit (DWord) hints plus a possible leftover Word/Byte hint.
+    fn hint_data(
+        &self,
+        mut ptr: u32,
+        mut count: u32,
+        operation: MemoryOp,
+    ) -> Result<Vec<MemoryHint>> {
+        // (1) pre-allocate, count expressed as bytes, hints as 32-bit double-word
+        let mut hints = Vec::with_capacity((count / 4 + 1) as usize);
+
+        // (2) generate as many 32-bit hints as possible
+        while count >= 4 {
+            hints.push(MemoryHint {
+                address: ptr as u64,
+                operation,
+                syscall_state: SyscallState::try_from(operation)?,
+                mask: MemoryMask::DWord,
+                data: self.tracee_data(u64::from(ptr), MemoryMask::DWord)?,
+            });
+            count -= 4;
+            ptr += 4;
+        }
+
+        // (3) generate appropriately sized hint for any remainder
+        if let Some(mask) = match count {
+            0 => None,
+            1 => Some(MemoryMask::Byte),
+            2 => Some(MemoryMask::Word),
+            3 => Some(MemoryMask::DWord), // NOTE(jl): cannot use straightforward `try_from()` here, explicitly round up 3-bytes.
+            _ => unreachable!(),
+        } {
+            hints.push(MemoryHint {
+                address: u64::from(ptr),
+                operation,
+                syscall_state: SyscallState::try_from(operation)?,
+                mask,
+                data: self.tracee_data(u64::from(ptr), mask)?,
+            });
+        }
+
+        Ok(hints)
+    }
+}
+
 pub trait SyscallDFA {
     const POINTER_TRANSITION_BYTES: u32 = 8; // number of pointer bytes offset per syscall transition
     const DATA_TRANSITION_BYTES: u32 = 8; // number of data bytes consumed per syscall transition
-    fn transition(&self, syscall: LinuxSyscall, ebx: u32, ecx: u32, edx: u32) -> Result<Vec<Step>>;
+    fn syscall_model(
+        &self,
+        syscall: LinuxSyscall,
+        ebx: u32,
+        ecx: u32,
+        edx: u32,
+    ) -> Result<Vec<Step>>;
 }
 
 impl<'a> SyscallDFA for Tracee<'a> {
-    fn transition(
+    fn syscall_model(
         &self,
         syscall: LinuxSyscall,
-        ebx: u32, // NOTE(jl): non-`mut`; constant FD for currently supported syscalls.
+        mut ebx: u32,
         mut ecx: u32,
         mut edx: u32,
     ) -> Result<Vec<Step>> {
         // NOTE(jl): assuming a fully Linux-syscall centric approach.
         match syscall {
             LinuxSyscall::Exit => Ok(vec![]),
+            // ssize_t write(int fd, const void buf[.count], size_t count);
             LinuxSyscall::Write => {
                 log::info!(
                     "write: buffer @{:#04x} of length {} to FD {}",
@@ -112,9 +166,52 @@ impl<'a> SyscallDFA for Tracee<'a> {
                 );
 
                 let mut dfa = vec![];
-                let mut state = SyscallState::Read;
+                let memory_hints = self.hint_data(ecx, edx, MemoryOp::Read)?;
+                for memory_hint_chunk in &memory_hints.iter().cloned().chunks(2) {
+                    let regs = RegisterFile {
+                        s_ebx: ebx,
+                        s_ecx: ecx,
+                        s_edx: edx,
+                        ..Default::default()
+                    };
 
-                while edx > 0 {
+                    dfa.push(Step {
+                        regs,
+                        hints: memory_hint_chunk.collect(),
+                        ..Default::default()
+                    });
+
+                    ecx = ecx.wrapping_add(Self::POINTER_TRANSITION_BYTES);
+                    edx = edx.wrapping_sub(Self::DATA_TRANSITION_BYTES);
+                }
+
+                Ok(dfa)
+            }
+            LinuxSyscall::Read => {
+                log::info!("read: FD {} of length {} to buffer @{:#04x}", ebx, edx, ecx);
+
+                let mut dfa = vec![];
+                let memory_hints = self.hint_data(ecx, edx, MemoryOp::Write)?;
+                for memory_hint_chunk in &memory_hints.iter().cloned().chunks(2) {
+                    let regs = RegisterFile {
+                        s_ebx: ebx,
+                        s_ecx: ecx,
+                        s_edx: edx,
+                        ..Default::default()
+                    };
+
+                    dfa.push(Step {
+                        regs,
+                        hints: memory_hint_chunk.collect(),
+                        ..Default::default()
+                    });
+
+                    ecx = ecx.wrapping_add(Self::POINTER_TRANSITION_BYTES);
+                    edx = edx.wrapping_sub(Self::DATA_TRANSITION_BYTES);
+                }
+
+                Ok(dfa)
+            }
                     dfa.push(Step {
                         instr: Default::default(),
                         regs: RegisterFile {
