@@ -10,7 +10,10 @@ C_SOURCES := \
 	condition.nostdlib.c \
 	jumptable.nostdlib.c \
 	smallcall.nostdlib.c \
-	empty.c
+	brk.c \
+	brk_loop.c \
+	empty.c \
+	mmap.c
 C_ELFS := $(C_SOURCES:.c=.elf)
 CFLAGS += -fno-pic -g -m32 -mtune=i386 -std=c99 \
 		-mpreferred-stack-boundary=2 -fno-stack-protector -z execstack

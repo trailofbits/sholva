@@ -47,6 +47,7 @@ pub enum LinuxSyscall {
     Open = 5,
     Close = 6,
     Brk = 45,
+    Mmap = 90,
 }
 
 impl TryFrom<u32> for LinuxSyscall {
