@@ -7,6 +7,7 @@ import Syscall.Internal
 
 import Syscall.Brk (syscallBrkDFA)
 import Syscall.Mmap (syscallMmapDFA)
+import Syscall.Munmap (syscallMunmapDFA)
 import Syscall.Read (syscallReadDFA)
 import Syscall.Write (syscallWriteDFA)
 
@@ -27,6 +28,7 @@ syscall' dfaState =
         SYSCALL_CLOSE -> todo
         SYSCALL_BRK -> syscallBrkDFA dfaState
         SYSCALL_MMAP -> syscallMmapDFA dfaState
+        SYSCALL_MUNMAP -> syscallMunmapDFA dfaState
 
 top :: ( "i_eax" ::: Signal System SyscallReg
        , "i_ebx" ::: Signal System SyscallReg
