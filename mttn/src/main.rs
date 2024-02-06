@@ -49,6 +49,7 @@ fn app() -> Command {
                 .action(ArgAction::Append)
                 .index(2),
         )
+        .arg(arg!(-o --output <FILE> "output file").required(true))
         .group(
             ArgGroup::new("target")
                 .required(true)
@@ -59,23 +60,22 @@ fn app() -> Command {
 fn run() -> Result<()> {
     let matches = app().get_matches();
     let tracer = trace::Tracer::from(&matches);
+    use std::fs::File;
+    let mut out: File = File::create(matches.get_one::<String>("output").unwrap())?;
 
     let mut traces = tracer.trace()?;
 
     match matches.get_one::<String>("format").unwrap().as_ref() {
         "jsonl" => traces
             .iter()
-            .try_for_each(|s| jsonl::write(stdout(), &s).map_err(|e| anyhow!("{:?}", e)))?,
-        "tiny86" => traces
-            .iter()
-            .try_for_each(|s| s.tiny86_write(&mut stdout()))?,
+            .try_for_each(|s| jsonl::write(&out, &s).map_err(|e| anyhow!("{:?}", e)))?,
+        "tiny86" => traces.iter().try_for_each(|s| s.tiny86_write(&mut out))?,
         "tiny86-text" => traces
             .iter()
-            .try_for_each(|s| s.bitstring().and_then(|bs| Ok(writeln!(stdout(), "{bs}")?)))?,
+            .try_for_each(|s| s.bitstring().and_then(|bs| Ok(writeln!(&out, "{bs}")?)))?,
         "inst-count" => match traces.count_instructions() {
             Ok(count) => {
-                write!(stdout(), "{count}")?;
-                stdout().flush()?;
+                write!(&out, "{count}")?;
                 writeln!(stderr(), " instructions")?;
                 stderr().flush()?;
             }
