@@ -6,6 +6,7 @@ module Syscall where
 import Syscall.Internal
 
 import Syscall.Brk (syscallBrkDFA)
+import Syscall.GetRandom (syscallGetRandomDFA)
 import Syscall.Mmap (syscallMmapDFA)
 import Syscall.Munmap (syscallMunmapDFA)
 import Syscall.Read (syscallReadDFA)
@@ -29,6 +30,7 @@ syscall' dfaState =
         SYSCALL_BRK -> syscallBrkDFA dfaState
         SYSCALL_MMAP -> syscallMmapDFA dfaState
         SYSCALL_MUNMAP -> syscallMunmapDFA dfaState
+        SYSCALL_GETRANDOM -> syscallGetRandomDFA dfaState
 
 top :: ( "i_eax" ::: Signal System SyscallReg
        , "i_ebx" ::: Signal System SyscallReg

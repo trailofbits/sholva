@@ -43,6 +43,7 @@ data LinuxSyscall
     | SYSCALL_BRK
     | SYSCALL_MMAP
     | SYSCALL_MUNMAP
+    | SYSCALL_GETRANDOM
     deriving (Bounded, Show)
 
 type SyscallReg = BitVector 32
@@ -57,6 +58,7 @@ instance Enum LinuxSyscall where
     fromEnum SYSCALL_BRK = 45
     fromEnum SYSCALL_MMAP = 90
     fromEnum SYSCALL_MUNMAP = 91
+    fromEnum SYSCALL_GETRANDOM = 355
     toEnum 0 = SYSCALL_NONE
     toEnum 1 = SYSCALL_EXIT
     toEnum 3 = SYSCALL_READ
@@ -66,6 +68,7 @@ instance Enum LinuxSyscall where
     toEnum 45 = SYSCALL_BRK 
     toEnum 90 = SYSCALL_MMAP
     toEnum 91 = SYSCALL_MUNMAP
+    toEnum 355 = SYSCALL_GETRANDOM
     toEnum _ = undefined
 
 -- NOTE(jl): as a convention, assume sholva's perspective.

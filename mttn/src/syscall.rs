@@ -49,6 +49,7 @@ pub enum LinuxSyscall {
     Brk = 45,
     Mmap = 90,
     Munmap = 91,
+    GetRandom = 355,
 }
 
 impl TryFrom<u32> for LinuxSyscall {
@@ -62,6 +63,7 @@ impl TryFrom<u32> for LinuxSyscall {
             5 => Self::Open,
             6 => Self::Close,
             45 => Self::Brk,
+            355 => Self::GetRandom,
             _ => return Err(anyhow!("unhandled Linux syscall: {}", syscall)),
         })
     }
@@ -75,6 +77,7 @@ impl TryFrom<DecreeSyscall> for LinuxSyscall {
             DecreeSyscall::Receive => LinuxSyscall::Read,
             DecreeSyscall::Transmit => LinuxSyscall::Write,
             DecreeSyscall::Terminate => LinuxSyscall::Exit,
+            DecreeSyscall::Random => LinuxSyscall::GetRandom,
             _ => todo!(),
         })
     }
@@ -226,6 +229,18 @@ impl<'a> SyscallDFA for Tracee<'a> {
                     ..Default::default()
                 }])
             }
+            LinuxSyscall::GetRandom => {
+                log::info!(
+                    "getrandom: buffer @{:#04x} of length {} with flags {}",
+                    ebx,
+                    ecx,
+                    edx
+                );
+
+                let mut dfa = vec![];
+                let mut state = SyscallState::Write;
+
+                while ecx > 0 {
                     dfa.push(Step {
                         instr: Default::default(),
                         regs: RegisterFile {
