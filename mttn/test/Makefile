@@ -20,7 +20,7 @@ C_SOURCES := \
 	getrandom.c \
 	mmap.c
 C_ELFS := $(C_SOURCES:.c=.elf)
-CFLAGS += -O2 -fno-pic -g -m32 -mtune=i386 -std=c99 \
+CFLAGS += -O0 -fno-pic -g -m32 -mtune=i386 -std=c99 \
 		-mpreferred-stack-boundary=2 -fno-stack-protector -z execstack
 CFLAGS_NOSTDLIB = $(CFLAGS) -Wl,-emain -nostdlib -static
 
