@@ -9,14 +9,18 @@ ASM_ELFS := $(ASM_OBJS:.o=.elf)
 C_SOURCES := \
 	condition.nostdlib.c \
 	jumptable.nostdlib.c \
+	smallcall.c \
 	smallcall.nostdlib.c \
+	condition.c \
+	jumptable.c \
+	smallcall.c \
 	brk.c \
 	brk_loop.c \
 	empty.c \
 	getrandom.c \
 	mmap.c
 C_ELFS := $(C_SOURCES:.c=.elf)
-CFLAGS += -fno-pic -g -m32 -mtune=i386 -std=c99 \
+CFLAGS += -O2 -fno-pic -g -m32 -mtune=i386 -std=c99 \
 		-mpreferred-stack-boundary=2 -fno-stack-protector -z execstack
 CFLAGS_NOSTDLIB = $(CFLAGS) -Wl,-emain -nostdlib -static
 

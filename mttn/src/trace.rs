@@ -938,7 +938,7 @@ mod tests {
         }
     }
 
-    fn test_program_tracer(program: &str) -> Tracer {
+    fn test_program_tracer(program: &str, trace_start_addr: Option<u64>) -> Tracer {
         let target = Target::Program(program.into(), vec![]);
 
         Tracer {
@@ -948,7 +948,7 @@ mod tests {
             debug_on_fault: false,
             disable_aslr: true,
             bitness: 32,
-            trace_start_addr: None,
+            trace_start_addr: trace_start_addr,
             target: target,
         }
     }
@@ -988,7 +988,7 @@ mod tests {
                 #[test]
                 fn $name() {
                     let program = concat!(env!("CARGO_MANIFEST_DIR"), "/test/", stringify!($name), ".elf");
-                    let tracer = test_program_tracer(&program);
+                    let tracer = test_program_tracer(&program, None);
 
                     // TODO(ww): Don't collect these.
                     let trace1 = tracer
@@ -1047,5 +1047,61 @@ mod tests {
         syscall_read0,
         syscall_write0,
         xchg_r_r,
+    }
+
+    macro_rules! trace_start_addr_tests {
+        ($(($name:ident, $main_addr:literal),)*) => {
+            $(
+                #[test]
+                fn $name() {
+                    let program_nostdlib = concat!(env!("CARGO_MANIFEST_DIR"), "/test/", stringify!($name), ".nostdlib.elf");
+                    let tracer_nostdlib = test_program_tracer(&program_nostdlib, None);
+
+                    let program_stdlib = concat!(env!("CARGO_MANIFEST_DIR"), "/test/", stringify!($name), ".elf");
+                    let tracer_stdlib = test_program_tracer(&program_stdlib, Some($main_addr));
+
+                    // TODO(ww): Don't collect these.
+                    let trace_nostdlib = tracer_nostdlib
+                        .trace()
+                        .expect("spawn failed")
+                        .iter()
+                        .collect::<Vec<Step>>();
+
+                    let trace_stdlib = tracer_stdlib
+                        .trace()
+                        .expect("spawn failed")
+                        .iter()
+                        .collect::<Vec<Step>>();
+
+                    assert_eq!(trace_nostdlib.len(), trace_stdlib.len());
+                    /*
+                     * TODO(jl): assert that instructions and memory hints are equal
+                    for (step1, step2) in trace_nostdlib.iter().zip(trace_stdlib.iter()) {
+                        assert_eq!(step1, step2);
+                    }
+                    */
+
+                    // FIXME(jl): the instruction counting implementation produces off-by-one
+                    // errors when tracing over syscalls.
+                    /*
+                    let trace1_count = tracer1
+                        .trace()
+                        .expect("spawn failed")
+                        .count_instructions()
+                        .expect("count failed");
+
+                    assert_eq!(trace1.len(), trace1_count);
+                    */
+                }
+            )*
+        }
+    }
+
+    // NOTE(jl): there's 
+    // function prolog decoder 
+    trace_start_addr_tests! {
+        (condition,0x804916f),
+        (jumptable,0x80491af),
+        (smallcall,0x804916f),
     }
 }
