@@ -487,6 +487,7 @@ impl<'a> Tracee<'a> {
         self.register_file = self.tracee_regs()?;
 
         if !self.tracing_active && self.register_file.rip == self.trace_start_addr.unwrap() {
+            log::info!("beginning tracing at %eip {:#04x}", self.trace_start_addr.unwrap());
             self.tracing_active = true;
         }
 
