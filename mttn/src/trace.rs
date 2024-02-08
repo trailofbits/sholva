@@ -15,6 +15,7 @@ use nix::sys::signal;
 use nix::sys::uio;
 use nix::sys::wait;
 use nix::unistd::Pid;
+use parse_int::parse;
 use serde::Serialize;
 use spawn_ptrace::CommandPtraceSpawn;
 
@@ -882,7 +883,9 @@ impl From<&clap::ArgMatches> for Tracer {
             debug_on_fault: matches.contains_id("debug_on_fault"),
             disable_aslr: matches.contains_id("disable_aslr"),
             bitness: matches.get_one::<String>("mode").unwrap().parse().unwrap(),
-            trace_start_addr: matches.get_one::<u64>("trace_start_addr").copied(),
+            trace_start_addr: matches
+                .get_one::<String>("tracee_start_addr")
+                .map(|s| parse::<u64>(s).unwrap()),
             target: target,
         }
     }

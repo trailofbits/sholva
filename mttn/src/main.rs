@@ -34,6 +34,7 @@ fn app() -> Command {
         .arg(arg!(-d --debug_on_fault "Suspend the tracee and detach if a memory access faults"))
         .arg(arg!(-A --disable_aslr "Disable ASLR on the tracee"))
         .arg(arg!(-M --memory_file <FILE> "the path to write the memory dump to (defaults to <pid>.memory"))
+        .arg(arg!(-n --tracee_start_addr <N> "begin tracing execution when instruction pointer equals n"))
         .arg(
             arg!(-a --attach <TRACEE_PID> "Attach to the given PID for tracing")
                 .conflicts_with("disable_aslr")
