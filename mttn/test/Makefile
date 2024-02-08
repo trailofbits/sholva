@@ -10,6 +10,9 @@ C_SOURCES := \
 	condition.nostdlib.c \
 	jumptable.nostdlib.c \
 	smallcall.nostdlib.c \
+	condition.c \
+	jumptable.c \
+	smallcall.c \
 	brk.c \
 	brk_loop.c \
 	empty.c \
