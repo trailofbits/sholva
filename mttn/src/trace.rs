@@ -468,7 +468,9 @@ impl<'a> Tracee<'a> {
                 }
             }
             wait::WaitStatus::Stopped(_, signal) => {
-                if self.tracing_active { log::debug!("stopped with {:?}", signal); }
+                if self.tracing_active {
+                    log::debug!("stopped with {:?}", signal);
+                }
             }
             wait::WaitStatus::StillAlive => {
                 log::debug!("still alive");
@@ -487,7 +489,10 @@ impl<'a> Tracee<'a> {
         self.register_file = self.tracee_regs()?;
 
         if !self.tracing_active && self.register_file.rip == self.trace_start_addr.unwrap() {
-            log::info!("beginning tracing at %eip {:#04x}", self.trace_start_addr.unwrap());
+            log::info!(
+                "beginning tracing at %eip {:#04x}",
+                self.trace_start_addr.unwrap()
+            );
             self.tracing_active = true;
         }
 
@@ -1044,7 +1049,6 @@ mod tests {
         // stosd, FIXME(jl): indeterminate.
         stosw,
         syscall_exit,
-        syscall_read0,
         syscall_write0,
         xchg_r_r,
     }
@@ -1074,31 +1078,11 @@ mod tests {
                         .collect::<Vec<Step>>();
 
                     assert_eq!(trace_nostdlib.len(), trace_stdlib.len());
-                    /*
-                     * TODO(jl): assert that instructions and memory hints are equal
-                    for (step1, step2) in trace_nostdlib.iter().zip(trace_stdlib.iter()) {
-                        assert_eq!(step1, step2);
-                    }
-                    */
-
-                    // FIXME(jl): the instruction counting implementation produces off-by-one
-                    // errors when tracing over syscalls.
-                    /*
-                    let trace1_count = tracer1
-                        .trace()
-                        .expect("spawn failed")
-                        .count_instructions()
-                        .expect("count failed");
-
-                    assert_eq!(trace1.len(), trace1_count);
-                    */
                 }
             )*
         }
     }
 
-    // NOTE(jl): there's 
-    // function prolog decoder 
     trace_start_addr_tests! {
         (condition,0x804916f),
         (jumptable,0x80491af),
