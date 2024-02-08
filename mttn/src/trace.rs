@@ -468,7 +468,7 @@ impl<'a> Tracee<'a> {
                 }
             }
             wait::WaitStatus::Stopped(_, signal) => {
-                log::debug!("stopped with {:?}", signal);
+                if self.tracing_active { log::debug!("stopped with {:?}", signal); }
             }
             wait::WaitStatus::StillAlive => {
                 log::debug!("still alive");
