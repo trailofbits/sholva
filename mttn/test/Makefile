@@ -21,6 +21,7 @@ ASM := \
 	stosd.s \
 	stosw.s \
 	syscall_exit.s \
+	syscall_write.s \
 	syscall_write0.s \
 	syscall_write1.s \
 	syscall_write2.s \

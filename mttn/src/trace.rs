@@ -1049,7 +1049,23 @@ mod tests {
         // stosd, FIXME(jl): indeterminate.
         stosw,
         syscall_exit,
+        // TODO(lo): syscall_read* requires support for passing stdin through
+        // mttn to the tracee.
+        // syscall_read,
+        // syscall_read0,
+        //syscall_read1,
+        // syscall_read2,
+        // syscall_read3,
+        // syscall_read4,
+        // syscall_read5,
+        syscall_write,
         syscall_write0,
+        syscall_write1,
+        syscall_write2,
+        syscall_write3,
+        syscall_write4,
+        syscall_write5,
+        syscall_write10,
         xchg_r_r,
     }
 
