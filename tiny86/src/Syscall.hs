@@ -35,12 +35,15 @@ syscall' dfaState =
 top :: ( "i_eax" ::: Signal System SyscallReg
        , "i_ebx" ::: Signal System SyscallReg
        , "i_ecx" ::: Signal System SyscallReg
+       , "i_edx" ::: Signal System SyscallReg
        , "i_syscall_state" ::: Signal System SyscallStateReg)
     -> ( "o_eax" ::: Signal System SyscallReg
        , "o_ebx" ::: Signal System SyscallReg
        , "o_ecx" ::: Signal System SyscallReg
+       , "o_edx" ::: Signal System SyscallReg
        , "o_syscall_state" ::: Signal System SyscallStateReg)
-top (i_eax, i_ebx, i_ecx, i_state) = (o_eax, o_ebx, o_ecx, o_state)
+top (i_eax, i_ebx, i_ecx, i_edx, i_state) =
+    (o_eax, o_ebx, o_ecx, i_edx, o_state)
   where
     syscall :: Signal System LinuxSyscall
     -- coerce input into a Syscall.
@@ -51,21 +54,28 @@ top (i_eax, i_ebx, i_ecx, i_state) = (o_eax, o_ebx, o_ecx, o_state)
     syscallDFAState :: Signal System SyscallDFAState
     -- restructure the inputs into a SyscallDFAState.
     syscallDFAState =
-        (\i_eax' i_ebx' i_ecx' state' ->
+        (\i_eax' i_ebx' i_ecx' i_edx' state' ->
              MkDFAState
-                 {eax = i_eax', ebx = i_ebx', ecx = i_ecx', state = state'}) <$>
+                 { eax = i_eax'
+                 , ebx = i_ebx'
+                 , ecx = i_ecx'
+                 , edx = i_edx'
+                 , state = state'
+                 }) <$>
         i_eax <*>
         i_ebx <*>
         i_ecx <*>
+        i_edx <*>
         syscallState
     syscallDFAState' :: Signal System SyscallDFAState
     -- compute DFA transition.
     syscallDFAState' = syscall' <$> syscallDFAState <*> syscall
-    o_eax, o_ebx, o_ecx :: Signal System SyscallReg
+    o_eax, o_ebx, o_ecx, o_edx :: Signal System SyscallReg
     -- destructure fields from computed DFA transition.
     o_eax = eax <$> syscallDFAState'
     o_ebx = ebx <$> syscallDFAState'
     o_ecx = ecx <$> syscallDFAState'
+    o_edx = edx <$> syscallDFAState'
     o_state :: Signal System SyscallStateReg
     o_state = toEnum . fromEnum . state <$> syscallDFAState'
 

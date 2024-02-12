@@ -13,6 +13,7 @@ syscallMmapDFA :: SyscallDFA
 syscallMmapDFA s@(MkDFAState { eax = eax'
                              , ebx = ebx'
                              , ecx = ecx'
+                             , edx = edx'
                              , state = state'
                              })
     | state' == SYSCALL_STATE_DONE = s
@@ -22,5 +23,6 @@ syscallMmapDFA s@(MkDFAState { eax = eax'
             { eax = 0 -- return success.
             , ebx = def
             , ecx = def
+            , edx = def
             , state = SYSCALL_STATE_DONE
             }

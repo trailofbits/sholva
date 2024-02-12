@@ -87,6 +87,7 @@ data SyscallDFAState =
         { eax :: SyscallReg
         , ebx :: SyscallReg
         , ecx :: SyscallReg
+        , edx :: SyscallReg
         , state :: SyscallState
         }
     deriving (Eq, Show)

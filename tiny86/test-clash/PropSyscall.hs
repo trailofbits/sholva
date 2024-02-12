@@ -22,10 +22,11 @@ newtype ValidSyscallDFAState =
 instance Arbitrary ValidSyscallDFAState where
   arbitrary = do
     eax' <- arbitrary
+    ebx' <- arbitrary
     ecx' <- arbitrary
     edx' <- arbitrary
     (ValidSyscallState state') <- arbitrary
-    return $ ValidSyscallDFAState $ MkDFAState eax' ecx' edx' state'
+    return $ ValidSyscallDFAState $ MkDFAState eax' ebx' ecx' edx' state'
 
 prop_syscall_read_none :: ValidSyscallDFAState -> Property
 prop_syscall_read_none (ValidSyscallDFAState s) =

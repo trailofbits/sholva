@@ -13,6 +13,7 @@ syscallGetRandomDFA :: SyscallDFA
 syscallGetRandomDFA s@(MkDFAState { eax = eax'
                                   , ebx = ebx'
                                   , ecx = ecx'
+                                  , edx = edx'
                                   , state = state'
                                   })
     | state' == SYSCALL_STATE_DONE = s
@@ -24,6 +25,7 @@ syscallGetRandomDFA s@(MkDFAState { eax = eax'
             { eax = 0 -- return success.
             , ebx = ebx' + ecx' -- increment the pointer into RAM by the remaining number bytes left to consume.
             , ecx = ecx' - ecx' -- consume the last of the data.
+            , edx = edx'
             , state = SYSCALL_STATE_DONE
             }
     -- more steps left to consume.
@@ -33,5 +35,6 @@ syscallGetRandomDFA s@(MkDFAState { eax = eax'
             { eax = eax'
             , ebx = ebx' + toEnum stepPtrBytes -- increment the pointer into RAM.
             , ecx = ecx' - toEnum stepDataBytes -- decrement the number of bytes left to consume.
+            , edx = edx'
             , state = SYSCALL_STATE_WRITE
             }
