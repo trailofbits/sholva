@@ -4,6 +4,9 @@ use thiserror::Error;
 /// enumerates all possible errors that can occur during circuit flattening
 #[derive(Error, Debug)]
 pub enum SVCircuitError {
+    #[error("Malformed BLIF: {0}")]
+    BlifError(String),
+
     #[error("No circuit named '{dependency}' available (referenced by {parent})")]
     MissingDependency { dependency: String, parent: String },
 
