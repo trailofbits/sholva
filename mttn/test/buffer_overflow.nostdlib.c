@@ -24,6 +24,7 @@ int main() {
   // forced exit
   __asm__(
     "mov $1, %eax\n\t"
+    "xor %ebx, %ebx\n\t"
     "int $0x80\n\t"
   );
 

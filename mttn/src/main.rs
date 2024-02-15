@@ -1,4 +1,4 @@
-use std::io::{stderr, stdout, Write};
+use std::io::Write;
 use std::process;
 
 use anyhow::{anyhow, Result};
@@ -34,6 +34,7 @@ fn app() -> Command {
         .arg(arg!(-d --debug_on_fault "Suspend the tracee and detach if a memory access faults"))
         .arg(arg!(-A --disable_aslr "Disable ASLR on the tracee"))
         .arg(arg!(-M --memory_file <FILE> "the path to write the memory dump to (defaults to <pid>.memory"))
+        .arg(arg!(-n --tracee_start_addr <N> "begin tracing execution when instruction pointer equals n"))
         .arg(
             arg!(-a --attach <TRACEE_PID> "Attach to the given PID for tracing")
                 .conflicts_with("disable_aslr")
@@ -49,6 +50,7 @@ fn app() -> Command {
                 .action(ArgAction::Append)
                 .index(2),
         )
+        .arg(arg!(-o --output <FILE> "output file").required(true))
         .group(
             ArgGroup::new("target")
                 .required(true)
@@ -59,32 +61,25 @@ fn app() -> Command {
 fn run() -> Result<()> {
     let matches = app().get_matches();
     let tracer = trace::Tracer::from(&matches);
+    use std::fs::File;
+    let mut out: File = File::create(matches.get_one::<String>("output").unwrap())?;
 
     let mut traces = tracer.trace()?;
 
     match matches.get_one::<String>("format").unwrap().as_ref() {
         "jsonl" => traces
             .iter()
-            .try_for_each(|s| jsonl::write(stdout(), &s).map_err(|e| anyhow!("{:?}", e)))?,
-        "tiny86" => traces
-            .iter()
-            .try_for_each(|s| s.tiny86_write(&mut stdout()))?,
-        "tiny86-text" => traces
-            .iter()
-            .try_for_each(|s| s.bitstring().and_then(|bs| Ok(writeln!(stdout(), "{bs}")?)))?,
-        "inst-count" => match traces.count_instructions() {
-            Ok(count) => {
-                write!(stdout(), "{count}")?;
-                stdout().flush()?;
-                writeln!(stderr(), " instructions")?;
-                stderr().flush()?;
-            }
-            Err(error) => {
-                writeln!(stderr(), "Error counting instructions: {error}")?;
-            }
-        },
+            .try_for_each(|s| jsonl::write(&out, &s).map_err(|e| anyhow!("{:?}", e))),
+        "tiny86" => traces.iter().try_for_each(|s| s.tiny86_write(&mut out)),
+        "tiny86-text" => traces.iter().try_for_each(|s| {
+            s.bitstring()
+                .and_then(|bs| writeln!(&out, "{bs}").map_err(|e| anyhow!("{:?}", e)))
+        }),
+        "inst-count" => traces
+            .count_instructions()
+            .and_then(|count| writeln!(&out, "{count}").map_err(|e| anyhow!("{:?}", e))),
         _ => unreachable!(),
-    };
+    }?;
 
     Ok(())
 }

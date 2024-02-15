@@ -19,6 +19,7 @@ module tiny86 (
     output [31:0] os_eax,
     output [31:0] os_ebx,
     output [31:0] os_ecx,
+    output [31:0] os_edx,
 
     output [31:0] o_eflags
 );
@@ -178,15 +179,17 @@ module tiny86 (
 
   assign _out = is_syscall_state_write ? hint_data : 0;
 
-  wire [31:0] s_eax, s_ebx, s_ecx;
+  wire [31:0] s_eax, s_ebx, s_ecx, s_edx;
   syscall syscall_x (
       .i_eax(eax),
       .i_ebx(ebx),
       .i_ecx(ecx),
+      .i_edx(edx),
       .i_syscall_state(syscall_state),
       .o_eax(s_eax),
       .o_ebx(s_ebx),
       .o_ecx(s_ecx),
+      .o_edx(s_edx),
       .o_syscall_state(o_syscall_state)
   );
 
@@ -203,7 +206,7 @@ module tiny86 (
       .i_eax(is_syscall ? s_eax : eax),
       .i_ebx(is_syscall ? s_ebx : ebx),
       .i_ecx(is_syscall ? s_ecx : ecx),
-      .i_edx(edx),
+      .i_edx(is_syscall ? s_edx : edx),
       .i_esi(esi),
       .i_edi(edi),
       .i_esp(esp),

@@ -9,18 +9,18 @@ use iced_x86::{
     Code, Decoder, DecoderOptions, Instruction, InstructionInfoFactory, InstructionInfoOptions,
     MemorySize, Mnemonic, OpAccess, Register,
 };
-use nix::errno::Errno;
 use nix::sys::personality::{self, Persona};
 use nix::sys::ptrace;
 use nix::sys::signal;
 use nix::sys::uio;
 use nix::sys::wait;
 use nix::unistd::Pid;
+use parse_int::parse;
 use serde::Serialize;
 use spawn_ptrace::CommandPtraceSpawn;
 
 use crate::dump;
-use crate::syscall::SyscallDFA;
+use crate::syscall::{DecreeSyscall, LinuxSyscall, SyscallDFA};
 
 const MAX_INSTR_LEN: usize = 15;
 const RFLAGS_RESERVED_MASK: u64 = 2;
@@ -33,60 +33,6 @@ pub trait CommandPersonality {
 impl CommandPersonality for Command {
     fn personality(&mut self, persona: Persona) {
         unsafe { self.pre_exec(move || Ok(personality::set(persona).map(|_| ())?)) };
-    }
-}
-
-#[derive(Copy, Clone, Debug, PartialEq, Eq, Serialize)]
-#[repr(u8)]
-pub enum DecreeSyscall {
-    Terminate = 1,
-    Transmit = 2,
-    Receive = 3,
-    Fdwait = 4,
-    Allocate = 5,
-    Deallocate = 6,
-    Random = 7,
-}
-
-impl TryFrom<u32> for DecreeSyscall {
-    type Error = anyhow::Error;
-
-    fn try_from(syscall: u32) -> Result<Self> {
-        Ok(match syscall {
-            1 => Self::Terminate,
-            2 => Self::Transmit,
-            3 => Self::Receive,
-            4 => Self::Fdwait,
-            5 => Self::Allocate,
-            6 => Self::Deallocate,
-            7 => Self::Random,
-            _ => return Err(anyhow!("unknown DECREE syscall: {}", syscall)),
-        })
-    }
-}
-
-#[derive(Copy, Clone, Debug, PartialEq, Eq, Serialize)]
-#[repr(u8)]
-pub enum LinuxSyscall {
-    Read = 0,
-    Write = 1,
-    Open = 2,
-    Close = 3,
-    Exit = 60,
-}
-
-impl TryFrom<u32> for LinuxSyscall {
-    type Error = anyhow::Error;
-
-    fn try_from(syscall: u32) -> Result<Self> {
-        Ok(match syscall {
-            0 => Self::Read,
-            1 => Self::Write,
-            2 => Self::Open,
-            3 => Self::Close,
-            60 => Self::Exit,
-            _ => return Err(anyhow!("unhandled Linux syscall: {}", syscall)),
-        })
     }
 }
 
@@ -189,7 +135,7 @@ impl Default for MemoryHint {
 /// Represents an individual step in the trace, including the raw instruction bytes,
 /// the register file state before execution, and any memory operations that result
 /// from execution.
-#[derive(Debug, PartialEq, Eq, Serialize)]
+#[derive(Debug, Default, PartialEq, Eq, Serialize)]
 pub struct Step {
     pub instr: Vec<u8>,
     pub regs: RegisterFile,
@@ -429,6 +375,8 @@ pub struct Tracee<'a> {
     tracer: &'a Tracer,
     info_factory: InstructionInfoFactory,
     register_file: RegisterFile,
+    tracing_active: bool,
+    trace_start_addr: Option<u64>,
 }
 
 pub struct TraceeIter<'a>(&'a mut Tracee<'a>);
@@ -456,6 +404,8 @@ impl<'a> Tracee<'a> {
             tracer: tracer,
             info_factory: InstructionInfoFactory::new(),
             register_file: Default::default(),
+            tracing_active: tracer.trace_start_addr.is_none(),
+            trace_start_addr: tracer.trace_start_addr,
         }
     }
 
@@ -473,14 +423,23 @@ impl<'a> Tracee<'a> {
             // we need to do a full trace, modeling memory
             while !self.terminated {
                 self.step()?;
-                count += 1;
+                if self.tracing_active {
+                    count += 1;
+                }
             }
         } else {
             // we just need to count the number of ptrace steps until the process terminates
             while !self.terminated {
+                if !self.tracing_active && self.register_file.rip == self.trace_start_addr.unwrap()
+                {
+                    self.tracing_active = true;
+                }
+
                 ptrace::step(self.tracee_pid, None)?;
 
-                count += 1;
+                if self.tracing_active {
+                    count += 1;
+                }
 
                 self.wait()?
             }
@@ -509,7 +468,9 @@ impl<'a> Tracee<'a> {
                 }
             }
             wait::WaitStatus::Stopped(_, signal) => {
-                log::debug!("stopped with {:?}", signal);
+                if self.tracing_active {
+                    log::debug!("stopped with {:?}", signal);
+                }
             }
             wait::WaitStatus::StillAlive => {
                 log::debug!("still alive");
@@ -526,78 +487,90 @@ impl<'a> Tracee<'a> {
     /// an `Err` if an internal tracing step fails.
     fn step(&mut self) -> Result<Vec<Step>> {
         self.register_file = self.tracee_regs()?;
-        let (instr, instr_bytes) = self.tracee_instr()?;
 
-        if self.tracer.tiny86_only {
-            self.tiny86_checks(&instr)?;
+        if !self.tracing_active && self.register_file.rip == self.trace_start_addr.unwrap() {
+            log::info!(
+                "beginning tracing at %eip {:#04x}",
+                self.trace_start_addr.unwrap()
+            );
+            self.tracing_active = true;
         }
 
-        let mut hints = vec![];
+        let steps = match self.tracing_active {
+            true => {
+                let (instr, instr_bytes) = self.tracee_instr()?;
 
-        let steps = if self.tracer.tiny86_only && instr.mnemonic() == Mnemonic::Int {
-            log::debug!("tiny86: entering syscall");
+                if self.tracer.tiny86_only {
+                    self.tiny86_checks(&instr)?;
+                }
 
-            // We only support INT 80h, since that's the standard syscall
-            // vector on 32-bit Linux.
-            if instr.immediate8() != 0x80 {
-                return Err(anyhow!("invalid interrupt: not syscall"));
+                let mut hints = vec![];
+
+                if self.tracer.tiny86_only && instr.mnemonic() == Mnemonic::Int {
+                    log::debug!("tiny86: entering syscall");
+
+                    // We only support INT 80h, since that's the standard syscall
+                    // vector on 32-bit Linux.
+                    if instr.immediate8() != 0x80 {
+                        return Err(anyhow!("invalid interrupt: not syscall"));
+                    }
+
+                    let syscall = self.register_file.rax;
+                    log::debug!("requested syscall {}", syscall);
+
+                    self.do_syscall(syscall as u32)
+                } else {
+                    // Hints are generated in two phases: we build a complete list of
+                    // expected hints (including all Read hints) in stage 1...
+                    self.tracee_hints_stage1(&instr, &mut hints)?;
+
+                    // TODO(ww): Check `instr` here and perform one of two cases:
+                    // 1. If `instr` is an instruction that benefits from modeling/emulation
+                    //    (e.g. `MOVS`), then emulate it and generate its memory hints
+                    //    from the emulation.
+                    // 2. Otherwise, generate the hints as normal (do phase 1, single-step,
+                    //    then phase 2).
+                    ptrace::step(self.tracee_pid, None)?;
+
+                    if instr.is_string_instruction() || instr.is_stack_instruction() {
+                        // NOTE(ww): By default, recent-ish x86 CPUs execute MOVS and STOS
+                        // in "fast string operation" mode. This can cause stores to not appear
+                        // when we expect them to, since they can be executed out-of-order.
+                        // The "correct" fix for this is probably to toggle the
+                        // fast-string-enable bit (0b) in the IA32_MISC_ENABLE MSR, but we just sleep
+                        // for a bit to give the CPU a chance to catch up.
+                        // TODO(ww): Longer term, we should just model REP'd instructions outright.
+                        std::thread::sleep(std::time::Duration::from_millis(5));
+                    }
+
+                    // ...then, after we've stepped the program, we fill in the data
+                    // associated with each Write hint in stage 2.
+                    self.tracee_hints_stage2(&mut hints)?;
+
+                    #[allow(clippy::redundant_field_names)]
+                    Ok(vec![Step {
+                        instr: instr_bytes,
+                        regs: self.register_file,
+                        hints: hints,
+                    }])
+                }
             }
-
-            let syscall = self.register_file.rax;
-            log::debug!("requested syscall {}", syscall);
-
-            self.do_syscall(&instr, syscall as u32)
-        } else {
-            // Hints are generated in two phases: we build a complete list of
-            // expected hints (including all Read hints) in stage 1...
-            self.tracee_hints_stage1(&instr, &mut hints)?;
-
-            // TODO(ww): Check `instr` here and perform one of two cases:
-            // 1. If `instr` is an instruction that benefits from modeling/emulation
-            //    (e.g. `MOVS`), then emulate it and generate its memory hints
-            //    from the emulation.
-            // 2. Otherwise, generate the hints as normal (do phase 1, single-step,
-            //    then phase 2).
-            ptrace::step(self.tracee_pid, None)?;
-
-            if instr.is_string_instruction() || instr.is_stack_instruction() {
-                // NOTE(ww): By default, recent-ish x86 CPUs execute MOVS and STOS
-                // in "fast string operation" mode. This can cause stores to not appear
-                // when we expect them to, since they can be executed out-of-order.
-                // The "correct" fix for this is probably to toggle the
-                // fast-string-enable bit (0b) in the IA32_MISC_ENABLE MSR, but we just sleep
-                // for a bit to give the CPU a chance to catch up.
-                // TODO(ww): Longer term, we should just model REP'd instructions outright.
-                std::thread::sleep(std::time::Duration::from_millis(5));
+            false => {
+                ptrace::step(self.tracee_pid, None)?;
+                Ok(Vec::new())
             }
-
-            // ...then, after we've stepped the program, we fill in the data
-            // associated with each Write hint in stage 2.
-            self.tracee_hints_stage2(&mut hints)?;
-
-            #[allow(clippy::redundant_field_names)]
-            Ok(vec![Step {
-                instr: instr_bytes,
-                regs: self.register_file,
-                hints: hints,
-            }])
         };
 
         self.wait()?;
         steps
     }
 
-    fn do_syscall(&mut self, instr: &Instruction, syscall: u32) -> Result<Vec<Step>> {
+    fn do_syscall(&mut self, syscall: u32) -> Result<Vec<Step>> {
         let syscall = if self.tracer.decree_syscalls {
             // Legacy support for tracing a DECREE binary, where syscalls are re-written into
             // native Linux equivalent
             let decree_syscall = DecreeSyscall::try_from(syscall)?;
-            let linux_syscall = match decree_syscall {
-                DecreeSyscall::Receive => LinuxSyscall::Read,
-                DecreeSyscall::Transmit => LinuxSyscall::Write,
-                DecreeSyscall::Terminate => LinuxSyscall::Exit,
-                _ => todo!(),
-            };
+            let linux_syscall = LinuxSyscall::try_from(decree_syscall)?;
             log::debug!("decomposed {:?} into {:?}", decree_syscall, linux_syscall);
 
             linux_syscall
@@ -606,40 +579,21 @@ impl<'a> Tracee<'a> {
         };
         log::debug!("selected {:?}", syscall);
 
-        // Generage syscall DFA.
-        let dfa = self.transition(
-            syscall,
-            self.register_file.rbx as u32,
-            self.register_file.rcx as u32,
-            self.register_file.rdx as u32,
-        )?;
+        // store pre-syscall boundary register states, step tracee into syscall.
+        let rbx = self.register_file.rbx as u32;
+        let rcx = self.register_file.rcx as u32;
+        let rdx = self.register_file.rdx as u32;
+        ptrace::step(self.tracee_pid, None).with_context(|| "Fault: failure executing syscall")?;
+        // syscall return value in %rax
+        let rax_return = self.register_file.rax as u32;
 
-        // Perform any Tracee side effects resulting from syscall.
-        #[allow(clippy::single_match)]
-        match syscall {
-            LinuxSyscall::Exit => ptrace::kill(self.tracee_pid)?,
-            _ => (),
-        };
+        // HACK(jl): for syscalls that consume data from stdin, immediately reading into process
+        // memory while generating syscall model DFA causes a race condition where the read
+        // buffer is occasionally empty. Use 5ms settling time.
+        std::thread::sleep(std::time::Duration::from_millis(5));
 
-        // Jump right over the syscall.
-        let mut user_regs = libc::user_regs_struct::from(&self.register_file);
-        user_regs.rip += instr.len() as u64;
-        log::debug!("jumping {:?} bytes to {:x}", instr.len(), user_regs.rip);
-
-        // We might have killed the program immediately above, in which case
-        // this will fail with ESRCH because the process has disappeared.
-        // This is an expected case, so we swallow the error and expect
-        // the calling context to handle the process exit cleanly.
-        match ptrace::setregs(self.tracee_pid, user_regs) {
-            Ok(_) => ptrace::step(self.tracee_pid, None)
-                .with_context(|| "Fault: resuming program after syscall")?,
-            Err(Errno::ESRCH) => {
-                log::debug!("process disappeared!")
-            }
-            Err(e) => return Err(e.into()),
-        };
-
-        Ok(dfa)
+        // Generage syscall DFA model.
+        self.syscall_model(syscall, rax_return, rbx, rcx, rdx)
     }
 
     /// Loads the our register file from the tracee's user register state.
@@ -700,7 +654,7 @@ impl<'a> Tracee<'a> {
     }
 
     /// Reads a piece of the tracee's memory, starting at `addr`.
-    fn tracee_data(&self, addr: u64, mask: MemoryMask) -> Result<Vec<u8>> {
+    pub fn tracee_data(&self, addr: u64, mask: MemoryMask) -> Result<Vec<u8>> {
         log::debug!("attempting to read tracee @ 0x{:x} ({:?})", addr, mask);
 
         // NOTE(ww): Could probably use ptrace::read() here since we're always <= 64 bits,
@@ -894,12 +848,13 @@ pub struct Tracer {
     pub debug_on_fault: bool,
     pub disable_aslr: bool,
     pub bitness: u32,
+    pub trace_start_addr: Option<u64>,
     pub target: Target,
 }
 
 impl From<&clap::ArgMatches> for Tracer {
     fn from(matches: &clap::ArgMatches) -> Self {
-        let target = if let Some(pid) = matches.get_one::<String>("TRACEE_PID") {
+        let target = if let Some(pid) = matches.get_one::<String>("attach") {
             let pid = Pid::from_raw(pid.parse().unwrap());
 
             // If we're starting from a PID, then we need to create
@@ -934,6 +889,9 @@ impl From<&clap::ArgMatches> for Tracer {
             debug_on_fault: matches.contains_id("debug_on_fault"),
             disable_aslr: matches.contains_id("disable_aslr"),
             bitness: matches.get_one::<String>("mode").unwrap().parse().unwrap(),
+            trace_start_addr: matches
+                .get_one::<String>("tracee_start_addr")
+                .map(|s| parse::<u64>(s).unwrap()),
             target: target,
         }
     }
@@ -985,16 +943,17 @@ mod tests {
         }
     }
 
-    fn test_program_tracer(program: &str) -> Tracer {
+    fn test_program_tracer(program: &str, trace_start_addr: Option<u64>) -> Tracer {
         let target = Target::Program(program.into(), vec![]);
 
         Tracer {
             ignore_unsupported_memops: false,
             tiny86_only: true,
-            decree_syscalls: true,
+            decree_syscalls: false,
             debug_on_fault: false,
             disable_aslr: true,
             bitness: 32,
+            trace_start_addr: trace_start_addr,
             target: target,
         }
     }
@@ -1034,7 +993,7 @@ mod tests {
                 #[test]
                 fn $name() {
                     let program = concat!(env!("CARGO_MANIFEST_DIR"), "/test/", stringify!($name), ".elf");
-                    let tracer = test_program_tracer(&program);
+                    let tracer = test_program_tracer(&program, None);
 
                     // TODO(ww): Don't collect these.
                     let trace1 = tracer
@@ -1089,9 +1048,60 @@ mod tests {
         // stosb, FIXME(jl): indeterminate.
         // stosd, FIXME(jl): indeterminate.
         stosw,
-        syscall_transmit,
-        syscall_terminate,
-        syscall_receive,
+        syscall_exit,
+        // TODO(lo): syscall_read* requires support for passing stdin through
+        // mttn to the tracee.
+        // syscall_read,
+        // syscall_read0,
+        //syscall_read1,
+        // syscall_read2,
+        // syscall_read3,
+        // syscall_read4,
+        // syscall_read5,
+        syscall_write,
+        syscall_write0,
+        syscall_write1,
+        syscall_write2,
+        syscall_write3,
+        syscall_write4,
+        syscall_write5,
+        syscall_write10,
         xchg_r_r,
+    }
+
+    macro_rules! trace_start_addr_tests {
+        ($(($name:ident, $main_addr:literal),)*) => {
+            $(
+                #[test]
+                fn $name() {
+                    let program_nostdlib = concat!(env!("CARGO_MANIFEST_DIR"), "/test/", stringify!($name), ".nostdlib.elf");
+                    let tracer_nostdlib = test_program_tracer(&program_nostdlib, None);
+
+                    let program_stdlib = concat!(env!("CARGO_MANIFEST_DIR"), "/test/", stringify!($name), ".elf");
+                    let tracer_stdlib = test_program_tracer(&program_stdlib, Some($main_addr));
+
+                    // TODO(ww): Don't collect these.
+                    let trace_nostdlib = tracer_nostdlib
+                        .trace()
+                        .expect("spawn failed")
+                        .iter()
+                        .collect::<Vec<Step>>();
+
+                    let trace_stdlib = tracer_stdlib
+                        .trace()
+                        .expect("spawn failed")
+                        .iter()
+                        .collect::<Vec<Step>>();
+
+                    assert_eq!(trace_nostdlib.len(), trace_stdlib.len());
+                }
+            )*
+        }
+    }
+
+    trace_start_addr_tests! {
+        (condition,0x804916f),
+        (jumptable,0x80491af),
+        (smallcall,0x804916f),
     }
 }
