@@ -6,7 +6,7 @@ edition = "2021"
 
 [dependencies]
 anyhow = "1.0"
-clap = { version = "4.4.3", features = ["cargo"] }
+clap = { version = "4.5.0", features = ["cargo"] }
 derivative = "2.2"
 env_logger = "0.10"
 iced-x86 = "1.21.0"
