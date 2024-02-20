@@ -1,11 +1,11 @@
 use std::fs::File;
 use std::io::{BufReader, BufWriter};
-use std::path::{PathBuf};
+use std::path::PathBuf;
 
 use anyhow::Result;
 use clap::{command, Parser};
 
-use sv_circuit::Witness;
+use sv_circuit::{parse, Witness};
 
 use mcircuit::parsers::blif::BlifParser;
 use mcircuit::Parse;
@@ -28,15 +28,15 @@ fn main() -> Result<()> {
     let cli = Cli::parse();
 
     // Parse and process input BLIF.
-    let blif = File::open(cli.blif)
+    let blif: BlifParser<bool> = File::open(cli.blif)
         .map(BufReader::new)
         .map(BlifParser::<bool>::new)?;
-    let (circuit, _, _) = sv_circuit::flatten(blif);
+    let circuit = parse::blif(blif)?;
 
     // Parse and process input witness.
     let witness: Witness = File::open(cli.witness)
         .map(BufReader::new)
-        .map(sv_circuit::parse::witness)??;
+        .map(parse::witness)??;
 
     File::create(format!("{}.circuit", &cli.output))
         .map(BufWriter::new)

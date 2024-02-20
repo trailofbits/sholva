@@ -5,11 +5,8 @@ use std::iter::FromIterator;
 
 use mcircuit::{HasIO, Operation, Translatable, WireValue};
 
-mod errors;
-
-pub use errors::SVCircuitError;
+pub use crate::errors::SVCircuitError;
 pub mod circuit;
-pub mod flattener;
 
 pub type Wire = usize;
 pub type NodeIdx = usize;
