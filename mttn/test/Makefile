@@ -125,6 +125,14 @@ smallcall.trace.txt: smallcall.elf
 smallcall.trace.jsonl: smallcall.elf
 	$(MTTN) -o $@ $(MTTN_FLAGS) -n 0x804916f -F jsonl ./$<
 
+# stubbed interactive targets
+
+syscall_read0.trace.jsonl: syscall_read1.elf
+	echo -ne '\xff\xff' | $(MTTN) -o $@ $(MTTN_FLAGS) -F jsonl ./$<
+
+syscall_read1.trace.jsonl: syscall_read1.elf
+	echo -ne '\xff' | $(MTTN) -o $@ $(MTTN_FLAGS) -F jsonl ./$<
+
 # generic targets
 
 %.trace.jsonl: %.elf
