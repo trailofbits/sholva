@@ -52,9 +52,10 @@ pub fn private<F: Write>(writer: &mut F, witness: &Witness) -> Result<()> {
     Ok(())
 }
 
+/// emit total IR0 circuit.
 pub fn circuit<F: Write>(
     circuit_writer: &mut F,
-    circuit: &BoolCircuit,
+    tiny86: &BoolCircuit,
     witness: &Witness,
 ) -> Result<()> {
     writeln!(circuit_writer, "version 2.0.0-beta;")?;
@@ -66,11 +67,11 @@ pub fn circuit<F: Write>(
     writeln!(
         circuit_writer,
         "@function({}, @out: 0:{}, @in: 0:{}, 0:{})",
-        circuit.name,
-        circuit.outputs.len(),
+        tiny86.name,
+        tiny86.outputs.len(),
         // NOTE(jl): guaranteed two inputs of same size in `check.v`.
-        circuit.inputs.len() / 2,
-        circuit.inputs.len() / 2
+        tiny86.inputs.len() / 2,
+        tiny86.inputs.len() / 2
     )?;
     // NOTE(lo): wire numbering in function bodies starts with the output and proceeds sequentially through the inputs
     // e.g. for the function signature above, which corresponds to circuit(step1, step2)
@@ -80,10 +81,10 @@ pub fn circuit<F: Write>(
 
     // FIXME(lo): we need a counter to increment through the input wire indices for the Operation::Input case below, i.e.,
     // let mut input_wire_idx: usize = 0;
-    // but circuit.topo_iter() already comes with a numbering that may conflict with these indices...
+    // but tiny86.topo_iter() already comes with a numbering that may conflict with these indices...
     // We also don't appear to hit the Operation::Input case.
 
-    for gate in circuit.topo_iter() {
+    for gate in tiny86.topo_iter() {
         write!(circuit_writer, "  ")?; // indent body
         match gate {
             Operation::Input(_) => panic!("Input in circuit body!"),
@@ -127,8 +128,8 @@ pub fn circuit<F: Write>(
     // HACK(jl): this exporting function should be independent of our circuit geometry;
     // here we're just lucky the number of outputs slots nicely into the area reserved for Bristol
     // True/False constants.
-    assert!(circuit.outputs.len() == 1);
-    for output in circuit.outputs.iter().sorted() {
+    assert!(tiny86.outputs.len() == 1);
+    for output in tiny86.outputs.iter().sorted() {
         writeln!(circuit_writer, "$0 <- ${};", output)?;
     }
 
@@ -180,7 +181,7 @@ pub fn circuit<F: Write>(
             circuit_writer,
             "@new(${} ... ${});", // NOTE(jl): this end range is asserted at exit of this loop.
             wire_counter,
-            wire_counter + circuit.inputs.len() / 2 - 1
+            wire_counter + tiny86.inputs.len() / 2 - 1
         )?;
 
         // 2.
@@ -190,7 +191,7 @@ pub fn circuit<F: Write>(
             wire_counter += 1;
         }
         let end = wire_counter;
-        assert!(end == start + circuit.inputs.len() / 2);
+        assert!(end == start + tiny86.inputs.len() / 2);
         // push current step onto deque
         let step_range = Range { start, end };
         steps.push_front(step_range);
@@ -203,7 +204,7 @@ pub fn circuit<F: Write>(
                 circuit_writer,
                 "${} <- @call({}, ${} ... ${}, ${} ... ${});",
                 wire_counter,
-                circuit.name,
+                tiny86.name,
                 // previous step wire range.
                 back.clone().min().context("no back step minimum")?,
                 back.clone().max().context("no back step maximum")?,
