@@ -9,7 +9,7 @@ use std::collections::VecDeque;
 use std::io::Write;
 use std::ops::Range;
 
-pub fn intra_bucket() -> Result<()> {
+pub fn intra_bucket() -> Result<BoolCircuit> {
     use crate::parse;
     use mcircuit::parsers::blif::BlifParser;
     use mcircuit::Parse;
