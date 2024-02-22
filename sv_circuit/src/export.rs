@@ -9,6 +9,19 @@ use std::collections::VecDeque;
 use std::io::Write;
 use std::ops::Range;
 
+pub fn intra_bucket() -> Result<()> {
+    use crate::parse;
+    use mcircuit::parsers::blif::BlifParser;
+    use mcircuit::Parse;
+    use std::fs::File;
+    use std::io::BufReader;
+
+    File::open("gadgets/intra_bucket.blif")
+        .map(BufReader::new)
+        .map(BlifParser::<bool>::new)
+        .map(parse::blif)?
+}
+
 pub fn public<F: Write>(writer: &mut F) -> Result<()> {
     writeln!(writer, "version 2.0.0-beta;")?;
     writeln!(writer, "public_input;")?;
