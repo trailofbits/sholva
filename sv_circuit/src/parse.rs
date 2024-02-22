@@ -1,4 +1,3 @@
-use anyhow::{anyhow, bail};
 use mcircuit::{parsers::blif::BlifParser, Parse};
 
 use crate::{GenericCircuit, SVCircuitError, Witness, WitnessStep};
