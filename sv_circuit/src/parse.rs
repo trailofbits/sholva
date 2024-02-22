@@ -18,7 +18,7 @@ fn witness_line(step: String) -> Result<WitnessStep, SVCircuitError> {
         })
         .collect::<Vec<_>>()
         .try_into()
-        .map_err(|_| SVCircuitError::WitnessError("FUCK".to_string()))
+        .map_err(|_| SVCircuitError::WitnessError("bad witness step".to_string()))
 }
 
 pub fn witness(f: BufReader<File>) -> Result<Witness, SVCircuitError> {
