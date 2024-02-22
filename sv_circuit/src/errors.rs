@@ -7,6 +7,9 @@ pub enum SVCircuitError {
     #[error("Malformed BLIF: {0}")]
     BlifError(String),
 
+    #[error("Malformed Witness: {0}")]
+    WitnessError(String),
+
     #[error("No circuit named '{dependency}' available (referenced by {parent})")]
     MissingDependency { dependency: String, parent: String },
 

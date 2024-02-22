@@ -28,7 +28,7 @@ pub fn private<F: Write>(writer: &mut F, witness: &Witness) -> Result<()> {
     writeln!(writer, "@type field 2;")?;
     writeln!(writer, "@begin")?;
 
-    for (i, step) in witness.iter().enumerate() {
+    for (step, i) in witness.iter() {
         writeln!(writer, "// step {}", i)?;
         for wit_value in step {
             writeln!(writer, "< {} > ;", *wit_value as u32)?;
@@ -172,7 +172,7 @@ pub fn circuit<F: Write>(
 
         // 2.
         let start = wire_counter;
-        for _ in step {
+        for _ in step.0 {
             writeln!(circuit_writer, "${} <- @private();", wire_counter)?;
             wire_counter += 1;
         }

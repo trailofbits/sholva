@@ -20,7 +20,8 @@ pub use crate::generic::circuit::GenericCircuit;
 
 pub const WITNESS_LEN: usize = 656;
 pub type WitnessStep = [bool; WITNESS_LEN];
-pub type Witness = Vec<WitnessStep>;
+pub type TimeStamp = usize;
+pub type Witness = Vec<(WitnessStep, TimeStamp)>;
 
 pub type ArithCircuit = GenericCircuit<u64>;
 pub type BoolCircuit = GenericCircuit<bool>;
