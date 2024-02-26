@@ -14,7 +14,7 @@ itertools = "0.12.1"
 jsonl = "4.0.1"
 libc = "0.2"
 log = "0.4"
-nix = { version = "0.27.1", features = ["signal", "personality", "ptrace", "uio"] }
+nix = { version = "0.28.0", features = ["signal", "personality", "ptrace", "uio"] }
 parse_int = "0.6.0"
 rsprocmaps = "0.3.1"
 serde = { version = "1.0", features = ["derive"] }
