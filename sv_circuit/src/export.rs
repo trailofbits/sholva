@@ -223,10 +223,57 @@ fn execution<F: Write>(
     Ok(())
 }
 
+fn memory<F: Write>(circuit_writer: &mut F) -> Result<()> {
+    for gate in intra_bucket()?.topo_iter() {
+        write!(circuit_writer, "  ")?; // indent body
+        match gate {
+            Operation::Input(_) => panic!("Input in circuit body!"),
+            Operation::Random(_) => panic!("Random unsupported!"),
+            Operation::Add(o, l, r) => {
+                writeln!(circuit_writer, "${} <- @add(${}, ${});", o, l, r)
+            }
+            Operation::AddConst(o, i, c) => {
+                writeln!(
+                    circuit_writer,
+                    "${} <- @addc(${}, < {} >);",
+                    o, i, *c as u32
+                )
+            }
+            Operation::Sub(o, l, r) => {
+                writeln!(circuit_writer, "${} <- @add(${}, ${});", o, l, r)
+            }
+            Operation::SubConst(o, i, c) => {
+                writeln!(
+                    circuit_writer,
+                    "${} <- @addc(${}, < {} >);",
+                    o, i, *c as u32
+                )
+            }
+            Operation::Mul(o, l, r) => {
+                writeln!(circuit_writer, "${} <- @mul(${}, ${});", o, l, r)
+            }
+            Operation::MulConst(o, i, c) => {
+                writeln!(
+                    circuit_writer,
+                    "${} <- @mulc(${}, < {} >);",
+                    o, i, *c as u32
+                )
+            }
+            Operation::AssertZero(_) => panic!("Unexpected assertion in circuit!"),
+            Operation::Const(w, c) => {
+                writeln!(circuit_writer, "${} <- < {} >;", w, *c as u32)
+            }
+        }?;
+    }
+    Ok(())
+}
+
 pub fn circuit<F: Write>(
     circuit_writer: &mut F,
     tiny86: &BoolCircuit,
     witness: &Witness,
 ) -> Result<()> {
-    execution(circuit_writer, tiny86, witness)
+    execution(circuit_writer, tiny86, witness)?;
+    memory(circuit_writer)?;
+    Ok(())
 }
