@@ -53,7 +53,7 @@ pub fn private<F: Write>(writer: &mut F, witness: &Witness) -> Result<()> {
 }
 
 /// emit total IR0 circuit.
-pub fn circuit<F: Write>(
+fn execution<F: Write>(
     circuit_writer: &mut F,
     tiny86: &BoolCircuit,
     witness: &Witness,
@@ -221,4 +221,12 @@ pub fn circuit<F: Write>(
     }
     writeln!(circuit_writer, "@end")?;
     Ok(())
+}
+
+pub fn circuit<F: Write>(
+    circuit_writer: &mut F,
+    tiny86: &BoolCircuit,
+    witness: &Witness,
+) -> Result<()> {
+    execution(circuit_writer, tiny86, witness)
 }
