@@ -16,7 +16,7 @@
   };
 
   outputs = { self, clash, nixpkgs, flake-compat, rust-overlay, ... }:
-   let
+    let
       supportedSystems = [ "x86_64-linux" ];
       forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
       nixpkgsFor = forAllSystems (system: import nixpkgs { inherit system; });
@@ -65,6 +65,22 @@
               '';
             };
 
+          ir0-clash-gadgets = stdenv.mkDerivation {
+            name = "ir0-clash-gadgets";
+            src = ./sv_circuit/gadgets;
+            buildInputs = [
+              clash.packages.${system}.clash-ghc
+              clash.packages.${system}.clash-prelude
+            ] ++ (with pkgs; [ yosys ]);
+
+            installPhase = ''
+              runHook preInstall
+              mkdir -p $out/gadgets
+              cp *.blif $out/gadgets
+              runHook postInstall
+            '';
+          };
+
           sv_circuit = with pkgs.extend (import rust-overlay);
             let
               platform = (rustChannelOf {
@@ -77,15 +93,19 @@
             }).buildRustPackage rec {
               name = "sv_circuit";
               src = ./sv_circuit;
-              cargoLock = { 
-                lockFile = ./sv_circuit/Cargo.lock; 
+              cargoLock = {
+                lockFile = ./sv_circuit/Cargo.lock;
                 outputHashes = {
                   "mcircuit-0.1.10" =
                     "sha256-MUlaG+/IdcIwqiPyv4o3r+flPpf9lzHHWAZHdMkxBjs=";
-                };  
+                };
               };
-            
-            doCheck = true;
+
+              buildInputs = [ ir0-clash-gadgets ];
+              preBuild = ''
+                cp ${ir0-clash-gadgets}/gadgets/*.blif gadgets/
+              '';
+              doCheck = true;
             };
 
           tiny86 = stdenv.mkDerivation {
@@ -94,7 +114,15 @@
             buildInputs = [
               clash.packages.${system}.clash-ghc
               clash.packages.${system}.clash-prelude
-            ] ++ (with pkgs; [ sv_circuit nasm python3 verible verilator verilog yosys ]);
+            ] ++ (with pkgs; [
+              sv_circuit
+              nasm
+              python3
+              verible
+              verilator
+              verilog
+              yosys
+            ]);
 
             checkInputs = with pkgs; [ mttn ruby ];
             preCheck = ''
